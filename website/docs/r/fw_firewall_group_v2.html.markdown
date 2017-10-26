@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_fw_firewall_group_v1"
-sidebar_current: "docs-opentelekomcloud-resource-fw-firewall-group-v1"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_fw_firewall_group_v1"
+sidebar_current: "docs-orangecloud-resource-fw-firewall-group-v1"
 description: |-
-  Manages a v1 firewall group resource within OpenTelekomCloud.
+  Manages a v1 firewall group resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_fw\_firewall_group_v2
+# orangecloud\_fw\_firewall_group_v2
 
-Manages a v1 firewall group resource within OpenTelekomCloud.
+Manages a v1 firewall group resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_fw_rule_v2" "rule_1" {
+resource "orangecloud_fw_rule_v2" "rule_1" {
   name             = "my-rule-1"
   description      = "drop TELNET traffic"
   action           = "deny"
@@ -22,7 +22,7 @@ resource "opentelekomcloud_fw_rule_v2" "rule_1" {
   enabled          = "true"
 }
 
-resource "opentelekomcloud_fw_rule_v2" "rule_2" {
+resource "orangecloud_fw_rule_v2" "rule_2" {
   name             = "my-rule-2"
   description      = "drop NTP traffic"
   action           = "deny"
@@ -31,17 +31,17 @@ resource "opentelekomcloud_fw_rule_v2" "rule_2" {
   enabled          = "false"
 }
 
-resource "opentelekomcloud_fw_policy_v2" "policy_1" {
+resource "orangecloud_fw_policy_v2" "policy_1" {
   name = "my-policy"
 
-  rules = ["${opentelekomcloud_fw_rule_v2.rule_1.id}",
-    "${opentelekomcloud_fw_rule_v2.rule_2.id}",
+  rules = ["${orangecloud_fw_rule_v2.rule_1.id}",
+    "${orangecloud_fw_rule_v2.rule_2.id}",
   ]
 }
 
-resource "opentelekomcloud_fw_firewall_group_v2" "firewall_group_1" {
+resource "orangecloud_fw_firewall_group_v2" "firewall_group_1" {
   name      = "my-firewall-group"
-  ingress_policy_id = "${opentelekomcloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
 }
 ```
 
@@ -97,5 +97,5 @@ The following attributes are exported:
 Firewall Groups can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
+$ terraform import orangecloud_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
 ```

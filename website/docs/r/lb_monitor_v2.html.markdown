@@ -1,20 +1,20 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_lb_monitor_v2"
-sidebar_current: "docs-opentelekomcloud-resource-lb-monitor-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_lb_monitor_v2"
+sidebar_current: "docs-orangecloud-resource-lb-monitor-v2"
 description: |-
-  Manages a V2 monitor resource within OpenTelekomCloud.
+  Manages a V2 monitor resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_lb\_monitor\_v2
+# orangecloud\_lb\_monitor\_v2
 
-Manages a V2 monitor resource within OpenTelekomCloud.
+Manages a V2 monitor resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_lb_monitor_v2" "monitor_1" {
-  pool_id     = "${opentelekomcloud_lb_pool_v2.pool_1.id}"
+resource "orangecloud_lb_monitor_v2" "monitor_1" {
+  pool_id     = "${orangecloud_lb_pool_v2.pool_1.id}"
   type        = "PING"
   delay       = 20
   timeout     = 10

@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_images_image_v2"
-sidebar_current: "docs-opentelekomcloud-resource-images-image-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_images_image_v2"
+sidebar_current: "docs-orangecloud-resource-images-image-v2"
 description: |-
-  Manages a V2 Image resource within OpenTelekomCloud Glance.
+  Manages a V2 Image resource within OrangeCloud Glance.
 ---
 
-# opentelekomcloud\_images\_image_v2
+# orangecloud\_images\_image_v2
 
-Manages a V2 Image resource within OpenTelekomCloud Glance.
+Manages a V2 Image resource within OrangeCloud Glance.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_images_image_v2" "rancheros" {
+resource "orangecloud_images_image_v2" "rancheros" {
   name   = "RancherOS"
   image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
   container_format = "bare"
@@ -65,7 +65,7 @@ The following arguments are supported:
 
 * `visibility` - (Optional) The visibility of the image. Must be one of
    "public", "private", "community", or "shared". The ability to set the
-   visibility depends upon the configuration of the OpenTelekomCloud cloud.
+   visibility depends upon the configuration of the OrangeCloud cloud.
 
 Note: The `properties` attribute handling in the gophercloud library is currently buggy
 and needs to be fixed before being implemented in this resource.
@@ -88,7 +88,7 @@ The following attributes are exported:
 * `min_disk_gb` - See Argument Reference above.
 * `min_ram_mb` - See Argument Reference above.
 * `name` - See Argument Reference above.
-* `owner` - The id of the opentelekomcloud user who owns the image.
+* `owner` - The id of the orangecloud user who owns the image.
 * `protected` - See Argument Reference above.
 * `region` - See Argument Reference above.
 * `schema` - The path to the JSON-schema that represent
@@ -105,5 +105,5 @@ The following attributes are exported:
 Images can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_images_image_v2.rancheros 89c60255-9bd6-460c-822a-e2b959ede9d2
+$ terraform import orangecloud_images_image_v2.rancheros 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

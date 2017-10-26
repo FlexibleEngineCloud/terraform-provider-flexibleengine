@@ -1,14 +1,14 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_compute_volume_attach_v2"
-sidebar_current: "docs-opentelekomcloud-resource-compute-volume-attach-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_compute_volume_attach_v2"
+sidebar_current: "docs-orangecloud-resource-compute-volume-attach-v2"
 description: |-
   Attaches a Block Storage Volume to an Instance.
 ---
 
-# opentelekomcloud\_compute\_volume_attach_v2
+# orangecloud\_compute\_volume_attach_v2
 
-Attaches a Block Storage Volume to an Instance using the OpenTelekomCloud
+Attaches a Block Storage Volume to an Instance using the OrangeCloud
 Compute (Nova) v2 API.
 
 ## Example Usage
@@ -16,44 +16,44 @@ Compute (Nova) v2 API.
 ### Basic attachment of a single volume to a single instance
 
 ```hcl
-resource "opentelekomcloud_blockstorage_volume_v2" "volume_1" {
+resource "orangecloud_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "opentelekomcloud_compute_instance_v2" "instance_1" {
+resource "orangecloud_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   security_groups = ["default"]
 }
 
-resource "opentelekomcloud_compute_volume_attach_v2" "va_1" {
-  instance_id = "${opentelekomcloud_compute_instance_v2.instance_1.id}"
-  volume_id   = "${opentelekomcloud_blockstorage_volume_v2.volume_1.id}"
+resource "orangecloud_compute_volume_attach_v2" "va_1" {
+  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+  volume_id   = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
 }
 ```
 
 ### Attaching multiple volumes to a single instance
 
 ```hcl
-resource "opentelekomcloud_blockstorage_volume_v2" "volumes" {
+resource "orangecloud_blockstorage_volume_v2" "volumes" {
   count = 2
   name  = "${format("vol-%02d", count.index + 1)}"
   size  = 1
 }
 
-resource "opentelekomcloud_compute_instance_v2" "instance_1" {
+resource "orangecloud_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   security_groups = ["default"]
 }
 
-resource "opentelekomcloud_compute_volume_attach_v2" "attachments" {
+resource "orangecloud_compute_volume_attach_v2" "attachments" {
   count       = 2
-  instance_id = "${opentelekomcloud_compute_instance_v2.instance_1.id}"
-  volume_id   = "${element(opentelekomcloud_blockstorage_volume_v2.volumes.*.id, count.index)}"
+  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+  volume_id   = "${element(orangecloud_blockstorage_volume_v2.volumes.*.id, count.index)}"
 }
 
 output "volume devices" {
-  value = "${opentelekomcloud_compute_volume_attach_v2.attachments.*.device}"
+  value = "${orangecloud_compute_volume_attach_v2.attachments.*.device}"
 }
 ```
 
@@ -94,5 +94,5 @@ Volume Attachments can be imported using the Instance ID and Volume ID
 separated by a slash, e.g.
 
 ```
-$ terraform import opentelekomcloud_compute_volume_attach_v2.va_1 89c60255-9bd6-460c-822a-e2b959ede9d2/45670584-225f-46c3-b33e-6707b589b666
+$ terraform import orangecloud_compute_volume_attach_v2.va_1 89c60255-9bd6-460c-822a-e2b959ede9d2/45670584-225f-46c3-b33e-6707b589b666
 ```

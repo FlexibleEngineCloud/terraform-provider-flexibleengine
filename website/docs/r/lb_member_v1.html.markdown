@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_lb_member_v1"
-sidebar_current: "docs-opentelekomcloud-resource-lb-member-v1"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_lb_member_v1"
+sidebar_current: "docs-orangecloud-resource-lb-member-v1"
 description: |-
-  Manages a V1 load balancer member resource within OpenTelekomCloud.
+  Manages a V1 load balancer member resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_lb\_member_v1
+# orangecloud\_lb\_member_v1
 
-Manages a V1 load balancer member resource within OpenTelekomCloud.
+Manages a V1 load balancer member resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_lb_member_v1" "member_1" {
+resource "orangecloud_lb_member_v1" "member_1" {
   pool_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
   address = "192.168.0.10"
   port    = 80
@@ -62,5 +62,5 @@ The following attributes are exported:
 Load Balancer Members can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_lb_member_v1.member_1 a7498676-4fe4-4243-a864-2eaaf18c73df
+$ terraform import orangecloud_lb_member_v1.member_1 a7498676-4fe4-4243-a864-2eaaf18c73df
 ```

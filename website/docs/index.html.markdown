@@ -1,15 +1,15 @@
 ---
-layout: "opentelekomcloud"
-page_title: "Provider: OpenTelekomCloud"
-sidebar_current: "docs-opentelekomcloud-index"
+layout: "orangecloud"
+page_title: "Provider: OrangeCloud"
+sidebar_current: "docs-orangecloud-index"
 description: |-
-  The OpenTelekomCloud provider is used to interact with the many resources supported by OpenTelekomCloud. The provider needs to be configured with the proper credentials before it can be used.
+  The OrangeCloud provider is used to interact with the many resources supported by OrangeCloud. The provider needs to be configured with the proper credentials before it can be used.
 ---
 
-# OpenTelekomCloud Provider
+# OrangeCloud Provider
 
-The OpenTelekomCloud provider is used to interact with the
-many resources supported by OpenTelekomCloud. The provider needs to be configured
+The OrangeCloud provider is used to interact with the
+many resources supported by OrangeCloud. The provider needs to be configured
 with the proper credentials before it can be used.
 
 Use the navigation to the left to read about the available resources.
@@ -17,8 +17,8 @@ Use the navigation to the left to read about the available resources.
 ## Example Usage
 
 ```hcl
-# Configure the OpenTelekomCloud Provider
-provider "opentelekomcloud" {
+# Configure the OrangeCloud Provider
+provider "orangecloud" {
   user_name   = "admin"
   tenant_name = "admin"
   password    = "pwd"
@@ -27,7 +27,7 @@ provider "opentelekomcloud" {
 }
 
 # Create a web server
-resource "opentelekomcloud_compute_instance_v2" "test-server" {
+resource "orangecloud_compute_instance_v2" "test-server" {
   # ...
 }
 ```
@@ -39,11 +39,11 @@ The following arguments are supported:
 * `auth_url` - (Required) The Identity authentication URL. If omitted, the
   `OS_AUTH_URL` environment variable is used.
 
-* `region` - (Optional) The region of the OpenTelekomCloud cloud to use. If omitted,
+* `region` - (Optional) The region of the OrangeCloud cloud to use. If omitted,
   the `OS_REGION_NAME` environment variable is used. If `OS_REGION_NAME` is
   not set, then no region will be used. It should be possible to omit the
-  region in single-region OpenTelekomCloud environments, but this behavior may vary
-  depending on the OpenTelekomCloud environment being used.
+  region in single-region OrangeCloud environments, but this behavior may vary
+  depending on the OrangeCloud environment being used.
 
 * `user_name` - (Optional) The Username to login with. If omitted, the
   `OS_USERNAME` environment variable is used.
@@ -101,12 +101,12 @@ The following arguments are supported:
   variable is used. You must also set `username` to the Swauth/Swift username
   such as `username:project`. Set the `password` to the Swauth/Swift key.
   Finally, set `auth_url` as the location of the Swift service. Note that this
-  will only work when used with the OpenTelekomCloud Object Storage resources.
+  will only work when used with the OrangeCloud Object Storage resources.
 
 ## Additional Logging
 
 This provider has the ability to log all HTTP requests and responses between
-Terraform and the OpenTelekomCloud cloud which is useful for troubleshooting and
+Terraform and the OrangeCloud cloud which is useful for troubleshooting and
 debugging.
 
 To enable these logs, set the `OS_DEBUG` environment variable to `1` along
@@ -121,7 +121,7 @@ information has been scrubbed first!
 
 ## Rackspace Compatibility
 
-Using this OpenTelekomCloud provider with Rackspace is not supported and not
+Using this OrangeCloud provider with Rackspace is not supported and not
 guaranteed to work; however, users have reported success with the
 following notes in mind:
 
@@ -134,7 +134,7 @@ all other resources is either untested or known to not work.
 instances as shown below:
 
 ```
-resource "opentelekomcloud_compute_instance_v2" "my_instance" {
+resource "orangecloud_compute_instance_v2" "my_instance" {
   name      = "my_instance"
   region    = "DFW"
   image_id  = "fabe045f-43f8-4991-9e6c-5cabd617538c"
@@ -179,15 +179,15 @@ variables must also be set:
 
 * `OS_EXTGW_ID` - The UUID of the external gateway.
 
-You should be able to use any OpenTelekomCloud environment to develop on as long as the
+You should be able to use any OrangeCloud environment to develop on as long as the
 above environment variables are set.
 
-Most of Terraform's OpenTelekomCloud support is done in a standardized Packstack
+Most of Terraform's OrangeCloud support is done in a standardized Packstack
 all-in-one environment. You can find the scripts to build this environment
 [here](https://github.com/jtopjian/terraform-devstack/tree/master/packstack-standard).
 The included `main.tf` file will need to be modified for your specific
 environment. Once it's up and running, you will have access to a standard,
-up-to-date OpenTelekomCloud environment with the latest OpenTelekomCloud services.
+up-to-date OrangeCloud environment with the latest OrangeCloud services.
 
 If you require access to deprecated services, such as Keystone v2 and
 LBaaS v1, you can use the "legacy" environment

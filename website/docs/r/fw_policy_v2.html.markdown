@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_fw_policy_v2"
-sidebar_current: "docs-opentelekomcloud-resource-fw-policy-v1"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_fw_policy_v2"
+sidebar_current: "docs-orangecloud-resource-fw-policy-v1"
 description: |-
-  Manages a v1 firewall policy resource within OpenTelekomCloud.
+  Manages a v1 firewall policy resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_fw\_policy_v2
+# orangecloud\_fw\_policy_v2
 
-Manages a v1 firewall policy resource within OpenTelekomCloud.
+Manages a v1 firewall policy resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_fw_rule_v2" "rule_1" {
+resource "orangecloud_fw_rule_v2" "rule_1" {
   name             = "my-rule-1"
   description      = "drop TELNET traffic"
   action           = "deny"
@@ -22,7 +22,7 @@ resource "opentelekomcloud_fw_rule_v2" "rule_1" {
   enabled          = "true"
 }
 
-resource "opentelekomcloud_fw_rule_v2" "rule_2" {
+resource "orangecloud_fw_rule_v2" "rule_2" {
   name             = "my-rule-2"
   description      = "drop NTP traffic"
   action           = "deny"
@@ -31,11 +31,11 @@ resource "opentelekomcloud_fw_rule_v2" "rule_2" {
   enabled          = "false"
 }
 
-resource "opentelekomcloud_fw_policy_v2" "policy_1" {
+resource "orangecloud_fw_policy_v2" "policy_1" {
   name = "my-policy"
 
-  rules = ["${opentelekomcloud_fw_rule_v2.rule_1.id}",
-    "${opentelekomcloud_fw_rule_v2.rule_2.id}",
+  rules = ["${orangecloud_fw_rule_v2.rule_1.id}",
+    "${orangecloud_fw_rule_v2.rule_2.id}",
   ]
 }
 ```
@@ -88,5 +88,5 @@ The following attributes are exported:
 Firewall Policies can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
+$ terraform import orangecloud_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
 ```

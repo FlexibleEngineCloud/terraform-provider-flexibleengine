@@ -1,37 +1,37 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_networking_router_interface_v2"
-sidebar_current: "docs-opentelekomcloud-resource-networking-router-interface-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_networking_router_interface_v2"
+sidebar_current: "docs-orangecloud-resource-networking-router-interface-v2"
 description: |-
-  Manages a V2 router interface resource within OpenTelekomCloud.
+  Manages a V2 router interface resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_networking\_router_interface_v2
+# orangecloud\_networking\_router_interface_v2
 
-Manages a V2 router interface resource within OpenTelekomCloud.
+Manages a V2 router interface resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_networking_network_v2" "network_1" {
+resource "orangecloud_networking_network_v2" "network_1" {
   name           = "tf_test_network"
   admin_state_up = "true"
 }
 
-resource "opentelekomcloud_networking_subnet_v2" "subnet_1" {
-  network_id = "${opentelekomcloud_networking_network_v2.network_1.id}"
+resource "orangecloud_networking_subnet_v2" "subnet_1" {
+  network_id = "${orangecloud_networking_network_v2.network_1.id}"
   cidr       = "192.168.199.0/24"
   ip_version = 4
 }
 
-resource "opentelekomcloud_networking_router_v2" "router_1" {
+resource "orangecloud_networking_router_v2" "router_1" {
   name             = "my_router"
   external_gateway = "f67f0d72-0ddf-11e4-9d95-e1f29f417e2f"
 }
 
-resource "opentelekomcloud_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${opentelekomcloud_networking_router_v2.router_1.id}"
-  subnet_id = "${opentelekomcloud_networking_subnet_v2.subnet_1.id}"
+resource "orangecloud_networking_router_interface_v2" "router_interface_1" {
+  router_id = "${orangecloud_networking_router_v2.router_1.id}"
+  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
 }
 ```
 

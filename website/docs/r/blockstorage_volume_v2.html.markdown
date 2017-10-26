@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_blockstorage_volume_v2"
-sidebar_current: "docs-opentelekomcloud-resource-blockstorage-volume-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_blockstorage_volume_v2"
+sidebar_current: "docs-orangecloud-resource-blockstorage-volume-v2"
 description: |-
-  Manages a V2 volume resource within OpenTelekomCloud.
+  Manages a V2 volume resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_blockstorage\_volume_v2
+# orangecloud\_blockstorage\_volume_v2
 
-Manages a V2 volume resource within OpenTelekomCloud.
+Manages a V2 volume resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_blockstorage_volume_v2" "volume_1" {
+resource "orangecloud_blockstorage_volume_v2" "volume_1" {
   region      = "RegionOne"
   name        = "volume_1"
   description = "first test volume"
@@ -84,5 +84,5 @@ The following attributes are exported:
 Volumes can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_blockstorage_volume_v2.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
+$ terraform import orangecloud_blockstorage_volume_v2.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
 ```
