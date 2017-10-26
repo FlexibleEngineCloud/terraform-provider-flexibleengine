@@ -420,10 +420,11 @@
 			"tree": true
 		},
 		{
-			"checksumSHA1": "27/S5dceTewu04JZnNfpbUnwuZk=",
-			"path": "github.com/gator1/terraform-provider-opentelekomcloud/opentelekomcloud",
-			"revision": "42161ac9e6c1770a481775bbb7e952a64566b761",
-			"revisionTime": "2017-10-18T18:43:25Z"
+			"checksumSHA1": "VvZKmbuBN1QAG699KduTdmSPwA4=",
+			"origin": "github.com/aws/aws-sdk-go/vendor/github.com/go-ini/ini",
+			"path": "github.com/go-ini/ini",
+			"revision": "a28db88bdcd87b7023011ebc987b155d6d52411b",
+			"revisionTime": "2017-10-17T21:13:06Z"
 		},
 		{
 			"checksumSHA1": "TQ8kDcngYTatY8vUAPMc3xnALLg=",
@@ -994,6 +995,13 @@
 			"revisionTime": "2017-08-31T20:16:02Z"
 		},
 		{
+			"checksumSHA1": "0ZrwvB6KoGPj2PoDNSEJwxQ6Mog=",
+			"origin": "github.com/aws/aws-sdk-go/vendor/github.com/jmespath/go-jmespath",
+			"path": "github.com/jmespath/go-jmespath",
+			"revision": "a28db88bdcd87b7023011ebc987b155d6d52411b",
+			"revisionTime": "2017-10-17T21:13:06Z"
+		},
+		{
 			"checksumSHA1": "guxbLo8KHHBeM0rzou4OTzzpDNs=",
 			"path": "github.com/mitchellh/copystructure",
 			"revision": "5af94aef99f597e6a9e1f6ac6be6ce0f3c96b49d",
@@ -1152,5 +1160,5 @@
 			"versionExact": "v1.6.1"
 		}
 	],
-	"rootPath": "github.com/khdegraaf/terraform-provider-opentelekomcloud"
+	"rootPath": "github.com/khdegraaf/terraform-provider-orangecloud"
 }

@@ -1,21 +1,21 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_dns_recordset_v2"
-sidebar_current: "docs-opentelekomcloud-resource-dns-recordset-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_dns_recordset_v2"
+sidebar_current: "docs-orangecloud-resource-dns-recordset-v2"
 description: |-
-  Manages a DNS record set in the OpenTelekomCloud DNS Service
+  Manages a DNS record set in the OrangeCloud DNS Service
 ---
 
-# opentelekomcloud\_dns\_recordset_v2
+# orangecloud\_dns\_recordset_v2
 
-Manages a DNS record set in the OpenTelekomCloud DNS Service.
+Manages a DNS record set in the OrangeCloud DNS Service.
 
 ## Example Usage
 
 ### Automatically detect the correct network
 
 ```hcl
-resource "opentelekomcloud_dns_zone_v2" "example_zone" {
+resource "orangecloud_dns_zone_v2" "example_zone" {
   name = "example.com."
   email = "email2@example.com"
   description = "a zone"
@@ -23,8 +23,8 @@ resource "opentelekomcloud_dns_zone_v2" "example_zone" {
   type = "PRIMARY"
 }
 
-resource "opentelekomcloud_dns_recordset_v2" "rs_example_com" {
-  zone_id = "${opentelekomcloud_dns_zone_v2.example_zone.id}"
+resource "orangecloud_dns_recordset_v2" "rs_example_com" {
+  zone_id = "${orangecloud_dns_zone_v2.example_zone.id}"
   name = "rs.example.com."
   description = "An example record set"
   ttl = 3000
@@ -78,5 +78,5 @@ This resource can be imported by specifying the zone ID and recordset ID,
 separated by a forward slash.
 
 ```
-$ terraform import opentelekomcloud_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
+$ terraform import orangecloud_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
 ```

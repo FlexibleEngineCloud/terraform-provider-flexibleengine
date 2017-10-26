@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_lb_pool_v2"
-sidebar_current: "docs-opentelekomcloud-resource-lb-pool-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_lb_pool_v2"
+sidebar_current: "docs-orangecloud-resource-lb-pool-v2"
 description: |-
-  Manages a V2 pool resource within OpenTelekomCloud.
+  Manages a V2 pool resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_lb\_pool\_v2
+# orangecloud\_lb\_pool\_v2
 
-Manages a V2 pool resource within OpenTelekomCloud.
+Manages a V2 pool resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_lb_pool_v2" "pool_1" {
+resource "orangecloud_lb_pool_v2" "pool_1" {
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
   listener_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"

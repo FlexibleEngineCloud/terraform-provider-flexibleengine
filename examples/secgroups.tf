@@ -1,4 +1,4 @@
-resource "opentelekomcloud_compute_secgroup_v2" "secgrp_web" {
+resource "orangecloud_compute_secgroup_v2" "secgrp_web" {
   count       = "${var.instance_count}"
   name        = "${var.project}-secgrp-web-elb"
   description = "Webserver Security Group"

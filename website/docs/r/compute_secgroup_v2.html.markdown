@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_compute_secgroup_v2"
-sidebar_current: "docs-opentelekomcloud-resource-compute-secgroup-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_compute_secgroup_v2"
+sidebar_current: "docs-orangecloud-resource-compute-secgroup-v2"
 description: |-
-  Manages a V2 security group resource within OpenTelekomCloud.
+  Manages a V2 security group resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_compute\_secgroup_v2
+# orangecloud\_compute\_secgroup_v2
 
-Manages a V2 security group resource within OpenTelekomCloud.
+Manages a V2 security group resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_compute_secgroup_v2" "secgroup_1" {
+resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
   name        = "my_secgroup"
   description = "my security group"
 
@@ -108,12 +108,12 @@ A list of ICMP types and codes can be found [here](https://en.wikipedia.org/wiki
 When referencing a security group in a configuration (for example, a configuration creates a new security group and then needs to apply it to an instance being created in the same configuration), it is currently recommended to reference the security group by name and not by ID, like this:
 
 ```hcl
-resource "opentelekomcloud_compute_instance_v2" "test-server" {
+resource "orangecloud_compute_instance_v2" "test-server" {
   name            = "tf-test"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
   flavor_id       = "3"
   key_pair        = "my_key_pair_name"
-  security_groups = ["${opentelekomcloud_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["${orangecloud_compute_secgroup_v2.secgroup_1.name}"]
 }
 ```
 
@@ -122,5 +122,5 @@ resource "opentelekomcloud_compute_instance_v2" "test-server" {
 Security Groups can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_compute_secgroup_v2.my_secgroup 1bc30ee9-9d5b-4c30-bdd5-7f1e663f5edf
+$ terraform import orangecloud_compute_secgroup_v2.my_secgroup 1bc30ee9-9d5b-4c30-bdd5-7f1e663f5edf
 ```

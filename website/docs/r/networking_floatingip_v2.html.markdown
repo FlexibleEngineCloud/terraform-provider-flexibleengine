@@ -1,14 +1,14 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_networking_floatingip_v2"
-sidebar_current: "docs-opentelekomcloud-resource-networking-floatingip-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_networking_floatingip_v2"
+sidebar_current: "docs-orangecloud-resource-networking-floatingip-v2"
 description: |-
-  Manages a V2 floating IP resource within OpenTelekomCloud Neutron (networking).
+  Manages a V2 floating IP resource within OrangeCloud Neutron (networking).
 ---
 
-# opentelekomcloud\_networking\_floatingip_v2
+# orangecloud\_networking\_floatingip_v2
 
-Manages a V2 floating IP resource within OpenTelekomCloud Neutron (networking)
+Manages a V2 floating IP resource within OrangeCloud Neutron (networking)
 that can be used for load balancers.
 These are similar to Nova (compute) floating IP resources,
 but only compute floating IPs can be used with compute instances.
@@ -16,7 +16,7 @@ but only compute floating IPs can be used with compute instances.
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_networking_floatingip_v2" "floatip_1" {
+resource "orangecloud_networking_floatingip_v2" "floatip_1" {
   pool = "public"
 }
 ```
@@ -63,5 +63,5 @@ The following attributes are exported:
 Floating IPs can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_networking_floatingip_v2.floatip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
+$ terraform import orangecloud_networking_floatingip_v2.floatip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```

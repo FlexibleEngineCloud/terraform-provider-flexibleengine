@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_networking_network_v2"
-sidebar_current: "docs-opentelekomcloud-datasource-networking-network-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_networking_network_v2"
+sidebar_current: "docs-orangecloud-datasource-networking-network-v2"
 description: |-
-  Get information on an OpenTelekomCloud Network.
+  Get information on an OrangeCloud Network.
 ---
 
-# opentelekomcloud\_networking\_network\_v2
+# orangecloud\_networking\_network\_v2
 
-Use this data source to get the ID of an available OpenTelekomCloud network.
+Use this data source to get the ID of an available OrangeCloud network.
 
 ## Example Usage
 
 ```hcl
-data "opentelekomcloud_networking_network_v2" "network" {
+data "orangecloud_networking_network_v2" "network" {
   name = "tf_test_network"
 }
 ```

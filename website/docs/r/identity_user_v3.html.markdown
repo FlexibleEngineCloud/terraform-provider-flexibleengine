@@ -1,27 +1,27 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_identity_user_v3"
-sidebar_current: "docs-opentelekomcloud-resource-identity-user-v3"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_identity_user_v3"
+sidebar_current: "docs-orangecloud-resource-identity-user-v3"
 description: |-
-  Manages a V3 User resource within OpenTelekomCloud Keystone.
+  Manages a V3 User resource within OrangeCloud Keystone.
 ---
 
-# opentelekomcloud\_identity\_user_v3
+# orangecloud\_identity\_user_v3
 
-Manages a V3 User resource within OpenTelekomCloud Keystone.
+Manages a V3 User resource within OrangeCloud Keystone.
 
-Note: You _must_ have admin privileges in your OpenTelekomCloud cloud to use
+Note: You _must_ have admin privileges in your OrangeCloud cloud to use
 this resource.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_identity_project_v3" "project_1" {
+resource "orangecloud_identity_project_v3" "project_1" {
   name = "project_1"
 }
 
-resource "opentelekomcloud_identity_user_v3" "user_1" {
-  default_project_id = "${opentelekomcloud_identity_project_v3.project_1.id}"
+resource "orangecloud_identity_user_v3" "user_1" {
+  default_project_id = "${orangecloud_identity_project_v3.project_1.id}"
   name = "user_1"
   description = "A user"
 
@@ -101,5 +101,5 @@ The following attributes are exported:
 Users can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_identity_user_v3.user_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+$ terraform import orangecloud_identity_user_v3.user_1 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

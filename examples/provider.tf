@@ -1,4 +1,4 @@
-provider "opentelekomcloud" {
+provider "orangecloud" {
   user_name   = "${var.username}"
   password    = "${var.password}"
   tenant_name = "${var.tenant_name}"

@@ -1,21 +1,21 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_networking_secgroup_v2"
-sidebar_current: "docs-opentelekomcloud-resource-networking-secgroup-v2"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_networking_secgroup_v2"
+sidebar_current: "docs-orangecloud-resource-networking-secgroup-v2"
 description: |-
-  Manages a V2 Neutron security group resource within OpenTelekomCloud.
+  Manages a V2 Neutron security group resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_networking\_secgroup_v2
+# orangecloud\_networking\_secgroup_v2
 
-Manages a V2 neutron security group resource within OpenTelekomCloud.
+Manages a V2 neutron security group resource within OrangeCloud.
 Unlike Nova security groups, neutron separates the group from the rules
 and also allows an admin to target a specific tenant_id.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_networking_secgroup_v2" "secgroup_1" {
+resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
   name        = "secgroup_1"
   description = "My neutron security group"
 }
@@ -53,29 +53,29 @@ The following attributes are exported:
 
 ## Default Security Group Rules
 
-In most cases, OpenTelekomCloud will create some egress security group rules for each
+In most cases, OrangeCloud will create some egress security group rules for each
 new security group. These security group rules will not be managed by
 Terraform, so if you prefer to have *all* aspects of your infrastructure
 managed by Terraform, set `delete_default_rules` to `true` and then create
 separate security group rules such as the following:
 
 ```hcl
-resource "opentelekomcloud_networking_secgroup_rule_v2" "secgroup_rule_v4" {
+resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_v4" {
   direction = "egress"
   ethertype = "IPv4"
-  security_group_id = "${opentelekomcloud_networking_secgroup_v2.secgroup.id}"
+  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup.id}"
 }
 
-resource "opentelekomcloud_networking_secgroup_rule_v2" "secgroup_rule_v6" {
+resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_v6" {
   direction = "egress"
   ethertype = "IPv6"
-  security_group_id = "${opentelekomcloud_networking_secgroup_v2.secgroup.id}"
+  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup.id}"
 }
 ```
 
 Please note that this behavior may differ depending on the configuration of
-the OpenTelekomCloud cloud. The above illustrates the current default Neutron
-behavior. Some OpenTelekomCloud clouds might provide additional rules and some might
+the OrangeCloud cloud. The above illustrates the current default Neutron
+behavior. Some OrangeCloud clouds might provide additional rules and some might
 not provide any rules at all (in which case the `delete_default_rules` setting
 is moot).
 
@@ -84,5 +84,5 @@ is moot).
 Security Groups can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
+$ terraform import orangecloud_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
 ```

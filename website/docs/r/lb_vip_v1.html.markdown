@@ -1,19 +1,19 @@
 ---
-layout: "opentelekomcloud"
-page_title: "OpenTelekomCloud: opentelekomcloud_lb_vip_v1"
-sidebar_current: "docs-opentelekomcloud-resource-lb-vip-v1"
+layout: "orangecloud"
+page_title: "OrangeCloud: orangecloud_lb_vip_v1"
+sidebar_current: "docs-orangecloud-resource-lb-vip-v1"
 description: |-
-  Manages a V1 load balancer vip resource within OpenTelekomCloud.
+  Manages a V1 load balancer vip resource within OrangeCloud.
 ---
 
-# opentelekomcloud\_lb\_vip_v1
+# orangecloud\_lb\_vip_v1
 
-Manages a V1 load balancer vip resource within OpenTelekomCloud.
+Manages a V1 load balancer vip resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "opentelekomcloud_lb_vip_v1" "vip_1" {
+resource "orangecloud_lb_vip_v1" "vip_1" {
   name      = "tf_test_lb_vip"
   subnet_id = "12345"
   protocol  = "HTTP"
@@ -104,5 +104,5 @@ The following attributes are exported:
 Load Balancer VIPs can be imported using the `id`, e.g.
 
 ```
-$ terraform import opentelekomcloud_lb_vip_v1.vip_1 50e16b26-89c1-475e-a492-76167182511e
+$ terraform import orangecloud_lb_vip_v1.vip_1 50e16b26-89c1-475e-a492-76167182511e
 ```
