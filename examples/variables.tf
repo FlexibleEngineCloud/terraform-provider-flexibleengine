@@ -15,11 +15,11 @@ variable "domain_name" {
 }
 
 variable "tenant_name" {
-  default = "eu-de"
+  default = "eu-west-0"
 }
 
 variable "endpoint" {
-  default = "https://iam.eu-de.otc.t-systems.com:443/v3"
+  default = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
 }
 
 ### OTC Specific Settings

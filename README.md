@@ -64,8 +64,8 @@ provider "orangecloud" {
   tenant_name = "tenant"
   domain_name = "domain"
   password    = "pwd"
-  auth_url    = "https://iam.eu-de.otc.t-systems.com/v3"
-  region      = "eu-de"
+  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+  region      = "eu-west-0"
 }
 
 # Create a web server
