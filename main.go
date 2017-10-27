@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform/plugin"
-	"github.com/khdegraaf/terraform-provider-orangecloud/orangecloud" // TODO: Revert path when merge
+	"github.com/gator1/terraform-provider-orangecloud/orangecloud" // TODO: Revert path when merge
 )
 
 func main() {
