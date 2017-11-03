@@ -13,6 +13,17 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
+func validateTrueOnly(v interface{}, k string) (ws []string, errors []error) {
+	if b, ok := v.(bool); ok && b {
+		return
+	}
+	if v, ok := v.(string); ok && v == "true" {
+		return
+	}
+	errors = append(errors, fmt.Errorf("%q must be true", k))
+	return
+}
+
 func validateRdsIdentifier(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if !regexp.MustCompile(`^[0-9a-z-]+$`).MatchString(value) {
