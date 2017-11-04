@@ -154,14 +154,14 @@ func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 				Config: testAccComputeV2Instance_bootFromVolumeForceNew_1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"opentelekomcloud_compute_instance_v2.instance_1", &instance1_1),
+						"orangecloud_compute_instance_v2.instance_1", &instance1_1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2Instance_bootFromVolumeForceNew_2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"opentelekomcloud_compute_instance_v2.instance_1", &instance1_2),
+						"orangecloud_compute_instance_v2.instance_1", &instance1_2),
 					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
 				),
 			},
