@@ -596,8 +596,7 @@ func TestAccAWSS3Bucket_Logging(t *testing.T) {
 	})
 }
 
-// FAIL: MalformedXML, gets Internal Error if XML is right
-// UNSUPPORTED due to being broken.
+// PASS
 func TestAccAWSS3Bucket_Lifecycle(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
