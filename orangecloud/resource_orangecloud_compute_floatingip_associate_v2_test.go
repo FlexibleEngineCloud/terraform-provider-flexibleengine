@@ -210,7 +210,7 @@ func testAccCheckComputeV2FloatingIPAssociateAssociated(
 var testAccComputeV2FloatingIPAssociate_basic = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -223,12 +223,12 @@ resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
   floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_fixedIP = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -242,12 +242,12 @@ resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
   fixed_ip = "${orangecloud_compute_instance_v2.instance_1.access_ip_v4}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachToFirstNetwork = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
 
   network {
     uuid = "%s"
@@ -262,7 +262,7 @@ resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
   fixed_ip = "${orangecloud_compute_instance_v2.instance_1.network.0.fixed_ip_v4}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachToSecondNetwork = fmt.Sprintf(`
 resource "orangecloud_networking_network_v2" "network_1" {
@@ -280,7 +280,7 @@ resource "orangecloud_networking_subnet_v2" "subnet_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
 
   network {
     uuid = "${orangecloud_networking_network_v2.network_1.id}"
@@ -299,12 +299,12 @@ resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
   fixed_ip = "${orangecloud_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachNew_1 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -320,12 +320,12 @@ resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
   floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachNew_2 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }

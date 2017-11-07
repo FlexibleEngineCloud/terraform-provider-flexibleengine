@@ -21,6 +21,7 @@ var (
 	OS_IMAGE_ID               = os.Getenv("OS_IMAGE_ID")
 	OS_IMAGE_NAME             = os.Getenv("OS_IMAGE_NAME")
 	OS_NETWORK_ID             = os.Getenv("OS_NETWORK_ID")
+	OS_SECURITY_GROUP_ID      = os.Getenv("OS_SECURITY_GROUP_ID")
 	OS_POOL_NAME              = os.Getenv("OS_POOL_NAME")
 	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
 	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
