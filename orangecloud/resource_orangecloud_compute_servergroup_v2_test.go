@@ -134,7 +134,7 @@ resource "orangecloud_compute_servergroup_v2" "sg_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -142,4 +142,4 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     group = "${orangecloud_compute_servergroup_v2.sg_1.id}"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)

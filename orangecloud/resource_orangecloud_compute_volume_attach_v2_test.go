@@ -152,7 +152,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -162,7 +162,7 @@ resource "orangecloud_compute_volume_attach_v2" "va_1" {
   instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
   volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_device = fmt.Sprintf(`
 resource "orangecloud_blockstorage_volume_v2" "volume_1" {
@@ -172,7 +172,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -183,7 +183,7 @@ resource "orangecloud_compute_volume_attach_v2" "va_1" {
   volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
   device = "/dev/vdc"
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_timeout = fmt.Sprintf(`
 resource "orangecloud_blockstorage_volume_v2" "volume_1" {
@@ -193,7 +193,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -208,4 +208,4 @@ resource "orangecloud_compute_volume_attach_v2" "va_1" {
     delete = "5m"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
