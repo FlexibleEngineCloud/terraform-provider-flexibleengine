@@ -194,6 +194,10 @@ func Provider() terraform.ResourceProvider {
 			"orangecloud_s3_bucket":                       resourceS3Bucket(),
 			"orangecloud_s3_bucket_policy":                resourceS3BucketPolicy(),
 			"orangecloud_s3_bucket_object":                resourceS3BucketObject(),
+			"orangecloud_elb_loadbalancer":                resourceELoadBalancer(),
+			"orangecloud_elb_listener":                    resourceEListener(),
+			"orangecloud_elb_backend":                     resourceBackend(),
+			"orangecloud_elb_health":                      resourceHealth(),
 		},
 
 		ConfigureFunc: configureProvider,
