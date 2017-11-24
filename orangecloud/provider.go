@@ -159,12 +159,11 @@ func Provider() terraform.ResourceProvider {
 			"orangecloud_images_image_v2":        dataSourceImagesImageV2(),
 			"orangecloud_networking_network_v2":  dataSourceNetworkingNetworkV2(),
 			"orangecloud_networking_secgroup_v2": dataSourceNetworkingSecGroupV2(),
-			"orangecloud_s3_bucket_object":       dataSourceAwsS3BucketObject(),
+			"orangecloud_s3_bucket_object":       dataSourceS3BucketObject(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"orangecloud_blockstorage_volume_v2":          resourceBlockStorageVolumeV2(),
-			"orangecloud_compute_flavor_v2":               resourceComputeFlavorV2(),
 			"orangecloud_compute_instance_v2":             resourceComputeInstanceV2(),
 			"orangecloud_compute_keypair_v2":              resourceComputeKeypairV2(),
 			"orangecloud_compute_secgroup_v2":             resourceComputeSecGroupV2(),
@@ -177,8 +176,6 @@ func Provider() terraform.ResourceProvider {
 			"orangecloud_fw_firewall_group_v2":            resourceFWFirewallGroupV2(),
 			"orangecloud_fw_policy_v2":                    resourceFWPolicyV2(),
 			"orangecloud_fw_rule_v2":                      resourceFWRuleV2(),
-			"orangecloud_identity_project_v3":             resourceIdentityProjectV3(),
-			"orangecloud_identity_user_v3":                resourceIdentityUserV3(),
 			"orangecloud_images_image_v2":                 resourceImagesImageV2(),
 			"orangecloud_lb_loadbalancer_v2":              resourceLoadBalancerV2(),
 			"orangecloud_lb_listener_v2":                  resourceListenerV2(),
@@ -194,9 +191,13 @@ func Provider() terraform.ResourceProvider {
 			"orangecloud_networking_router_route_v2":      resourceNetworkingRouterRouteV2(),
 			"orangecloud_networking_secgroup_v2":          resourceNetworkingSecGroupV2(),
 			"orangecloud_networking_secgroup_rule_v2":     resourceNetworkingSecGroupRuleV2(),
-			"orangecloud_s3_bucket":                       resourceAwsS3Bucket(),
-			"orangecloud_s3_bucket_policy":                resourceAwsS3BucketPolicy(),
-			"orangecloud_s3_bucket_object":                resourceAwsS3BucketObject(),
+			"orangecloud_s3_bucket":                       resourceS3Bucket(),
+			"orangecloud_s3_bucket_policy":                resourceS3BucketPolicy(),
+			"orangecloud_s3_bucket_object":                resourceS3BucketObject(),
+			"orangecloud_elb_loadbalancer":                resourceELoadBalancer(),
+			"orangecloud_elb_listener":                    resourceEListener(),
+			"orangecloud_elb_backend":                     resourceBackend(),
+			"orangecloud_elb_health":                      resourceHealth(),
 		},
 
 		ConfigureFunc: configureProvider,
@@ -208,10 +209,10 @@ var descriptions map[string]string
 func init() {
 	descriptions = map[string]string{
 		"access_key": "The access key for API operations. You can retrieve this\n" +
-			"from the 'Security & Credentials' section of the AWS console.",
+			"from the 'My Credential' section of the console.",
 
 		"secret_key": "The secret key for API operations. You can retrieve this\n" +
-			"from the 'Security & Credentials' section of the AWS console.",
+			"from the 'My Credential' section of the console.",
 
 		"auth_url": "The Identity authentication URL.",
 
