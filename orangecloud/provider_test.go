@@ -21,12 +21,15 @@ var (
 	OS_IMAGE_ID               = os.Getenv("OS_IMAGE_ID")
 	OS_IMAGE_NAME             = os.Getenv("OS_IMAGE_NAME")
 	OS_NETWORK_ID             = os.Getenv("OS_NETWORK_ID")
+	OS_SECURITY_GROUP_ID      = os.Getenv("OS_SECURITY_GROUP_ID")
 	OS_POOL_NAME              = os.Getenv("OS_POOL_NAME")
 	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
 	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
 	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
 	OS_SWIFT_ENVIRONMENT      = os.Getenv("OS_SWIFT_ENVIRONMENT")
 	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
+	OS_VPC_ID                 = os.Getenv("OS_VPC_ID")
+	OS_TENANT_ID              = os.Getenv("OS_TENANT_ID")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider

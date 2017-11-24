@@ -447,7 +447,7 @@ func testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(
 var testAccComputeV2Instance_basic = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["sg-ef86"]
   availability_zone = "%s"
   metadata {
     foo = "bar"
@@ -472,12 +472,12 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default", "${orangecloud_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["%s", "${orangecloud_compute_secgroup_v2.secgroup_1.name}"]
   network {
     uuid = "%s"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_1 = fmt.Sprintf(`
 resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
@@ -504,12 +504,12 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_2 = fmt.Sprintf(`
 resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
@@ -536,17 +536,17 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default", "${orangecloud_compute_secgroup_v2.secgroup_1.name}", "${orangecloud_compute_secgroup_v2.secgroup_2.name}"]
+  security_groups = ["%s", "${orangecloud_compute_secgroup_v2.secgroup_1.name}", "${orangecloud_compute_secgroup_v2.secgroup_2.name}"]
   network {
     uuid = "%s"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_bootFromVolumeImage = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   availability_zone = "%s"
   network {
     uuid = "%s"
@@ -560,7 +560,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_bootFromVolumeVolume = fmt.Sprintf(`
 resource "orangecloud_blockstorage_volume_v2" "vol_1" {
@@ -571,7 +571,7 @@ resource "orangecloud_blockstorage_volume_v2" "vol_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -583,12 +583,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_IMAGE_ID, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_IMAGE_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_bootFromVolumeForceNew_1 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -601,12 +601,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_bootFromVolumeForceNew_2 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -619,12 +619,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_blockDeviceNewVolume = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -643,7 +643,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_blockDeviceExistingVolume = fmt.Sprintf(`
 resource "orangecloud_blockstorage_volume_v2" "volume_1" {
@@ -653,7 +653,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -672,12 +672,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
 }
-`, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_personality = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -690,12 +690,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     content = "angry"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_multiEphemeral = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "terraform-test"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -721,7 +721,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     volume_size = 1
   }
 }
-`, OS_NETWORK_ID, OS_IMAGE_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_accessIPv4 = fmt.Sprintf(`
 resource "orangecloud_networking_network_v2" "network_1" {
@@ -741,7 +741,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   depends_on = ["orangecloud_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
 
   network {
     uuid = "%s"
@@ -753,45 +753,45 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     access_network = true
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_changeFixedIP_1 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
     fixed_ip_v4 = "10.0.0.24"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_changeFixedIP_2 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
     fixed_ip_v4 = "10.0.0.25"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_stopBeforeDestroy = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
   stop_before_destroy = true
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_metadataRemove_1 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -800,12 +800,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     abc = "def"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_metadataRemove_2 = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -814,25 +814,25 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     ghi = "jkl"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 /*
 var testAccComputeV2Instance_forceDelete = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
   force_delete = true
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 */
 
 var testAccComputeV2Instance_timeout = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
   network {
     uuid = "%s"
   }
@@ -841,7 +841,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     create = "10m"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_networkNameToID = fmt.Sprintf(`
 resource "orangecloud_networking_network_v2" "network_1" {
@@ -861,7 +861,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   depends_on = ["orangecloud_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
 
   network {
     uuid = "%s"
@@ -872,7 +872,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_crazyNICs = fmt.Sprintf(`
 resource "orangecloud_networking_network_v2" "network_1" {
@@ -954,7 +954,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   ]
 
   name = "instance_1"
-  security_groups = ["default"]
+  security_groups = ["%s"]
 
   network {
     uuid = "%s"
@@ -996,4 +996,4 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     port = "${orangecloud_networking_port_v2.port_4.id}"
   }
 }
-`, OS_NETWORK_ID)
+`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
