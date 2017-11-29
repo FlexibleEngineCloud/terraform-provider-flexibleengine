@@ -447,7 +447,7 @@ func testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(
 var testAccComputeV2Instance_basic = fmt.Sprintf(`
 resource "orangecloud_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s"]
+  security_groups = ["sg-ef86"]
   availability_zone = "%s"
   metadata {
     foo = "bar"
@@ -456,7 +456,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     uuid = "%s"
   }
 }
-`, OS_SECURITY_GROUP_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
+`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMulti = fmt.Sprintf(`
 resource "orangecloud_compute_secgroup_v2" "secgroup_1" {

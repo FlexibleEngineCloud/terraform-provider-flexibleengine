@@ -160,7 +160,7 @@ func (c *Config) LoadAndValidate() error {
 			if awsErr, ok := err.(awserr.Error); ok && awsErr.Code() == "NoCredentialProviders" {
 				return fmt.Errorf(`No valid credential sources found for Swift S3 Provider.
   Please see https://terraform.io/docs/providers/aws/index.html for more information on
-  providing credentials for the AWS Provider`)
+  providing credentials for the S3 Provider`)
 			}
 
 			return fmt.Errorf("Error loading credentials for Swift S3 Provider: %s", err)
@@ -231,7 +231,7 @@ func (c *Config) computeS3conn(region string) (*s3.S3, error) {
 		Availability: c.getEndpointType(),
 	})
 	// Bit of a hack, seems the only way to compute this.
-	endpoint := strings.Replace(client.Endpoint, "//ims", "//obs", 1)
+	endpoint := strings.Replace(client.Endpoint, "//ims", "//oss", 1)
 
 	awsS3Sess := c.s3sess.Copy(&aws.Config{Endpoint: aws.String(endpoint)})
 	s3conn := s3.New(awsS3Sess)
@@ -301,6 +301,13 @@ func (c *Config) objectStorageV1Client(region string) (*gophercloud.ServiceClien
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	})
+}
+
+func (c *Config) otcV1Client(region string) (*gophercloud.ServiceClient, error) {
+	return openstack.NewOtcV1(c.OsClient, gophercloud.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getEndpointType(),
+	}, "elb")
 }
 
 func (c *Config) getEndpointType() gophercloud.Availability {
