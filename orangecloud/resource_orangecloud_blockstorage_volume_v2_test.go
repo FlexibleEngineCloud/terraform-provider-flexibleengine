@@ -203,7 +203,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 var testAccBlockStorageV2Volume_image = fmt.Sprintf(`
 resource "orangecloud_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
-  size = 12
+  size = 50
   image_id = "%s"
 }
 `, OS_IMAGE_ID)

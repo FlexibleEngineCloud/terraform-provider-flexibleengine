@@ -115,8 +115,8 @@ resource "orangecloud_elb_health" "health_1" {
   listener_id = "${orangecloud_elb_listener.listener_1.id}"
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
-  healthcheck_timeout = 10
-  healthcheck_interval = 5
+  #healthcheck_timeout = 10
+  #healthcheck_interval = 5
 
   timeouts {
     create = "5m"
