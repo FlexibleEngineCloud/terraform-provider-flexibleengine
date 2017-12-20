@@ -2,8 +2,8 @@ Terraform OrangeCloud Provider
 ============================
 
 - Website: https://www.terraform.io
-- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
-- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+- Tools: comming soon...
+- Mailing list: comming soon...
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
@@ -17,16 +17,16 @@ Requirements
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/gator1/terraform-provider-orangecloud`
+Clone repository to: `$GOPATH/src/github.com/Karajan-project/terraform-provider-orangecloud`
 
 ```sh
-$ go get github.com/gator1/terraform-provider-orangecloud
+$ go get github.com/Karajan-project/terraform-provider-orangecloud
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/gator1/terraform-provider-orangecloud
+$ cd $GOPATH/src/github.com/Karajan-project/terraform-provider-orangecloud
 $ make build
 ```
 
@@ -38,8 +38,8 @@ $ wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
 $ sudo tar -C /usr/local -xzf go1.9.1.linux-amd64.tar.gz
 $ export PATH=$PATH:/usr/local/go/bin # You should put in your .profile or .bashrc
 $ go version # to verify it runs and version #
-$ go get github.com/gator1/terraform-provider-orangecloud
-$ cd ~/go/src/github.com/gator1/terraform-provider-orangecloud/
+$ go get github.com/Karajan-project/terraform-provider-orangecloud
+$ cd ~/go/src/github.com/Karajan-project/terraform-provider-orangecloud/
 $ make build
 $ export PATH=$PATH:~/go/bin # You should put in your .profile or .bashrc
 $ wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
@@ -78,7 +78,7 @@ resource "orangecloud_compute_instance_v2" "test-server" {
 
 ### Full Example
 ----------------------
-Please see full example at https://github.com/gator1/terraform-provider-orangecloud/tree/master/examples, 
+Please see full example at https://github.com/Karajan-project/fe-terraform, 
 you must fill in the required variables in variables.tf.
 
 Using the provider
