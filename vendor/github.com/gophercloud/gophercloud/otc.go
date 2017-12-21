@@ -6,17 +6,17 @@ import (
 )
 
 type JobResponse struct {
-	URI string `json:"uri"`
+	URI   string `json:"uri"`
 	JobID string `json:"job_id"`
 }
 
 type JobStatus struct {
-	Status string `json:"status"`
-	Entities map[string]interface{} `json:"entities"`
-	JobID string `json:"job_id"`
-	JobType string `json:"job_type"`
-	ErrorCode string `json:"error_code"`
-	FailReason string `json:"fail_reason"`
+	Status     string                 `json:"status"`
+	Entities   map[string]interface{} `json:"entities"`
+	JobID      string                 `json:"job_id"`
+	JobType    string                 `json:"job_type"`
+	ErrorCode  string                 `json:"error_code"`
+	FailReason string                 `json:"fail_reason"`
 }
 
 func (r Result) ExtractJobResponse() (*JobResponse, error) {
@@ -36,13 +36,15 @@ func GetJobEndpoint(endpoint string) string {
 	if n == -1 {
 		return endpoint
 	}
-	return endpoint[0:n+8]
+	return endpoint[0 : n+8]
 }
 
 func WaitForJobSuccess(client *ServiceClient, uri string, secs int) error {
+	uri = strings.Replace(uri, "v1", "v1.0", 1)
+
 	return WaitFor(secs, func() (bool, error) {
 		job := new(JobStatus)
-		_, err := client.Get(GetJobEndpoint(client.Endpoint) + uri, &job, nil)
+		_, err := client.Get(GetJobEndpoint(client.Endpoint)+uri, &job, nil)
 		if err != nil {
 			return false, err
 		}
@@ -61,8 +63,10 @@ func WaitForJobSuccess(client *ServiceClient, uri string, secs int) error {
 }
 
 func GetJobEntity(client *ServiceClient, uri string, label string) (interface{}, error) {
+	uri = strings.Replace(uri, "v1", "v1.0", 1)
+
 	job := new(JobStatus)
-	_, err := client.Get(GetJobEndpoint(client.Endpoint) + uri, &job, nil)
+	_, err := client.Get(GetJobEndpoint(client.Endpoint)+uri, &job, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -76,5 +80,3 @@ func GetJobEntity(client *ServiceClient, uri string, label string) (interface{},
 
 	return nil, fmt.Errorf("Unexpected conversion error in GetJobEntity.")
 }
-
-
