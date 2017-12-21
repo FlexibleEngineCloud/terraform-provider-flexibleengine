@@ -1,4 +1,4 @@
-# FULL Terraform OTC Example
+# FULL Terraform orangecloud Example
 
 This script will create the following resources (if enabled):
 * Volumes
@@ -22,9 +22,9 @@ This example will, by default not create Volumes. This is to show how to enable 
 
 ### Required
 
-* **username** (your OTC username)
-* **password** (your OTC password)
-* **domain\_name** (your OTC domain name)
+* **username** (your orange cloud username)
+* **password** (your orange cloud password)
+* **domain\_name** (your orange cloud domain name)
 * You must have a **ssh\_pub\_key** file defined, or terraform will complain, see default path below.
 
 ### Optional
