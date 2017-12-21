@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gator1/terraform-provider-orangecloud/orangecloud" // TODO: Revert path when merge
+	"github.com/Karajan-project/terraform-provider-orangecloud/orangecloud" // TODO: Revert path when merge
 	"github.com/hashicorp/terraform/plugin"
 )
 
