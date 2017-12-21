@@ -41,7 +41,7 @@ func testAccCheckELBHealthDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -73,7 +73,7 @@ func testAccCheckELBHealthExists(t *testing.T, n string, health *healthcheck.Hea
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 		}
 
 		found, err := healthcheck.Get(client, rs.Primary.ID).Extract()
@@ -115,8 +115,8 @@ resource "orangecloud_elb_health" "health_1" {
   listener_id = "${orangecloud_elb_listener.listener_1.id}"
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
-  #healthcheck_timeout = 10
-  #healthcheck_interval = 5
+  healthcheck_timeout = 10
+  healthcheck_interval = 5
 
   timeouts {
     create = "5m"

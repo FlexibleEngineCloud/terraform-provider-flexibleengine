@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 
 	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas"
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
@@ -52,7 +53,7 @@ func resourceBackendCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	addOpts := backendmember.AddOpts{
@@ -67,12 +68,20 @@ func resourceBackendCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	log.Printf("Waiting for backend to become active")
-	if err := gophercloud.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
+	log.Printf("Waiting for backend to become active, job=%#v", job)
+
+	j := &elbaas.Job{Uri: job.URI, JobId: job.JobID}
+	timeout := d.Timeout(schema.TimeoutCreate)
+	jobInfo, err := waitForELBJobSuccess(client, j, timeout)
+	if err != nil {
 		return err
 	}
 
-	entity, err := gophercloud.GetJobEntity(client, job.URI, "members")
+	entity, ok := jobInfo.Entities["members"]
+	if !ok {
+		return fmt.Errorf("Error getting the entity from job info")
+	}
+	log.Printf("[DEBUG] get job entity: %#v", entity)
 
 	if members, ok := entity.([]interface{}); ok {
 		if len(members) > 0 {
@@ -94,22 +103,27 @@ func resourceBackendRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	listener_id := d.Get("listener_id").(string)
-	id := d.Id()
-	backend, err := backendmember.Get(client, listener_id, id).Extract()
+	b, err := backendmember.Get(client, listener_id, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "backend member")
+		return err
 	}
 
-	log.Printf("[DEBUG] Retrieved backend member %s: %#v", id, backend)
+	log.Printf("[DEBUG] Retrieved backend: %#v", b)
 
-	d.Set("server_id", backend.ServerID)
+	backend := b[0]
+	d.Set("server_address", backend.ServerAddress)
 	d.Set("address", backend.Address)
-
-	d.Set("region", GetRegion(d, config))
+	d.Set("status", backend.Status)
+	d.Set("health_status", backend.HealthStatus)
+	d.Set("update_time", backend.UpdateTime)
+	d.Set("create_time", backend.CreateTime)
+	d.Set("server_name", backend.ServerName)
+	d.Set("server_id", backend.ServerID)
+	d.Set("listeners", backend.Listeners)
 
 	return nil
 }
@@ -118,7 +132,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting backend member %s", d.Id())

@@ -51,18 +51,12 @@ func resourceELoadBalancer() *schema.Resource {
 			"bandwidth": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 1, 300)
-				},
 			},
 
 			"type": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateStringList(v, k, []string{"Internal", "External"})
-				},
 			},
 
 			"admin_state_up": &schema.Schema{
@@ -104,7 +98,7 @@ func resourceELoadBalancerCreate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
@@ -151,7 +145,7 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	networkingClient, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	lb, err := loadbalancer_elbs.Get(networkingClient, d.Id()).Extract()
@@ -185,7 +179,7 @@ func resourceELoadBalancerUpdate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	var updateOpts loadbalancer_elbs.UpdateOpts
@@ -216,7 +210,7 @@ func resourceELoadBalancerDelete(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	id := d.Id()

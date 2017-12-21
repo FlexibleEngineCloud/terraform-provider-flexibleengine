@@ -1,9 +1,9 @@
 package listeners
 
 import (
+	"fmt"
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/pagination"
-	"fmt"
 )
 
 type Protocol string
@@ -27,7 +27,7 @@ type ListOptsBuilder interface {
 // sort by a particular listener attribute. SortDir sets the direction, and is
 // either `asc' or `desc'. Marker and Limit are used for pagination.
 type ListOpts struct {
-	LoadbalancerId              string `q:"loadbalancer_id"`
+	LoadbalancerId string `q:"loadbalancer_id"`
 }
 
 // ToListenerListQuery formats a ListOpts into a query string.

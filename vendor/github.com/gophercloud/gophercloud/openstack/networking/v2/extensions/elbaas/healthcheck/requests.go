@@ -30,29 +30,29 @@ type CreateOptsBuilder interface {
 // CreateOpts is the common options struct used in this package's Create
 // operation.
 type CreateOpts struct {
-    // Required.  Specifies the ID of the listener to which the health check task belongs.
-    ListenerID string `json:"listener_id" required:"true"`
-    // Optional. Specifies the protocol used for the health check. The value can be HTTP or TCP (case-insensitive).
+	// Required.  Specifies the ID of the listener to which the health check task belongs.
+	ListenerID string `json:"listener_id" required:"true"`
+	// Optional. Specifies the protocol used for the health check. The value can be HTTP or TCP (case-insensitive).
 	HealthcheckProtocol string `json:"healthcheck_protocol,omitempty"`
 	// Optional. Specifies the URI for health check. This parameter is valid when healthcheck_ protocol is HTTP.
-    // The value is a string of 1 to 80 characters that must start with a slash (/) and can only contain letters, digits, 
-    // and special characters, such as -/.%?#&.
+	// The value is a string of 1 to 80 characters that must start with a slash (/) and can only contain letters, digits,
+	// and special characters, such as -/.%?#&.
 	HealthcheckUri string `json:"healthcheck_uri,omitempty"`
 	// Optional. Specifies the port used for the health check.  The value ranges from 1 to 65535.
 	HealthcheckConnectPort int `json:"healthcheck_connect_port,omitempty"`
-	// Optional. MSpecifies the threshold at which the health check result is success, that is, the number of consecutive successful 
-    // health checks when the health check result of the backend server changes from fail to success.
-    // The value ranges from 1 to 10.
+	// Optional. MSpecifies the threshold at which the health check result is success, that is, the number of consecutive successful
+	// health checks when the health check result of the backend server changes from fail to success.
+	// The value ranges from 1 to 10.
 	HealthyThreshold int `json:"healthy_threshold,omitempty"`
-	// Optional. Specifies the threshold at which the health check result is fail, that is, the number of consecutive 
-    // failed health checks when the health check result of the backend server changes from success to fail.
-    // The value ranges from 1 to 10.
+	// Optional. Specifies the threshold at which the health check result is fail, that is, the number of consecutive
+	// failed health checks when the health check result of the backend server changes from success to fail.
+	// The value ranges from 1 to 10.
 	UnhealthyThreshold int `json:"unhealthy_threshold,omitempty"`
-    // Optional. Specifies the maximum timeout duration (s) for the health check.
-    // The value ranges from 1 to 50.
+	// Optional. Specifies the maximum timeout duration (s) for the health check.
+	// The value ranges from 1 to 50.
 	HealthcheckTimeout int `json:"healthcheck_timeout,omitempty"`
 	// Optional. Specifies the maximum interval (s) for health check.
-    // The value ranges from 1 to 5.
+	// The value ranges from 1 to 5.
 	HealthcheckInterval int `json:"healthcheck_interval,omitempty"`
 }
 
@@ -63,19 +63,19 @@ func (opts CreateOpts) ToHealthCreateMap() (map[string]interface{}, error) {
 		return nil, err
 	}
 
-    /* 
-      switch opts.Type {
-	case TypeHTTP, TypeHTTPS:
-		switch opts.URLPath {
-		case "":
-			return nil, fmt.Errorf("URLPath must be provided for HTTP and HTTPS")
-		}
-		switch opts.ExpectedCodes {
-		case "":
-			return nil, fmt.Errorf("ExpectedCodes must be provided for HTTP and HTTPS")
-		}
-    } 
-    */ 
+	/*
+	      switch opts.Type {
+		case TypeHTTP, TypeHTTPS:
+			switch opts.URLPath {
+			case "":
+				return nil, fmt.Errorf("URLPath must be provided for HTTP and HTTPS")
+			}
+			switch opts.ExpectedCodes {
+			case "":
+				return nil, fmt.Errorf("ExpectedCodes must be provided for HTTP and HTTPS")
+			}
+	    }
+	*/
 
 	return b, nil
 }

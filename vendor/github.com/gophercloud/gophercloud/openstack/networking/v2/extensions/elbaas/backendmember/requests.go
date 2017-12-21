@@ -1,7 +1,6 @@
 package backendmember
 
 import (
-	"fmt"
 	"github.com/gophercloud/gophercloud"
 	//"github.com/gophercloud/gophercloud/pagination"
 )
@@ -58,15 +57,15 @@ type RemoveOptsBuilder interface {
 	ToBackendRemoveMap() (map[string]interface{}, error)
 }
 
-type LoadBalancerID struct {
-	// backend member id to remove
-	ID string `json:"id", required:"true"`
-}
-
 // RemoveOpts is the common options struct used in this package's Remove
 // operation.
 type RemoveOpts struct {
-	removeMember []LoadBalancerID `json:"removeMember", required:"true"`
+	// backend member id to remove
+	Members []RemoveMemberOpts `json:"removeMember" required:"true"`
+}
+
+type RemoveMemberOpts struct {
+	ID string `json:"id" required:"true"`
 }
 
 // ToBackendCreateMap casts a CreateOpts struct to a map.
@@ -76,26 +75,18 @@ func (opts RemoveOpts) ToBackendRemoveMap() (map[string]interface{}, error) {
 
 // Remove will permanently remove a particular backend based on its unique ID.
 func Remove(c *gophercloud.ServiceClient, listener_id string, id string) (r RemoveResult) {
-	/*lbid := LoadBalancerID{
-		ID: id,
-	}
-	lbids := []LoadBalancerID{lbid}
 	removeOpts := RemoveOpts{
-		removeMember: lbids,
+		Members: []RemoveMemberOpts{
+			RemoveMemberOpts{
+				ID: id,
+			},
+		},
 	}
-	fmt.Printf("removeOpts=%+v.\n", removeOpts)
-	b, err := removeOpts.ToBackendRemoveMap() */
-	lbid := make(map[string]interface{})
-	lbid["id"] = id
-	lbids := make([]map[string]interface{}, 1)
-	lbids[0] = lbid
-	b := make(map[string]interface{})
-	b["removeMember"] = lbids
-	fmt.Printf("b=%+v.\n", b)
-	/* if err != nil {
+	b, err := removeOpts.ToBackendRemoveMap()
+	if err != nil {
 		r.Err = err
 		return
-	} */
+	}
 	_, r.Err = c.Post(removeURL(c, listener_id), b, &r.Body, &gophercloud.RequestOpts{
 		OkCodes: []int{200},
 	})
@@ -104,6 +95,6 @@ func Remove(c *gophercloud.ServiceClient, listener_id string, id string) (r Remo
 
 // Get retrieves a particular Health Monitor based on its unique ID.
 func Get(c *gophercloud.ServiceClient, listener_id, id string) (r GetResult) {
-	_, r.Err = c.Get(resourceURL(c, listener_id, id), &r.Body, nil)
+	_, r.Err = c.Get(getBackendURL(c, listener_id, id), &r.Body, nil)
 	return
 }

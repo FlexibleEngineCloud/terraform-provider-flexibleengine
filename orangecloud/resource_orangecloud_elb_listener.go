@@ -9,10 +9,17 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-var ProtocolFormats = []string{"HTTP", "TCP", "HTTPS", "SSL", "UDP"}
+var ProtocolFormats = [5]string{"HTTP", "TCP", "HTTPS", "SSL", "UDP"}
 
 func ValidateProtocolFormat(v interface{}, k string) (ws []string, errors []error) {
-	return ValidateStringList(v, k, ProtocolFormats)
+	value := v.(string)
+	for i := range ProtocolFormats {
+		if value == ProtocolFormats[i] {
+			return
+		}
+	}
+	errors = append(errors, fmt.Errorf("%q must be one of %v", k, ProtocolFormats))
+	return
 }
 
 func resourceEListener() *schema.Resource {
@@ -66,27 +73,19 @@ func resourceEListener() *schema.Resource {
 			},
 
 			"backend_protocol": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateStringList(v, k, []string{"HTTP", "TCP", "UDP"})
-				},
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: ValidateProtocolFormat,
 			},
 			"backend_port": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 1, 65535)
-				},
 			},
 
 			"lb_algorithm": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateStringList(v, k, []string{"roundrobin", "leastconn", "source"})
-				},
 			},
 
 			"session_sticky": &schema.Schema{
@@ -105,18 +104,12 @@ func resourceEListener() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 1, 1440)
-				},
 			},
 
 			"tcp_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 1, 5)
-				},
 			},
 
 			"tcp_draining": &schema.Schema{
@@ -127,9 +120,6 @@ func resourceEListener() *schema.Resource {
 			"tcp_draining_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 0, 60)
-				},
 			},
 
 			"certificate_id": &schema.Schema{
@@ -138,36 +128,26 @@ func resourceEListener() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"certificates": &schema.Schema{
-				Type:     schema.TypeList,
+			/* "certificates": &schema.Schema{
+				Type:     schema.TypeSet,
 				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
 				ForceNew: true,
-			},
+			}, */
 
 			"udp_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateIntRange(v, k, 1, 1440)
-				},
 			},
 
 			"ssl_protocols": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateStringList(v, k, []string{"TLSv1.2", "TLSv1.2 TLSv1.1 TLSv1"})
-				},
 			},
 
 			"ssl_ciphers": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					return ValidateStringList(v, k, []string{"Default", "Extended", "Strict"})
-				},
 			},
 		},
 	}
@@ -177,15 +157,9 @@ func resourceEListenerCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
-	var certificates []string
-	if raw, ok := d.GetOk("certificates"); ok {
-		for _, v := range raw.([]interface{}) {
-			certificates = append(certificates, v.(string))
-		}
-	}
 	createOpts := listeners.CreateOpts{
 		Name:                d.Get("name").(string),
 		Description:         d.Get("description").(string),
@@ -202,10 +176,10 @@ func resourceEListenerCreate(d *schema.ResourceData, meta interface{}) error {
 		TcpDraining:         d.Get("tcp_draining").(bool),
 		TcpDrainingTimeout:  d.Get("tcp_draining_timeout").(int),
 		CertificateID:       d.Get("certificate_id").(string),
-		Certificates:        certificates,
-		UDPTimeout:          d.Get("udp_timeout").(int),
-		SSLProtocols:        d.Get("ssl_protocols").(string),
-		SSLCiphers:          d.Get("ssl_ciphers").(string),
+		//Certificates: 			d.Get("certificates")
+		UDPTimeout:   d.Get("udp_timeout").(int),
+		SSLProtocols: d.Get("ssl_protocols").(string),
+		SSLCiphers:   d.Get("ssl_ciphers").(string),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -225,7 +199,7 @@ func resourceEListenerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	listener, err := listeners.Get(client, d.Id()).Extract()
@@ -248,7 +222,7 @@ func resourceEListenerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("lb_algorithm", listener.Algorithm)
 	d.Set("name", listener.Name)
 	d.Set("certificate_id", listener.CertificateID)
-	d.Set("certificates", listener.Certificates)
+	//d.Set("certificates", listener.Certificates)
 	d.Set("tcp_timeout", listener.TcpTimeout)
 	d.Set("udp_timeout", listener.UDPTimeout)
 	d.Set("ssl_protocols", listener.SSLProtocols)
@@ -265,7 +239,7 @@ func resourceEListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	var updateOpts listeners.UpdateOpts
@@ -316,7 +290,7 @@ func resourceEListenerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
 	}
 
 	id := d.Id()
