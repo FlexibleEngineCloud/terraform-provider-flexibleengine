@@ -1,31 +1,31 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_network_v2"
-sidebar_current: "docs-orangecloud-resource-networking-network-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_network_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-network-v2"
 description: |-
   Manages a V2 Neutron network resource within OrangeCloud.
 ---
 
-# orangecloud\_networking\_network_v2
+# flexibleengine\_networking\_network_v2
 
 Manages a V2 Neutron network resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name       = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr       = "192.168.199.0/24"
   ip_version = 4
 }
 
-resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
   name        = "secgroup_1"
   description = "a security group"
 
@@ -37,24 +37,24 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
   }
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name               = "port_1"
-  network_id         = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id         = "${flexibleengine_networking_network_v2.network_1.id}"
   admin_state_up     = "true"
-  security_group_ids = ["${orangecloud_compute_secgroup_v2.secgroup_1.id}"]
+  security_group_ids = ["${flexibleengine_compute_secgroup_v2.secgroup_1.id}"]
 
   fixed_ip {
-    "subnet_id"  = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    "subnet_id"  = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     "ip_address" = "192.168.199.10"
   }
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
-  security_groups = ["${orangecloud_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["${flexibleengine_compute_secgroup_v2.secgroup_1.name}"]
 
   network {
-    port = "${orangecloud_networking_port_v2.port_1.id}"
+    port = "${flexibleengine_networking_port_v2.port_1.id}"
   }
 }
 ```
@@ -107,5 +107,5 @@ The following attributes are exported:
 Networks can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_networking_network_v2.network_1 d90ce693-5ccf-4136-a0ed-152ce412b6b9
+$ terraform import flexibleengine_networking_network_v2.network_1 d90ce693-5ccf-4136-a0ed-152ce412b6b9
 ```

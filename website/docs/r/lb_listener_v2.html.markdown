@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_lb_listener_v2"
-sidebar_current: "docs-orangecloud-resource-lb-listener-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_lb_listener_v2"
+sidebar_current: "docs-flexibleengine-resource-lb-listener-v2"
 description: |-
   Manages a V2 listener resource within OrangeCloud.
 ---
 
-# orangecloud\_lb\_listener\_v2
+# flexibleengine\_lb\_listener\_v2
 
 Manages a V2 listener resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"

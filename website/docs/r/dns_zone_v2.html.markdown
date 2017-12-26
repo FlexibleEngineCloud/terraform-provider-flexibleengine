@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_dns_zone_v2"
-sidebar_current: "docs-orangecloud-resource-dns-zone-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_dns_zone_v2"
+sidebar_current: "docs-flexibleengine-resource-dns-zone-v2"
 description: |-
   Manages a DNS zone in the OrangeCloud DNS Service
 ---
 
-# orangecloud\_dns\_zone_v2
+# flexibleengine\_dns\_zone_v2
 
 Manages a DNS zone in the OrangeCloud DNS Service.
 
@@ -15,7 +15,7 @@ Manages a DNS zone in the OrangeCloud DNS Service.
 ### Automatically detect the correct network
 
 ```hcl
-resource "orangecloud_dns_zone_v2" "example.com" {
+resource "flexibleengine_dns_zone_v2" "example.com" {
   name = "example.com."
   email = "jdoe@example.com"
   description = "An example zone"
@@ -73,5 +73,5 @@ The following attributes are exported:
 This resource can be imported by specifying the zone ID:
 
 ```
-$ terraform import orangecloud_dns_zone_v2.zone_1 <zone_id>
+$ terraform import flexibleengine_dns_zone_v2.zone_1 <zone_id>
 ```

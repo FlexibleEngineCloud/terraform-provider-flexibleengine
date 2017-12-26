@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_router_v2"
-sidebar_current: "docs-orangecloud-resource-networking-router-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_router_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-router-v2"
 description: |-
   Manages a V2 router resource within OrangeCloud.
 ---
 
-# orangecloud\_networking\_router_v2
+# flexibleengine\_networking\_router_v2
 
 Manages a V2 router resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name             = "my_router"
   external_gateway = "f67f0d72-0ddf-11e4-9d95-e1f29f417e2f"
 }

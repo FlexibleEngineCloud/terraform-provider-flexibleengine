@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_compute_flavor_v2"
-sidebar_current: "docs-orangecloud-resource-compute-flavor-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_compute_flavor_v2"
+sidebar_current: "docs-flexibleengine-resource-compute-flavor-v2"
 description: |-
   Manages a V2 flavor resource within OrangeCloud.
 ---
 
-# orangecloud\_compute\_flavor_v2
+# flexibleengine\_compute\_flavor_v2
 
 Manages a V2 flavor resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_compute_flavor_v2" "test-flavor" {
+resource "flexibleengine_compute_flavor_v2" "test-flavor" {
   name  = "my-flavor"
   ram   = "8"
   vcpus = "2"
@@ -69,5 +69,5 @@ The following attributes are exported:
 Flavors can be imported using the `ID`, e.g.
 
 ```
-$ terraform import orangecloud_compute_flavor_v2.my-flavor 4142e64b-1b35-44a0-9b1e-5affc7af1106
+$ terraform import flexibleengine_compute_flavor_v2.my-flavor 4142e64b-1b35-44a0-9b1e-5affc7af1106
 ```

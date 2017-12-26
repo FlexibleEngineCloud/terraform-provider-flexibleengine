@@ -1,42 +1,42 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_router_route_v2"
-sidebar_current: "docs-orangecloud-resource-networking-router-route-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_router_route_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-router-route-v2"
 description: |-
   Creates a routing entry on a OrangeCloud V2 router.
 ---
 
-# orangecloud\_networking\_router_route_v2
+# flexibleengine\_networking\_router_route_v2
 
 Creates a routing entry on a OrangeCloud V2 router.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name           = "router_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr       = "192.168.199.0/24"
   ip_version = 4
 }
 
-resource "orangecloud_networking_router_interface_v2" "int_1" {
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "int_1" {
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_networking_router_route_v2" "router_route_1" {
-  depends_on       = ["orangecloud_networking_router_interface_v2.int_1"]
-  router_id        = "${orangecloud_networking_router_v2.router_1.id}"
+resource "flexibleengine_networking_router_route_v2" "router_route_1" {
+  depends_on       = ["flexibleengine_networking_router_interface_v2.int_1"]
+  router_id        = "${flexibleengine_networking_router_v2.router_1.id}"
   destination_cidr = "10.0.1.0/24"
   next_hop         = "192.168.199.254"
 }
@@ -71,6 +71,6 @@ The following attributes are exported:
 
 ## Notes
 
-The `next_hop` IP address must be directly reachable from the router at the ``orangecloud_networking_router_route_v2``
-resource creation time.  You can ensure that by explicitly specifying a dependency on the ``orangecloud_networking_router_interface_v2``
+The `next_hop` IP address must be directly reachable from the router at the ``flexibleengine_networking_router_route_v2``
+resource creation time.  You can ensure that by explicitly specifying a dependency on the ``flexibleengine_networking_router_interface_v2``
 resource that connects the next hop to the router, as in the example above.

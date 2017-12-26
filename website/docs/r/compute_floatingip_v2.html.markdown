@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_compute_floatingip_v2"
-sidebar_current: "docs-orangecloud-resource-compute-floatingip-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_compute_floatingip_v2"
+sidebar_current: "docs-flexibleengine-resource-compute-floatingip-v2"
 description: |-
   Manages a V2 floating IP resource within OrangeCloud Nova (compute).
 ---
 
-# orangecloud\_compute\_floatingip_v2
+# flexibleengine\_compute\_floatingip_v2
 
 Manages a V2 floating IP resource within OrangeCloud Nova (compute)
 that can be used for compute instances.
@@ -16,7 +16,7 @@ but only networking floating IPs can be used with load balancers.
 ## Example Usage
 
 ```hcl
-resource "orangecloud_compute_floatingip_v2" "floatip_1" {
+resource "flexibleengine_compute_floatingip_v2" "floatip_1" {
   pool = "public"
 }
 ```
@@ -49,5 +49,5 @@ The following attributes are exported:
 Floating IPs can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_compute_floatingip_v2.floatip_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+$ terraform import flexibleengine_compute_floatingip_v2.floatip_1 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

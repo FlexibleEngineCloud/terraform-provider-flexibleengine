@@ -1,7 +1,7 @@
 ---
-layout: "orangecloud"
+layout: "flexibleengine"
 page_title: "Provider: OrangeCloud"
-sidebar_current: "docs-orangecloud-index"
+sidebar_current: "docs-flexibleengine-index"
 description: |-
   The OrangeCloud provider is used to interact with the many resources supported by OrangeCloud. The provider needs to be configured with the proper credentials before it can be used.
 ---
@@ -18,7 +18,7 @@ Use the navigation to the left to read about the available resources.
 
 ```hcl
 # Configure the OrangeCloud Provider
-provider "orangecloud" {
+provider "flexibleengine" {
   user_name   = "admin"
   tenant_name = "admin"
   password    = "pwd"
@@ -27,7 +27,7 @@ provider "orangecloud" {
 }
 
 # Create a web server
-resource "orangecloud_compute_instance_v2" "test-server" {
+resource "flexibleengine_compute_instance_v2" "test-server" {
   # ...
 }
 ```
@@ -134,7 +134,7 @@ all other resources is either untested or known to not work.
 instances as shown below:
 
 ```
-resource "orangecloud_compute_instance_v2" "my_instance" {
+resource "flexibleengine_compute_instance_v2" "my_instance" {
   name      = "my_instance"
   region    = "DFW"
   image_id  = "fabe045f-43f8-4991-9e6c-5cabd617538c"

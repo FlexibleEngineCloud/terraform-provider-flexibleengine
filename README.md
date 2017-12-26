@@ -1,4 +1,4 @@
-Terraform OrangeCloud Provider
+Terraform flexibleengine Provider
 ============================
 
 - Website: https://www.terraform.io
@@ -17,16 +17,16 @@ Requirements
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/Karajan-project/terraform-provider-orangecloud`
+Clone repository to: `$GOPATH/src/github.com/Karajan-project/terraform-provider-flexibleengine`
 
 ```sh
-$ go get github.com/Karajan-project/terraform-provider-orangecloud
+$ go get github.com/Karajan-project/terraform-provider-flexibleengine
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/Karajan-project/terraform-provider-orangecloud
+$ cd $GOPATH/src/github.com/Karajan-project/terraform-provider-flexibleengine
 $ make build
 ```
 
@@ -38,8 +38,8 @@ $ wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
 $ sudo tar -C /usr/local -xzf go1.9.1.linux-amd64.tar.gz
 $ export PATH=$PATH:/usr/local/go/bin # You should put in your .profile or .bashrc
 $ go version # to verify it runs and version #
-$ go get github.com/Karajan-project/terraform-provider-orangecloud
-$ cd ~/go/src/github.com/Karajan-project/terraform-provider-orangecloud/
+$ go get github.com/Karajan-project/terraform-provider-flexibleengine
+$ cd ~/go/src/github.com/Karajan-project/terraform-provider-flexibleengine/
 $ make build
 $ export PATH=$PATH:~/go/bin # You should put in your .profile or .bashrc
 $ wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
@@ -59,7 +59,7 @@ $ terraform apply # Should all work if everything is correct.
 # Configure the OrangeCloud Provider
 # This will work with a single defined/default network, otherwise you need to specify network
 # to fix errrors about multiple networks found.
-provider "orangecloud" {
+provider "flexibleengine" {
   user_name   = "user"
   tenant_name = "tenant"
   domain_name = "domain"
@@ -69,7 +69,7 @@ provider "orangecloud" {
 }
 
 # Create a web server
-resource "orangecloud_compute_instance_v2" "test-server" {
+resource "flexibleengine_compute_instance_v2" "test-server" {
   name		  = "test-server"
   image_name  = "Standard_CentOS_7_latest"
   flavor_name = "s1.medium"
@@ -95,7 +95,7 @@ To compile the provider, run `make build`. This will build the provider and put 
 ```sh
 $ make build
 ...
-$ $GOPATH/bin/terraform-provider-orangecloud
+$ $GOPATH/bin/terraform-provider-flexibleengine
 ...
 ```
 

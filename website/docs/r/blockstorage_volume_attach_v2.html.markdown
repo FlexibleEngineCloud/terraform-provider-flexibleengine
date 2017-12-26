@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_blockstorage_volume_attach_v2"
-sidebar_current: "docs-orangecloud-resource-blockstorage-volume-attach-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_blockstorage_volume_attach_v2"
+sidebar_current: "docs-flexibleengine-resource-blockstorage-volume-attach-v2"
 description: |-
   Creates an attachment connection to a Block Storage volume
 ---
 
-# orangecloud\_blockstorage\_volume\_attach\_v2
+# flexibleengine\_blockstorage\_volume\_attach\_v2
 
 This resource is experimental and may be removed in the future! Feedback
 is requested if you find this resource useful or if you find any problems
@@ -20,18 +20,18 @@ such as a bare-metal server or a remote virtual machine in a
 different cloud provider.
 
 This does not actually attach a volume to an instance. Please use
-the `orangecloud_compute_volume_attach_v2` resource for that.
+the `flexibleengine_compute_volume_attach_v2` resource for that.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "orangecloud_blockstorage_volume_attach_v2" "va_1" {
-  volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
+resource "flexibleengine_blockstorage_volume_attach_v2" "va_1" {
+  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
   device = "auto"
   host_name = "devstack"
   ip_address = "192.168.255.10"

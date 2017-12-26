@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_fw_policy_v2"
-sidebar_current: "docs-orangecloud-resource-fw-policy-v1"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_fw_policy_v2"
+sidebar_current: "docs-flexibleengine-resource-fw-policy-v1"
 description: |-
   Manages a v1 firewall policy resource within OrangeCloud.
 ---
 
-# orangecloud\_fw\_policy_v2
+# flexibleengine\_fw\_policy_v2
 
 Manages a v1 firewall policy resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
   name             = "my-rule-1"
   description      = "drop TELNET traffic"
   action           = "deny"
@@ -22,7 +22,7 @@ resource "orangecloud_fw_rule_v2" "rule_1" {
   enabled          = "true"
 }
 
-resource "orangecloud_fw_rule_v2" "rule_2" {
+resource "flexibleengine_fw_rule_v2" "rule_2" {
   name             = "my-rule-2"
   description      = "drop NTP traffic"
   action           = "deny"
@@ -31,11 +31,11 @@ resource "orangecloud_fw_rule_v2" "rule_2" {
   enabled          = "false"
 }
 
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "my-policy"
 
-  rules = ["${orangecloud_fw_rule_v2.rule_1.id}",
-    "${orangecloud_fw_rule_v2.rule_2.id}",
+  rules = ["${flexibleengine_fw_rule_v2.rule_1.id}",
+    "${flexibleengine_fw_rule_v2.rule_2.id}",
   ]
 }
 ```
@@ -88,5 +88,5 @@ The following attributes are exported:
 Firewall Policies can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
+$ terraform import flexibleengine_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
 ```

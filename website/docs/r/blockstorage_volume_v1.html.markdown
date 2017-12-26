@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_blockstorage_volume_v1"
-sidebar_current: "docs-orangecloud-resource-blockstorage-volume-v1"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_blockstorage_volume_v1"
+sidebar_current: "docs-flexibleengine-resource-blockstorage-volume-v1"
 description: |-
   Manages a V1 volume resource within OrangeCloud.
 ---
 
-# orangecloud\_blockstorage\_volume_v1
+# flexibleengine\_blockstorage\_volume_v1
 
 Manages a V1 volume resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_blockstorage_volume_v1" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v1" "volume_1" {
   region      = "RegionOne"
   name        = "tf-test-volume"
   description = "first test volume"
@@ -79,5 +79,5 @@ The following attributes are exported:
 Volumes can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_blockstorage_volume_v1.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
+$ terraform import flexibleengine_blockstorage_volume_v1.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
 ```

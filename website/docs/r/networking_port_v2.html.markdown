@@ -1,26 +1,26 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_port_v2"
-sidebar_current: "docs-orangecloud-resource-networking-port-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_port_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-port-v2"
 description: |-
   Manages a V2 port resource within OrangeCloud.
 ---
 
-# orangecloud\_networking\_port_v2
+# flexibleengine\_networking\_port_v2
 
 Manages a V2 port resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name           = "port_1"
-  network_id     = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id     = "${flexibleengine_networking_network_v2.network_1.id}"
   admin_state_up = "true"
 }
 ```
@@ -104,7 +104,7 @@ The following attributes are exported:
 Ports can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
+$ terraform import flexibleengine_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
 ```
 
 ## Notes
@@ -112,5 +112,5 @@ $ terraform import orangecloud_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31
 ### Ports and Instances
 
 There are some notes to consider when connecting Instances to networks using
-Ports. Please see the `orangecloud_compute_instance_v2` documentation for further
+Ports. Please see the `flexibleengine_compute_instance_v2` documentation for further
 documentation.

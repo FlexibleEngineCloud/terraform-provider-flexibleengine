@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_lb_member_v2"
-sidebar_current: "docs-orangecloud-resource-lb-member-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_lb_member_v2"
+sidebar_current: "docs-flexibleengine-resource-lb-member-v2"
 description: |-
   Manages a V2 member resource within OrangeCloud.
 ---
 
-# orangecloud\_lb\_member\_v2
+# flexibleengine\_lb\_member\_v2
 
 Manages a V2 member resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_lb_member_v2" "member_1" {
+resource "flexibleengine_lb_member_v2" "member_1" {
   address       = "192.168.199.23"
   protocol_port = 8080
 }

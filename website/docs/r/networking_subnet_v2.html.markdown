@@ -1,25 +1,25 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_subnet_v2"
-sidebar_current: "docs-orangecloud-resource-networking-subnet-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_subnet_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-subnet-v2"
 description: |-
   Manages a V2 Neutron subnet resource within OrangeCloud.
 ---
 
-# orangecloud\_networking\_subnet_v2
+# flexibleengine\_networking\_subnet_v2
 
 Manages a V2 Neutron subnet resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "tf_test_network"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr       = "192.168.199.0/24"
 }
 ```
@@ -79,7 +79,7 @@ The `allocation_pools` block supports:
 
 * `start` - (Required) The starting address.
 
-* `end` - (Required) The ending address.
+* `end` - (Required) The ending addresss.
 
 The `host_routes` block supports:
 
@@ -108,5 +108,5 @@ The following attributes are exported:
 Subnets can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_networking_subnet_v2.subnet_1 da4faf16-5546-41e4-8330-4d0002b74048
+$ terraform import flexibleengine_networking_subnet_v2.subnet_1 da4faf16-5546-41e4-8330-4d0002b74048
 ```

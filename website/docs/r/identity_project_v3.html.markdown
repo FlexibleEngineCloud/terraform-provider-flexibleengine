@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_identity_project_v3"
-sidebar_current: "docs-orangecloud-resource-identity-project-v3"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_identity_project_v3"
+sidebar_current: "docs-flexibleengine-resource-identity-project-v3"
 description: |-
   Manages a V3 Project resource within OrangeCloud Keystone.
 ---
 
-# orangecloud\_identity\_project_v3
+# flexibleengine\_identity\_project_v3
 
 Manages a V3 Project resource within OrangeCloud Keystone.
 
@@ -16,7 +16,7 @@ this resource.
 ## Example Usage
 
 ```hcl
-resource "orangecloud_identity_project_v3" "project_1" {
+resource "flexibleengine_identity_project_v3" "project_1" {
   name = "project_1"
   description = "A project"
 }
@@ -56,5 +56,5 @@ The following attributes are exported:
 Projects can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_identity_project_v3.project_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+$ terraform import flexibleengine_identity_project_v3.project_1 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

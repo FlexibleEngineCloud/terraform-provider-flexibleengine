@@ -1,22 +1,22 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_compute_floatingip_associate_v2"
-sidebar_current: "docs-orangecloud-resource-compute-floatingip-associate-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_compute_floatingip_associate_v2"
+sidebar_current: "docs-flexibleengine-resource-compute-floatingip-associate-v2"
 description: |-
   Associate a floating IP to an instance
 ---
 
-# orangecloud\_compute\_floatingip_associate_v2
+# flexibleengine\_compute\_floatingip_associate_v2
 
 Associate a floating IP to an instance. This can be used instead of the
-`floating_ip` options in `orangecloud_compute_instance_v2`.
+`floating_ip` options in `flexibleengine_compute_instance_v2`.
 
 ## Example Usage
 
 ### Automatically detect the correct network
 
 ```hcl
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
   flavor_id       = 3
@@ -24,20 +24,20 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   security_groups = ["default"]
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
   pool = "my_pool"
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
 }
 ```
 
 ### Explicitly set the network to attach to
 
 ```hcl
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
   flavor_id       = 3
@@ -53,14 +53,14 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
   pool = "my_pool"
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  fixed_ip    = "${orangecloud_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  fixed_ip    = "${flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
 }
 ```
 
@@ -94,5 +94,5 @@ This resource can be imported by specifying all three arguments, separated
 by a forward slash:
 
 ```
-$ terraform import orangecloud_compute_floatingip_associate_v2.fip_1 <floating_ip>/<instance_id>/<fixed_ip>
+$ terraform import flexibleengine_compute_floatingip_associate_v2.fip_1 <floating_ip>/<instance_id>/<fixed_ip>
 ```

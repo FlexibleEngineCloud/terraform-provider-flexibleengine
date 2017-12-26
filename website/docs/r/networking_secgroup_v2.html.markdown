@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_secgroup_v2"
-sidebar_current: "docs-orangecloud-resource-networking-secgroup-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_networking_secgroup_v2"
+sidebar_current: "docs-flexibleengine-resource-networking-secgroup-v2"
 description: |-
   Manages a V2 Neutron security group resource within OrangeCloud.
 ---
 
-# orangecloud\_networking\_secgroup_v2
+# flexibleengine\_networking\_secgroup_v2
 
 Manages a V2 neutron security group resource within OrangeCloud.
 Unlike Nova security groups, neutron separates the group from the rules
@@ -15,7 +15,7 @@ and also allows an admin to target a specific tenant_id.
 ## Example Usage
 
 ```hcl
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name        = "secgroup_1"
   description = "My neutron security group"
 }
@@ -60,16 +60,16 @@ managed by Terraform, set `delete_default_rules` to `true` and then create
 separate security group rules such as the following:
 
 ```hcl
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_v4" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v4" {
   direction = "egress"
   ethertype = "IPv4"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_v6" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v6" {
   direction = "egress"
   ethertype = "IPv6"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
 }
 ```
 
@@ -84,5 +84,5 @@ is moot).
 Security Groups can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
+$ terraform import flexibleengine_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
 ```

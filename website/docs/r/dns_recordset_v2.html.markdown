@@ -1,12 +1,12 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_dns_recordset_v2"
-sidebar_current: "docs-orangecloud-resource-dns-recordset-v2"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_dns_recordset_v2"
+sidebar_current: "docs-flexibleengine-resource-dns-recordset-v2"
 description: |-
   Manages a DNS record set in the OrangeCloud DNS Service
 ---
 
-# orangecloud\_dns\_recordset_v2
+# flexibleengine\_dns\_recordset_v2
 
 Manages a DNS record set in the OrangeCloud DNS Service.
 
@@ -15,7 +15,7 @@ Manages a DNS record set in the OrangeCloud DNS Service.
 ### Automatically detect the correct network
 
 ```hcl
-resource "orangecloud_dns_zone_v2" "example_zone" {
+resource "flexibleengine_dns_zone_v2" "example_zone" {
   name = "example.com."
   email = "email2@example.com"
   description = "a zone"
@@ -23,8 +23,8 @@ resource "orangecloud_dns_zone_v2" "example_zone" {
   type = "PRIMARY"
 }
 
-resource "orangecloud_dns_recordset_v2" "rs_example_com" {
-  zone_id = "${orangecloud_dns_zone_v2.example_zone.id}"
+resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
+  zone_id = "${flexibleengine_dns_zone_v2.example_zone.id}"
   name = "rs.example.com."
   description = "An example record set"
   ttl = 3000
@@ -78,5 +78,5 @@ This resource can be imported by specifying the zone ID and recordset ID,
 separated by a forward slash.
 
 ```
-$ terraform import orangecloud_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
+$ terraform import flexibleengine_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
 ```

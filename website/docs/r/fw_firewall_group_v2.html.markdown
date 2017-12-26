@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_fw_firewall_group_v1"
-sidebar_current: "docs-orangecloud-resource-fw-firewall-group-v1"
+layout: "flexibleengine"
+page_title: "OrangeCloud: flexibleengine_fw_firewall_group_v1"
+sidebar_current: "docs-flexibleengine-resource-fw-firewall-group-v1"
 description: |-
   Manages a v1 firewall group resource within OrangeCloud.
 ---
 
-# orangecloud\_fw\_firewall_group_v2
+# flexibleengine\_fw\_firewall_group_v2
 
 Manages a v1 firewall group resource within OrangeCloud.
 
 ## Example Usage
 
 ```hcl
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
   name             = "my-rule-1"
   description      = "drop TELNET traffic"
   action           = "deny"
@@ -22,7 +22,7 @@ resource "orangecloud_fw_rule_v2" "rule_1" {
   enabled          = "true"
 }
 
-resource "orangecloud_fw_rule_v2" "rule_2" {
+resource "flexibleengine_fw_rule_v2" "rule_2" {
   name             = "my-rule-2"
   description      = "drop NTP traffic"
   action           = "deny"
@@ -31,17 +31,17 @@ resource "orangecloud_fw_rule_v2" "rule_2" {
   enabled          = "false"
 }
 
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "my-policy"
 
-  rules = ["${orangecloud_fw_rule_v2.rule_1.id}",
-    "${orangecloud_fw_rule_v2.rule_2.id}",
+  rules = ["${flexibleengine_fw_rule_v2.rule_1.id}",
+    "${flexibleengine_fw_rule_v2.rule_2.id}",
   ]
 }
 
-resource "orangecloud_fw_firewall_group_v2" "firewall_group_1" {
+resource "flexibleengine_fw_firewall_group_v2" "firewall_group_1" {
   name      = "my-firewall-group"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
 }
 ```
 
@@ -97,5 +97,5 @@ The following attributes are exported:
 Firewall Groups can be imported using the `id`, e.g.
 
 ```
-$ terraform import orangecloud_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
+$ terraform import flexibleengine_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
 ```
