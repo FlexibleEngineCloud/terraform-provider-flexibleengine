@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_dns_zone_v2"
+page_title: "FlexibleEngine: flexibleengine_dns_zone_v2"
 sidebar_current: "docs-flexibleengine-resource-dns-zone-v2"
 description: |-
-  Manages a DNS zone in the OrangeCloud DNS Service
+  Manages a DNS zone in the FlexibleEngine DNS Service
 ---
 
 # flexibleengine\_dns\_zone_v2
 
-Manages a DNS zone in the OrangeCloud DNS Service.
+Manages a DNS zone in the FlexibleEngine DNS Service.
 
 ## Example Usage
 

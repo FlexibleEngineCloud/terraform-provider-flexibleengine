@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_volume_attach_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_volume_attach_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-volume-attach-v2"
 description: |-
   Attaches a Block Storage Volume to an Instance.
@@ -8,7 +8,7 @@ description: |-
 
 # flexibleengine\_compute\_volume_attach_v2
 
-Attaches a Block Storage Volume to an Instance using the OrangeCloud
+Attaches a Block Storage Volume to an Instance using the FlexibleEngine
 Compute (Nova) v2 API.
 
 ## Example Usage

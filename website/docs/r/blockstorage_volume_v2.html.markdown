@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_blockstorage_volume_v2"
+page_title: "FlexibleEngine: flexibleengine_blockstorage_volume_v2"
 sidebar_current: "docs-flexibleengine-resource-blockstorage-volume-v2"
 description: |-
-  Manages a V2 volume resource within OrangeCloud.
+  Manages a V2 volume resource within FlexibleEngine.
 ---
 
 # flexibleengine\_blockstorage\_volume_v2
 
-Manages a V2 volume resource within OrangeCloud.
+Manages a V2 volume resource within FlexibleEngine.
 
 ## Example Usage
 

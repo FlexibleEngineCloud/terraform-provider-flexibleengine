@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_floatingip_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_floatingip_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-floatingip-v2"
 description: |-
-  Manages a V2 floating IP resource within OrangeCloud Nova (compute).
+  Manages a V2 floating IP resource within FlexibleEngine Nova (compute).
 ---
 
 # flexibleengine\_compute\_floatingip_v2
 
-Manages a V2 floating IP resource within OrangeCloud Nova (compute)
+Manages a V2 floating IP resource within FlexibleEngine Nova (compute)
 that can be used for compute instances.
 These are similar to Neutron (networking) floating IP resources,
 but only networking floating IPs can be used with load balancers.

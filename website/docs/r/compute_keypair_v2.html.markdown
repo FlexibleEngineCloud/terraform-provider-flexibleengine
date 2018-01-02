@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_keypair_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_keypair_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-keypair-v2"
 description: |-
-  Manages a V2 keypair resource within OrangeCloud.
+  Manages a V2 keypair resource within FlexibleEngine.
 ---
 
 # flexibleengine\_compute\_keypair_v2
 
-Manages a V2 keypair resource within OrangeCloud.
+Manages a V2 keypair resource within FlexibleEngine.
 
 ## Example Usage
 

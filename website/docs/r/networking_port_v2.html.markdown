@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_port_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_port_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-port-v2"
 description: |-
-  Manages a V2 port resource within OrangeCloud.
+  Manages a V2 port resource within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_port_v2
 
-Manages a V2 port resource within OrangeCloud.
+Manages a V2 port resource within FlexibleEngine.
 
 ## Example Usage
 

@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_router_route_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_router_route_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-router-route-v2"
 description: |-
-  Creates a routing entry on a OrangeCloud V2 router.
+  Creates a routing entry on a FlexibleEngine V2 router.
 ---
 
 # flexibleengine\_networking\_router_route_v2
 
-Creates a routing entry on a OrangeCloud V2 router.
+Creates a routing entry on a FlexibleEngine V2 router.
 
 ## Example Usage
 

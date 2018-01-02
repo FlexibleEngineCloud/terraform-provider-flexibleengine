@@ -1,4 +1,4 @@
-Terraform flexibleengine Provider
+Terraform FlexibleEngine Provider
 ============================
 
 - Website: https://www.terraform.io
@@ -56,7 +56,7 @@ $ terraform apply # Should all work if everything is correct.
 ## Quick Start
 
 ```hcl
-# Configure the OrangeCloud Provider
+# Configure the FlexibleEngine Provider
 # This will work with a single defined/default network, otherwise you need to specify network
 # to fix errrors about multiple networks found.
 provider "flexibleengine" {

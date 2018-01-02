@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_secgroup_rule_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_secgroup_rule_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-secgroup-rule-v2"
 description: |-
-  Manages a V2 Neutron security group rule resource within OrangeCloud.
+  Manages a V2 Neutron security group rule resource within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_secgroup\_rule_v2
 
-Manages a V2 neutron security group rule resource within OrangeCloud.
+Manages a V2 neutron security group rule resource within FlexibleEngine.
 Unlike Nova security groups, neutron separates the group from the rules
 and also allows an admin to target a specific tenant_id.
 
@@ -81,11 +81,11 @@ The following arguments are supported:
     CIDR (i.e. 192.168.0.0/16). Changing this creates a new security group rule.
 
 * `remote_group_id` - (Optional) The remote group id, the value needs to be an
-    OrangeCloud ID of a security group in the same tenant. Changing this creates
+    FlexibleEngine ID of a security group in the same tenant. Changing this creates
     a new security group rule.
 
 * `security_group_id` - (Required) The security group id the rule should belong
-    to, the value needs to be an OrangeCloud ID of a security group in the same
+    to, the value needs to be an FlexibleEngine ID of a security group in the same
     tenant. Changing this creates a new security group rule.
 
 * `tenant_id` - (Optional) The owner of the security group. Required if admin

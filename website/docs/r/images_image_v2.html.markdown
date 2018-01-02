@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_images_image_v2"
+page_title: "FlexibleEngine: flexibleengine_images_image_v2"
 sidebar_current: "docs-flexibleengine-resource-images-image-v2"
 description: |-
-  Manages a V2 Image resource within OrangeCloud Glance.
+  Manages a V2 Image resource within FlexibleEngine Glance.
 ---
 
 # flexibleengine\_images\_image_v2
 
-Manages a V2 Image resource within OrangeCloud Glance.
+Manages a V2 Image resource within FlexibleEngine Glance.
 
 ## Example Usage
 
@@ -65,7 +65,7 @@ The following arguments are supported:
 
 * `visibility` - (Optional) The visibility of the image. Must be one of
    "public", "private", "community", or "shared". The ability to set the
-   visibility depends upon the configuration of the OrangeCloud cloud.
+   visibility depends upon the configuration of the FlexibleEngine cloud.
 
 Note: The `properties` attribute handling in the gophercloud library is currently buggy
 and needs to be fixed before being implemented in this resource.

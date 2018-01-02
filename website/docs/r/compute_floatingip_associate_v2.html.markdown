@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_floatingip_associate_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_floatingip_associate_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-floatingip-associate-v2"
 description: |-
   Associate a floating IP to an instance

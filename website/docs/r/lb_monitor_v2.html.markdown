@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_lb_monitor_v2"
+page_title: "FlexibleEngine: flexibleengine_lb_monitor_v2"
 sidebar_current: "docs-flexibleengine-resource-lb-monitor-v2"
 description: |-
-  Manages a V2 monitor resource within OrangeCloud.
+  Manages a V2 monitor resource within FlexibleEngine.
 ---
 
 # flexibleengine\_lb\_monitor\_v2
 
-Manages a V2 monitor resource within OrangeCloud.
+Manages a V2 monitor resource within FlexibleEngine.
 
 ## Example Usage
 

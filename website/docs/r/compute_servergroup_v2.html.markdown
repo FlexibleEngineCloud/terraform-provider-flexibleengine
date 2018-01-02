@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_servergroup_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_servergroup_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-servergroup-v2"
 description: |-
-  Manages a V2 Server Group resource within OrangeCloud.
+  Manages a V2 Server Group resource within FlexibleEngine.
 ---
 
 # flexibleengine\_compute\_servergroup_v2
 
-Manages a V2 Server Group resource within OrangeCloud.
+Manages a V2 Server Group resource within FlexibleEngine.
 
 ## Example Usage
 

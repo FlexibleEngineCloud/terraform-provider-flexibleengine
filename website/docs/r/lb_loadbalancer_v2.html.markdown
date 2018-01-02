@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_lb_loadbalancer_v2"
+page_title: "FlexibleEngine: flexibleengine_lb_loadbalancer_v2"
 sidebar_current: "docs-flexibleengine-resource-lb-loadbalancer-v2"
 description: |-
-  Manages a V2 loadbalancer resource within OrangeCloud.
+  Manages a V2 loadbalancer resource within FlexibleEngine.
 ---
 
 # flexibleengine\_lb\_loadbalancer\_v2
 
-Manages a V2 loadbalancer resource within OrangeCloud.
+Manages a V2 loadbalancer resource within FlexibleEngine.
 
 ## Example Usage
 

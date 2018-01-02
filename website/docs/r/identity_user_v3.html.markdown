@@ -1,16 +1,16 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_identity_user_v3"
+page_title: "FlexibleEngine: flexibleengine_identity_user_v3"
 sidebar_current: "docs-flexibleengine-resource-identity-user-v3"
 description: |-
-  Manages a V3 User resource within OrangeCloud Keystone.
+  Manages a V3 User resource within FlexibleEngine Keystone.
 ---
 
 # flexibleengine\_identity\_user_v3
 
-Manages a V3 User resource within OrangeCloud Keystone.
+Manages a V3 User resource within FlexibleEngine Keystone.
 
-Note: You _must_ have admin privileges in your OrangeCloud cloud to use
+Note: You _must_ have admin privileges in your FlexibleEngine cloud to use
 this resource.
 
 ## Example Usage

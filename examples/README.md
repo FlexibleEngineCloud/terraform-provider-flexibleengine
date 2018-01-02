@@ -1,4 +1,4 @@
-# FULL Terraform orangecloud Example
+# FULL Terraform flexibleengine Example
 
 This script will create the following resources (if enabled):
 * Volumes

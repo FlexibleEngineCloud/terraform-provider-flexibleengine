@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_router_interface_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_router_interface_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-router-interface-v2"
 description: |-
-  Manages a V2 router interface resource within OrangeCloud.
+  Manages a V2 router interface resource within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_router_interface_v2
 
-Manages a V2 router interface resource within OrangeCloud.
+Manages a V2 router interface resource within FlexibleEngine.
 
 ## Example Usage
 

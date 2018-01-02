@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_compute_instance_v2"
+page_title: "FlexibleEngine: flexibleengine_compute_instance_v2"
 sidebar_current: "docs-flexibleengine-resource-compute-instance-v2"
 description: |-
-  Manages a V2 VM instance resource within OrangeCloud.
+  Manages a V2 VM instance resource within FlexibleEngine.
 ---
 
 # flexibleengine\_compute\_instance_v2
 
-Manages a V2 VM instance resource within OrangeCloud.
+Manages a V2 VM instance resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -350,7 +350,7 @@ The following arguments are supported:
     before destroying it, thus giving chance for guest OS daemons to stop correctly.
     If instance doesn't stop within timeout, it will be destroyed anyway.
 
-* `force_delete` - (Optional) Whether to force the OrangeCloud instance to be
+* `force_delete` - (Optional) Whether to force the FlexibleEngine instance to be
     forcefully deleted. This is useful for environments that have reclaim / soft
     deletion enabled.
 
@@ -499,7 +499,7 @@ there are some notes to be aware of when mixing Instances and Ports:
 * When attaching an Instance to one or more networks using Ports, place the
 security groups on the Port and not the Instance. If you place the security
 groups on the Instance, the security groups will not be applied upon creation,
-but they will be applied upon a refresh. This is a known OrangeCloud bug.
+but they will be applied upon a refresh. This is a known FlexibleEngine bug.
 
 * Network IP information is not available within an instance for networks that
 are attached with Ports. This is mostly due to the flexibility Neutron Ports

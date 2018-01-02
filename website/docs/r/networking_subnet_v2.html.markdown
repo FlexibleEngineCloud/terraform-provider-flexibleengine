@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_subnet_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_subnet_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-subnet-v2"
 description: |-
-  Manages a V2 Neutron subnet resource within OrangeCloud.
+  Manages a V2 Neutron subnet resource within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_subnet_v2
 
-Manages a V2 Neutron subnet resource within OrangeCloud.
+Manages a V2 Neutron subnet resource within FlexibleEngine.
 
 ## Example Usage
 

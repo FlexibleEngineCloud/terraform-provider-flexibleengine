@@ -1,4 +1,4 @@
-### OrangeCloud Credentials
+### FlexibleEngine Credentials
 variable "username" {
   # If you don't fill this in, you will be prompted for it
   #default = "your_username"

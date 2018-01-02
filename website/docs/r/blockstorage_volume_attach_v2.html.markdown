@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_blockstorage_volume_attach_v2"
+page_title: "FlexibleEngine: flexibleengine_blockstorage_volume_attach_v2"
 sidebar_current: "docs-flexibleengine-resource-blockstorage-volume-attach-v2"
 description: |-
   Creates an attachment connection to a Block Storage volume
@@ -13,9 +13,9 @@ is requested if you find this resource useful or if you find any problems
 with it.
 
 Creates a general purpose attachment connection to a Block
-Storage volume using the OrangeCloud Block Storage (Cinder) v2 API.
+Storage volume using the FlexibleEngine Block Storage (Cinder) v2 API.
 Depending on your Block Storage service configuration, this
-resource can assist in attaching a volume to a non-OrangeCloud resource
+resource can assist in attaching a volume to a non-FlexibleEngine resource
 such as a bare-metal server or a remote virtual machine in a
 different cloud provider.
 
@@ -123,8 +123,8 @@ iscsiadm -m node -T ${self.data.target_iqn} -p ${self.data.target_portal} --resc
 The contents of `data` will vary from each Block Storage service. You must have
 a good understanding of how the service is configured and how to make the
 appropriate final connection. However, if used correctly, this has the
-flexibility to be able to attach OrangeCloud Block Storage volumes to
-non-OrangeCloud resources.
+flexibility to be able to attach FlexibleEngine Block Storage volumes to
+non-FlexibleEngine resources.
 
 ## Import
 

@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_networking_network_v2"
+page_title: "FlexibleEngine: flexibleengine_networking_network_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-network-v2"
 description: |-
-  Manages a V2 Neutron network resource within OrangeCloud.
+  Manages a V2 Neutron network resource within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_network_v2
 
-Manages a V2 Neutron network resource within OrangeCloud.
+Manages a V2 Neutron network resource within FlexibleEngine.
 
 ## Example Usage
 

@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_lb_pool_v1"
+page_title: "FlexibleEngine: flexibleengine_lb_pool_v1"
 sidebar_current: "docs-flexibleengine-resource-lb-pool-v1"
 description: |-
-  Manages a V1 load balancer pool resource within OrangeCloud.
+  Manages a V1 load balancer pool resource within FlexibleEngine.
 ---
 
 # flexibleengine\_lb\_pool_v1
 
-Manages a V1 load balancer pool resource within OrangeCloud.
+Manages a V1 load balancer pool resource within FlexibleEngine.
 
 ## Example Usage
 

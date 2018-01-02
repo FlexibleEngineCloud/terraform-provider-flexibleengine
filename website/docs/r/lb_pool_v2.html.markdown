@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OrangeCloud: flexibleengine_lb_pool_v2"
+page_title: "FlexibleEngine: flexibleengine_lb_pool_v2"
 sidebar_current: "docs-flexibleengine-resource-lb-pool-v2"
 description: |-
-  Manages a V2 pool resource within OrangeCloud.
+  Manages a V2 pool resource within FlexibleEngine.
 ---
 
 # flexibleengine\_lb\_pool\_v2
 
-Manages a V2 pool resource within OrangeCloud.
+Manages a V2 pool resource within FlexibleEngine.
 
 ## Example Usage
 
