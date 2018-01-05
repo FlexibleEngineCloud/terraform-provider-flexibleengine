@@ -23,7 +23,7 @@ func TestAccComputeV2ServerGroup_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2ServerGroup_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2ServerGroupExists("orangecloud_compute_servergroup_v2.sg_1", &sg),
+					testAccCheckComputeV2ServerGroupExists("flexibleengine_compute_servergroup_v2.sg_1", &sg),
 				),
 			},
 		},
@@ -43,8 +43,8 @@ func TestAccComputeV2ServerGroup_affinity(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2ServerGroup_affinity,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2ServerGroupExists("orangecloud_compute_servergroup_v2.sg_1", &sg),
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2ServerGroupExists("flexibleengine_compute_servergroup_v2.sg_1", &sg),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceInServerGroup(&instance, &sg),
 				),
 			},
@@ -60,7 +60,7 @@ func testAccCheckComputeV2ServerGroupDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_servergroup_v2" {
+		if rs.Type != "flexibleengine_compute_servergroup_v2" {
 			continue
 		}
 
@@ -120,26 +120,26 @@ func testAccCheckComputeV2InstanceInServerGroup(instance *servers.Server, sg *se
 }
 
 const testAccComputeV2ServerGroup_basic = `
-resource "orangecloud_compute_servergroup_v2" "sg_1" {
+resource "flexibleengine_compute_servergroup_v2" "sg_1" {
   name = "sg_1"
   policies = ["affinity"]
 }
 `
 
 var testAccComputeV2ServerGroup_affinity = fmt.Sprintf(`
-resource "orangecloud_compute_servergroup_v2" "sg_1" {
+resource "flexibleengine_compute_servergroup_v2" "sg_1" {
   name = "sg_1"
   policies = ["affinity"]
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
     uuid = "%s"
   }
   scheduler_hints {
-    group = "${orangecloud_compute_servergroup_v2.sg_1.id}"
+    group = "${flexibleengine_compute_servergroup_v2.sg_1.id}"
   }
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)

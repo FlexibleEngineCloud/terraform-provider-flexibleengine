@@ -22,15 +22,15 @@ func TestAccImagesImageV2_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccImagesImageV2_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "name", "Rancher TerraformAccTest"),
+						"flexibleengine_images_image_v2.image_1", "name", "Rancher TerraformAccTest"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "container_format", "bare"),
+						"flexibleengine_images_image_v2.image_1", "container_format", "bare"),
 					/* resource.TestCheckResourceAttr(
-					"orangecloud_images_image_v2.image_1", "disk_format", "qcow2"), */
+					"flexibleengine_images_image_v2.image_1", "disk_format", "qcow2"), */
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "schema", "/v2/schemas/image"),
+						"flexibleengine_images_image_v2.image_1", "schema", "/v2/schemas/image"),
 				),
 			},
 		},
@@ -49,17 +49,17 @@ func TestAccImagesImageV2_name(t *testing.T) {
 			resource.TestStep{
 				Config: testAccImagesImageV2_name_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "name", "Rancher TerraformAccTest"),
+						"flexibleengine_images_image_v2.image_1", "name", "Rancher TerraformAccTest"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccImagesImageV2_name_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "name", "TerraformAccTest Rancher"),
+						"flexibleengine_images_image_v2.image_1", "name", "TerraformAccTest Rancher"),
 				),
 			},
 		},
@@ -78,29 +78,29 @@ func TestAccImagesImageV2_tags(t *testing.T) {
 			resource.TestStep{
 				Config: testAccImagesImageV2_tags_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "foo"),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "bar"),
-					testAccCheckImagesImageV2TagCount("orangecloud_images_image_v2.image_1", 2),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "foo"),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "bar"),
+					testAccCheckImagesImageV2TagCount("flexibleengine_images_image_v2.image_1", 2),
 				),
 			},
 			resource.TestStep{
 				Config: testAccImagesImageV2_tags_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "foo"),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "bar"),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "baz"),
-					testAccCheckImagesImageV2TagCount("orangecloud_images_image_v2.image_1", 3),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "foo"),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "bar"),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "baz"),
+					testAccCheckImagesImageV2TagCount("flexibleengine_images_image_v2.image_1", 3),
 				),
 			},
 			resource.TestStep{
 				Config: testAccImagesImageV2_tags_3,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "foo"),
-					testAccCheckImagesImageV2HasTag("orangecloud_images_image_v2.image_1", "baz"),
-					testAccCheckImagesImageV2TagCount("orangecloud_images_image_v2.image_1", 2),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "foo"),
+					testAccCheckImagesImageV2HasTag("flexibleengine_images_image_v2.image_1", "baz"),
+					testAccCheckImagesImageV2TagCount("flexibleengine_images_image_v2.image_1", 2),
 				),
 			},
 		},
@@ -121,17 +121,17 @@ func TestAccImagesImageV2_visibility(t *testing.T) {
 			resource.TestStep{
 				Config: testAccImagesImageV2_visibility_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "visibility", "private"),
+						"flexibleengine_images_image_v2.image_1", "visibility", "private"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccImagesImageV2_visibility_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 					resource.TestCheckResourceAttr(
-						"orangecloud_images_image_v2.image_1", "visibility", "public"),
+						"flexibleengine_images_image_v2.image_1", "visibility", "public"),
 				),
 			},
 		},
@@ -149,7 +149,7 @@ func TestAccImagesImageV2_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccImagesImageV2_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("orangecloud_images_image_v2.image_1", &image),
+					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
 				),
 			},
 		},
@@ -164,7 +164,7 @@ func testAccCheckImagesImageV2Destroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_images_image_v2" {
+		if rs.Type != "flexibleengine_images_image_v2" {
 			continue
 		}
 
@@ -280,7 +280,7 @@ func testAccCheckImagesImageV2TagCount(n string, expected int) resource.TestChec
 }
 
 var testAccImagesImageV2_basic = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -288,7 +288,7 @@ var testAccImagesImageV2_basic = `
   }`
 
 var testAccImagesImageV2_name_1 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -296,7 +296,7 @@ var testAccImagesImageV2_name_1 = `
   }`
 
 var testAccImagesImageV2_name_2 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "TerraformAccTest Rancher"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -304,7 +304,7 @@ var testAccImagesImageV2_name_2 = `
   }`
 
 var testAccImagesImageV2_tags_1 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -313,7 +313,7 @@ var testAccImagesImageV2_tags_1 = `
   }`
 
 var testAccImagesImageV2_tags_2 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -322,7 +322,7 @@ var testAccImagesImageV2_tags_2 = `
   }`
 
 var testAccImagesImageV2_tags_3 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -331,7 +331,7 @@ var testAccImagesImageV2_tags_3 = `
   }`
 
 var testAccImagesImageV2_visibility_1 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -340,7 +340,7 @@ var testAccImagesImageV2_visibility_1 = `
   }`
 
 var testAccImagesImageV2_visibility_2 = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"
@@ -349,7 +349,7 @@ var testAccImagesImageV2_visibility_2 = `
   }`
 
 var testAccImagesImageV2_timeout = `
-  resource "orangecloud_images_image_v2" "image_1" {
+  resource "flexibleengine_images_image_v2" "image_1" {
       name   = "Rancher TerraformAccTest"
       image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
       container_format = "bare"

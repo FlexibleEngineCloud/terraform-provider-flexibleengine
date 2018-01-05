@@ -23,16 +23,16 @@ func TestAccLBV2Member_basic(t *testing.T) {
 				Config:             TestAccLBV2MemberConfig_basic,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2MemberExists("orangecloud_lb_member_v2.member_1", &member_1),
-					testAccCheckLBV2MemberExists("orangecloud_lb_member_v2.member_2", &member_2),
+					testAccCheckLBV2MemberExists("flexibleengine_lb_member_v2.member_1", &member_1),
+					testAccCheckLBV2MemberExists("flexibleengine_lb_member_v2.member_2", &member_2),
 				),
 			},
 			resource.TestStep{
 				Config:             TestAccLBV2MemberConfig_update,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("orangecloud_lb_member_v2.member_1", "weight", "10"),
-					resource.TestCheckResourceAttr("orangecloud_lb_member_v2.member_2", "weight", "15"),
+					resource.TestCheckResourceAttr("flexibleengine_lb_member_v2.member_1", "weight", "10"),
+					resource.TestCheckResourceAttr("flexibleengine_lb_member_v2.member_2", "weight", "15"),
 				),
 			},
 		},
@@ -47,7 +47,7 @@ func testAccCheckLBV2MemberDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_lb_member_v2" {
+		if rs.Type != "flexibleengine_lb_member_v2" {
 			continue
 		}
 
@@ -95,42 +95,42 @@ func testAccCheckLBV2MemberExists(n string, member *pools.Member) resource.TestC
 }
 
 const TestAccLBV2MemberConfig_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.199.0/24"
   ip_version = 4
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 }
 
-resource "orangecloud_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool_v2" "pool_1" {
   name = "pool_1"
   protocol = "HTTP"
   lb_method = "ROUND_ROBIN"
-  listener_id = "${orangecloud_lb_listener_v2.listener_1.id}"
+  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
 }
 
-resource "orangecloud_lb_member_v2" "member_1" {
+resource "flexibleengine_lb_member_v2" "member_1" {
   address = "192.168.199.10"
   protocol_port = 8080
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -139,11 +139,11 @@ resource "orangecloud_lb_member_v2" "member_1" {
   }
 }
 
-resource "orangecloud_lb_member_v2" "member_2" {
+resource "flexibleengine_lb_member_v2" "member_2" {
   address = "192.168.199.11"
   protocol_port = 8080
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -154,44 +154,44 @@ resource "orangecloud_lb_member_v2" "member_2" {
 `
 
 const TestAccLBV2MemberConfig_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 }
 
-resource "orangecloud_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool_v2" "pool_1" {
   name = "pool_1"
   protocol = "HTTP"
   lb_method = "ROUND_ROBIN"
-  listener_id = "${orangecloud_lb_listener_v2.listener_1.id}"
+  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
 }
 
-resource "orangecloud_lb_member_v2" "member_1" {
+resource "flexibleengine_lb_member_v2" "member_1" {
   address = "192.168.199.10"
   protocol_port = 8080
   weight = 10
   admin_state_up = "true"
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -200,13 +200,13 @@ resource "orangecloud_lb_member_v2" "member_1" {
   }
 }
 
-resource "orangecloud_lb_member_v2" "member_2" {
+resource "flexibleengine_lb_member_v2" "member_2" {
   address = "192.168.199.11"
   protocol_port = 8080
   weight = 15
   admin_state_up = "true"
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"

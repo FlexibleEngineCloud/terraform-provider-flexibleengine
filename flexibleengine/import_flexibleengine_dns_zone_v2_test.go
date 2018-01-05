@@ -11,7 +11,7 @@ import (
 // PASS, but normally skip
 func TestAccDNSV2Zone_importBasic(t *testing.T) {
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
-	resourceName := "orangecloud_dns_zone_v2.zone_1"
+	resourceName := "flexibleengine_dns_zone_v2.zone_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckDNS(t) },

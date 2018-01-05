@@ -21,14 +21,14 @@ func TestAccELBBackend_basic(t *testing.T) {
 				Config:             TestAccELBBackendConfig_basic,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckELBBackendExists("orangecloud_elb_backend.backend_1"),
+					testAccCheckELBBackendExists("flexibleengine_elb_backend.backend_1"),
 				),
 			},
 			resource.TestStep{
 				Config:             TestAccELBBackendConfig_update,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("orangecloud_elb_backend.backend_1", "weight", "10"),
+					resource.TestCheckResourceAttr("flexibleengine_elb_backend.backend_1", "weight", "10"),
 				),
 			},
 		},
@@ -43,7 +43,7 @@ func testAccCheckELBBackendDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_elb_backendmember" {
+		if rs.Type != "flexibleengine_elb_backendmember" {
 			continue
 		}
 
@@ -74,24 +74,24 @@ func testAccCheckELBBackendExists(n string) resource.TestCheckFunc {
 }
 
 var TestAccELBBackendConfig_basic = fmt.Sprintf(`
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
-  // vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  // vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
   vpc_id = "%s"
   type = "External"
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 }
 
-resource "orangecloud_elb_backend" "backend_1" {
+resource "flexibleengine_elb_backend" "backend_1" {
   address = "192.168.199.10"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
-  listener_id = "${orangecloud_elb_listener.listener_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  listener_id = "${flexibleengine_elb_listener.listener_1.id}"
   server_id = "gary-backend"
   timeouts {
     create = "5m"
@@ -100,10 +100,10 @@ resource "orangecloud_elb_backend" "backend_1" {
   }
 }
 
-resource "orangecloud_elb_backend" "backend_2" {
+resource "flexibleengine_elb_backend" "backend_2" {
   address = "192.168.199.11"
   protocol_port = 8080
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -114,37 +114,37 @@ resource "orangecloud_elb_backend" "backend_2" {
 `, OS_VPC_ID)
 
 const TestAccELBBackendConfig_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 }
 
 
-resource "orangecloud_elb_backend" "backend_1" {
+resource "flexibleengine_elb_backend" "backend_1" {
   address = "192.168.199.10"
   protocol_port = 8080
   weight = 10
   admin_state_up = "true"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -153,12 +153,12 @@ resource "orangecloud_elb_backend" "backend_1" {
   }
 }
 
-resource "orangecloud_elb_backend" "backend" {
+resource "flexibleengine_elb_backend" "backend" {
   address = "192.168.199.11"
   protocol_port = 8080
   weight = 15
   admin_state_up = "true"
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"

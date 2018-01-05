@@ -36,7 +36,7 @@ func resourceS3BucketImportState(
 	policy := resourceS3BucketPolicy()
 	pData := policy.Data(nil)
 	pData.SetId(d.Id())
-	pData.SetType("orangecloud_s3_bucket_policy")
+	pData.SetType("flexibleengine_s3_bucket_policy")
 	pData.Set("bucket", d.Id())
 	pData.Set("policy", pol)
 	results = append(results, pData)

@@ -39,7 +39,7 @@ func TestAccS3BucketObject_source(t *testing.T) {
 		Steps: []resource.TestStep{
 			resource.TestStep{
 				Config: testAccS3BucketObjectConfigSource(rInt, tmpFile.Name()),
-				Check:  testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &obj),
+				Check:  testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &obj),
 			},
 		},
 	})
@@ -58,7 +58,7 @@ func TestAccS3BucketObject_content(t *testing.T) {
 			resource.TestStep{
 				PreConfig: func() {},
 				Config:    testAccS3BucketObjectConfigContent(rInt),
-				Check:     testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &obj),
+				Check:     testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &obj),
 			},
 		},
 	})
@@ -89,11 +89,11 @@ func TestAccS3BucketObject_withContentCharacteristics(t *testing.T) {
 			resource.TestStep{
 				Config: testAccS3BucketObjectConfig_withContentCharacteristics(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &obj),
+					testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &obj),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket_object.object", "content_type", "binary/octet-stream"),
+						"flexibleengine_s3_bucket_object.object", "content_type", "binary/octet-stream"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket_object.object", "website_redirect", "http://google.com"),
+						"flexibleengine_s3_bucket_object.object", "website_redirect", "http://google.com"),
 				),
 			},
 		},
@@ -123,8 +123,8 @@ func TestAccS3BucketObject_updates(t *testing.T) {
 			resource.TestStep{
 				Config: testAccS3BucketObjectConfig_updates(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &obj),
-					resource.TestCheckResourceAttr("orangecloud_s3_bucket_object.object", "etag", "647d1d58e1011c743ec67d5e8af87b53"),
+					testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &obj),
+					resource.TestCheckResourceAttr("flexibleengine_s3_bucket_object.object", "etag", "647d1d58e1011c743ec67d5e8af87b53"),
 				),
 			},
 			resource.TestStep{
@@ -136,8 +136,8 @@ func TestAccS3BucketObject_updates(t *testing.T) {
 				},
 				Config: testAccS3BucketObjectConfig_updates(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &obj),
-					resource.TestCheckResourceAttr("orangecloud_s3_bucket_object.object", "etag", "1c7fd13df1515c2a13ad9eb068931f09"),
+					testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &obj),
+					resource.TestCheckResourceAttr("flexibleengine_s3_bucket_object.object", "etag", "1c7fd13df1515c2a13ad9eb068931f09"),
 				),
 			},
 		},
@@ -168,8 +168,8 @@ func TestAccS3BucketObject_updatesWithVersioning(t *testing.T) {
 			resource.TestStep{
 				Config: testAccS3BucketObjectConfig_updatesWithVersioning(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &originalObj),
-					resource.TestCheckResourceAttr("orangecloud_s3_bucket_object.object", "etag", "cee4407fa91906284e2a5e5e03e86b1b"),
+					testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &originalObj),
+					resource.TestCheckResourceAttr("flexibleengine_s3_bucket_object.object", "etag", "cee4407fa91906284e2a5e5e03e86b1b"),
 				),
 			},
 			resource.TestStep{
@@ -181,8 +181,8 @@ func TestAccS3BucketObject_updatesWithVersioning(t *testing.T) {
 				},
 				Config: testAccS3BucketObjectConfig_updatesWithVersioning(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists("orangecloud_s3_bucket_object.object", &modifiedObj),
-					resource.TestCheckResourceAttr("orangecloud_s3_bucket_object.object", "etag", "00b8c73b1b50e7cc932362c7225b8e29"),
+					testAccCheckS3BucketObjectExists("flexibleengine_s3_bucket_object.object", &modifiedObj),
+					resource.TestCheckResourceAttr("flexibleengine_s3_bucket_object.object", "etag", "00b8c73b1b50e7cc932362c7225b8e29"),
 					testAccCheckS3BucketObjectVersionIdDiffers(&originalObj, &modifiedObj),
 				),
 			},
@@ -215,7 +215,7 @@ func testAccCheckS3BucketObjectDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_s3_bucket_object" {
+		if rs.Type != "flexibleengine_s3_bucket_object" {
 			continue
 		}
 
@@ -291,10 +291,10 @@ func TestAccS3BucketObject_sse(t *testing.T) {
 				Config:    testAccS3BucketObjectConfig_withSSE(rInt, tmpFile.Name()),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckS3BucketObjectExists(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						&obj),
 					testAccCheckS3BucketObjectSSE(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						"aws:kms"),
 				),
 			},
@@ -316,13 +316,13 @@ func TestAccS3BucketObject_acl(t *testing.T) {
 				Config: testAccS3BucketObjectConfig_acl(rInt, "private"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckS3BucketObjectExists(
-						"orangecloud_s3_bucket_object.object", &obj),
+						"flexibleengine_s3_bucket_object.object", &obj),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						"acl",
 						"private"),
 					testAccCheckS3BucketObjectAcl(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						[]string{"FULL_CONTROL"}),
 				),
 			},
@@ -330,14 +330,14 @@ func TestAccS3BucketObject_acl(t *testing.T) {
 				Config: testAccS3BucketObjectConfig_acl(rInt, "public-read"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckS3BucketObjectExists(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						&obj),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						"acl",
 						"public-read"),
 					testAccCheckS3BucketObjectAcl(
-						"orangecloud_s3_bucket_object.object",
+						"flexibleengine_s3_bucket_object.object",
 						[]string{"FULL_CONTROL", "READ"}),
 				),
 			},
@@ -469,11 +469,11 @@ func testAccCheckS3BucketObjectSSE(n, expectedSSE string) resource.TestCheckFunc
 
 func testAccS3BucketObjectConfigSource(randInt int, source string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket" {
+resource "flexibleengine_s3_bucket" "object_bucket" {
     bucket = "tf-object-test-bucket-%d"
 }
-resource "orangecloud_s3_bucket_object" "object" {
-	bucket = "${orangecloud_s3_bucket.object_bucket.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+	bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
 	key = "test-key"
 	source = "%s"
 	content_type = "binary/octet-stream"
@@ -483,12 +483,12 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfig_withContentCharacteristics(randInt int, source string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket_2" {
+resource "flexibleengine_s3_bucket" "object_bucket_2" {
 	bucket = "tf-object-test-bucket-%d"
 }
 
-resource "orangecloud_s3_bucket_object" "object" {
-	bucket = "${orangecloud_s3_bucket.object_bucket_2.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+	bucket = "${flexibleengine_s3_bucket.object_bucket_2.bucket}"
 	key = "test-key"
 	source = "%s"
 	content_language = "en"
@@ -500,11 +500,11 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfigContent(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket" {
+resource "flexibleengine_s3_bucket" "object_bucket" {
         bucket = "tf-object-test-bucket-%d"
 }
-resource "orangecloud_s3_bucket_object" "object" {
-        bucket = "${orangecloud_s3_bucket.object_bucket.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+        bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
         key = "test-key"
         content = "some_bucket_content"
 }
@@ -513,12 +513,12 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfig_updates(randInt int, source string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket_3" {
+resource "flexibleengine_s3_bucket" "object_bucket_3" {
 	bucket = "tf-object-test-bucket-%d"
 }
 
-resource "orangecloud_s3_bucket_object" "object" {
-	bucket = "${orangecloud_s3_bucket.object_bucket_3.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+	bucket = "${flexibleengine_s3_bucket.object_bucket_3.bucket}"
 	key = "updateable-key"
 	source = "%s"
 	etag = "${md5(file("%s"))}"
@@ -528,15 +528,15 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfig_updatesWithVersioning(randInt int, source string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket_3" {
+resource "flexibleengine_s3_bucket" "object_bucket_3" {
 	bucket = "tf-object-test-bucket-%d"
 	versioning {
 		enabled = true
 	}
 }
 
-resource "orangecloud_s3_bucket_object" "object" {
-	bucket = "${orangecloud_s3_bucket.object_bucket_3.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+	bucket = "${flexibleengine_s3_bucket.object_bucket_3.bucket}"
 	key = "updateable-key"
 	source = "%s"
 	etag = "${md5(file("%s"))}"
@@ -546,12 +546,12 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfig_withSSE(randInt int, source string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket" {
+resource "flexibleengine_s3_bucket" "object_bucket" {
 	bucket = "tf-object-test-bucket-%d"
 }
 
-resource "orangecloud_s3_bucket_object" "object" {
-	bucket = "${orangecloud_s3_bucket.object_bucket.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+	bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
 	key = "test-key"
 	source = "%s"
 	server_side_encryption = "aws:kms"
@@ -561,11 +561,11 @@ resource "orangecloud_s3_bucket_object" "object" {
 
 func testAccS3BucketObjectConfig_acl(randInt int, acl string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "object_bucket" {
+resource "flexibleengine_s3_bucket" "object_bucket" {
         bucket = "tf-object-test-bucket-%d"
 }
-resource "orangecloud_s3_bucket_object" "object" {
-        bucket = "${orangecloud_s3_bucket.object_bucket.bucket}"
+resource "flexibleengine_s3_bucket_object" "object" {
+        bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
         key = "test-key"
         content = "some_bucket_content"
         acl = "%s"

@@ -29,12 +29,12 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
+						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "availability_zone", OS_AVAILABILITY_ZONE),
+						"flexibleengine_compute_instance_v2.instance_1", "availability_zone", OS_AVAILABILITY_ZONE),
 				),
 			},
 		},
@@ -55,9 +55,9 @@ func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 				Config: testAccComputeV2Instance_secgroupMulti,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2SecGroupExists(
-						"orangecloud_compute_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance_1),
+						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
 			},
 		},
@@ -78,22 +78,22 @@ func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 				Config: testAccComputeV2Instance_secgroupMultiUpdate_1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2SecGroupExists(
-						"orangecloud_compute_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckComputeV2SecGroupExists(
-						"orangecloud_compute_secgroup_v2.secgroup_2", &secgroup_2),
+						"flexibleengine_compute_secgroup_v2.secgroup_2", &secgroup_2),
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance_1),
+						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2Instance_secgroupMultiUpdate_2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2SecGroupExists(
-						"orangecloud_compute_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckComputeV2SecGroupExists(
-						"orangecloud_compute_secgroup_v2.secgroup_2", &secgroup_2),
+						"flexibleengine_compute_secgroup_v2.secgroup_2", &secgroup_2),
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance_1),
+						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
 			},
 		},
@@ -112,7 +112,7 @@ func TestAccComputeV2Instance_bootFromVolumeImage(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_bootFromVolumeImage,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceBootVolumeAttachment(&instance),
 				),
 			},
@@ -132,7 +132,7 @@ func TestAccComputeV2Instance_bootFromVolumeVolume(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_bootFromVolumeVolume,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceBootVolumeAttachment(&instance),
 				),
 			},
@@ -154,14 +154,14 @@ func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 				Config: testAccComputeV2Instance_bootFromVolumeForceNew_1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance1_1),
+						"flexibleengine_compute_instance_v2.instance_1", &instance1_1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2Instance_bootFromVolumeForceNew_2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance1_2),
+						"flexibleengine_compute_instance_v2.instance_1", &instance1_2),
 					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
 				),
 			},
@@ -181,7 +181,7 @@ func TestAccComputeV2Instance_personality(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_personality,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 				),
 			},
 		},
@@ -201,14 +201,14 @@ func TestAccComputeV2Instance_changeFixedIP(t *testing.T) {
 				Config: testAccComputeV2Instance_changeFixedIP_1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance1_1),
+						"flexibleengine_compute_instance_v2.instance_1", &instance1_1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2Instance_changeFixedIP_2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2InstanceExists(
-						"orangecloud_compute_instance_v2.instance_1", &instance1_2),
+						"flexibleengine_compute_instance_v2.instance_1", &instance1_2),
 					testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(&instance1_1, &instance1_2),
 				),
 			},
@@ -226,7 +226,7 @@ func TestAccComputeV2Instance_stopBeforeDestroy(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_stopBeforeDestroy,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 				),
 			},
 		},
@@ -244,26 +244,26 @@ func TestAccComputeV2Instance_metadataRemove(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_metadataRemove_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
 					testAccCheckComputeV2InstanceMetadata(&instance, "abc", "def"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
+						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "all_metadata.abc", "def"),
+						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.abc", "def"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2Instance_metadataRemove_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
 					testAccCheckComputeV2InstanceMetadata(&instance, "ghi", "jkl"),
 					testAccCheckComputeV2InstanceNoMetadataKey(&instance, "abc"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
+						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_instance_v2.instance_1", "all_metadata.ghi", "jkl"),
+						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.ghi", "jkl"),
 				),
 			},
 		},
@@ -280,7 +280,7 @@ func TestAccComputeV2Instance_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
 				),
 			},
 		},
@@ -295,7 +295,7 @@ func testAccCheckComputeV2InstanceDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_instance_v2" {
+		if rs.Type != "flexibleengine_compute_instance_v2" {
 			continue
 		}
 
@@ -445,7 +445,7 @@ func testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(
 }
 
 var testAccComputeV2Instance_basic = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   availability_zone = "%s"
@@ -459,7 +459,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMulti = fmt.Sprintf(`
-resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "a security group"
   rule {
@@ -470,9 +470,9 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
   }
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s", "${orangecloud_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["%s", "${flexibleengine_compute_secgroup_v2.secgroup_1.name}"]
   network {
     uuid = "%s"
   }
@@ -480,7 +480,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_1 = fmt.Sprintf(`
-resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "a security group"
   rule {
@@ -491,7 +491,7 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "another security group"
   rule {
@@ -502,7 +502,7 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
   }
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -512,7 +512,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_2 = fmt.Sprintf(`
-resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "a security group"
   rule {
@@ -523,7 +523,7 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_1" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_compute_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "another security group"
   rule {
@@ -534,9 +534,9 @@ resource "orangecloud_compute_secgroup_v2" "secgroup_2" {
   }
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s", "${orangecloud_compute_secgroup_v2.secgroup_1.name}", "${orangecloud_compute_secgroup_v2.secgroup_2.name}"]
+  security_groups = ["%s", "${flexibleengine_compute_secgroup_v2.secgroup_1.name}", "${flexibleengine_compute_secgroup_v2.secgroup_2.name}"]
   network {
     uuid = "%s"
   }
@@ -544,7 +544,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_bootFromVolumeImage = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   availability_zone = "%s"
@@ -563,20 +563,20 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_bootFromVolumeVolume = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "vol_1" {
+resource "flexibleengine_blockstorage_volume_v2" "vol_1" {
   name = "vol_1"
   size = 50
   image_id = "%s"
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
     uuid = "%s"
   }
   block_device {
-    uuid = "${orangecloud_blockstorage_volume_v2.vol_1.id}"
+    uuid = "${flexibleengine_blockstorage_volume_v2.vol_1.id}"
     source_type = "volume"
     boot_index = 0
     destination_type = "volume"
@@ -586,7 +586,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_IMAGE_ID, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_bootFromVolumeForceNew_1 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -604,7 +604,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_bootFromVolumeForceNew_2 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -622,7 +622,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_blockDeviceNewVolume = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -646,12 +646,12 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_blockDeviceExistingVolume = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -665,7 +665,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
   block_device {
-    uuid = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
+    uuid = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
     source_type = "volume"
     destination_type = "volume"
     boot_index = 1
@@ -675,7 +675,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_personality = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -693,7 +693,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_multiEphemeral = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "terraform-test"
   security_groups = ["%s"]
   network {
@@ -724,21 +724,21 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID, OS_IMAGE_ID)
 
 var testAccComputeV2Instance_accessIPv4 = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
   no_gateway = true
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
-  depends_on = ["orangecloud_networking_subnet_v2.subnet_1"]
+resource "flexibleengine_compute_instance_v2" "instance_1" {
+  depends_on = ["flexibleengine_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
   security_groups = ["%s"]
@@ -748,7 +748,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_1.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.100"
     access_network = true
   }
@@ -756,7 +756,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_changeFixedIP_1 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -767,7 +767,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_changeFixedIP_2 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -778,7 +778,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_stopBeforeDestroy = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -789,7 +789,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_metadataRemove_1 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -803,7 +803,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_metadataRemove_2 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -818,7 +818,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 
 /*
 var testAccComputeV2Instance_forceDelete = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -830,7 +830,7 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 */
 
 var testAccComputeV2Instance_timeout = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -844,21 +844,21 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_networkNameToID = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
   no_gateway = true
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
-  depends_on = ["orangecloud_networking_subnet_v2.subnet_1"]
+resource "flexibleengine_compute_instance_v2" "instance_1" {
+  depends_on = ["flexibleengine_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
   security_groups = ["%s"]
@@ -868,89 +868,89 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 
   network {
-    name = "${orangecloud_networking_network_v2.network_1.name}"
+    name = "${flexibleengine_networking_network_v2.network_1.name}"
   }
 
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_crazyNICs = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
   no_gateway = true
 }
 
-resource "orangecloud_networking_network_v2" "network_2" {
+resource "flexibleengine_networking_network_v2" "network_2" {
   name = "network_2"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_2" {
+resource "flexibleengine_networking_subnet_v2" "subnet_2" {
   name = "subnet_2"
-  network_id = "${orangecloud_networking_network_v2.network_2.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
   cidr = "192.168.2.0/24"
   ip_version = 4
   enable_dhcp = true
   no_gateway = true
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.1.103"
   }
 }
 
-resource "orangecloud_networking_port_v2" "port_2" {
+resource "flexibleengine_networking_port_v2" "port_2" {
   name = "port_2"
-  network_id = "${orangecloud_networking_network_v2.network_2.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${orangecloud_networking_subnet_v2.subnet_2.id}"
+    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_2.id}"
     ip_address = "192.168.2.103"
   }
 }
 
-resource "orangecloud_networking_port_v2" "port_3" {
+resource "flexibleengine_networking_port_v2" "port_3" {
   name = "port_3"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.1.104"
   }
 }
 
-resource "orangecloud_networking_port_v2" "port_4" {
+resource "flexibleengine_networking_port_v2" "port_4" {
   name = "port_4"
-  network_id = "${orangecloud_networking_network_v2.network_2.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${orangecloud_networking_subnet_v2.subnet_2.id}"
+    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_2.id}"
     ip_address = "192.168.2.104"
   }
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   depends_on = [
-    "orangecloud_networking_subnet_v2.subnet_1",
-    "orangecloud_networking_subnet_v2.subnet_2",
-    "orangecloud_networking_port_v2.port_1",
-    "orangecloud_networking_port_v2.port_2",
+    "flexibleengine_networking_subnet_v2.subnet_1",
+    "flexibleengine_networking_subnet_v2.subnet_2",
+    "flexibleengine_networking_port_v2.port_1",
+    "flexibleengine_networking_port_v2.port_2",
   ]
 
   name = "instance_1"
@@ -961,39 +961,39 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_1.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.100"
   }
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_2.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_2.id}"
     fixed_ip_v4 = "192.168.2.100"
   }
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_1.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
     fixed_ip_v4 = "192.168.1.101"
   }
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_2.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_2.id}"
     fixed_ip_v4 = "192.168.2.101"
   }
 
   network {
-    port = "${orangecloud_networking_port_v2.port_1.id}"
+    port = "${flexibleengine_networking_port_v2.port_1.id}"
   }
 
   network {
-    port = "${orangecloud_networking_port_v2.port_2.id}"
+    port = "${flexibleengine_networking_port_v2.port_2.id}"
   }
 
   network {
-    port = "${orangecloud_networking_port_v2.port_3.id}"
+    port = "${flexibleengine_networking_port_v2.port_3.id}"
   }
 
   network {
-    port = "${orangecloud_networking_port_v2.port_4.id}"
+    port = "${flexibleengine_networking_port_v2.port_4.id}"
   }
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)

@@ -8,7 +8,7 @@ import (
 
 // PASS, but Taking 15m+ in time...
 func TestAccImagesImageV2_importBasic(t *testing.T) {
-	resourceName := "orangecloud_images_image_v2.image_1"
+	resourceName := "flexibleengine_images_image_v2.image_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

@@ -27,16 +27,16 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccLBV2LoadBalancerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2LoadBalancerExists("orangecloud_lb_loadbalancer_v2.loadbalancer_1", &lb),
+					testAccCheckLBV2LoadBalancerExists("flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
 				),
 			},
 			resource.TestStep{
 				Config: testAccLBV2LoadBalancerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", "name", "loadbalancer_1_updated"),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "name", "loadbalancer_1_updated"),
 					resource.TestMatchResourceAttr(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", "vip_port_id",
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "vip_port_id",
 						regexp.MustCompile("^[a-f0-9-]+")),
 				),
 			},
@@ -58,13 +58,13 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 				Config: testAccLBV2LoadBalancer_secGroup,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2LoadBalancerExists(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", &lb),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_1", &sg_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_1", &sg_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_2),
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_1),
 				),
 			},
@@ -72,13 +72,13 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 				Config: testAccLBV2LoadBalancer_secGroup_update1,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2LoadBalancerExists(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", &lb),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &sg_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &sg_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "2"),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "2"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_1),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_2),
 				),
@@ -87,13 +87,13 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 				Config: testAccLBV2LoadBalancer_secGroup_update2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2LoadBalancerExists(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", &lb),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &sg_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &sg_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
+						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_2),
 				),
 			},
@@ -109,7 +109,7 @@ func testAccCheckLBV2LoadBalancerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_lb_loadbalancer_v2" {
+		if rs.Type != "flexibleengine_lb_loadbalancer_v2" {
 			continue
 		}
 
@@ -180,22 +180,22 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 }
 
 const testAccLBV2LoadBalancerConfig_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
   #loadbalancer_provider = "haproxy"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -206,23 +206,23 @@ resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
 `
 
 const testAccLBV2LoadBalancerConfig_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1_updated"
   #loadbalancer_provider = "haproxy"
   admin_state_up = "true"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 
   timeouts {
     create = "5m"
@@ -233,96 +233,96 @@ resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
 `
 
 const testAccLBV2LoadBalancer_secGroup = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "secgroup_2"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.199.0/24"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     security_group_ids = [
-      "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
     ]
 }
 `
 
 const testAccLBV2LoadBalancer_secGroup_update1 = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "secgroup_2"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.199.0/24"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     security_group_ids = [
-      "${orangecloud_networking_secgroup_v2.secgroup_1.id}",
-      "${orangecloud_networking_secgroup_v2.secgroup_2.id}"
+      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}",
+      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
     ]
 }
 `
 
 const testAccLBV2LoadBalancer_secGroup_update2 = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "secgroup_2"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.199.0/24"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     security_group_ids = [
-      "${orangecloud_networking_secgroup_v2.secgroup_2.id}"
+      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
     ]
-    depends_on = ["orangecloud_networking_secgroup_v2.secgroup_1"]
+    depends_on = ["flexibleengine_networking_secgroup_v2.secgroup_1"]
 }
 `

@@ -27,13 +27,13 @@ func TestAccNetworkingV2SecGroupRule_basic(t *testing.T) {
 				Config: testAccNetworkingV2SecGroupRule_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &secgroup_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
 					testAccCheckNetworkingV2SecGroupRuleExists(
-						"orangecloud_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
+						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
 					testAccCheckNetworkingV2SecGroupRuleExists(
-						"orangecloud_networking_secgroup_rule_v2.secgroup_rule_2", &secgroup_rule_2),
+						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_2", &secgroup_rule_2),
 				),
 			},
 		},
@@ -54,9 +54,9 @@ func TestAccNetworkingV2SecGroupRule_timeout(t *testing.T) {
 				Config: testAccNetworkingV2SecGroupRule_timeout,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_2", &secgroup_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
 				),
 			},
 		},
@@ -76,11 +76,11 @@ func TestAccNetworkingV2SecGroupRule_numericProtocol(t *testing.T) {
 				Config: testAccNetworkingV2SecGroupRule_numericProtocol,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2SecGroupExists(
-						"orangecloud_networking_secgroup_v2.secgroup_1", &secgroup_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckNetworkingV2SecGroupRuleExists(
-						"orangecloud_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
+						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_secgroup_rule_v2.secgroup_rule_1", "protocol", "115"),
+						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", "protocol", "115"),
 				),
 			},
 		},
@@ -95,7 +95,7 @@ func testAccCheckNetworkingV2SecGroupRuleDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_networking_secgroup_rule_v2" {
+		if rs.Type != "flexibleengine_networking_secgroup_rule_v2" {
 			continue
 		}
 
@@ -141,87 +141,87 @@ func testAccCheckNetworkingV2SecGroupRuleExists(n string, security_group_rule *r
 }
 
 const testAccNetworkingV2SecGroupRule_basic = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   direction = "ingress"
   ethertype = "IPv4"
   port_range_max = 22
   port_range_min = 22
   protocol = "tcp"
   remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_2" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_2" {
   direction = "ingress"
   ethertype = "IPv4"
   port_range_max = 80
   port_range_min = 80
   protocol = "tcp"
-  remote_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_2.id}"
+  remote_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
 }
 `
 
 const testAccNetworkingV2SecGroupRule_lowerCaseCIDR = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   direction = "ingress"
   ethertype = "IPv6"
   port_range_max = 22
   port_range_min = 22
   protocol = "tcp"
   remote_ip_prefix = "2001:558:FC00::/39"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
 `
 
 const testAccNetworkingV2SecGroupRule_timeout = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_2" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   name = "secgroup_2"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   direction = "ingress"
   ethertype = "IPv4"
   port_range_max = 22
   port_range_min = 22
   protocol = "tcp"
   remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 
   timeouts {
     delete = "5m"
   }
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_2" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_2" {
   direction = "ingress"
   ethertype = "IPv4"
   port_range_max = 80
   port_range_min = 80
   protocol = "tcp"
-  remote_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_2.id}"
+  remote_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
 
   timeouts {
     delete = "5m"
@@ -230,187 +230,187 @@ resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_2" {
 `
 
 const testAccNetworkingV2SecGroupRule_protocols = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "terraform security group rule acceptance test"
 }
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ah" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ah" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "ah"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_dccp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_dccp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "dccp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_egp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_egp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "egp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_esp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_esp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "esp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_gre" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_gre" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "gre"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_igmp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_igmp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "igmp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_encap" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_encap" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-encap"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_frag" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_frag" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-frag"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_icmp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_icmp" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-icmp"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_nonxt" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_nonxt" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-nonxt"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_opts" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_opts" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-opts"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ipv6_route" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_route" {
 #  direction = "ingress"
 #  ethertype = "IPv6"
 #  protocol = "ipv6-route"
 #  remote_ip_prefix = "::/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_ospf" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ospf" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "ospf"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_pgm" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_pgm" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "pgm"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_rsvp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_rsvp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "rsvp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_sctp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_sctp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "sctp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_udplite" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_udplite" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "udplite"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 
 # NOT SUPPORTED
-#resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_vrrp" {
+#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_vrrp" {
 #  direction = "ingress"
 #  ethertype = "IPv4"
 #  protocol = "vrrp"
 #  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 #}
 `
 
 const testAccNetworkingV2SecGroupRule_numericProtocol = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "terraform security group rule acceptance test"
 }
 
-resource "orangecloud_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   direction = "ingress"
   ethertype = "IPv4"
   port_range_max = 22
   port_range_min = 22
   protocol = "115"
   remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
 `

@@ -22,7 +22,7 @@ func TestAccComputeV2VolumeAttach_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2VolumeAttach_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("orangecloud_compute_volume_attach_v2.va_1", &va),
+					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
 				),
 			},
 		},
@@ -41,7 +41,7 @@ func TestAccComputeV2VolumeAttach_device(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2VolumeAttach_device,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("orangecloud_compute_volume_attach_v2.va_1", &va),
+					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
 					//testAccCheckComputeV2VolumeAttachDevice(&va, "/dev/vdc"),
 				),
 			},
@@ -61,7 +61,7 @@ func TestAccComputeV2VolumeAttach_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2VolumeAttach_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("orangecloud_compute_volume_attach_v2.va_1", &va),
+					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
 				),
 			},
 		},
@@ -76,7 +76,7 @@ func testAccCheckComputeV2VolumeAttachDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_volume_attach_v2" {
+		if rs.Type != "flexibleengine_compute_volume_attach_v2" {
 			continue
 		}
 
@@ -144,12 +144,12 @@ func testAccCheckComputeV2VolumeAttachDevice(
 }
 
 var testAccComputeV2VolumeAttach_basic = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -157,19 +157,19 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_compute_volume_attach_v2" "va_1" {
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
+resource "flexibleengine_compute_volume_attach_v2" "va_1" {
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_device = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -177,20 +177,20 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_compute_volume_attach_v2" "va_1" {
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
+resource "flexibleengine_compute_volume_attach_v2" "va_1" {
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
   device = "/dev/vdc"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_timeout = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 1
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -198,9 +198,9 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_compute_volume_attach_v2" "va_1" {
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  volume_id = "${orangecloud_blockstorage_volume_v2.volume_1.id}"
+resource "flexibleengine_compute_volume_attach_v2" "va_1" {
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
 
   timeouts {
     create = "5m"

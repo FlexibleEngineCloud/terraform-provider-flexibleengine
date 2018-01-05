@@ -22,14 +22,14 @@ func TestAccNetworkingV2Router_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Router_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
 			},
 			resource.TestStep{
 				Config: testAccNetworkingV2Router_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_router_v2.router_1", "name", "router_2"),
+						"flexibleengine_networking_router_v2.router_1", "name", "router_2"),
 				),
 			},
 		},
@@ -48,14 +48,14 @@ func TestAccNetworkingV2Router_update_external_gw(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Router_update_external_gw_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
 			},
 			resource.TestStep{
 				Config: testAccNetworkingV2Router_update_external_gw_2,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_router_v2.router_1", "external_gateway", OS_EXTGW_ID),
+						"flexibleengine_networking_router_v2.router_1", "external_gateway", OS_EXTGW_ID),
 				),
 			},
 		},
@@ -74,7 +74,7 @@ func TestAccNetworkingV2Router_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Router_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
 			},
 		},
@@ -89,7 +89,7 @@ func testAccCheckNetworkingV2RouterDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_networking_router_v2" {
+		if rs.Type != "flexibleengine_networking_router_v2" {
 			continue
 		}
 
@@ -135,7 +135,7 @@ func testAccCheckNetworkingV2RouterExists(n string, router *routers.Router) reso
 }
 
 const testAccNetworkingV2Router_basic = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
 	name = "router_1"
 	admin_state_up = "true"
 	distributed = "false"
@@ -143,7 +143,7 @@ resource "orangecloud_networking_router_v2" "router_1" {
 `
 
 const testAccNetworkingV2Router_update = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
 	name = "router_2"
 	admin_state_up = "true"
 	distributed = "false"
@@ -151,7 +151,7 @@ resource "orangecloud_networking_router_v2" "router_1" {
 `
 
 const testAccNetworkingV2Router_update_external_gw_1 = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
 	name = "router"
 	admin_state_up = "true"
 	distributed = "false"
@@ -159,7 +159,7 @@ resource "orangecloud_networking_router_v2" "router_1" {
 `
 
 var testAccNetworkingV2Router_update_external_gw_2 = fmt.Sprintf(`
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
 	name = "router"
 	admin_state_up = "true"
 	distributed = "false"
@@ -168,7 +168,7 @@ resource "orangecloud_networking_router_v2" "router_1" {
 `, OS_EXTGW_ID)
 
 const testAccNetworkingV2Router_timeout = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
 	name = "router_1"
 	admin_state_up = "true"
 	distributed = "false"

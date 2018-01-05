@@ -21,7 +21,7 @@ func TestAccFWPolicyV2_basic(t *testing.T) {
 				Config: testAccFWPolicyV2_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWPolicyV2Exists(
-						"orangecloud_fw_policy_v2.policy_1", "", "", 0),
+						"flexibleengine_fw_policy_v2.policy_1", "", "", 0),
 				),
 			},
 		},
@@ -38,7 +38,7 @@ func TestAccFWPolicyV2_addRules(t *testing.T) {
 				Config: testAccFWPolicyV2_addRules,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWPolicyV2Exists(
-						"orangecloud_fw_policy_v2.policy_1", "policy_1", "terraform acceptance test", 2),
+						"flexibleengine_fw_policy_v2.policy_1", "policy_1", "terraform acceptance test", 2),
 				),
 			},
 		},
@@ -55,7 +55,7 @@ func TestAccFWPolicyV2_deleteRules(t *testing.T) {
 				Config: testAccFWPolicyV2_deleteRules,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWPolicyV2Exists(
-						"orangecloud_fw_policy_v2.policy_1", "policy_1", "terraform acceptance test", 1),
+						"flexibleengine_fw_policy_v2.policy_1", "policy_1", "terraform acceptance test", 1),
 				),
 			},
 		},
@@ -72,7 +72,7 @@ func TestAccFWPolicyV2_timeout(t *testing.T) {
 				Config: testAccFWPolicyV2_timeout,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWPolicyV2Exists(
-						"orangecloud_fw_policy_v2.policy_1", "", "", 0),
+						"flexibleengine_fw_policy_v2.policy_1", "", "", 0),
 				),
 			},
 		},
@@ -86,7 +86,7 @@ func testAccCheckFWPolicyV2Destroy(s *terraform.State) error {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_fw_policy_v2" {
+		if rs.Type != "flexibleengine_fw_policy_v2" {
 			continue
 		}
 		_, err = policies.Get(networkingClient, rs.Primary.ID).Extract()
@@ -150,48 +150,48 @@ func testAccCheckFWPolicyV2Exists(n, name, description string, ruleCount int) re
 }
 
 const testAccFWPolicyV2_basic = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
 }
 `
 
 const testAccFWPolicyV2_addRules = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
   description =  "terraform acceptance test"
   rules = [
-    "${orangecloud_fw_rule_v2.udp_deny.id}",
-    "${orangecloud_fw_rule_v2.tcp_allow.id}"
+    "${flexibleengine_fw_rule_v2.udp_deny.id}",
+    "${flexibleengine_fw_rule_v2.tcp_allow.id}"
   ]
 }
 
-resource "orangecloud_fw_rule_v2" "tcp_allow" {
+resource "flexibleengine_fw_rule_v2" "tcp_allow" {
   protocol = "tcp"
   action = "allow"
 }
 
-resource "orangecloud_fw_rule_v2" "udp_deny" {
+resource "flexibleengine_fw_rule_v2" "udp_deny" {
   protocol = "udp"
   action = "deny"
 }
 `
 
 const testAccFWPolicyV2_deleteRules = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
   description =  "terraform acceptance test"
   rules = [
-    "${orangecloud_fw_rule_v2.udp_deny.id}"
+    "${flexibleengine_fw_rule_v2.udp_deny.id}"
   ]
 }
 
-resource "orangecloud_fw_rule_v2" "udp_deny" {
+resource "flexibleengine_fw_rule_v2" "udp_deny" {
   protocol = "udp"
   action = "deny"
 }
 `
 
 const testAccFWPolicyV2_timeout = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   timeouts {
     create = "5m"
   }

@@ -25,8 +25,8 @@ func TestAccComputeV2FloatingIPAssociate_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip, &instance, 1),
 				),
 			},
@@ -47,8 +47,8 @@ func TestAccComputeV2FloatingIPAssociate_fixedIP(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_fixedIP,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip, &instance, 1),
 				),
 			},
@@ -69,8 +69,8 @@ func TestAccComputeV2FloatingIPAssociate_attachToFirstNetwork(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_attachToFirstNetwork,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip, &instance, 1),
 				),
 			},
@@ -92,8 +92,8 @@ func TestAccComputeV2FloatingIPAssociate_attachToSecondNetwork(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_attachToSecondNetwork,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip, &instance, 2),
 				),
 			},
@@ -116,18 +116,18 @@ func TestAccComputeV2FloatingIPAssociate_attachNew(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_attachNew_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip_1),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_2", &fip_2),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip_1),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_2", &fip_2),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip_1, &instance, 1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIPAssociate_attachNew_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("orangecloud_compute_instance_v2.instance_1", &instance),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_1", &fip_1),
-					testAccCheckNetworkingV2FloatingIPExists("orangecloud_networking_floatingip_v2.fip_2", &fip_2),
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip_1),
+					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_2", &fip_2),
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip_2, &instance, 1),
 				),
 			},
@@ -143,7 +143,7 @@ func testAccCheckComputeV2FloatingIPAssociateDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_floatingip_associate_v2" {
+		if rs.Type != "flexibleengine_compute_floatingip_associate_v2" {
 			continue
 		}
 
@@ -208,7 +208,7 @@ func testAccCheckComputeV2FloatingIPAssociateAssociated(
 }
 
 var testAccComputeV2FloatingIPAssociate_basic = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -216,17 +216,17 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_fixedIP = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -234,18 +234,18 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${orangecloud_compute_instance_v2.instance_1.access_ip_v4}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.access_ip_v4}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachToFirstNetwork = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
 
@@ -254,36 +254,36 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${orangecloud_compute_instance_v2.instance_1.network.0.fixed_ip_v4}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachToSecondNetwork = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
   no_gateway = true
 }
 
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
 
   network {
-    uuid = "${orangecloud_networking_network_v2.network_1.id}"
+    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
   }
 
   network {
@@ -291,18 +291,18 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${orangecloud_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachNew_1 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -310,20 +310,20 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_2" {
+resource "flexibleengine_networking_floatingip_v2" "fip_2" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
 }
 `, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
 
 var testAccComputeV2FloatingIPAssociate_attachNew_2 = fmt.Sprintf(`
-resource "orangecloud_compute_instance_v2" "instance_1" {
+resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["%s"]
   network {
@@ -331,14 +331,14 @@ resource "orangecloud_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_1" {
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
-resource "orangecloud_networking_floatingip_v2" "fip_2" {
+resource "flexibleengine_networking_floatingip_v2" "fip_2" {
 }
 
-resource "orangecloud_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${orangecloud_networking_floatingip_v2.fip_2.address}"
-  instance_id = "${orangecloud_compute_instance_v2.instance_1.id}"
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_2.address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
 }
 `, OS_NETWORK_ID)

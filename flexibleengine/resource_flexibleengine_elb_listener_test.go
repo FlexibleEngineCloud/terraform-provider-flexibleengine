@@ -21,14 +21,14 @@ func TestAccELBListener_basic(t *testing.T) {
 			resource.TestStep{
 				Config: TestAccELBListenerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckELBListenerExists("orangecloud_elb_listener.listener_1", &listener),
+					testAccCheckELBListenerExists("flexibleengine_elb_listener.listener_1", &listener),
 				),
 			},
 			resource.TestStep{
 				Config: TestAccELBListenerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_elb_listener.listener_1", "name", "listener_1_updated"),
+						"flexibleengine_elb_listener.listener_1", "name", "listener_1_updated"),
 				),
 			},
 		},
@@ -43,7 +43,7 @@ func testAccCheckELBListenerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_lb_listener_v2" {
+		if rs.Type != "flexibleengine_lb_listener_v2" {
 			continue
 		}
 
@@ -89,21 +89,21 @@ func testAccCheckELBListenerExists(n string, listener *listeners.Listener) resou
 }
 
 var TestAccELBListenerConfig_basic = fmt.Sprintf(`
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
   vpc_id = "%s"
   type = "External"
   bandwidth = 5
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1"
   protocol = "TCP"
   protocol_port = 8080
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 
 	timeouts {
 		create = "5m"
@@ -114,21 +114,21 @@ resource "orangecloud_elb_listener" "listener_1" {
 `, OS_VPC_ID)
 
 var TestAccELBListenerConfig_update = fmt.Sprintf(`
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
   vpc_id = "%s"
   type = "External"
   bandwidth = 5
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1_updated"
   protocol = "TCP"
   protocol_port = 8080
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 
 	timeouts {
 		create = "5m"

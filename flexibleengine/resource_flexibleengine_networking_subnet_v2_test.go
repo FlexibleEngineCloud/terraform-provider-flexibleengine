@@ -22,22 +22,22 @@ func TestAccNetworkingV2Subnet_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.100"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.100"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "name", "subnet_1"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "name", "subnet_1"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "gateway_ip", "192.168.199.1"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "gateway_ip", "192.168.199.1"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "enable_dhcp", "true"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "enable_dhcp", "true"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.150"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.150"),
 				),
 			},
 		},
@@ -56,9 +56,9 @@ func TestAccNetworkingV2Subnet_enableDHCP(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_enableDHCP,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "enable_dhcp", "true"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "enable_dhcp", "true"),
 				),
 			},
 		},
@@ -77,9 +77,9 @@ func TestAccNetworkingV2Subnet_noGateway(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_noGateway,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "gateway_ip", ""),
+						"flexibleengine_networking_subnet_v2.subnet_1", "gateway_ip", ""),
 				),
 			},
 		},
@@ -98,9 +98,9 @@ func TestAccNetworkingV2Subnet_impliedGateway(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_impliedGateway,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 					resource.TestCheckResourceAttr(
-						"orangecloud_networking_subnet_v2.subnet_1", "gateway_ip", "192.168.199.1"),
+						"flexibleengine_networking_subnet_v2.subnet_1", "gateway_ip", "192.168.199.1"),
 				),
 			},
 		},
@@ -119,7 +119,7 @@ func TestAccNetworkingV2Subnet_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Subnet_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 				),
 			},
 		},
@@ -134,7 +134,7 @@ func testAccCheckNetworkingV2SubnetDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_networking_subnet_v2" {
+		if rs.Type != "flexibleengine_networking_subnet_v2" {
 			continue
 		}
 
@@ -180,14 +180,14 @@ func testAccCheckNetworkingV2SubnetExists(n string, subnet *subnets.Subnet) reso
 }
 
 const testAccNetworkingV2Subnet_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   allocation_pools {
     start = "192.168.199.100"
@@ -197,16 +197,16 @@ resource "orangecloud_networking_subnet_v2" "subnet_1" {
 `
 
 const testAccNetworkingV2Subnet_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   gateway_ip = "192.168.199.1"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   allocation_pools {
     start = "192.168.199.150"
@@ -216,69 +216,69 @@ resource "orangecloud_networking_subnet_v2" "subnet_1" {
 `
 
 const testAccNetworkingV2Subnet_enableDHCP = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   gateway_ip = "192.168.199.1"
   enable_dhcp = true
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `
 
 const testAccNetworkingV2Subnet_disableDHCP = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   enable_dhcp = false
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `
 
 const testAccNetworkingV2Subnet_noGateway = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   no_gateway = true
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `
 
 const testAccNetworkingV2Subnet_impliedGateway = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `
 
 const testAccNetworkingV2Subnet_timeout = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   allocation_pools {
     start = "192.168.199.100"

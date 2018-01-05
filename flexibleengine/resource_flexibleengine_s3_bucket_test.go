@@ -31,7 +31,7 @@ func TestAccS3Bucket_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 		/*
-			IDRefreshName:   "orangecloud_s3_bucket.bucket",
+			IDRefreshName:   "flexibleengine_s3_bucket.bucket",
 			IDRefreshIgnore: []string{"force_destroy"},
 		*/
 		Providers:    testAccProviders,
@@ -40,19 +40,19 @@ func TestAccS3Bucket_basic(t *testing.T) {
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					/*resource.TestCheckResourceAttr(
-					"orangecloud_s3_bucket.bucket", "hosted_zone_id", HostedZoneIDForRegion("us-west-2")), */
+					"flexibleengine_s3_bucket.bucket", "hosted_zone_id", HostedZoneIDForRegion("us-west-2")), */
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "region", OS_REGION_NAME),
+						"flexibleengine_s3_bucket.bucket", "region", OS_REGION_NAME),
 					resource.TestCheckNoResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint"),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint"),
 					/*resource.TestMatchResourceAttr(
-					"orangecloud_s3_bucket.bucket", "arn", arnRegexp), */
+					"flexibleengine_s3_bucket.bucket", "arn", arnRegexp), */
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "bucket", testAccBucketName(rInt)),
+						"flexibleengine_s3_bucket.bucket", "bucket", testAccBucketName(rInt)),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "bucket_domain_name", testAccBucketDomainName(rInt)),
+						"flexibleengine_s3_bucket.bucket", "bucket_domain_name", testAccBucketDomainName(rInt)),
 				),
 			},
 		},
@@ -69,9 +69,9 @@ func TestAccS3Bucket_namePrefix(t *testing.T) {
 			{
 				Config: testAccS3BucketConfig_namePrefix,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.test"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.test"),
 					resource.TestMatchResourceAttr(
-						"orangecloud_s3_bucket.test", "bucket", regexp.MustCompile("^tf-test-")),
+						"flexibleengine_s3_bucket.test", "bucket", regexp.MustCompile("^tf-test-")),
 				),
 			},
 		},
@@ -88,7 +88,7 @@ func TestAccS3Bucket_generatedName(t *testing.T) {
 			{
 				Config: testAccS3BucketConfig_generatedName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.test"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.test"),
 				),
 			},
 		},
@@ -107,8 +107,8 @@ func TestAccS3Bucket_region(t *testing.T) {
 			{
 				Config: testAccS3BucketConfigWithRegion(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
-					resource.TestCheckResourceAttr("orangecloud_s3_bucket.bucket", "region", OS_REGION_NAME),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
+					resource.TestCheckResourceAttr("flexibleengine_s3_bucket.bucket", "region", OS_REGION_NAME),
 				),
 			},
 		},
@@ -127,25 +127,25 @@ func TestAccS3Bucket_Policy(t *testing.T) {
 			{
 				Config: testAccS3BucketConfigWithPolicy(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketPolicy(
-						"orangecloud_s3_bucket.bucket", testAccS3BucketPolicy(rInt)),
+						"flexibleengine_s3_bucket.bucket", testAccS3BucketPolicy(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketPolicy(
-						"orangecloud_s3_bucket.bucket", ""),
+						"flexibleengine_s3_bucket.bucket", ""),
 				),
 			},
 			{
 				Config: testAccS3BucketConfigWithEmptyPolicy(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketPolicy(
-						"orangecloud_s3_bucket.bucket", ""),
+						"flexibleengine_s3_bucket.bucket", ""),
 				),
 			},
 		},
@@ -166,17 +166,17 @@ func TestAccS3Bucket_UpdateAcl(t *testing.T) {
 			{
 				Config: preConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "acl", "public-read"),
+						"flexibleengine_s3_bucket.bucket", "acl", "public-read"),
 				),
 			},
 			{
 				Config: postConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "acl", "private"),
+						"flexibleengine_s3_bucket.bucket", "acl", "private"),
 				),
 			},
 		},
@@ -194,31 +194,31 @@ func TestAccS3Bucket_Website_Simple(t *testing.T) {
 			{
 				Config: testAccS3BucketWebsiteConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "index.html", "", "", ""),
+						"flexibleengine_s3_bucket.bucket", "index.html", "", "", ""),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketWebsiteConfigWithError(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "index.html", "error.html", "", ""),
+						"flexibleengine_s3_bucket.bucket", "index.html", "error.html", "", ""),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "", "", "", ""),
+						"flexibleengine_s3_bucket.bucket", "", "", "", ""),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", ""),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", ""),
 				),
 			},
 		},
@@ -236,31 +236,31 @@ func TestAccS3Bucket_WebsiteRedirect(t *testing.T) {
 			{
 				Config: testAccS3BucketWebsiteConfigWithRedirect(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "", "", "", "hashicorp.com"),
+						"flexibleengine_s3_bucket.bucket", "", "", "", "hashicorp.com"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketWebsiteConfigWithHttpsRedirect(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "", "", "https", "hashicorp.com"),
+						"flexibleengine_s3_bucket.bucket", "", "", "https", "hashicorp.com"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "", "", "", ""),
+						"flexibleengine_s3_bucket.bucket", "", "", "", ""),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", ""),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", ""),
 				),
 			},
 		},
@@ -278,11 +278,11 @@ func TestAccS3Bucket_WebsiteRoutingRules(t *testing.T) {
 			{
 				Config: testAccS3BucketWebsiteConfigWithRoutingRules(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "index.html", "error.html", "", ""),
+						"flexibleengine_s3_bucket.bucket", "index.html", "error.html", "", ""),
 					testAccCheckS3BucketWebsiteRoutingRules(
-						"orangecloud_s3_bucket.bucket",
+						"flexibleengine_s3_bucket.bucket",
 						[]*s3.RoutingRule{
 							{
 								Condition: &s3.Condition{
@@ -295,18 +295,18 @@ func TestAccS3Bucket_WebsiteRoutingRules(t *testing.T) {
 						},
 					),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", testAccWebsiteEndpoint(rInt)),
 				),
 			},
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketWebsite(
-						"orangecloud_s3_bucket.bucket", "", "", "", ""),
-					testAccCheckS3BucketWebsiteRoutingRules("orangecloud_s3_bucket.bucket", nil),
+						"flexibleengine_s3_bucket.bucket", "", "", "", ""),
+					testAccCheckS3BucketWebsiteRoutingRules("flexibleengine_s3_bucket.bucket", nil),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "website_endpoint", ""),
+						"flexibleengine_s3_bucket.bucket", "website_endpoint", ""),
 				),
 			},
 		},
@@ -327,8 +327,8 @@ func TestAccS3Bucket_shouldFailNotFound(t *testing.T) {
 			{
 				Config: testAccS3BucketDestroyedConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
-					testAccCheckS3DestroyBucket("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
+					testAccCheckS3DestroyBucket("flexibleengine_s3_bucket.bucket"),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -347,25 +347,25 @@ func TestAccS3Bucket_Versioning(t *testing.T) {
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketVersioning(
-						"orangecloud_s3_bucket.bucket", ""),
+						"flexibleengine_s3_bucket.bucket", ""),
 				),
 			},
 			{
 				Config: testAccS3BucketConfigWithVersioning(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketVersioning(
-						"orangecloud_s3_bucket.bucket", s3.BucketVersioningStatusEnabled),
+						"flexibleengine_s3_bucket.bucket", s3.BucketVersioningStatusEnabled),
 				),
 			},
 			{
 				Config: testAccS3BucketConfigWithDisableVersioning(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketVersioning(
-						"orangecloud_s3_bucket.bucket", s3.BucketVersioningStatusSuspended),
+						"flexibleengine_s3_bucket.bucket", s3.BucketVersioningStatusSuspended),
 				),
 			},
 		},
@@ -417,9 +417,9 @@ func TestAccS3Bucket_Cors(t *testing.T) {
 			{
 				Config: testAccS3BucketConfigWithCORS(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketCors(
-						"orangecloud_s3_bucket.bucket",
+						"flexibleengine_s3_bucket.bucket",
 						[]*s3.CORSRule{
 							{
 								AllowedHeaders: []*string{aws.String("*")},
@@ -430,16 +430,16 @@ func TestAccS3Bucket_Cors(t *testing.T) {
 							},
 						},
 					),
-					updateBucketCors("orangecloud_s3_bucket.bucket"),
+					updateBucketCors("flexibleengine_s3_bucket.bucket"),
 				),
 				ExpectNonEmptyPlan: true, // TODO: No diff in real life, so maybe a timing problem?
 			},
 			{
 				Config: testAccS3BucketConfigWithCORS(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketCors(
-						"orangecloud_s3_bucket.bucket",
+						"flexibleengine_s3_bucket.bucket",
 						[]*s3.CORSRule{
 							{
 								AllowedHeaders: []*string{aws.String("*")},
@@ -467,9 +467,9 @@ func TestAccS3Bucket_Logging(t *testing.T) {
 			{
 				Config: testAccS3BucketConfigWithLogging(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					testAccCheckS3BucketLogging(
-						"orangecloud_s3_bucket.bucket", "orangecloud_s3_bucket.log_bucket", "log/"),
+						"flexibleengine_s3_bucket.bucket", "flexibleengine_s3_bucket.log_bucket", "log/"),
 				),
 			},
 		},
@@ -487,67 +487,67 @@ func TestAccS3Bucket_Lifecycle(t *testing.T) {
 			{
 				Config: testAccS3BucketConfigWithLifecycle(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.id", "id1"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.id", "id1"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.prefix", "path1/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.prefix", "path1/"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.days", "365"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.days", "365"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.date", ""),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.date", ""),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.expired_object_delete_marker", "false"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.expiration.2613713285.expired_object_delete_marker", "false"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.id", "id2"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.id", "id2"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.prefix", "path2/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.prefix", "path2/"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.date", "2016-01-12"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.date", "2016-01-12"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.days", "0"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.days", "0"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.expired_object_delete_marker", "false"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.expiration.2855832418.expired_object_delete_marker", "false"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.2.id", "id3"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.2.id", "id3"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.2.prefix", "path3/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.2.prefix", "path3/"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.3.id", "id4"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.3.id", "id4"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.3.prefix", "path4/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.3.prefix", "path4/"),
 				),
 			},
 			{
 				Config: testAccS3BucketConfigWithVersioningLifecycle(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.id", "id1"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.id", "id1"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.prefix", "path1/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.prefix", "path1/"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.enabled", "true"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.enabled", "true"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.0.noncurrent_version_expiration.80908210.days", "365"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.0.noncurrent_version_expiration.80908210.days", "365"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.id", "id2"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.id", "id2"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.prefix", "path2/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.prefix", "path2/"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.enabled", "false"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.enabled", "false"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.1.noncurrent_version_expiration.80908210.days", "365"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.1.noncurrent_version_expiration.80908210.days", "365"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.2.id", "id3"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.2.id", "id3"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_s3_bucket.bucket", "lifecycle_rule.2.prefix", "path3/"),
+						"flexibleengine_s3_bucket.bucket", "lifecycle_rule.2.prefix", "path3/"),
 				),
 			},
 			{
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
 				),
 			},
 		},
@@ -947,7 +947,7 @@ func testAccS3BucketPolicy(randInt int) string {
 
 func testAccS3BucketConfig(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 }
@@ -956,13 +956,13 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithRegion(randInt int) string {
 	return fmt.Sprintf(`
-provider "orangecloud" {
+provider "flexibleengine" {
 	alias = "reg1"
 	region = "%s"
 }
 
-resource "orangecloud_s3_bucket" "bucket" {
-	provider = "orangecloud.reg1"
+resource "flexibleengine_s3_bucket" "bucket" {
+	provider = "flexibleengine.reg1"
 	bucket = "tf-test-bucket-%d"
 	region = "%s"
 }
@@ -971,7 +971,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketWebsiteConfig(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 
@@ -984,7 +984,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketWebsiteConfigWithError(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 
@@ -998,7 +998,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketWebsiteConfigWithRedirect(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 
@@ -1011,7 +1011,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketWebsiteConfigWithHttpsRedirect(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 
@@ -1024,7 +1024,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketWebsiteConfigWithRoutingRules(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 
@@ -1048,7 +1048,7 @@ EOF
 
 func testAccS3BucketConfigWithPolicy(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 	policy = %s
@@ -1058,7 +1058,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketDestroyedConfig(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 }
@@ -1067,7 +1067,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithEmptyPolicy(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 	policy = ""
@@ -1077,7 +1077,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithVersioning(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 	versioning {
@@ -1089,7 +1089,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithDisableVersioning(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 	versioning {
@@ -1101,7 +1101,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithCORS(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 	cors_rule {
@@ -1116,14 +1116,14 @@ resource "orangecloud_s3_bucket" "bucket" {
 }
 
 var testAccS3BucketConfigWithAcl = `
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "public-read"
 }
 `
 
 var testAccS3BucketConfigWithAclUpdate = `
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "private"
 }
@@ -1131,16 +1131,16 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithLogging(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "log_bucket" {
+resource "flexibleengine_s3_bucket" "log_bucket" {
 	bucket = "tf-test-log-bucket-%d"
 	acl = "log-delivery-write"
 }
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "private"
 	force_destroy = "true"
 	logging {
-		target_bucket = "${orangecloud_s3_bucket.log_bucket.id}"
+		target_bucket = "${flexibleengine_s3_bucket.log_bucket.id}"
 		target_prefix = "log/"
 	}
 }
@@ -1149,7 +1149,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithLifecycle(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "private"
 	lifecycle_rule {
@@ -1194,7 +1194,7 @@ resource "orangecloud_s3_bucket" "bucket" {
 
 func testAccS3BucketConfigWithVersioningLifecycle(randInt int) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "tf-test-bucket-%d"
 	acl = "private"
 	versioning {
@@ -1232,13 +1232,13 @@ resource "orangecloud_s3_bucket" "bucket" {
 }
 
 const testAccS3BucketConfig_namePrefix = `
-resource "orangecloud_s3_bucket" "test" {
+resource "flexibleengine_s3_bucket" "test" {
 	bucket_prefix = "tf-test-"
 }
 `
 
 const testAccS3BucketConfig_generatedName = `
-resource "orangecloud_s3_bucket" "test" {
+resource "flexibleengine_s3_bucket" "test" {
 	bucket_prefix = "tf-test-"
 }
 `

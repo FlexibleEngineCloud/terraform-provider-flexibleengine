@@ -22,7 +22,7 @@ func TestAccComputeV2SecGroup_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_basic_orig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 				),
 			},
 		},
@@ -41,13 +41,13 @@ func TestAccComputeV2SecGroup_update(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_basic_orig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_basic_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 					testAccCheckComputeV2SecGroupRuleCount(&secgroup, 2),
 				),
 			},
@@ -67,18 +67,18 @@ func TestAccComputeV2SecGroup_groupID(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_groupID_orig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup1),
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_2", &secgroup2),
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_3", &secgroup3),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup1),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_2", &secgroup2),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_3", &secgroup3),
 					testAccCheckComputeV2SecGroupGroupIDMatch(&secgroup1, &secgroup3),
 				),
 			},
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_groupID_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup1),
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_2", &secgroup2),
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_3", &secgroup3),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup1),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_2", &secgroup2),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_3", &secgroup3),
 					testAccCheckComputeV2SecGroupGroupIDMatch(&secgroup2, &secgroup3),
 				),
 			},
@@ -98,12 +98,12 @@ func TestAccComputeV2SecGroup_self(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_self,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 					testAccCheckComputeV2SecGroupGroupIDMatch(&secgroup, &secgroup),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_secgroup_v2.sg_1", "rule.3170486100.self", "true"),
+						"flexibleengine_compute_secgroup_v2.sg_1", "rule.3170486100.self", "true"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_compute_secgroup_v2.sg_1", "rule.3170486100.from_group_id", ""),
+						"flexibleengine_compute_secgroup_v2.sg_1", "rule.3170486100.from_group_id", ""),
 				),
 			},
 		},
@@ -122,7 +122,7 @@ func TestAccComputeV2SecGroup_icmpZero(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_icmpZero,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 				),
 			},
 		},
@@ -141,7 +141,7 @@ func TestAccComputeV2SecGroup_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2SecGroup_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists("orangecloud_compute_secgroup_v2.sg_1", &secgroup),
+					testAccCheckComputeV2SecGroupExists("flexibleengine_compute_secgroup_v2.sg_1", &secgroup),
 				),
 			},
 		},
@@ -156,7 +156,7 @@ func testAccCheckComputeV2SecGroupDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_secgroup_v2" {
+		if rs.Type != "flexibleengine_compute_secgroup_v2" {
 			continue
 		}
 
@@ -226,7 +226,7 @@ func testAccCheckComputeV2SecGroupGroupIDMatch(sg1, sg2 *secgroups.SecurityGroup
 }
 
 const testAccComputeV2SecGroup_basic_orig = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -251,7 +251,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
 `
 
 const testAccComputeV2SecGroup_basic_update = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -270,7 +270,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
 `
 
 const testAccComputeV2SecGroup_groupID_orig = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -281,7 +281,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "sg_2" {
+resource "flexibleengine_compute_secgroup_v2" "sg_2" {
   name = "sg_2"
   description = "second test security group"
   rule {
@@ -292,20 +292,20 @@ resource "orangecloud_compute_secgroup_v2" "sg_2" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "sg_3" {
+resource "flexibleengine_compute_secgroup_v2" "sg_3" {
   name = "sg_3"
   description = "third test security group"
   rule {
     from_port = 80
     to_port = 80
     ip_protocol = "tcp"
-    from_group_id = "${orangecloud_compute_secgroup_v2.sg_1.id}"
+    from_group_id = "${flexibleengine_compute_secgroup_v2.sg_1.id}"
   }
 }
 `
 
 const testAccComputeV2SecGroup_groupID_update = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -316,7 +316,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "sg_2" {
+resource "flexibleengine_compute_secgroup_v2" "sg_2" {
   name = "sg_2"
   description = "second test security group"
   rule {
@@ -327,20 +327,20 @@ resource "orangecloud_compute_secgroup_v2" "sg_2" {
   }
 }
 
-resource "orangecloud_compute_secgroup_v2" "sg_3" {
+resource "flexibleengine_compute_secgroup_v2" "sg_3" {
   name = "sg_3"
   description = "third test security group"
   rule {
     from_port = 80
     to_port = 80
     ip_protocol = "tcp"
-    from_group_id = "${orangecloud_compute_secgroup_v2.sg_2.id}"
+    from_group_id = "${flexibleengine_compute_secgroup_v2.sg_2.id}"
   }
 }
 `
 
 const testAccComputeV2SecGroup_self = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -353,7 +353,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
 `
 
 const testAccComputeV2SecGroup_icmpZero = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -366,7 +366,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
 `
 
 const testAccComputeV2SecGroup_lowerCaseCIDR = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {
@@ -379,7 +379,7 @@ resource "orangecloud_compute_secgroup_v2" "sg_1" {
 `
 
 const testAccComputeV2SecGroup_timeout = `
-resource "orangecloud_compute_secgroup_v2" "sg_1" {
+resource "flexibleengine_compute_secgroup_v2" "sg_1" {
   name = "sg_1"
   description = "first test security group"
   rule {

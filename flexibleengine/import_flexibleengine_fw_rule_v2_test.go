@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccFWRuleV2_importBasic(t *testing.T) {
-	resourceName := "orangecloud_fw_rule_v2.rule_1"
+	resourceName := "flexibleengine_fw_rule_v2.rule_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

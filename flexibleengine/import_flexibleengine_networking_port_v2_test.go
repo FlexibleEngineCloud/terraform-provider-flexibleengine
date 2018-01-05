@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccNetworkingV2Port_importBasic(t *testing.T) {
-	resourceName := "orangecloud_networking_port_v2.port_1"
+	resourceName := "flexibleengine_networking_port_v2.port_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
