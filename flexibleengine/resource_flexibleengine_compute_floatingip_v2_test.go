@@ -22,7 +22,7 @@ func TestAccComputeV2FloatingIP_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2FloatingIP_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2FloatingIPExists("orangecloud_compute_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2FloatingIPExists("flexibleengine_compute_floatingip_v2.fip_1", &fip),
 				),
 			},
 		},
@@ -37,7 +37,7 @@ func testAccCheckComputeV2FloatingIPDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_compute_floatingip_v2" {
+		if rs.Type != "flexibleengine_compute_floatingip_v2" {
 			continue
 		}
 
@@ -83,6 +83,6 @@ func testAccCheckComputeV2FloatingIPExists(n string, kp *floatingips.FloatingIP)
 }
 
 const testAccComputeV2FloatingIP_basic = `
-resource "orangecloud_compute_floatingip_v2" "fip_1" {
+resource "flexibleengine_compute_floatingip_v2" "fip_1" {
 }
 `

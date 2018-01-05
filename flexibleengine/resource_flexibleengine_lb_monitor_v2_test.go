@@ -20,16 +20,16 @@ func TestAccLBV2Monitor_basic(t *testing.T) {
 			resource.TestStep{
 				Config: TestAccLBV2MonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2MonitorExists(t, "orangecloud_lb_monitor_v2.monitor_1", &monitor),
+					testAccCheckLBV2MonitorExists(t, "flexibleengine_lb_monitor_v2.monitor_1", &monitor),
 				),
 			},
 			resource.TestStep{
 				Config: TestAccLBV2MonitorConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_monitor_v2.monitor_1", "name", "monitor_1_updated"),
-					resource.TestCheckResourceAttr("orangecloud_lb_monitor_v2.monitor_1", "delay", "30"),
-					resource.TestCheckResourceAttr("orangecloud_lb_monitor_v2.monitor_1", "timeout", "15"),
+						"flexibleengine_lb_monitor_v2.monitor_1", "name", "monitor_1_updated"),
+					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "delay", "30"),
+					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "timeout", "15"),
 				),
 			},
 		},
@@ -44,7 +44,7 @@ func testAccCheckLBV2MonitorDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_lb_monitor_v2" {
+		if rs.Type != "flexibleengine_lb_monitor_v2" {
 			continue
 		}
 
@@ -90,44 +90,44 @@ func testAccCheckLBV2MonitorExists(t *testing.T, n string, monitor *monitors.Mon
 }
 
 const TestAccLBV2MonitorConfig_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 }
 
-resource "orangecloud_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool_v2" "pool_1" {
   name = "pool_1"
   protocol = "HTTP"
   lb_method = "ROUND_ROBIN"
-  listener_id = "${orangecloud_lb_listener_v2.listener_1.id}"
+  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
 }
 
-resource "orangecloud_lb_monitor_v2" "monitor_1" {
+resource "flexibleengine_lb_monitor_v2" "monitor_1" {
   name = "monitor_1"
   type = "PING"
   delay = 20
   timeout = 10
   max_retries = 5
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
 
   timeouts {
     create = "5m"
@@ -138,45 +138,45 @@ resource "orangecloud_lb_monitor_v2" "monitor_1" {
 `
 
 const TestAccLBV2MonitorConfig_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 }
 
-resource "orangecloud_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool_v2" "pool_1" {
   name = "pool_1"
   protocol = "HTTP"
   lb_method = "ROUND_ROBIN"
-  listener_id = "${orangecloud_lb_listener_v2.listener_1.id}"
+  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
 }
 
-resource "orangecloud_lb_monitor_v2" "monitor_1" {
+resource "flexibleengine_lb_monitor_v2" "monitor_1" {
   name = "monitor_1_updated"
   type = "PING"
   delay = 30
   timeout = 15
   max_retries = 10
   admin_state_up = "true"
-  pool_id = "${orangecloud_lb_pool_v2.pool_1.id}"
+  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
 
   timeouts {
     create = "5m"

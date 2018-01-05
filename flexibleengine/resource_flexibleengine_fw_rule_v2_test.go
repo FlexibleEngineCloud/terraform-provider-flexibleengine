@@ -55,19 +55,19 @@ func TestAccFWRuleV2_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWRuleV2_basic_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWRuleV2Exists("orangecloud_fw_rule_v2.rule_1", rule1),
+					testAccCheckFWRuleV2Exists("flexibleengine_fw_rule_v2.rule_1", rule1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccFWRuleV2_basic_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWRuleV2Exists("orangecloud_fw_rule_v2.rule_1", rule2),
+					testAccCheckFWRuleV2Exists("flexibleengine_fw_rule_v2.rule_1", rule2),
 				),
 			},
 			resource.TestStep{
 				Config: testAccFWRuleV2_basic_3,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWRuleV2Exists("orangecloud_fw_rule_v2.rule_1", rule3),
+					testAccCheckFWRuleV2Exists("flexibleengine_fw_rule_v2.rule_1", rule3),
 				),
 			},
 		},
@@ -93,7 +93,7 @@ func TestAccFWRuleV2_anyProtocol(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWRuleV2_anyProtocol,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWRuleV2Exists("orangecloud_fw_rule_v2.rule_1", rule),
+					testAccCheckFWRuleV2Exists("flexibleengine_fw_rule_v2.rule_1", rule),
 				),
 			},
 		},
@@ -108,7 +108,7 @@ func testAccCheckFWRuleV2Destroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_firewall_rule" {
+		if rs.Type != "flexibleengine_firewall_rule" {
 			continue
 		}
 		_, err = rules.Get(networkingClient, rs.Primary.ID).Extract()
@@ -168,7 +168,7 @@ func testAccCheckFWRuleV2Exists(n string, expected *rules.Rule) resource.TestChe
 }
 
 const testAccFWRuleV2_basic_1 = `
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
 	name = "rule_1"
 	protocol = "udp"
 	action = "deny"
@@ -176,7 +176,7 @@ resource "orangecloud_fw_rule_v2" "rule_1" {
 `
 
 const testAccFWRuleV2_basic_2 = `
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
 	name = "rule_1"
 	description = "Terraform accept test"
 	protocol = "udp"
@@ -191,7 +191,7 @@ resource "orangecloud_fw_rule_v2" "rule_1" {
 `
 
 const testAccFWRuleV2_basic_3 = `
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
 	name = "rule_1"
 	description = "Terraform accept test updated"
 	protocol = "tcp"
@@ -206,7 +206,7 @@ resource "orangecloud_fw_rule_v2" "rule_1" {
 `
 
 const testAccFWRuleV2_anyProtocol = `
-resource "orangecloud_fw_rule_v2" "rule_1" {
+resource "flexibleengine_fw_rule_v2" "rule_1" {
 	name = "rule_1"
 	description = "Allow any protocol"
 	protocol = "any"

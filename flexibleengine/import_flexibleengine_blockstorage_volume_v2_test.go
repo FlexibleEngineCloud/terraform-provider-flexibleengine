@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccBlockStorageV2Volume_importBasic(t *testing.T) {
-	resourceName := "orangecloud_blockstorage_volume_v2.volume_1"
+	resourceName := "flexibleengine_blockstorage_volume_v2.volume_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

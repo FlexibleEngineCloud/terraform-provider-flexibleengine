@@ -23,19 +23,19 @@ func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccBlockStorageV2Volume_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("orangecloud_blockstorage_volume_v2.volume_1", &volume),
+					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
 					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_blockstorage_volume_v2.volume_1", "name", "volume_1"),
+						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1"),
 				),
 			},
 			resource.TestStep{
 				Config: testAccBlockStorageV2Volume_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("orangecloud_blockstorage_volume_v2.volume_1", &volume),
+					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
 					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_blockstorage_volume_v2.volume_1", "name", "volume_1-updated"),
+						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1-updated"),
 				),
 			},
 		},
@@ -54,9 +54,9 @@ func TestAccBlockStorageV2Volume_image(t *testing.T) {
 			resource.TestStep{
 				Config: testAccBlockStorageV2Volume_image,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("orangecloud_blockstorage_volume_v2.volume_1", &volume),
+					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
 					resource.TestCheckResourceAttr(
-						"orangecloud_blockstorage_volume_v2.volume_1", "name", "volume_1"),
+						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1"),
 				),
 			},
 		},
@@ -75,7 +75,7 @@ func TestAccBlockStorageV2Volume_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccBlockStorageV2Volume_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("orangecloud_blockstorage_volume_v2.volume_1", &volume),
+					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
 				),
 			},
 		},
@@ -90,7 +90,7 @@ func testAccCheckBlockStorageV2VolumeDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_blockstorage_volume_v2" {
+		if rs.Type != "flexibleengine_blockstorage_volume_v2" {
 			continue
 		}
 
@@ -179,7 +179,7 @@ func testAccCheckBlockStorageV2VolumeMetadata(
 }
 
 const testAccBlockStorageV2Volume_basic = `
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   description = "first test volume"
   metadata {
@@ -190,7 +190,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 `
 
 const testAccBlockStorageV2Volume_update = `
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1-updated"
   description = "first test volume"
   metadata {
@@ -201,7 +201,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 `
 
 var testAccBlockStorageV2Volume_image = fmt.Sprintf(`
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   size = 50
   image_id = "%s"
@@ -209,7 +209,7 @@ resource "orangecloud_blockstorage_volume_v2" "volume_1" {
 `, OS_IMAGE_ID)
 
 const testAccBlockStorageV2Volume_timeout = `
-resource "orangecloud_blockstorage_volume_v2" "volume_1" {
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
   description = "first test volume"
   size = 1

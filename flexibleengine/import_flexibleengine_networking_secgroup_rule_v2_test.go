@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccNetworkingV2SecGroupRule_importBasic(t *testing.T) {
-	resourceName := "orangecloud_networking_secgroup_rule_v2.secgroup_rule_1"
+	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

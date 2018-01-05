@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccComputeV2ServerGroup_importBasic(t *testing.T) {
-	resourceName := "orangecloud_compute_servergroup_v2.sg_1"
+	resourceName := "flexibleengine_compute_servergroup_v2.sg_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

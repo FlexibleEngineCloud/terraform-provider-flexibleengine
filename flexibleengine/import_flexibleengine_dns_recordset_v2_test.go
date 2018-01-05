@@ -9,7 +9,7 @@ import (
 // PASS, but normally skip
 func TestAccDNSV2RecordSet_importBasic(t *testing.T) {
 	zoneName := randomZoneName()
-	resourceName := "orangecloud_dns_recordset_v2.recordset_1"
+	resourceName := "flexibleengine_dns_recordset_v2.recordset_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckDNS(t) },

@@ -27,22 +27,22 @@ func TestAccDNSV2Zone_basic(t *testing.T) {
 				Config:             testAccDNSV2Zone_basic(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2ZoneExists("orangecloud_dns_zone_v2.zone_1", &zone),
+					testAccCheckDNSV2ZoneExists("flexibleengine_dns_zone_v2.zone_1", &zone),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_zone_v2.zone_1", "description", "a zone"),
+						"flexibleengine_dns_zone_v2.zone_1", "description", "a zone"),
 				),
 			},
 			resource.TestStep{
 				Config:             testAccDNSV2Zone_update(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("orangecloud_dns_zone_v2.zone_1", "name", zoneName),
-					resource.TestCheckResourceAttr("orangecloud_dns_zone_v2.zone_1", "email", "email2@example.com"),
-					resource.TestCheckResourceAttr("orangecloud_dns_zone_v2.zone_1", "ttl", "6000"),
+					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "name", zoneName),
+					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "email", "email2@example.com"),
+					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "ttl", "6000"),
 					// TODO: research why this is blank...
-					//resource.TestCheckResourceAttr("orangecloud_dns_zone_v2.zone_1", "type", "PRIMARY"),
+					//resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "type", "PRIMARY"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_zone_v2.zone_1", "description", "an updated zone"),
+						"flexibleengine_dns_zone_v2.zone_1", "description", "an updated zone"),
 				),
 			},
 		},
@@ -63,10 +63,10 @@ func TestAccDNSV2Zone_readTTL(t *testing.T) {
 				Config:             testAccDNSV2Zone_readTTL(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2ZoneExists("orangecloud_dns_zone_v2.zone_1", &zone),
-					//resource.TestCheckResourceAttr("orangecloud_dns_zone_v2.zone_1", "type", "PRIMARY"),
+					testAccCheckDNSV2ZoneExists("flexibleengine_dns_zone_v2.zone_1", &zone),
+					//resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "type", "PRIMARY"),
 					resource.TestMatchResourceAttr(
-						"orangecloud_dns_zone_v2.zone_1", "ttl", regexp.MustCompile("^[0-9]+$")),
+						"flexibleengine_dns_zone_v2.zone_1", "ttl", regexp.MustCompile("^[0-9]+$")),
 				),
 			},
 		},
@@ -87,7 +87,7 @@ func TestAccDNSV2Zone_timeout(t *testing.T) {
 				Config:             testAccDNSV2Zone_timeout(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2ZoneExists("orangecloud_dns_zone_v2.zone_1", &zone),
+					testAccCheckDNSV2ZoneExists("flexibleengine_dns_zone_v2.zone_1", &zone),
 				),
 			},
 		},
@@ -102,7 +102,7 @@ func testAccCheckDNSV2ZoneDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_dns_zone_v2" {
+		if rs.Type != "flexibleengine_dns_zone_v2" {
 			continue
 		}
 
@@ -149,7 +149,7 @@ func testAccCheckDNSV2ZoneExists(n string, zone *zones.Zone) resource.TestCheckF
 
 func testAccDNSV2Zone_basic(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email1@example.com"
 			description = "a zone"
@@ -161,7 +161,7 @@ func testAccDNSV2Zone_basic(zoneName string) string {
 
 func testAccDNSV2Zone_update(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email2@example.com"
 			description = "an updated zone"
@@ -173,7 +173,7 @@ func testAccDNSV2Zone_update(zoneName string) string {
 
 func testAccDNSV2Zone_readTTL(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email1@example.com"
 		}
@@ -182,7 +182,7 @@ func testAccDNSV2Zone_readTTL(zoneName string) string {
 
 func testAccDNSV2Zone_timeout(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email@example.com"
 			ttl = 3000

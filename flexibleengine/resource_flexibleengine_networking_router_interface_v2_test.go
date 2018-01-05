@@ -27,10 +27,10 @@ func TestAccNetworkingV2RouterInterface_basic_subnet(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2RouterInterface_basic_subnet,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
-					testAccCheckNetworkingV2RouterInterfaceExists("orangecloud_networking_router_interface_v2.int_1"),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2RouterInterfaceExists("flexibleengine_networking_router_interface_v2.int_1"),
 				),
 			},
 		},
@@ -52,11 +52,11 @@ func TestAccNetworkingV2RouterInterface_basic_port(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2RouterInterface_basic_port,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.port_1", &port),
-					testAccCheckNetworkingV2RouterInterfaceExists("orangecloud_networking_router_interface_v2.int_1"),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.port_1", &port),
+					testAccCheckNetworkingV2RouterInterfaceExists("flexibleengine_networking_router_interface_v2.int_1"),
 				),
 			},
 		},
@@ -77,10 +77,10 @@ func TestAccNetworkingV2RouterInterface_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2RouterInterface_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2RouterExists("orangecloud_networking_router_v2.router_1", &router),
-					testAccCheckNetworkingV2RouterInterfaceExists("orangecloud_networking_router_interface_v2.int_1"),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
+					testAccCheckNetworkingV2RouterInterfaceExists("flexibleengine_networking_router_interface_v2.int_1"),
 				),
 			},
 		},
@@ -95,7 +95,7 @@ func testAccCheckNetworkingV2RouterInterfaceDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_networking_router_interface_v2" {
+		if rs.Type != "flexibleengine_networking_router_interface_v2" {
 			continue
 		}
 
@@ -139,71 +139,71 @@ func testAccCheckNetworkingV2RouterInterfaceExists(n string) resource.TestCheckF
 }
 
 const testAccNetworkingV2RouterInterface_basic_subnet = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name = "router_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_router_interface_v2" "int_1" {
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "int_1" {
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `
 
 const testAccNetworkingV2RouterInterface_basic_port = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name = "router_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_router_interface_v2" "int_1" {
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
-  port_id = "${orangecloud_networking_port_v2.port_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "int_1" {
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
+  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.1"
   }
 }
 `
 
 const testAccNetworkingV2RouterInterface_timeout = `
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name = "router_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_router_interface_v2" "int_1" {
-  subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "int_1" {
+  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
 
   timeouts {
     create = "5m"
@@ -211,14 +211,14 @@ resource "orangecloud_networking_router_interface_v2" "int_1" {
   }
 }
 
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 `

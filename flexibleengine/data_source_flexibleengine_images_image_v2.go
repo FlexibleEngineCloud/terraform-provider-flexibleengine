@@ -198,7 +198,7 @@ func dataSourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error
 
 // dataSourceImagesImageV2Attributes populates the fields of an Image resource.
 func dataSourceImagesImageV2Attributes(d *schema.ResourceData, image *images.Image) error {
-	log.Printf("[DEBUG] orangecloud_images_image details: %#v", image)
+	log.Printf("[DEBUG] flexibleengine_images_image details: %#v", image)
 
 	d.SetId(image.ID)
 	d.Set("name", image.Name)

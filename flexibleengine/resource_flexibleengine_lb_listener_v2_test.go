@@ -21,18 +21,18 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 			resource.TestStep{
 				Config: TestAccLBV2ListenerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2ListenerExists("orangecloud_lb_listener_v2.listener_1", &listener),
+					testAccCheckLBV2ListenerExists("flexibleengine_lb_listener_v2.listener_1", &listener),
 					/* resource.TestCheckResourceAttr(
-					"orangecloud_lb_listener_v2.listener_1", "connection_limit", "-1"), */
+					"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "-1"), */
 				),
 			},
 			resource.TestStep{
 				Config: TestAccLBV2ListenerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"orangecloud_lb_listener_v2.listener_1", "name", "listener_1_updated"),
+						"flexibleengine_lb_listener_v2.listener_1", "name", "listener_1_updated"),
 					/* resource.TestCheckResourceAttr(
-					"orangecloud_lb_listener_v2.listener_1", "connection_limit", "100"), */
+					"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "100"), */
 				),
 			},
 		},
@@ -47,7 +47,7 @@ func testAccCheckLBV2ListenerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_lb_listener_v2" {
+		if rs.Type != "flexibleengine_lb_listener_v2" {
 			continue
 		}
 
@@ -93,28 +93,28 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 }
 
 const TestAccLBV2ListenerConfig_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1"
   protocol = "HTTP"
   protocol_port = 8080
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 
 	timeouts {
 		create = "5m"
@@ -125,30 +125,30 @@ resource "orangecloud_lb_listener_v2" "listener_1" {
 `
 
 const TestAccLBV2ListenerConfig_update = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${orangecloud_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
 
-resource "orangecloud_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener_v2" "listener_1" {
   name = "listener_1_updated"
   protocol = "HTTP"
   protocol_port = 8080
   #connection_limit = 100
   admin_state_up = "true"
-  loadbalancer_id = "${orangecloud_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 
 	timeouts {
 		create = "5m"

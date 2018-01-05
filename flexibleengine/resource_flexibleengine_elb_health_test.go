@@ -22,16 +22,16 @@ func TestAccELBHealth_basic(t *testing.T) {
 			resource.TestStep{
 				Config: TestAccELBHealthConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckELBHealthExists(t, "orangecloud_elb_health.health_1", &health),
-					resource.TestCheckResourceAttr("orangecloud_elb_health.health_1", "healthy_threshold", "3"),
-					resource.TestCheckResourceAttr("orangecloud_elb_health.health_1", "healthcheck_timeout", "10"),
+					testAccCheckELBHealthExists(t, "flexibleengine_elb_health.health_1", &health),
+					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthy_threshold", "3"),
+					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthcheck_timeout", "10"),
 				),
 			},
 			resource.TestStep{
 				Config: TestAccELBHealthConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("orangecloud_elb_health.health_1", "healthy_threshold", "5"),
-					resource.TestCheckResourceAttr("orangecloud_elb_health.health_1", "healthcheck_timeout", "15"),
+					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthy_threshold", "5"),
+					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthcheck_timeout", "15"),
 				),
 			},
 		},
@@ -46,7 +46,7 @@ func testAccCheckELBHealthDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_elb_healthcheck" {
+		if rs.Type != "flexibleengine_elb_healthcheck" {
 			continue
 		}
 
@@ -94,26 +94,26 @@ func testAccCheckELBHealthExists(t *testing.T, n string, health *healthcheck.Hea
 }
 
 var TestAccELBHealthConfig_basic = fmt.Sprintf(`
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
   vpc_id = "%s"
   type = "External"
   bandwidth = 5
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1"
   protocol = "TCP"
   protocol_port = 8080
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 }
 
 
-resource "orangecloud_elb_health" "health_1" {
-  listener_id = "${orangecloud_elb_listener.listener_1.id}"
+resource "flexibleengine_elb_health" "health_1" {
+  listener_id = "${flexibleengine_elb_listener.listener_1.id}"
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
   healthcheck_timeout = 10
@@ -128,26 +128,26 @@ resource "orangecloud_elb_health" "health_1" {
 `, OS_VPC_ID)
 
 var TestAccELBHealthConfig_update = fmt.Sprintf(`
-resource "orangecloud_elb_loadbalancer" "loadbalancer_1" {
+resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
   vpc_id = "%s"
   type = "External"
   bandwidth = 5
 }
 
-resource "orangecloud_elb_listener" "listener_1" {
+resource "flexibleengine_elb_listener" "listener_1" {
   name = "listener_1"
   protocol = "TCP"
   protocol_port = 8080
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${orangecloud_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
 }
 
 
-resource "orangecloud_elb_health" "health_1" {
-  listener_id = "${orangecloud_elb_listener.listener_1.id}"
+resource "flexibleengine_elb_health" "health_1" {
+  listener_id = "${flexibleengine_elb_listener.listener_1.id}"
   healthcheck_protocol = "HTTP"
   healthy_threshold = 5
   healthcheck_timeout = 15

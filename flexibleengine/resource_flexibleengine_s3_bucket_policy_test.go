@@ -28,8 +28,8 @@ func TestAccS3BucketPolicy_basic(t *testing.T) {
 			{
 				Config: testAccS3BucketPolicyConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
-					testAccCheckS3BucketHasPolicy("orangecloud_s3_bucket.bucket", expectedPolicyText),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
+					testAccCheckS3BucketHasPolicy("flexibleengine_s3_bucket.bucket", expectedPolicyText),
 				),
 			},
 		},
@@ -56,16 +56,16 @@ func TestAccS3BucketPolicy_policyUpdate(t *testing.T) {
 			{
 				Config: testAccS3BucketPolicyConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
-					testAccCheckS3BucketHasPolicy("orangecloud_s3_bucket.bucket", expectedPolicyText1),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
+					testAccCheckS3BucketHasPolicy("flexibleengine_s3_bucket.bucket", expectedPolicyText1),
 				),
 			},
 
 			{
 				Config: testAccS3BucketPolicyConfig_updated(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("orangecloud_s3_bucket.bucket"),
-					testAccCheckS3BucketHasPolicy("orangecloud_s3_bucket.bucket", expectedPolicyText2),
+					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
+					testAccCheckS3BucketHasPolicy("flexibleengine_s3_bucket.bucket", expectedPolicyText2),
 				),
 			},
 		},
@@ -113,15 +113,15 @@ func testAccCheckS3BucketHasPolicy(n string, expectedPolicyText string) resource
 
 func testAccS3BucketPolicyConfig(bucketName string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "%s"
 	#tags {
 	#	TestName = "TestAccS3BucketPolicy_basic"
 	#}
 }
 
-resource "orangecloud_s3_bucket_policy" "bucket" {
-	bucket = "${orangecloud_s3_bucket.bucket.bucket}"
+resource "flexibleengine_s3_bucket_policy" "bucket" {
+	bucket = "${flexibleengine_s3_bucket.bucket.bucket}"
 	policy =<<POLICY
 {
 	"Version": "2008-10-17",
@@ -146,15 +146,15 @@ POLICY
 
 func testAccS3BucketPolicyConfig_updated(bucketName string) string {
 	return fmt.Sprintf(`
-resource "orangecloud_s3_bucket" "bucket" {
+resource "flexibleengine_s3_bucket" "bucket" {
 	bucket = "%s"
 	#tags {
 	#	TestName = "TestAccS3BucketPolicy_basic"
 	#}
 }
 
-resource "orangecloud_s3_bucket_policy" "bucket" {
-	bucket = "${orangecloud_s3_bucket.bucket.bucket}"
+resource "flexibleengine_s3_bucket_policy" "bucket" {
+	bucket = "${flexibleengine_s3_bucket.bucket.bucket}"
 	policy =<<POLICY
 {
 	"Version": "2008-10-17",

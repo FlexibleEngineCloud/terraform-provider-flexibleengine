@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccComputeV2FloatingIPAssociate_importBasic(t *testing.T) {
-	resourceName := "orangecloud_compute_floatingip_associate_v2.fip_1"
+	resourceName := "flexibleengine_compute_floatingip_associate_v2.fip_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

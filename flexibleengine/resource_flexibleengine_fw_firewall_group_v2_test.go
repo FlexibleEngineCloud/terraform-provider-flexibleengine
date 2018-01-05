@@ -23,14 +23,14 @@ func TestAccFWFirewallGroupV2_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWFirewallGroupV2_basic_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2("orangecloud_fw_firewall_group_v2.fw_1", "", "", ipolicyID, epolicyID),
+					testAccCheckFWFirewallGroupV2("flexibleengine_fw_firewall_group_v2.fw_1", "", "", ipolicyID, epolicyID),
 				),
 			},
 			resource.TestStep{
 				Config: testAccFWFirewallGroupV2_basic_2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWFirewallGroupV2(
-						"orangecloud_fw_firewall_group_v2.fw_1", "fw_1", "terraform acceptance test", ipolicyID, epolicyID),
+						"flexibleengine_fw_firewall_group_v2.fw_1", "fw_1", "terraform acceptance test", ipolicyID, epolicyID),
 				),
 			},
 		},
@@ -48,7 +48,7 @@ func TestAccFWFirewallGroupV2_port0(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWFirewallV2_port,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
 				),
 			},
@@ -67,8 +67,8 @@ func TestAccFWFirewallGroupV2_no_ports(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWFirewallV2_no_ports,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
-					resource.TestCheckResourceAttr("orangecloud_fw_firewall_group_v2.fw_1", "description", "firewall router test"),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
+					resource.TestCheckResourceAttr("flexibleengine_fw_firewall_group_v2.fw_1", "description", "firewall router test"),
 					testAccCheckFWFirewallPortCount(&firewall_group, 0),
 				),
 			},
@@ -87,14 +87,14 @@ func TestAccFWFirewallGroupV2_port_update(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWFirewallV2_port,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccFWFirewallV2_port_add,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 2),
 				),
 			},
@@ -113,14 +113,14 @@ func TestAccFWFirewallGroupV2_port_remove(t *testing.T) {
 			resource.TestStep{
 				Config: testAccFWFirewallV2_port,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
 				),
 			},
 			resource.TestStep{
 				Config: testAccFWFirewallV2_port_remove,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWFirewallGroupV2Exists("orangecloud_fw_firewall_group_v2.fw_1", &firewall_group),
+					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 0),
 				),
 			},
@@ -135,7 +135,7 @@ func testAccCheckFWFirewallGroupV2Destroy(s *terraform.State) error {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_firewall_group" {
+		if rs.Type != "flexibleengine_firewall_group" {
 			continue
 		}
 
@@ -255,9 +255,9 @@ func testAccCheckFWFirewallGroupV2(n, expectedName, expectedDescription string, 
 }
 
 const testAccFWFirewallGroupV2_basic_1 = `
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
 
   timeouts {
     create = "5m"
@@ -266,17 +266,17 @@ resource "orangecloud_fw_firewall_group_v2" "fw_1" {
   }
 }
 
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
 }
 `
 
 const testAccFWFirewallGroupV2_basic_2 = `
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "fw_1"
   description = "terraform acceptance test"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_2.id}"
-  egress_policy_id = "${orangecloud_fw_policy_v2.policy_2.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_2.id}"
+  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_2.id}"
   admin_state_up = true
 
   timeouts {
@@ -286,159 +286,159 @@ resource "orangecloud_fw_firewall_group_v2" "fw_1" {
   }
 }
 
-resource "orangecloud_fw_policy_v2" "policy_2" {
+resource "flexibleengine_fw_policy_v2" "policy_2" {
   name = "policy_2"
 }
 `
 
 var testAccFWFirewallV2_port = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
   enable_dhcp = true
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name = "router_1"
   admin_state_up = "true"
   external_gateway = "%s"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     #ip_address = "192.168.199.23"
   }
 }
 
-resource "orangecloud_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
-  port_id = "${orangecloud_networking_port_v2.port_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
+  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
 }
 
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
 }
 
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
-  #egress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  #egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
   ports = [
-	"${orangecloud_networking_port_v2.port_1.id}"
+	"${flexibleengine_networking_port_v2.port_1.id}"
   ]
-  depends_on = ["orangecloud_networking_router_interface_v2.router_interface_1"]
+  depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1"]
 }
 `, OS_EXTGW_ID)
 
 var testAccFWFirewallV2_port_add = fmt.Sprintf(`
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_router_v2" "router_1" {
+resource "flexibleengine_networking_router_v2" "router_1" {
   name = "router_1"
   admin_state_up = "true"
   external_gateway = "%s"
 }
 
-resource "orangecloud_networking_router_v2" "router_2" {
+resource "flexibleengine_networking_router_v2" "router_2" {
   name = "router_2"
   admin_state_up = "true"
   external_gateway = "%s"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     #ip_address = "192.168.199.23"
   }
 }
 
-resource "orangecloud_networking_port_v2" "port_2" {
+resource "flexibleengine_networking_port_v2" "port_2" {
   name = "port_2"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     #ip_address = "192.168.199.24"
   }
 }
 
-resource "orangecloud_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${orangecloud_networking_router_v2.router_1.id}"
-  port_id = "${orangecloud_networking_port_v2.port_1.id}"
+resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
+  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
+  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
 }
 
-resource "orangecloud_networking_router_interface_v2" "router_interface_2" {
-  router_id = "${orangecloud_networking_router_v2.router_2.id}"
-  port_id = "${orangecloud_networking_port_v2.port_2.id}"
+resource "flexibleengine_networking_router_interface_v2" "router_interface_2" {
+  router_id = "${flexibleengine_networking_router_v2.router_2.id}"
+  port_id = "${flexibleengine_networking_port_v2.port_2.id}"
 }
 
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
 }
 
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
   ports = [
-	"${orangecloud_networking_port_v2.port_1.id}",
-	"${orangecloud_networking_port_v2.port_2.id}"
+	"${flexibleengine_networking_port_v2.port_1.id}",
+	"${flexibleengine_networking_port_v2.port_2.id}"
   ]
-  depends_on = ["orangecloud_networking_router_interface_v2.router_interface_1", "orangecloud_networking_router_interface_v2.router_interface_2"]
+  depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1", "flexibleengine_networking_router_interface_v2.router_interface_2"]
 }
 `, OS_EXTGW_ID, OS_EXTGW_ID)
 
 const testAccFWFirewallV2_port_remove = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
 }
 
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
 }
 `
 
 const testAccFWFirewallV2_no_ports = `
-resource "orangecloud_fw_policy_v2" "policy_1" {
+resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
 }
 
-resource "orangecloud_fw_firewall_group_v2" "fw_1" {
+resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${orangecloud_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
 }
 `

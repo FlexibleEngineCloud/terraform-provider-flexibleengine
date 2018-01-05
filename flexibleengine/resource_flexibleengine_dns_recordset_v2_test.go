@@ -31,24 +31,24 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 				Config:             testAccDNSV2RecordSet_basic(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("orangecloud_dns_recordset_v2.recordset_1", &recordset),
+					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_recordset_v2.recordset_1", "description", "a record set"),
+						"flexibleengine_dns_recordset_v2.recordset_1", "description", "a record set"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_recordset_v2.recordset_1", "records.0", "10.1.0.0"),
+						"flexibleengine_dns_recordset_v2.recordset_1", "records.0", "10.1.0.0"),
 				),
 			},
 			resource.TestStep{
 				Config:             testAccDNSV2RecordSet_update(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("orangecloud_dns_recordset_v2.recordset_1", "name", zoneName),
-					resource.TestCheckResourceAttr("orangecloud_dns_recordset_v2.recordset_1", "ttl", "6000"),
-					resource.TestCheckResourceAttr("orangecloud_dns_recordset_v2.recordset_1", "type", "A"),
+					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "name", zoneName),
+					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "ttl", "6000"),
+					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "type", "A"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_recordset_v2.recordset_1", "description", "an updated record set"),
+						"flexibleengine_dns_recordset_v2.recordset_1", "description", "an updated record set"),
 					resource.TestCheckResourceAttr(
-						"orangecloud_dns_recordset_v2.recordset_1", "records.0", "10.1.0.1"),
+						"flexibleengine_dns_recordset_v2.recordset_1", "records.0", "10.1.0.1"),
 				),
 			},
 		},
@@ -69,9 +69,9 @@ func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 				Config:             testAccDNSV2RecordSet_readTTL(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("orangecloud_dns_recordset_v2.recordset_1", &recordset),
+					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
 					resource.TestMatchResourceAttr(
-						"orangecloud_dns_recordset_v2.recordset_1", "ttl", regexp.MustCompile("^[0-9]+$")),
+						"flexibleengine_dns_recordset_v2.recordset_1", "ttl", regexp.MustCompile("^[0-9]+$")),
 				),
 			},
 		},
@@ -92,7 +92,7 @@ func TestAccDNSV2RecordSet_timeout(t *testing.T) {
 				Config:             testAccDNSV2RecordSet_timeout(zoneName),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("orangecloud_dns_recordset_v2.recordset_1", &recordset),
+					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
 				),
 			},
 		},
@@ -107,7 +107,7 @@ func testAccCheckDNSV2RecordSetDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_dns_recordset_v2" {
+		if rs.Type != "flexibleengine_dns_recordset_v2" {
 			continue
 		}
 
@@ -164,7 +164,7 @@ func testAccCheckDNSV2RecordSetExists(n string, recordset *recordsets.RecordSet)
 
 func testAccDNSV2RecordSet_basic(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email2@example.com"
 			description = "a zone"
@@ -172,8 +172,8 @@ func testAccDNSV2RecordSet_basic(zoneName string) string {
 			type = "PRIMARY"
 		}
 
-		resource "orangecloud_dns_recordset_v2" "recordset_1" {
-			zone_id = "${orangecloud_dns_zone_v2.zone_1.id}"
+		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
 			name = "%s"
 			type = "A"
 			description = "a record set"
@@ -185,7 +185,7 @@ func testAccDNSV2RecordSet_basic(zoneName string) string {
 
 func testAccDNSV2RecordSet_update(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email2@example.com"
 			description = "an updated zone"
@@ -193,8 +193,8 @@ func testAccDNSV2RecordSet_update(zoneName string) string {
 			type = "PRIMARY"
 		}
 
-		resource "orangecloud_dns_recordset_v2" "recordset_1" {
-			zone_id = "${orangecloud_dns_zone_v2.zone_1.id}"
+		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
 			name = "%s"
 			type = "A"
 			description = "an updated record set"
@@ -206,7 +206,7 @@ func testAccDNSV2RecordSet_update(zoneName string) string {
 
 func testAccDNSV2RecordSet_readTTL(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email2@example.com"
 			description = "an updated zone"
@@ -214,8 +214,8 @@ func testAccDNSV2RecordSet_readTTL(zoneName string) string {
 			type = "PRIMARY"
 		}
 
-		resource "orangecloud_dns_recordset_v2" "recordset_1" {
-			zone_id = "${orangecloud_dns_zone_v2.zone_1.id}"
+		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
 			name = "%s"
 			type = "A"
 			records = ["10.1.0.2"]
@@ -225,7 +225,7 @@ func testAccDNSV2RecordSet_readTTL(zoneName string) string {
 
 func testAccDNSV2RecordSet_timeout(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "orangecloud_dns_zone_v2" "zone_1" {
+		resource "flexibleengine_dns_zone_v2" "zone_1" {
 			name = "%s"
 			email = "email2@example.com"
 			description = "an updated zone"
@@ -233,8 +233,8 @@ func testAccDNSV2RecordSet_timeout(zoneName string) string {
 			type = "PRIMARY"
 		}
 
-		resource "orangecloud_dns_recordset_v2" "recordset_1" {
-			zone_id = "${orangecloud_dns_zone_v2.zone_1.id}"
+		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
 			name = "%s"
 			type = "A"
 			ttl = 3000

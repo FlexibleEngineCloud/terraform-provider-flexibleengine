@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccFWFirewallV2_importBasic(t *testing.T) {
-	resourceName := "orangecloud_fw_firewall_group_v2.fw_1"
+	resourceName := "flexibleengine_fw_firewall_group_v2.fw_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

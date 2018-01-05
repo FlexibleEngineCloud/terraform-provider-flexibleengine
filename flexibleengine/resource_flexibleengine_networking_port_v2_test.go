@@ -27,9 +27,9 @@ func TestAccNetworkingV2Port_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Port_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.port_1", &port),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.port_1", &port),
 				),
 			},
 		},
@@ -50,9 +50,9 @@ func TestAccNetworkingV2Port_noip(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Port_noip,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.port_1", &port),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.port_1", &port),
 					testAccCheckNetworkingV2PortCountFixedIPs(&port, 1),
 				),
 			},
@@ -74,11 +74,11 @@ func TestAccNetworkingV2Port_allowedAddressPairs(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Port_allowedAddressPairs,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.vrrp_subnet", &subnet),
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.vrrp_network", &network),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.vrrp_port_1", &vrrp_port_1),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.vrrp_port_2", &vrrp_port_2),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.instance_port", &instance_port),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.vrrp_subnet", &subnet),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.vrrp_network", &network),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.vrrp_port_1", &vrrp_port_1),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.vrrp_port_2", &vrrp_port_2),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.instance_port", &instance_port),
 				),
 			},
 		},
@@ -99,9 +99,9 @@ func TestAccNetworkingV2Port_timeout(t *testing.T) {
 			resource.TestStep{
 				Config: testAccNetworkingV2Port_timeout,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("orangecloud_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2NetworkExists("orangecloud_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2PortExists("orangecloud_networking_port_v2.port_1", &port),
+					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
+					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2PortExists("flexibleengine_networking_port_v2.port_1", &port),
 				),
 			},
 		},
@@ -116,7 +116,7 @@ func testAccCheckNetworkingV2PortDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "orangecloud_networking_port_v2" {
+		if rs.Type != "flexibleengine_networking_port_v2" {
 			continue
 		}
 
@@ -182,97 +182,97 @@ func testAccCheckNetworkingV2PortCountSecurityGroups(port *ports.Port, expected 
 }
 
 const testAccNetworkingV2Port_basic = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }
 `
 
 const testAccNetworkingV2Port_noip = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
   }
 }
 `
 
 const testAccNetworkingV2Port_multipleNoIP = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
   }
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
   }
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
   }
 }
 `
 
 const testAccNetworkingV2Port_allowedAddressPairs = `
-resource "orangecloud_networking_network_v2" "vrrp_network" {
+resource "flexibleengine_networking_network_v2" "vrrp_network" {
   name = "vrrp_network"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "vrrp_subnet" {
+resource "flexibleengine_networking_subnet_v2" "vrrp_subnet" {
   name = "vrrp_subnet"
   cidr = "10.0.0.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.vrrp_network.id}"
+  network_id = "${flexibleengine_networking_network_v2.vrrp_network.id}"
 
   allocation_pools {
     start = "10.0.0.2"
@@ -280,109 +280,109 @@ resource "orangecloud_networking_subnet_v2" "vrrp_subnet" {
   }
 }
 
-resource "orangecloud_networking_router_v2" "vrrp_router" {
+resource "flexibleengine_networking_router_v2" "vrrp_router" {
   name = "vrrp_router"
 }
 
-resource "orangecloud_networking_router_interface_v2" "vrrp_interface" {
-  router_id = "${orangecloud_networking_router_v2.vrrp_router.id}"
-  subnet_id = "${orangecloud_networking_subnet_v2.vrrp_subnet.id}"
+resource "flexibleengine_networking_router_interface_v2" "vrrp_interface" {
+  router_id = "${flexibleengine_networking_router_v2.vrrp_router.id}"
+  subnet_id = "${flexibleengine_networking_subnet_v2.vrrp_subnet.id}"
 }
 
-resource "orangecloud_networking_port_v2" "vrrp_port_1" {
+resource "flexibleengine_networking_port_v2" "vrrp_port_1" {
   name = "vrrp_port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.vrrp_network.id}"
+  network_id = "${flexibleengine_networking_network_v2.vrrp_network.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.vrrp_subnet.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.vrrp_subnet.id}"
     ip_address = "10.0.0.202"
   }
 }
 
-resource "orangecloud_networking_port_v2" "vrrp_port_2" {
+resource "flexibleengine_networking_port_v2" "vrrp_port_2" {
   name = "vrrp_port_2"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.vrrp_network.id}"
+  network_id = "${flexibleengine_networking_network_v2.vrrp_network.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.vrrp_subnet.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.vrrp_subnet.id}"
     ip_address = "10.0.0.201"
   }
 }
 
-resource "orangecloud_networking_port_v2" "instance_port" {
+resource "flexibleengine_networking_port_v2" "instance_port" {
   name = "instance_port"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.vrrp_network.id}"
+  network_id = "${flexibleengine_networking_network_v2.vrrp_network.id}"
 
   allowed_address_pairs {
-    ip_address = "${orangecloud_networking_port_v2.vrrp_port_1.fixed_ip.0.ip_address}"
-    mac_address = "${orangecloud_networking_port_v2.vrrp_port_1.mac_address}"
+    ip_address = "${flexibleengine_networking_port_v2.vrrp_port_1.fixed_ip.0.ip_address}"
+    mac_address = "${flexibleengine_networking_port_v2.vrrp_port_1.mac_address}"
   }
 
   allowed_address_pairs {
-    ip_address = "${orangecloud_networking_port_v2.vrrp_port_2.fixed_ip.0.ip_address}"
-    mac_address = "${orangecloud_networking_port_v2.vrrp_port_2.mac_address}"
+    ip_address = "${flexibleengine_networking_port_v2.vrrp_port_2.fixed_ip.0.ip_address}"
+    mac_address = "${flexibleengine_networking_port_v2.vrrp_port_2.mac_address}"
   }
 }
 `
 
 const testAccNetworkingV2Port_multipleFixedIPs = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.20"
   }
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.40"
   }
 }
 `
 
 const testAccNetworkingV2Port_timeout = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 
@@ -394,153 +394,153 @@ resource "orangecloud_networking_port_v2" "port_1" {
 `
 
 const testAccNetworkingV2Port_fixedIPs = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.24"
   }
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }
 `
 
 const testAccNetworkingV2Port_updateSecurityGroups_1 = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "security_group"
   description = "terraform security group acceptance test"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }
 `
 
 const testAccNetworkingV2Port_updateSecurityGroups_2 = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "security_group"
   description = "terraform security group acceptance test"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
-  security_group_ids = ["${orangecloud_networking_secgroup_v2.secgroup_1.id}"]
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  security_group_ids = ["${flexibleengine_networking_secgroup_v2.secgroup_1.id}"]
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }
 `
 
 const testAccNetworkingV2Port_updateSecurityGroups_3 = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "security_group_1"
   description = "terraform security group acceptance test"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
-  security_group_ids = ["${orangecloud_networking_secgroup_v2.secgroup_1.id}"]
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  security_group_ids = ["${flexibleengine_networking_secgroup_v2.secgroup_1.id}"]
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }
 `
 
 const testAccNetworkingV2Port_updateSecurityGroups_4 = `
-resource "orangecloud_networking_network_v2" "network_1" {
+resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
 }
 
-resource "orangecloud_networking_subnet_v2" "subnet_1" {
+resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
 
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "security_group"
   description = "terraform security group acceptance test"
 }
 
-resource "orangecloud_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${orangecloud_networking_network_v2.network_1.id}"
+  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 	security_group_ids = []
 
   fixed_ip {
-    subnet_id =  "${orangecloud_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
     ip_address = "192.168.199.23"
   }
 }

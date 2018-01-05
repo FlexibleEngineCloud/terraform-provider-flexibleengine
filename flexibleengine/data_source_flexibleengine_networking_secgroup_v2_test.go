@@ -20,9 +20,9 @@ func TestAccOrangeCloudNetworkingSecGroupV2DataSource_basic(t *testing.T) {
 			resource.TestStep{
 				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingSecGroupV2DataSourceID("data.orangecloud_networking_secgroup_v2.secgroup_1"),
+					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.orangecloud_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
 				),
 			},
 		},
@@ -41,9 +41,9 @@ func TestAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID(t *testing.T) {
 			resource.TestStep{
 				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingSecGroupV2DataSourceID("data.orangecloud_networking_secgroup_v2.secgroup_1"),
+					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.orangecloud_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
 				),
 			},
 		},
@@ -66,7 +66,7 @@ func testAccCheckNetworkingSecGroupV2DataSourceID(n string) resource.TestCheckFu
 }
 
 const testAccOrangeCloudNetworkingSecGroupV2DataSource_group = `
-resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
         name        = "secgroup_1"
 	description = "My neutron security group"
 }
@@ -75,15 +75,15 @@ resource "orangecloud_networking_secgroup_v2" "secgroup_1" {
 var testAccOrangeCloudNetworkingSecGroupV2DataSource_basic = fmt.Sprintf(`
 %s
 
-data "orangecloud_networking_secgroup_v2" "secgroup_1" {
-	name = "${orangecloud_networking_secgroup_v2.secgroup_1.name}"
+data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+	name = "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"
 }
 `, testAccOrangeCloudNetworkingSecGroupV2DataSource_group)
 
 var testAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID = fmt.Sprintf(`
 %s
 
-data "orangecloud_networking_secgroup_v2" "secgroup_1" {
-	secgroup_id = "${orangecloud_networking_secgroup_v2.secgroup_1.id}"
+data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+	secgroup_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
 `, testAccOrangeCloudNetworkingSecGroupV2DataSource_group)
