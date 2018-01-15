@@ -64,7 +64,8 @@ provider "flexibleengine" {
   tenant_name = "tenant"
   domain_name = "domain"
   password    = "pwd"
-  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+  # the auth url format follows: https://iam.{region_id}.prod-cloud-ocb.orange-business.com:443/v3
+  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com:443/v3"
   region      = "eu-west-0"
 }
 
