@@ -112,6 +112,8 @@ type CreateOpts struct {
 	// You can select an existing elastic IP address and create a public network load balancer.
 	// When this parameter is configured, parameters bandwidth, charge_mode, and eip_type are invalid.
     VipAddress         string `json:"vip_address,omitempty"`
+    // Specifies the tenant ID. This parameter is mandatory when type is set to Internal
+    TenantID           string `json:"tenantid,omitempty"`
 }
 
 // ToLoadBalancerCreateMap casts a CreateOpts struct to a map.
