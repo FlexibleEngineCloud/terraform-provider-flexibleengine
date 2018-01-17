@@ -175,7 +175,6 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("admin_state_up", basu)
 	d.Set("vip_subnet_id", lb.VipSubnetID)
-	d.Set("az", lb.AZ)
 	d.Set("vip_address", lb.VipAddress)
 	d.Set("security_group_id", lb.SecurityGroupID)
 	d.Set("region", GetRegion(d, config))
