@@ -42,8 +42,6 @@ type LoadBalancer struct {
 	Description string `json:"description"`
 	// Specifies the security group ID.
 	SecurityGroupID    string `json:"security_group_id"`
-	// Specifies the ID of the availability zone (AZ).
-	AZ          string `json:"az"`
 }
 
 // LoadBalancerPage is the page returned by a pager when traversing over a
