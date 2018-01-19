@@ -190,7 +190,7 @@ func getDisk(diskMeta []interface{}) ([]configurations.DiskOpts, error) {
 		diskType := disk["disk_type"].(string)
 		if diskType == "SYS" {
 			if size < 1 || size > 32768 {
-				return diskOptsList, fmt.Errorf("For system disk size should be [40, 32768]")
+				return diskOptsList, fmt.Errorf("For system disk size should be [1, 32768]")
 			}
 		}
 		if diskType == "DATA" {
