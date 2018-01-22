@@ -90,6 +90,13 @@ func resourceELoadBalancer() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+
+			"tenantid": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
 		},
 	}
 }
@@ -113,6 +120,7 @@ func resourceELoadBalancerCreate(d *schema.ResourceData, meta interface{}) error
 		AZ:              d.Get("az").(string),
 		SecurityGroupID: d.Get("security_group_id").(string),
 		VipAddress:      d.Get("vip_address").(string),
+		TenantID:        d.Get("tenantid").(string),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -167,7 +175,6 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("admin_state_up", basu)
 	d.Set("vip_subnet_id", lb.VipSubnetID)
-	d.Set("az", lb.AZ)
 	d.Set("vip_address", lb.VipAddress)
 	d.Set("security_group_id", lb.SecurityGroupID)
 	d.Set("region", GetRegion(d, config))

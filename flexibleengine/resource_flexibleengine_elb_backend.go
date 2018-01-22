@@ -13,8 +13,8 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
-const loadbalancerActiveTimeoutSeconds = 300
-const loadbalancerDeleteTimeoutSeconds = 300
+const loadbalancerActiveTimeoutSeconds = 600
+const loadbalancerDeleteTimeoutSeconds = 600
 
 func resourceBackend() *schema.Resource {
 	return &schema.Resource{

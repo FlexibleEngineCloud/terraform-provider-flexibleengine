@@ -198,6 +198,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_elb_listener":                    resourceEListener(),
 			"flexibleengine_elb_backend":                     resourceBackend(),
 			"flexibleengine_elb_health":                      resourceHealth(),
+			"flexibleengine_as_group_v1":                     resourceASGroup(),
+			"flexibleengine_as_configuration_v1":             resourceASConfiguration(),
+			"flexibleengine_as_policy_v1":                    resourceASPolicy(),
 		},
 
 		ConfigureFunc: configureProvider,

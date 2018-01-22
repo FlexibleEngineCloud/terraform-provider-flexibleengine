@@ -130,6 +130,7 @@ func v2auth(client *gophercloud.ProviderClient, endpoint string, options gopherc
 		}
 	}
 	client.TokenID = token.ID
+	client.ProjectID = token.Tenant.ID
 	client.EndpointLocator = func(opts gophercloud.EndpointOpts) (string, error) {
 		return V2EndpointURL(catalog, opts)
 	}
@@ -160,12 +161,18 @@ func v3auth(client *gophercloud.ProviderClient, endpoint string, opts tokens3.Au
 		return err
 	}
 
+	project, err := result.ExtractProject()
+    if err != nil {
+		return err
+	}
+
 	catalog, err := result.ExtractServiceCatalog()
 	if err != nil {
 		return err
 	}
 
 	client.TokenID = token.ID
+	client.ProjectID = project.ID
 
 	if opts.CanReauth() {
 		client.ReauthFunc = func() error {
@@ -303,5 +310,12 @@ func NewDNSV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (
 func NewImageServiceV2(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "image")
 	sc.ResourceBase = sc.Endpoint + "v2/"
+	return sc, err
+}
+
+//NewAutoScalingService creates a ServiceClient that may be used to access the
+//auto-scaling service of huawei public cloud
+func NewAutoScalingService(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "as")
 	return sc, err
 }
