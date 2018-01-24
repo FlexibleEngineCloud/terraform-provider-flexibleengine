@@ -305,13 +305,13 @@ func (c *Config) objectStorageV1Client(region string) (*gophercloud.ServiceClien
 }
 
 func (c *Config) otcV1Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewOtcV1(c.OsClient, gophercloud.EndpointOpts{
+	return openstack.NewElbV1(c.OsClient, gophercloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
 	}, "elb")
 }
 
-func (c *Config) autoscalingV1Client(region string) (*gophercloud.ServiceClient, error) {
+func (c *Config) autoscalingV1Client(region string) (*gophercloud.ServiceClientExtension, error) {
 	return openstack.NewAutoScalingService(c.OsClient, gophercloud.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getEndpointType(),
