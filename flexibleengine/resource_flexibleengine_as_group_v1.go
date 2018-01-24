@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/groups"
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/instances"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/groups"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/instances"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"regexp"
@@ -254,7 +254,7 @@ func getAllSecurityGroups(d *schema.ResourceData, meta interface{}) []Group {
 	return Groups
 }
 
-func getInstancesInGroup(asClient *gophercloud.ServiceClientExtension, groupID string, opts instances.ListOptsBuilder) ([]instances.Instance, error) {
+func getInstancesInGroup(asClient *golangsdk.ServiceClientExtension, groupID string, opts instances.ListOptsBuilder) ([]instances.Instance, error) {
 	var insList []instances.Instance
 	page, err := instances.List(asClient, groupID, opts).AllPages()
 	if err != nil {
@@ -286,7 +286,7 @@ func getInstancesLifeStates(allIns []instances.Instance) []string {
 	return allLifeStates
 }
 
-func refreshInstancesLifeStates(asClient *gophercloud.ServiceClientExtension, groupID string, insNum int, checkInService bool) resource.StateRefreshFunc {
+func refreshInstancesLifeStates(asClient *golangsdk.ServiceClientExtension, groupID string, insNum int, checkInService bool) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		var opts instances.ListOptsBuilder
 		allIns, err := getInstancesInGroup(asClient, groupID, opts)
@@ -321,7 +321,7 @@ func refreshInstancesLifeStates(asClient *gophercloud.ServiceClientExtension, gr
 	}
 }
 
-func checkASGroupInstancesInService(asClient *gophercloud.ServiceClientExtension, groupID string, insNum int, timeout time.Duration) error {
+func checkASGroupInstancesInService(asClient *golangsdk.ServiceClientExtension, groupID string, insNum int, timeout time.Duration) error {
 	stateConf := &resource.StateChangeConf{
 		Pending: []string{"PENDING"},
 		Target:  []string{"INSERVICE"}, //if there is no lifecyclestatus, meaning no instances in asg
@@ -335,7 +335,7 @@ func checkASGroupInstancesInService(asClient *gophercloud.ServiceClientExtension
 	return err
 }
 
-func checkASGroupInstancesRemoved(asClient *gophercloud.ServiceClientExtension, groupID string, timeout time.Duration) error {
+func checkASGroupInstancesRemoved(asClient *golangsdk.ServiceClientExtension, groupID string, timeout time.Duration) error {
 	stateConf := &resource.StateChangeConf{
 		Pending: []string{"REMOVING"},
 		Target:  []string{""}, //if there is no lifecyclestatus, meaning no instances in asg

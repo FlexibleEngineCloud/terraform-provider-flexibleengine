@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/policies"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/policies"
 	"github.com/hashicorp/terraform/helper/schema"
 	"regexp"
 	"strings"

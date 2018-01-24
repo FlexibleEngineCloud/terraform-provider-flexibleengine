@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/listeners"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/listeners"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )

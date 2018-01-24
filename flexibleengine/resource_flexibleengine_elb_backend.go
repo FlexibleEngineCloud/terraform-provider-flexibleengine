@@ -8,9 +8,9 @@ import (
 	// "github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/backendmember"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
 const loadbalancerActiveTimeoutSeconds = 600
@@ -145,7 +145,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("Waiting for backend member %s to delete", id)
 
-	if err := gophercloud.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
+	if err := golangsdk.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
 		return err
 	}
 

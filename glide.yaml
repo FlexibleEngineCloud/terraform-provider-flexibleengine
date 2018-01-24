@@ -1,14 +1,8 @@
 package: github.com/freesky-edward/terraform-provider-flexibleengine
 import:
 - package: github.com/gophercloud/gophercloud
-  repo: https://github.com/huawei-clouds/golangsdk
-  vcs: git
   subpackages:
   - openstack
-  - openstack/autoscaling/v1/configurations
-  - openstack/autoscaling/v1/groups
-  - openstack/autoscaling/v1/instances
-  - openstack/autoscaling/v1/policies
   - openstack/blockstorage/v2/volumes
   - openstack/compute/v2/extensions/availabilityzones
   - openstack/compute/v2/extensions/bootfromvolume
@@ -27,15 +21,6 @@ import:
   - openstack/dns/v2/zones
   - openstack/imageservice/v2/imagedata
   - openstack/imageservice/v2/images
-  - openstack/networking/v2/extensions/elbaas
-  - openstack/networking/v2/extensions/elbaas/backendmember
-  - openstack/networking/v2/extensions/elbaas/healthcheck
-  - openstack/networking/v2/extensions/elbaas/listeners
-  - openstack/networking/v2/extensions/elbaas/loadbalancer_elbs
-  - openstack/networking/v2/extensions/fwaas_v2/firewall_groups
-  - openstack/networking/v2/extensions/fwaas_v2/policies
-  - openstack/networking/v2/extensions/fwaas_v2/routerinsertion
-  - openstack/networking/v2/extensions/fwaas_v2/rules
   - openstack/networking/v2/extensions/layer3/floatingips
   - openstack/networking/v2/extensions/layer3/routers
   - openstack/networking/v2/extensions/lbaas_v2/listeners
@@ -50,3 +35,19 @@ import:
   - openstack/networking/v2/subnets
   - openstack/objectstorage/v1/swauth
   - pagination
+- package: github.com/huawei-clouds/golangsdk
+  subpackages:
+  - openstack
+  - openstack/autoscaling/v1/configurations
+  - openstack/autoscaling/v1/groups
+  - openstack/autoscaling/v1/instances
+  - openstack/autoscaling/v1/policies
+  - openstack/networking/v2/extensions/elbaas
+  - openstack/networking/v2/extensions/elbaas/backendmember
+  - openstack/networking/v2/extensions/elbaas/healthcheck
+  - openstack/networking/v2/extensions/elbaas/listeners
+  - openstack/networking/v2/extensions/elbaas/loadbalancer_elbs
+  - openstack/networking/v2/extensions/fwaas_v2/firewall_groups
+  - openstack/networking/v2/extensions/fwaas_v2/policies
+  - openstack/networking/v2/extensions/fwaas_v2/routerinsertion
+  - openstack/networking/v2/extensions/fwaas_v2/rules

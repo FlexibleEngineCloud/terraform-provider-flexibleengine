@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas"
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func waitForELBJobSuccess(networkingClient *gophercloud.ServiceClient, j *elbaas.Job, timeout time.Duration) (*elbaas.JobInfo, error) {
+func waitForELBJobSuccess(networkingClient *golangsdk.ServiceClient, j *elbaas.Job, timeout time.Duration) (*elbaas.JobInfo, error) {
 	jobId := j.JobId
 	target := "SUCCESS"
 	pending := []string{"INIT", "RUNNING"}
@@ -24,7 +24,7 @@ func waitForELBJobSuccess(networkingClient *gophercloud.ServiceClient, j *elbaas
 	return nil, err
 }
 
-func getELBJobInfo(networkingClient *gophercloud.ServiceClient, uri string) resource.StateRefreshFunc {
+func getELBJobInfo(networkingClient *golangsdk.ServiceClient, uri string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		info, err := elbaas.QueryJobInfo(networkingClient, uri).Extract()
 		if err != nil {
@@ -35,9 +35,9 @@ func getELBJobInfo(networkingClient *gophercloud.ServiceClient, uri string) reso
 	}
 }
 
-type getELBResource func(networkingClient *gophercloud.ServiceClient, id string) resource.StateRefreshFunc
+type getELBResource func(networkingClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc
 
-func waitForELBResource(networkingClient *gophercloud.ServiceClient, name string, id string, target string, pending []string, timeout time.Duration, f getELBResource) (interface{}, error) {
+func waitForELBResource(networkingClient *golangsdk.ServiceClient, name string, id string, target string, pending []string, timeout time.Duration, f getELBResource) (interface{}, error) {
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
@@ -50,7 +50,7 @@ func waitForELBResource(networkingClient *gophercloud.ServiceClient, name string
 
 	o, err := stateConf.WaitForState()
 	if err != nil {
-		if _, ok := err.(gophercloud.ErrDefault404); ok {
+		if _, ok := err.(golangsdk.ErrDefault404); ok {
 			return nil, fmt.Errorf("Error: elbaas %s %s not found: %s", name, id, err)
 		}
 		return nil, fmt.Errorf("Error waiting for elbaas %s %s to become %s: %s", name, id, target, err)

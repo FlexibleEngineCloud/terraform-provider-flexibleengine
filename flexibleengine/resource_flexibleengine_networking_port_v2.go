@@ -147,6 +147,7 @@ func resourceNetworkingPortV2Create(d *schema.ResourceData, meta interface{}) er
 	if !asu {
 		pAsu = &asu
 	}
+	sgs := resourcePortSecurityGroupsV2(d)
 	createOpts := PortCreateOpts{
 		ports.CreateOpts{
 			Name:                d.Get("name").(string),
@@ -155,7 +156,7 @@ func resourceNetworkingPortV2Create(d *schema.ResourceData, meta interface{}) er
 			MACAddress:          d.Get("mac_address").(string),
 			TenantID:            d.Get("tenant_id").(string),
 			DeviceOwner:         d.Get("device_owner").(string),
-			SecurityGroups:      resourcePortSecurityGroupsV2(d),
+			SecurityGroups:      &sgs,
 			DeviceID:            d.Get("device_id").(string),
 			FixedIPs:            resourcePortFixedIpsV2(d),
 			AllowedAddressPairs: resourceAllowedAddressPairsV2(d),
@@ -247,9 +248,11 @@ func resourceNetworkingPortV2Update(d *schema.ResourceData, meta interface{}) er
 	// to denote the removal of each. But their default zero-value is translated
 	// to "null", which has been reported to cause problems in vendor-modified
 	// OrangeCloud clouds. Therefore, we must set them in each request update.
+	addrPairs := resourceAllowedAddressPairsV2(d)
+	sg := resourcePortSecurityGroupsV2(d)
 	updateOpts := ports.UpdateOpts{
-		AllowedAddressPairs: resourceAllowedAddressPairsV2(d),
-		SecurityGroups:      resourcePortSecurityGroupsV2(d),
+		AllowedAddressPairs: &addrPairs,
+		SecurityGroups:      &sg,
 	}
 
 	if d.HasChange("name") {
