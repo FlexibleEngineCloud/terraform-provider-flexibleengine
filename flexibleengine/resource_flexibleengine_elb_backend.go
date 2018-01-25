@@ -8,9 +8,9 @@ import (
 	// "github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/backendmember"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
 const loadbalancerActiveTimeoutSeconds = 600
@@ -53,7 +53,7 @@ func resourceBackendCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	addOpts := backendmember.AddOpts{
@@ -103,7 +103,7 @@ func resourceBackendRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	listener_id := d.Get("listener_id").(string)
@@ -132,7 +132,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting backend member %s", d.Id())
@@ -145,7 +145,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("Waiting for backend member %s to delete", id)
 
-	if err := gophercloud.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
+	if err := golangsdk.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
 		return err
 	}
 

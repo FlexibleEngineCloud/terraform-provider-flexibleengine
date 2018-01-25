@@ -3,14 +3,11 @@ package gophercloud
 import (
 	"bytes"
 	"encoding/json"
-	//"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
-	//"reflect"
-	//"fmt"
-	//"reflect"
+	"sync"
 )
 
 // DefaultUserAgent is the default User-Agent string set in the request header.
@@ -55,10 +52,9 @@ type ProviderClient struct {
 	IdentityEndpoint string
 
 	// TokenID is the ID of the most recently issued valid token.
+	// NOTE: Aside from within a custom ReauthFunc, this field shouldn't be set by an application.
+	// To safely read or write this value, call `Token` or `SetToken`, respectively
 	TokenID string
-
-	// ProjectID is the ID of project to which User is authorized.
-	ProjectID string
 
 	// EndpointLocator describes how this provider discovers the endpoints for
 	// its constituent services.
@@ -75,16 +71,59 @@ type ProviderClient struct {
 	// authentication functions for different Identity service versions.
 	ReauthFunc func() error
 
-	Debug bool
+	mut *sync.RWMutex
+
+	reauthmut *reauthlock
+}
+
+type reauthlock struct {
+	sync.RWMutex
+	reauthing bool
 }
 
 // AuthenticatedHeaders returns a map of HTTP headers that are common for all
 // authenticated service requests.
-func (client *ProviderClient) AuthenticatedHeaders() map[string]string {
-	if client.TokenID == "" {
-		return map[string]string{}
+func (client *ProviderClient) AuthenticatedHeaders() (m map[string]string) {
+	if client.reauthmut != nil {
+		client.reauthmut.RLock()
+		if client.reauthmut.reauthing {
+			client.reauthmut.RUnlock()
+			return
+		}
+		client.reauthmut.RUnlock()
 	}
-	return map[string]string{"X-Auth-Token": client.TokenID}
+	t := client.Token()
+	if t == "" {
+		return
+	}
+	return map[string]string{"X-Auth-Token": t}
+}
+
+// UseTokenLock creates a mutex that is used to allow safe concurrent access to the auth token.
+// If the application's ProviderClient is not used concurrently, this doesn't need to be called.
+func (client *ProviderClient) UseTokenLock() {
+	client.mut = new(sync.RWMutex)
+	client.reauthmut = new(reauthlock)
+}
+
+// Token safely reads the value of the auth token from the ProviderClient. Applications should
+// call this method to access the token instead of the TokenID field
+func (client *ProviderClient) Token() string {
+	if client.mut != nil {
+		client.mut.RLock()
+		defer client.mut.RUnlock()
+	}
+	return client.TokenID
+}
+
+// SetToken safely sets the value of the auth token in the ProviderClient. Applications may
+// use this method in a custom ReauthFunc
+func (client *ProviderClient) SetToken(t string) {
+	if client.mut != nil {
+		client.mut.Lock()
+		defer client.mut.Unlock()
+	}
+	client.TokenID = t
 }
 
 // RequestOpts customizes the behavior of the provider.Request() method.
@@ -119,10 +158,8 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	var body io.Reader
 	var contentType *string
 
-	//fmt.Printf("Request method: %s, url: %s, options=%+v.\n", method, url, options)
 	// Derive the content body by either encoding an arbitrary object as JSON, or by taking a provided
 	// io.ReadSeeker as-is. Default the content-type to application/json.
-	//fmt.Printf("Request: %s, %s, %+v.\n", method, url, options)
 	if options.JSONBody != nil {
 		if options.RawBody != nil {
 			panic("Please provide only one of JSONBody or RawBody to gophercloud.Request().")
@@ -134,7 +171,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		}
 
 		body = bytes.NewReader(rendered)
-		//fmt.Printf("Request body: %s.\n", body)
 		contentType = &applicationJSON
 	}
 
@@ -143,7 +179,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	}
 
 	// Construct the http.Request.
-	//fmt.Printf("Request NewRequest...\n")
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -155,10 +190,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		req.Header.Set("Content-Type", *contentType)
 	}
 	req.Header.Set("Accept", applicationJSON)
-
-	for k, v := range client.AuthenticatedHeaders() {
-		req.Header.Add(k, v)
-	}
 
 	// Set the User-Agent header
 	req.Header.Set("User-Agent", client.UserAgent.Join())
@@ -173,11 +204,17 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		}
 	}
 
+	// get latest token from client
+	for k, v := range client.AuthenticatedHeaders() {
+		req.Header.Set(k, v)
+	}
+
 	// Set connection parameter to close the connection immediately when we've got the response
 	req.Close = true
 
+	prereqtok := req.Header.Get("X-Auth-Token")
+
 	// Issue the request.
-	//fmt.Printf("Request Do...\n")
 	resp, err := client.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -200,10 +237,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	if !ok {
 		body, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
-		//fmt.Printf("Error body: %s.\n", body)
-		//pc := make([]uintptr, 1)
-		//runtime.Callers(2, pc)
-		//f := runtime.FuncForPC(pc[0])
 		respErr := ErrUnexpectedResponseCode{
 			URL:      url,
 			Method:   method,
@@ -211,7 +244,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			Actual:   resp.StatusCode,
 			Body:     body,
 		}
-		//respErr.Function = "gophercloud.ProviderClient.Request"
 
 		errType := options.ErrorContext
 		switch resp.StatusCode {
@@ -222,7 +254,21 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			}
 		case http.StatusUnauthorized:
 			if client.ReauthFunc != nil {
-				err = client.ReauthFunc()
+				if client.mut != nil {
+					client.mut.Lock()
+					client.reauthmut.Lock()
+					client.reauthmut.reauthing = true
+					client.reauthmut.Unlock()
+					if curtok := client.TokenID; curtok == prereqtok {
+						err = client.ReauthFunc()
+					}
+					client.reauthmut.Lock()
+					client.reauthmut.reauthing = false
+					client.reauthmut.Unlock()
+					client.mut.Unlock()
+				} else {
+					err = client.ReauthFunc()
+				}
 				if err != nil {
 					e := &ErrUnableToReauthenticate{}
 					e.ErrOriginal = respErr
@@ -246,7 +292,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 						return nil, e
 					}
 				}
-				//fmt.Printf("Error response1: %+v, code=%d, body=%s.\n", resp, resp.StatusCode, body)
 				return resp, nil
 			}
 			err = ErrDefault401{respErr}
@@ -288,7 +333,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		if err == nil {
 			err = respErr
 		}
-		//fmt.Printf("Error response: %+v, code=%d, body=%s.\n", resp, resp.StatusCode, body)
 
 		return resp, err
 	}
@@ -297,16 +341,10 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	if options.JSONResponse != nil {
 		defer resp.Body.Close()
 		if err := json.NewDecoder(resp.Body).Decode(options.JSONResponse); err != nil {
-			//fmt.Printf("JSON error: %+v, code=%d, body=%s.\n", resp, resp.StatusCode, body)
 			return nil, err
 		}
-		//rv := reflect.ValueOf(options.JSONResponse)
-		//fmt.Printf("JSON OK: JSONResponse=%+v, body=%s.\n", reflect.Indirect(rv), body)
 	}
 
-	//body2, _ := ioutil.ReadAll(resp.Body)
-	//resp.Body.Close()
-	//fmt.Printf("OK response: %+v, code=%d, body=%s\n", resp, resp.StatusCode, body2)
 	return resp, nil
 }
 

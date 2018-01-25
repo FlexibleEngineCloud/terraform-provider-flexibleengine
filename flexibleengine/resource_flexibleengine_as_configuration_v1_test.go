@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/configurations"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/configurations"
 	"log"
 )
 
@@ -20,9 +20,9 @@ func TestAccASV1Configuration_basic(t *testing.T) {
 		CheckDestroy: testAccCheckASV1ConfigurationDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccASV1Configuration_basic,
+				Config: testASV1Configuration_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckASV1ConfigurationExists("telefonicaopencloud_as_configuration_v1.hth_as_config", &asConfig),
+					testAccCheckASV1ConfigurationExists("flexibleengine_as_configuration_v1.hth_as_config", &asConfig),
 				),
 			},
 		},
@@ -33,11 +33,11 @@ func testAccCheckASV1ConfigurationDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating telefonicaopencloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating orangecloud autoscaling client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "telefonicaopencloud_as_configuration_v1" {
+		if rs.Type != "flexibleengine_as_configuration_v1" {
 			continue
 		}
 
@@ -47,7 +47,7 @@ func testAccCheckASV1ConfigurationDestroy(s *terraform.State) error {
 		}
 	}
 
-	log.Printf("[DEBUG] testAccCheckASV1ConfigurationDestroy success!")
+	log.Printf("[DEBUG] testCheckASV1ConfigurationDestroy success!")
 
 	return nil
 }
@@ -66,7 +66,7 @@ func testAccCheckASV1ConfigurationExists(n string, configuration *configurations
 		config := testAccProvider.Meta().(*Config)
 		asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating telefonicaopencloud autoscaling client: %s", err)
+			return fmt.Errorf("Error creating orangecloud autoscaling client: %s", err)
 		}
 
 		found, err := configurations.Get(asClient, rs.Primary.ID).Extract()
@@ -84,13 +84,13 @@ func testAccCheckASV1ConfigurationExists(n string, configuration *configurations
 	}
 }
 
-var testAccASV1Configuration_basic = fmt.Sprintf(`
-resource "telefonicaopencloud_compute_keypair_v2" "hth_key" {
+var testASV1Configuration_basic = fmt.Sprintf(`
+resource "flexibleenginecloud_compute_keypair_v2" "hth_key" {
   name = "hth_key"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLo1BCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAT9+OfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZquwhvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TAIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIFuu1p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB jrp-hp-pc"
 }
 
-resource "telefonicaopencloud_as_configuration_v1" "hth_as_config"{
+resource "flexibleengine_as_configuration_v1" "hth_as_config"{
   scaling_configuration_name = "hth_as_config"
   instance_config = {
     image = "%s"
@@ -99,7 +99,7 @@ resource "telefonicaopencloud_as_configuration_v1" "hth_as_config"{
       volume_type = "SATA"
       disk_type = "SYS"}
     ]
-    key_name = "${telefonicaopencloud_compute_keypair_v2.hth_key.id}"
+    key_name = "${flexibleengine_compute_keypair_v2.hth_key.id}"
   }
 }
 `, OS_IMAGE_ID)

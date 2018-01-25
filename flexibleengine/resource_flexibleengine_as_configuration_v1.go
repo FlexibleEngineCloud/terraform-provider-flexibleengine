@@ -6,10 +6,10 @@ import (
 
 	"crypto/sha1"
 	"encoding/hex"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/configurations"
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/groups"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/configurations"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/groups"
 	"os"
 	"regexp"
 )
@@ -285,7 +285,7 @@ func resourceASConfigurationCreate(d *schema.ResourceData, meta interface{}) err
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating TelefonicaOpenCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
 	}
 	log.Printf("[DEBUG] asClient: %#v", asClient)
 	configDataMap := d.Get("instance_config").([]interface{})[0].(map[string]interface{})
@@ -314,7 +314,7 @@ func resourceASConfigurationRead(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating TelefonicaOpenCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
 	}
 
 	asConfig, err := configurations.Get(asClient, d.Id()).Extract()
@@ -331,7 +331,7 @@ func resourceASConfigurationDelete(d *schema.ResourceData, meta interface{}) err
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating TelefonicaOpenCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
 	}
 	groups, err1 := getASGroupsByConfiguration(asClient, d.Id())
 	if err1 != nil {
@@ -352,7 +352,7 @@ func resourceASConfigurationDelete(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func getASGroupsByConfiguration(asClient *gophercloud.ServiceClient, configurationID string) ([]groups.Group, error) {
+func getASGroupsByConfiguration(asClient *golangsdk.ServiceClientExtension, configurationID string) ([]groups.Group, error) {
 	var gs []groups.Group
 	listOpts := groups.ListOpts{
 		ConfigurationID: configurationID,

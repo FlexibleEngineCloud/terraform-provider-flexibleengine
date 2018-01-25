@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	//"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/backendmember"
+	//"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -39,7 +39,7 @@ func testAccCheckELBBackendDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	_, err := config.otcV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -66,7 +66,7 @@ func testAccCheckELBBackendExists(n string) resource.TestCheckFunc {
 		config := testAccProvider.Meta().(*Config)
 		_ /*networkingClient*/, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}
 
 		return nil
