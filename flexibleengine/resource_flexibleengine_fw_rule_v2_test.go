@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/huawei-clouds/golangsdk"
-	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
 )
 
 func TestAccFWRuleV2_basic(t *testing.T) {
@@ -102,7 +102,7 @@ func TestAccFWRuleV2_anyProtocol(t *testing.T) {
 
 func testAccCheckFWRuleV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.fwV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -134,7 +134,7 @@ func testAccCheckFWRuleV2Exists(n string, expected *rules.Rule) resource.TestChe
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.fwV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}
