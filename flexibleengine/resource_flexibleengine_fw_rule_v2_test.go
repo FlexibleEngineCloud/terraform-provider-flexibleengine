@@ -102,7 +102,7 @@ func TestAccFWRuleV2_anyProtocol(t *testing.T) {
 
 func testAccCheckFWRuleV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.fwV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -134,7 +134,7 @@ func testAccCheckFWRuleV2Exists(n string, expected *rules.Rule) resource.TestChe
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.fwV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}
