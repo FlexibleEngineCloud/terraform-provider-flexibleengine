@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/gophercloud/gophercloud/openstack/autoscaling/v1/configurations"
+	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/configurations"
 	"log"
 )
 

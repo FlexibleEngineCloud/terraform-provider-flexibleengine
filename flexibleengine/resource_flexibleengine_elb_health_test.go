@@ -6,7 +6,7 @@ import (
 
 	"log"
 
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/elbaas/healthcheck"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/healthcheck"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )

@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/fwaas_v2/policies"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/policies"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -71,7 +71,7 @@ func resourceFWPolicyV2() *schema.Resource {
 
 func resourceFWPolicyV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.fwV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -122,7 +122,7 @@ func resourceFWPolicyV2Read(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Retrieve information about firewall policy: %s", d.Id())
 
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.fwV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -147,7 +147,7 @@ func resourceFWPolicyV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceFWPolicyV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.fwV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -189,7 +189,7 @@ func resourceFWPolicyV2Delete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Destroy firewall policy: %s", d.Id())
 
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.fwV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
@@ -210,14 +210,14 @@ func resourceFWPolicyV2Delete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func waitForFirewallPolicyDeletion(networkingClient *gophercloud.ServiceClient, id string) resource.StateRefreshFunc {
+func waitForFirewallPolicyDeletion(networkingClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		err := policies.Delete(networkingClient, id).Err
 		if err == nil {
 			return "", "DELETED", nil
 		}
 
-		if errCode, ok := err.(gophercloud.ErrUnexpectedResponseCode); ok {
+		if errCode, ok := err.(golangsdk.ErrUnexpectedResponseCode); ok {
 			if errCode.Actual == 409 {
 				// This error usually means that the policy is attached
 				// to a firewall. At this point, the firewall is probably
