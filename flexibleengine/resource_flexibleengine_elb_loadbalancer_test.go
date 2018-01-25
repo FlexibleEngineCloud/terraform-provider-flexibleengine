@@ -94,9 +94,9 @@ func testAccCheckELBLoadBalancerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
 	if err != nil {
-		fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerDestroy OpenTelekomCloud networking client: %s", err)
+		fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerDestroy OrangeCloud networking client: %s", err)
 
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -134,8 +134,8 @@ func testAccCheckELBLoadBalancerExists(
 		config := testAccProvider.Meta().(*Config)
 		networkingClient, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists Error creating OpenTelekomCloud networking client: %s", err)
-			return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}
 		fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists  middle \n ")
 		found, err := loadbalancer_elbs.Get(networkingClient, rs.Primary.ID).Extract()
@@ -164,7 +164,7 @@ func testAccCheckELBLoadBalancerHasSecGroup(
 		config := testAccProvider.Meta().(*Config)
 		_ /*networkingClient,*/, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}
 
 		return nil

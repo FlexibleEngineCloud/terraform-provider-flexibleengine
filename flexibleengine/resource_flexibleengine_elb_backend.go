@@ -53,7 +53,7 @@ func resourceBackendCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	addOpts := backendmember.AddOpts{
@@ -103,7 +103,7 @@ func resourceBackendRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	listener_id := d.Get("listener_id").(string)
@@ -132,7 +132,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenTelekomCloud networking client: %s", err)
+		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting backend member %s", d.Id())
