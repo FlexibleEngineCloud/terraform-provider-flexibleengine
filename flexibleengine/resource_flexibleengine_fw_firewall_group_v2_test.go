@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/huawei-clouds/golangsdk"
-	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/firewall_groups"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/huawei-clouds/golangsdk"
+	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/firewall_groups"
 )
 
 func TestAccFWFirewallGroupV2_basic(t *testing.T) {
