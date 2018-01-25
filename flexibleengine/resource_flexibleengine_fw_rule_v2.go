@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huawei-clouds/golangsdk"
 	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/policies"
 	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceFWRuleV2() *schema.Resource {

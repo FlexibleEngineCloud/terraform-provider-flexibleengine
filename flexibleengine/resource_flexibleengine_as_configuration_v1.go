@@ -6,10 +6,10 @@ import (
 
 	"crypto/sha1"
 	"encoding/hex"
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huawei-clouds/golangsdk"
 	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/configurations"
 	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/groups"
-	"github.com/hashicorp/terraform/helper/schema"
 	"os"
 	"regexp"
 )

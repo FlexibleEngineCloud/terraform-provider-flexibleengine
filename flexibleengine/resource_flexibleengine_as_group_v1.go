@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huawei-clouds/golangsdk"
 	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/groups"
 	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/instances"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
 	"regexp"
 	"strings"
 	"time"
