@@ -204,8 +204,16 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("snapshot_id", v.SnapshotID)
 	d.Set("source_vol_id", v.SourceVolID)
 	d.Set("volume_type", v.VolumeType)
-	//orange cloud will add metadata 'billing=1' additionally, so don't sync metadata from the server
-	//d.Set("metadata", v.Metadata)
+	//orange cloud will add metadata 'billing=1' additionally, so remove the metadata 'billing' from response
+	m := make(map[string]string)
+	for key, val := range v.Metadata {
+		if key == "billing" {
+			continue
+		}
+		m[key] = val
+	}
+	d.Set("metadata", m)
+
 	d.Set("region", GetRegion(d, config))
 
 	attachments := make([]map[string]interface{}, len(v.Attachments))
