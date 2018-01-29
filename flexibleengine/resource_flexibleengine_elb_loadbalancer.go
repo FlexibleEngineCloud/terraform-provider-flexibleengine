@@ -176,7 +176,14 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("admin_state_up", basu)
 	d.Set("vip_subnet_id", lb.VipSubnetID)
 	d.Set("vip_address", lb.VipAddress)
-	d.Set("security_group_id", lb.SecurityGroupID)
+	secgroup_Id := lb.SecurityGroupID
+	// orange cloud will return empty string of security_group_id when lb type is External
+	if lb.Type == "External" {
+		if secgroup_Id == "" {
+			secgroup_Id = d.Get("security_group_id").(string)
+		}
+	}
+	d.Set("security_group_id", secgroup_Id)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
