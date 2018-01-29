@@ -151,7 +151,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s"]
+  security_groups = ["Sys-default"]
   network {
     uuid = "%s"
   }
@@ -161,7 +161,7 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
   instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
   volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
 }
-`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
+`, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_device = fmt.Sprintf(`
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
@@ -171,7 +171,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s"]
+  security_groups = ["Sys-default"]
   network {
     uuid = "%s"
   }
@@ -182,7 +182,7 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
   volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
   device = "/dev/vdc"
 }
-`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
+`, OS_NETWORK_ID)
 
 var testAccComputeV2VolumeAttach_timeout = fmt.Sprintf(`
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
@@ -192,7 +192,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["%s"]
+  security_groups = ["Sys-default"]
   network {
     uuid = "%s"
   }
@@ -207,4 +207,4 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
     delete = "5m"
   }
 }
-`, OS_SECURITY_GROUP_ID, OS_NETWORK_ID)
+`, OS_NETWORK_ID)
