@@ -1036,5 +1036,5 @@
 			"versionExact": "v1.6.1"
 		}
 	],
-	"rootPath": "github.com/huawei-clouds/terraform-provider-huaweicloud"
+	"rootPath": "github.com/Karajan-project/terraform-provider-flexibleengine"
 }
