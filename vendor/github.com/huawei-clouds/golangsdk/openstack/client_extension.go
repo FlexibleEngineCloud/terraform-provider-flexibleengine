@@ -6,6 +6,7 @@ import (
 	tokens2 "github.com/huawei-clouds/golangsdk/openstack/identity/v2/tokens"
 	tokens3 "github.com/huawei-clouds/golangsdk/openstack/identity/v3/tokens"
 	"github.com/huawei-clouds/golangsdk/openstack/utils"
+	"strings"
 )
 
 func GetProjectId(client *golangsdk.ProviderClient) (string, error) {
@@ -88,5 +89,38 @@ func initClientOptsExtension(client *golangsdk.ProviderClient, eo golangsdk.Endp
 //auto-scaling service of huawei public cloud
 func NewAutoScalingService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClientExtension, error) {
 	sc, err := initClientOptsExtension(client, eo, "as")
+	return sc, err
+}
+
+// NewKmsKeyV1 creates a ServiceClient that may be used to access the v3
+// kms key service.
+func NewKmsKeyV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "compute")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "kms", 1)
+	sc.Endpoint = strings.Replace(sc.Endpoint, "v2", "v1.0", 1)
+	sc.ResourceBase = sc.Endpoint + "kms/"
+	sc.Type = "kms"
+	return sc, err
+}
+
+func NewElasticLoadBalancer(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClientExtension, error) {
+	//sc, err := initClientOpts1(client, eo, "elb")
+	sc, err := initClientOptsExtension(client, eo, "compute")
+	if err != nil {
+		return sc, err
+	}
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "elb", 1)
+	sc.Endpoint = sc.Endpoint[:strings.LastIndex(sc.Endpoint, "v2")+3]
+	sc.Endpoint = strings.Replace(sc.Endpoint, "v2", "v1.0", 1)
+	sc.ResourceBase = sc.Endpoint
+	return sc, err
+}
+
+// NewVpcV2 creates a ServiceClient that may be used with the v2 vpc package.
+func NewVpcV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "network")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "nat", 1)
+	sc.Endpoint = strings.Replace(sc.Endpoint, "myhwclouds", "myhuaweicloud", 1)
+	sc.ResourceBase = sc.Endpoint + "v2.0/"
 	return sc, err
 }

@@ -59,30 +59,15 @@ func TestAccELBLoadBalancer_secGroup(t *testing.T) {
 					testAccCheckNetworkingV2SecGroupExists(
 						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_2),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_elb_loadbalancer.loadbalancer_1", "security_group_ids.#", "1"),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
 					testAccCheckELBLoadBalancerHasSecGroup(&lb, &sg_1),
 				),
 			},
 			resource.TestStep{
-				Config: testAccLBV2LoadBalancer_secGroup_update1,
+				Config: testAccELBLoadBalancer_secGroup_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckELBLoadBalancerExists(
 						"flexibleengine_elb_loadbalancer.loadbalancer_1", &lb),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_elb_loadbalancer.loadbalancer_1", "security_group_ids.#", "2"),
-					testAccCheckELBLoadBalancerHasSecGroup(&lb, &sg_1),
-					testAccCheckELBLoadBalancerHasSecGroup(&lb, &sg_2),
-				),
-			},
-			resource.TestStep{
-				Config: testAccELBLoadBalancer_secGroup_update2,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckELBLoadBalancerExists(
-						"flexibleengine_elb_loadbalancer.loadbalancer_1", &lb),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_elb_loadbalancer.loadbalancer_1", "security_group_ids.#", "1"),
 					testAccCheckELBLoadBalancerHasSecGroup(&lb, &sg_2),
 				),
 			},
@@ -202,7 +187,7 @@ resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
 }
 `, OS_VPC_ID)
 
-const testAccELBLoadBalancer_secGroup = `
+var testAccELBLoadBalancer_secGroup = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
@@ -225,15 +210,16 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 
 resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-    ]
+  name = "loadbalancer_1"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  vpc_id = "%s"
+  type = "External"
+  bandwidth = 3
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
-`
+`, OS_VPC_ID)
 
-const testAccELBLoadBalancer_secGroup_update1 = `
+var testAccELBLoadBalancer_secGroup_update = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
@@ -256,43 +242,11 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 
 resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}",
-      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-    ]
+  name = "loadbalancer_1"
+  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  vpc_id = "%s"
+  type = "External"
+  bandwidth = 3
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
 }
-`
-
-const testAccELBLoadBalancer_secGroup_update2 = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
-  description = "secgroup_1"
-}
-
-resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
-  description = "secgroup_2"
-}
-
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  cidr = "192.168.199.0/24"
-}
-
-resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-    ]
-    depends_on = ["flexibleengine_networking_secgroup_v2.secgroup_1"]
-}
-`
+`, OS_VPC_ID)

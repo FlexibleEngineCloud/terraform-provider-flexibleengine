@@ -22,7 +22,7 @@ func TestAccOrangeCloudNetworkingSecGroupV2DataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "orange_acctest_secgroup"),
 				),
 			},
 		},
@@ -43,7 +43,7 @@ func TestAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "secgroup_1"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "orange_acctest_secgroup"),
 				),
 			},
 		},
@@ -67,8 +67,8 @@ func testAccCheckNetworkingSecGroupV2DataSourceID(n string) resource.TestCheckFu
 
 const testAccOrangeCloudNetworkingSecGroupV2DataSource_group = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-        name        = "secgroup_1"
-	description = "My neutron security group"
+        name        = "orange_acctest_secgroup"
+	description = "My neutron security group for orange acctest"
 }
 `
 

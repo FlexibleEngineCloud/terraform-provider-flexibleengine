@@ -22,7 +22,7 @@ func TestAccOrangeCloudNetworkingNetworkV2DataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingNetworkV2DataSourceID("data.flexibleengine_networking_network_v2.net"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_network_v2.net", "name", "tf_test_network"),
+						"data.flexibleengine_networking_network_v2.net", "name", "orange_test_network"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_networking_network_v2.net", "admin_state_up", "true"),
 				),
@@ -45,7 +45,7 @@ func TestAccOrangeCloudNetworkingNetworkV2DataSource_subnet(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingNetworkV2DataSourceID("data.flexibleengine_networking_network_v2.net"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_network_v2.net", "name", "tf_test_network"),
+						"data.flexibleengine_networking_network_v2.net", "name", "orange_test_network"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_networking_network_v2.net", "admin_state_up", "true"),
 				),
@@ -68,7 +68,7 @@ func TestAccOrangeCloudNetworkingNetworkV2DataSource_networkID(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingNetworkV2DataSourceID("data.flexibleengine_networking_network_v2.net"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_network_v2.net", "name", "tf_test_network"),
+						"data.flexibleengine_networking_network_v2.net", "name", "orange_test_network"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_networking_network_v2.net", "admin_state_up", "true"),
 				),
@@ -94,13 +94,13 @@ func testAccCheckNetworkingNetworkV2DataSourceID(n string) resource.TestCheckFun
 
 const testAccOrangeCloudNetworkingNetworkV2DataSource_network = `
 resource "flexibleengine_networking_network_v2" "net" {
-        name = "tf_test_network"
+        name = "orange_test_network"
         admin_state_up = "true"
 }
 
 resource "flexibleengine_networking_subnet_v2" "subnet" {
-  name = "tf_test_subnet"
-  cidr = "192.168.199.0/24"
+  name = "orange_test_subnet"
+  cidr = "192.168.198.0/24"
   no_gateway = true
   network_id = "${flexibleengine_networking_network_v2.net.id}"
 }

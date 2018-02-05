@@ -529,11 +529,15 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 
 	d.Set("all_metadata", server.Metadata)
 
-	secGrpNames := []string{}
-	for _, sg := range server.SecurityGroups {
-		secGrpNames = append(secGrpNames, sg["name"].(string))
-	}
-	d.Set("security_groups", secGrpNames)
+	// NOTE: As OrangeCloud returns security group description with the group's name
+	// We disable security_groups setting here as a workaround.
+	/*
+		secGrpNames := []string{}
+		for _, sg := range server.SecurityGroups {
+			secGrpNames = append(secGrpNames, sg["name"].(string))
+		}
+		d.Set("security_groups", secGrpNames)
+	*/
 
 	flavorId, ok := server.Flavor["id"].(string)
 	if !ok {
