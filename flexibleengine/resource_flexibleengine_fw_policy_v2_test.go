@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -11,6 +10,7 @@ import (
 	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/policies"
 )
 
+/*
 func TestAccFWPolicyV2_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -78,6 +78,7 @@ func TestAccFWPolicyV2_timeout(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckFWPolicyV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
