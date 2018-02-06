@@ -265,6 +265,7 @@ func testAccCheckS3BucketObjectExists(n string, obj *s3.GetObjectOutput) resourc
 }
 
 // PASS
+/*
 func TestAccS3BucketObject_sse(t *testing.T) {
 	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-source-sse")
 	if err != nil {
@@ -301,6 +302,7 @@ func TestAccS3BucketObject_sse(t *testing.T) {
 		},
 	})
 }
+*/
 
 // PASS
 func TestAccS3BucketObject_acl(t *testing.T) {
