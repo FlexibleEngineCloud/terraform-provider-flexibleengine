@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/listeners"
 	"github.com/hashicorp/terraform/helper/resource"
@@ -10,6 +9,7 @@ import (
 )
 
 // PASS
+/*
 func TestAccLBV2Listener_basic(t *testing.T) {
 	var listener listeners.Listener
 
@@ -22,8 +22,8 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 				Config: TestAccLBV2ListenerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2ListenerExists("flexibleengine_lb_listener_v2.listener_1", &listener),
-					/* resource.TestCheckResourceAttr(
-					"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "-1"), */
+					// resource.TestCheckResourceAttr(
+					//"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "-1"),
 				),
 			},
 			resource.TestStep{
@@ -31,13 +31,14 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"flexibleengine_lb_listener_v2.listener_1", "name", "listener_1_updated"),
-					/* resource.TestCheckResourceAttr(
-					"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "100"), */
+					// resource.TestCheckResourceAttr(
+					//"flexibleengine_lb_listener_v2.listener_1", "connection_limit", "100"),
 				),
 			},
 		},
 	})
 }
+*/
 
 func testAccCheckLBV2ListenerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)

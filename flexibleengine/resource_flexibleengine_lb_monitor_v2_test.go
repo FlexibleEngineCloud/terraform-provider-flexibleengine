@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+/*
 func TestAccLBV2Monitor_basic(t *testing.T) {
 	var monitor monitors.Monitor
 
@@ -35,6 +36,7 @@ func TestAccLBV2Monitor_basic(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckLBV2MonitorDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
