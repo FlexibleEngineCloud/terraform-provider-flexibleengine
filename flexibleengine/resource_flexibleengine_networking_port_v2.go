@@ -156,12 +156,15 @@ func resourceNetworkingPortV2Create(d *schema.ResourceData, meta interface{}) er
 			MACAddress:          d.Get("mac_address").(string),
 			TenantID:            d.Get("tenant_id").(string),
 			DeviceOwner:         d.Get("device_owner").(string),
-			SecurityGroups:      &sgs,
 			DeviceID:            d.Get("device_id").(string),
 			FixedIPs:            resourcePortFixedIpsV2(d),
 			AllowedAddressPairs: resourceAllowedAddressPairsV2(d),
 		},
 		MapValueSpecs(d),
+	}
+	// do not pass "security_groups" parameter if there is no element, otherwise an error will be raised
+	if len(sgs) > 0 {
+		createOpts.SecurityGroups = &sgs
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
