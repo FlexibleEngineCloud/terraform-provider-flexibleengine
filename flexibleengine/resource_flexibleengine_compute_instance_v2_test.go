@@ -9,9 +9,9 @@ import (
 
 	"github.com/gophercloud/gophercloud"
 	//"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/secgroups"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/volumeattach"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
+	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
 	//"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
 	//"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/gophercloud/gophercloud/pagination"
@@ -44,7 +44,7 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 // PASS
 func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 	var instance_1 servers.Server
-	var secgroup_1 secgroups.SecurityGroup
+	var secgroup_1 groups.SecGroup
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -54,8 +54,8 @@ func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_secgroupMulti,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists(
-						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
+					testAccCheckNetworkingV2SecGroupExists(
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
 					testAccCheckComputeV2InstanceExists(
 						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
@@ -67,7 +67,7 @@ func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 // PASS
 func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 	var instance_1 servers.Server
-	var secgroup_1, secgroup_2 secgroups.SecurityGroup
+	var secgroup_1, secgroup_2 groups.SecGroup
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -77,10 +77,10 @@ func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_secgroupMultiUpdate_1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists(
-						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
-					testAccCheckComputeV2SecGroupExists(
-						"flexibleengine_compute_secgroup_v2.secgroup_2", &secgroup_2),
+					testAccCheckNetworkingV2SecGroupExists(
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
+					testAccCheckNetworkingV2SecGroupExists(
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
 					testAccCheckComputeV2InstanceExists(
 						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
@@ -88,10 +88,10 @@ func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 			resource.TestStep{
 				Config: testAccComputeV2Instance_secgroupMultiUpdate_2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2SecGroupExists(
-						"flexibleengine_compute_secgroup_v2.secgroup_1", &secgroup_1),
-					testAccCheckComputeV2SecGroupExists(
-						"flexibleengine_compute_secgroup_v2.secgroup_2", &secgroup_2),
+					testAccCheckNetworkingV2SecGroupExists(
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
+					testAccCheckNetworkingV2SecGroupExists(
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
 					testAccCheckComputeV2InstanceExists(
 						"flexibleengine_compute_instance_v2.instance_1", &instance_1),
 				),
@@ -459,20 +459,14 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 `, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMulti = fmt.Sprintf(`
-resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "orange_acctest_secgroup_1"
   description = "a security group"
-  rule {
-    from_port = 22
-    to_port = 22
-    ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
-  }
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default", "${flexibleengine_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["Sys-default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"]
   network {
     uuid = "%s"
   }
@@ -480,26 +474,14 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 `, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_1 = fmt.Sprintf(`
-resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "orange_acctest_secgroup_1"
   description = "a security group"
-  rule {
-    from_port = 22
-    to_port = 22
-    ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
-  }
 }
 
-resource "flexibleengine_compute_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
+  name = "orange_acctest_secgroup_2"
   description = "another security group"
-  rule {
-    from_port = 80
-    to_port = 80
-    ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
-  }
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
@@ -512,31 +494,19 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 `, OS_NETWORK_ID)
 
 var testAccComputeV2Instance_secgroupMultiUpdate_2 = fmt.Sprintf(`
-resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "orange_acctest_secgroup_1"
   description = "a security group"
-  rule {
-    from_port = 22
-    to_port = 22
-    ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
-  }
 }
 
-resource "flexibleengine_compute_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
+  name = "orange_acctest_secgroup_2"
   description = "another security group"
-  rule {
-    from_port = 80
-    to_port = 80
-    ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
-  }
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default", "${flexibleengine_compute_secgroup_v2.secgroup_1.name}", "${flexibleengine_compute_secgroup_v2.secgroup_2.name}"]
+  security_groups = ["Sys-default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}", "${flexibleengine_networking_secgroup_v2.secgroup_2.name}"]
   network {
     uuid = "%s"
   }
