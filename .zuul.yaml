@@ -1,0 +1,4 @@
+- project:
+    check-generic-cloud:
+      jobs:
+        - terraform-provider-flexibleengine-acceptance-test-orange
