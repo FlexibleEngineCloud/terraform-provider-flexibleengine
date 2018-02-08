@@ -117,13 +117,14 @@ resource "flexibleengine_elb_health" "health_orange_acctest" {
   }
 }
 
-resource "flexibleengine_compute_secgroup_v2" "secgroup_orange_acc_test" {
+resource "flexibleengine_networking_secgroup_v2" "secgroup_orange_acc_test" {
   name = "secgroup_orange_acc_test"
+  description = "orange security group acceptance test"
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_orange_backend_test" {
   name = "instance_orange_backend_test"
-  security_groups = ["${flexibleengine_compute_secgroup_v2.secgroup_orange_acc_test.name}"]
+  security_groups = ["${flexibleengine_networking_secgroup_v2.secgroup_orange_acc_test.name}"]
   network {
     uuid = "%s"
   }
