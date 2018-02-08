@@ -761,7 +761,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   security_groups = ["Sys-default"]
   network {
     uuid = "%s"
-    fixed_ip_v4 = "10.0.0.24"
+    fixed_ip_v4 = "172.16.10.24"
   }
 }
 `, OS_NETWORK_ID)
@@ -772,7 +772,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   security_groups = ["Sys-default"]
   network {
     uuid = "%s"
-    fixed_ip_v4 = "10.0.0.25"
+    fixed_ip_v4 = "172.16.10.25"
   }
 }
 `, OS_NETWORK_ID)
