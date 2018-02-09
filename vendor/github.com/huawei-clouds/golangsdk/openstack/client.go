@@ -165,6 +165,7 @@ func v2auth(client *golangsdk.ProviderClient, endpoint string, options golangsdk
 		}
 	}
 	client.TokenID = token.ID
+	client.ProjectID = token.Tenant.ID
 	client.EndpointLocator = func(opts golangsdk.EndpointOpts) (string, error) {
 		return V2EndpointURL(catalog, opts)
 	}
@@ -195,12 +196,18 @@ func v3auth(client *golangsdk.ProviderClient, endpoint string, opts tokens3.Auth
 		return err
 	}
 
+	project, err := result.ExtractProject()
+	if err != nil {
+		return err
+	}
+
 	catalog, err := result.ExtractServiceCatalog()
 	if err != nil {
 		return err
 	}
 
 	client.TokenID = token.ID
+	client.ProjectID = project.ID
 
 	if opts.CanReauth() {
 		client.ReauthFunc = func() error {
@@ -369,4 +376,25 @@ func NewElbV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, otcty
 	sc.ResourceBase = sc.Endpoint
 	sc.Type = otctype
 	return sc, err
+}
+
+// NewSmnServiceV2 creates a ServiceClient that may be used to access the v2 Simple Message Notification service.
+func NewSmnServiceV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+
+	sc, err := initClientOpts(client, eo, "compute")
+	sc.Endpoint = strings.Replace(sc.Endpoint, "ecs", "smn", 1)
+	sc.ResourceBase = sc.Endpoint + "notifications/"
+	sc.Type = "smn"
+	return sc, err
+}
+
+//NewRdsServiceV1 creates the a ServiceClient that may be used to access the v1
+//rds service which is a service of db instances management.
+func NewRdsServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	newsc, err := initClientOpts(client, eo, "compute")
+	rdsendpoint := strings.Replace(strings.Replace(newsc.Endpoint, "ecs", "rds", 1), "/v2/", "/rds/v1/", 1)
+	newsc.Endpoint = rdsendpoint
+	newsc.ResourceBase = rdsendpoint
+	newsc.Type = "rds"
+	return newsc, err
 }

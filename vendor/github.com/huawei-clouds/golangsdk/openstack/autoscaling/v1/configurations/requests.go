@@ -2,9 +2,10 @@ package configurations
 
 import (
 	"encoding/base64"
+	"log"
+
 	"github.com/huawei-clouds/golangsdk"
 	"github.com/huawei-clouds/golangsdk/pagination"
-	"log"
 )
 
 type CreateOptsBuilder interface {
@@ -110,7 +111,7 @@ type BandwidthOpts struct {
 
 //Create is a method by which can be able to access to create a configuration
 //of autoscaling
-func Create(client *golangsdk.ServiceClientExtension, opts CreateOptsBuilder) (r CreateResult) {
+func Create(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r CreateResult) {
 	b, err := opts.ToConfigurationCreateMap()
 	if err != nil {
 		r.Err = err
@@ -124,13 +125,13 @@ func Create(client *golangsdk.ServiceClientExtension, opts CreateOptsBuilder) (r
 
 //Get is a method by which can be able to access to get a configuration of
 //autoscaling detailed information
-func Get(client *golangsdk.ServiceClientExtension, id string) (r GetResult) {
+func Get(client *golangsdk.ServiceClient, id string) (r GetResult) {
 	_, r.Err = client.Get(getURL(client, id), &r.Body, nil)
 	return
 }
 
 //Delete
-func Delete(client *golangsdk.ServiceClientExtension, id string) (r DeleteResult) {
+func Delete(client *golangsdk.ServiceClient, id string) (r DeleteResult) {
 	_, r.Err = client.Delete(deleteURL(client, id), nil)
 	return
 }
@@ -150,7 +151,7 @@ func (opts ListOpts) ToConfigurationListQuery() (string, error) {
 }
 
 //List is method that can be able to list all configurations of autoscaling service
-func List(client *golangsdk.ServiceClientExtension, opts ListOptsBuilder) pagination.Pager {
+func List(client *golangsdk.ServiceClient, opts ListOptsBuilder) pagination.Pager {
 	url := listURL(client)
 	if opts != nil {
 		query, err := opts.ToConfigurationListQuery()
@@ -160,7 +161,7 @@ func List(client *golangsdk.ServiceClientExtension, opts ListOptsBuilder) pagina
 		url += query
 	}
 
-	return pagination.NewPager(client.ServiceClient, url, func(r pagination.PageResult) pagination.Page {
+	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
 		return ConfigurationPage{pagination.SinglePageBase(r)}
 	})
 }

@@ -352,7 +352,7 @@ func resourceASConfigurationDelete(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func getASGroupsByConfiguration(asClient *golangsdk.ServiceClientExtension, configurationID string) ([]groups.Group, error) {
+func getASGroupsByConfiguration(asClient *golangsdk.ServiceClient, configurationID string) ([]groups.Group, error) {
 	var gs []groups.Group
 	listOpts := groups.ListOpts{
 		ConfigurationID: configurationID,

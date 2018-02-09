@@ -6,18 +6,18 @@ import (
 
 const resourcePath = "scaling_configuration"
 
-func createURL(client *golangsdk.ServiceClientExtension) string {
+func createURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL(client.ProjectID, resourcePath)
 }
 
-func getURL(client *golangsdk.ServiceClientExtension, id string) string {
+func getURL(client *golangsdk.ServiceClient, id string) string {
 	return client.ServiceURL(client.ProjectID, resourcePath, id)
 }
 
-func deleteURL(client *golangsdk.ServiceClientExtension, id string) string {
+func deleteURL(client *golangsdk.ServiceClient, id string) string {
 	return client.ServiceURL(client.ProjectID, resourcePath, id)
 }
 
-func listURL(client *golangsdk.ServiceClientExtension) string {
+func listURL(client *golangsdk.ServiceClient) string {
 	return client.ServiceURL(client.ProjectID, resourcePath)
 }
