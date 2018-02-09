@@ -407,7 +407,7 @@ func (c *Config) otcV1Client(region string) (*golangsdk.ServiceClient, error) {
 	}, "elb")
 }
 
-func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClientExtension, error) {
+func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewAutoScalingService(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
