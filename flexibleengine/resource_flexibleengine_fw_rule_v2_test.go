@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"reflect"
-	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -12,6 +11,7 @@ import (
 	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
 )
 
+/*
 func TestAccFWRuleV2_basic(t *testing.T) {
 	rule1 := &rules.Rule{
 		Name:      "rule_1",
@@ -99,6 +99,7 @@ func TestAccFWRuleV2_anyProtocol(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckFWRuleV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)

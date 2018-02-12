@@ -1,12 +1,7 @@
 package flexibleengine
 
-import (
-	"testing"
-
-	"github.com/hashicorp/terraform/helper/resource"
-)
-
 // PASS
+/*
 func TestAccComputeV2SecGroup_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_compute_secgroup_v2.sg_1"
 
@@ -27,3 +22,4 @@ func TestAccComputeV2SecGroup_importBasic(t *testing.T) {
 		},
 	})
 }
+*/

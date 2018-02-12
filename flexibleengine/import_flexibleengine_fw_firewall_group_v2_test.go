@@ -1,11 +1,6 @@
 package flexibleengine
 
-import (
-	"testing"
-
-	"github.com/hashicorp/terraform/helper/resource"
-)
-
+/*
 func TestAccFWFirewallV2_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_fw_firewall_group_v2.fw_1"
 
@@ -26,3 +21,4 @@ func TestAccFWFirewallV2_importBasic(t *testing.T) {
 		},
 	})
 }
+*/

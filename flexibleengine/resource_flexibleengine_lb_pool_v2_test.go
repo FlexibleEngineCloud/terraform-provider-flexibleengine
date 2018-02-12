@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/pools"
 	"github.com/hashicorp/terraform/helper/resource"
@@ -10,6 +9,7 @@ import (
 )
 
 // PASS
+/*
 func TestAccLBV2Pool_basic(t *testing.T) {
 	var pool pools.Pool
 
@@ -33,6 +33,7 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckLBV2PoolDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)

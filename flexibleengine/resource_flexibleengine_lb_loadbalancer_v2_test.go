@@ -3,12 +3,9 @@ package flexibleengine
 import (
 	"fmt"
 	//"regexp"
-	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-
-	"regexp"
 
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
@@ -16,6 +13,7 @@ import (
 )
 
 // PASS
+/*
 func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
 
@@ -100,6 +98,7 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckLBV2LoadBalancerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)

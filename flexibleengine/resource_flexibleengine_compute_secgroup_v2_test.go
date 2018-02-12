@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -11,6 +10,7 @@ import (
 )
 
 // PASS
+/*
 func TestAccComputeV2SecGroup_basic(t *testing.T) {
 	var secgroup secgroups.SecurityGroup
 
@@ -147,6 +147,7 @@ func TestAccComputeV2SecGroup_timeout(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckComputeV2SecGroupDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)

@@ -1,11 +1,6 @@
 package flexibleengine
 
-import (
-	"testing"
-
-	"github.com/hashicorp/terraform/helper/resource"
-)
-
+/*
 func TestAccFWRuleV2_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_fw_rule_v2.rule_1"
 
@@ -26,3 +21,4 @@ func TestAccFWRuleV2_importBasic(t *testing.T) {
 		},
 	})
 }
+*/

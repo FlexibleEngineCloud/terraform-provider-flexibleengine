@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -11,6 +10,7 @@ import (
 	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/fwaas_v2/firewall_groups"
 )
 
+/*
 func TestAccFWFirewallGroupV2_basic(t *testing.T) {
 	var epolicyID *string
 	var ipolicyID *string
@@ -127,6 +127,7 @@ func TestAccFWFirewallGroupV2_port_remove(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckFWFirewallGroupV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
