@@ -1,8 +1,31 @@
-# Gophercloud: an OpenStack SDK for Go
+# Golangsdk: a Huawei clouds SDK for Golang
+[![Go Report Card](https://goreportcard.com/badge/github.com/huawei-clouds/golangsdk?branch=master)](https://goreportcard.com/badge/github.com/huawei-clouds/golangsdk)
 [![Build Status](https://travis-ci.org/huawei-clouds/golangsdk.svg?branch=master)](https://travis-ci.org/huawei-clouds/golangsdk)
 [![Coverage Status](https://coveralls.io/repos/github/huawei-clouds/golangsdk/badge.svg?branch=master)](https://coveralls.io/github/huawei-clouds/golangsdk?branch=master)
+[![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huawei-clouds/golangsdk/blob/master/LICENSE)
 
-Gophercloud is an OpenStack Go SDK.
+Golangsdk is a Huawei clouds Go SDK.
+Golangsdk is based on [Gophercloud](https://github.com/gophercloud/gophercloud)
+which is an OpenStack Go SDK and has a great design.
+Golangsdk has added and removed some features to support Huawei clouds.
+
+## Added features
+
+- **autoscaling**: auto scaling service
+- **kms**: key management service
+- **rds**: relational database service
+- **smn**: simple message notification service
+
+## Removed features
+
+- **blockstorage**: block storage service
+- **cdn**: content delivery network service
+- **compute**: compute service
+- **db**: database service
+- **imageservice**: image service
+- **objectstorage**: object storage service
+- **orchestration**: orchestration service
+- **sharedfilesystems**: share file system service
 
 ## Useful links
 
@@ -12,7 +35,7 @@ Gophercloud is an OpenStack Go SDK.
 ## How to install
 
 Before installing, you need to ensure that your [GOPATH environment variable](https://golang.org/doc/code.html#GOPATH)
-is pointing to an appropriate directory where you want to install Gophercloud:
+is pointing to an appropriate directory where you want to install Golangsdk:
 
 ```bash
 mkdir $HOME/go
@@ -22,7 +45,7 @@ export GOPATH=$HOME/go
 To protect yourself against changes in your dependencies, we highly recommend choosing a
 [dependency management solution](https://github.com/golang/go/wiki/PackageManagementTools) for
 your projects, such as [godep](https://github.com/tools/godep). Once this is set up, you can install
-Gophercloud as a dependency like so:
+golangsdk as a dependency like so:
 
 ```bash
 go get github.com/huawei-clouds/golangsdk
@@ -39,7 +62,7 @@ referenceable from your own source files when you use the `godep go` command.
 
 ### Credentials
 
-Because you'll be hitting an API, you will need to retrieve your OpenStack
+Because you'll be hitting an API, you will need to retrieve your Huawei clouds
 credentials and either store them as environment variables or in your local Go
 files. The first method is recommended because it decouples credential
 information from source code, allowing you to push the latter to your version
@@ -49,21 +72,14 @@ You will need to retrieve the following:
 
 * username
 * password
-* a valid Keystone identity URL
-
-For users that have the OpenStack dashboard installed, there's a shortcut. If
-you visit the `project/access_and_security` path in Horizon and click on the
-"Download OpenStack RC File" button at the top right hand corner, you will
-download a bash file that exports all of your access details to environment
-variables. To execute the file, run `source admin-openrc.sh` and you will be
-prompted for your password.
+* a valid IAM identity URL
 
 ### Authentication
 
 Once you have access to your credentials, you can begin plugging them into
-Gophercloud. The next step is authentication, and this is handled by a base
+Golangsdk. The next step is authentication, and this is handled by a base
 "Provider" struct. To get one, you can either pass in your credentials
-explicitly, or tell Gophercloud to use environment variables:
+explicitly, or tell Golangsdk to use environment variables:
 
 ```go
 import (
@@ -90,44 +106,43 @@ Once you have the `opts` variable, you can pass it in and get back a
 provider, err := openstack.AuthenticatedClient(opts)
 ```
 
-The `ProviderClient` is the top-level client that all of your OpenStack services
+The `ProviderClient` is the top-level client that all of your Huawei clouds services
 derive from. The provider contains all of the authentication details that allow
 your Go code to access the API - such as the base URL and token ID.
 
-### Provision a server
+### Provision a rds instance
 
-Once we have a base Provider, we inject it as a dependency into each OpenStack
-service. In order to work with the Compute API, we need a Compute service
+Once we have a base Provider, we inject it as a dependency into each Huawei clouds
+service. In order to work with the rds API, we need a rds service
 client; which can be created like so:
 
 ```go
-client, err := openstack.NewComputeV2(provider, golangsdk.EndpointOpts{
+client, err := openstack.NewRdsServiceV1(provider, golangsdk.EndpointOpts{
   Region: os.Getenv("OS_REGION_NAME"),
 })
 ```
 
-We then use this `client` for any Compute API operation we want. In our case,
-we want to provision a new server - so we invoke the `Create` method and pass
-in the flavor ID (hardware specification) and image ID (operating system) we're
+We then use this `client` for any rds API operation we want. In our case,
+we want to provision a rds instance - so we invoke the `Create` method and pass
+in the name and the flavor ID (database specification) we're
 interested in:
 
 ```go
-import "github.com/huawei-clouds/golangsdk/openstack/compute/v2/servers"
+import "github.com/huawei-clouds/golangsdk/openstack/rds/v1/instances"
 
-server, err := servers.Create(client, servers.CreateOpts{
-  Name:      "My new server!",
+instance, err := instances.Create(client, instances.CreateOpts{
+  Name:      "My new rds instance!",
   FlavorRef: "flavor_id",
-  ImageRef:  "image_id",
 }).Extract()
 ```
 
-The above code sample creates a new server with the parameters, and embodies the
-new resource in the `server` variable (a
-[`servers.Server`](http://godoc.org/github.com/huawei-clouds/golangsdk) struct).
+The above code sample creates a new rds instance with the parameters, and embodies the
+new resource in the `instance` variable (a
+[`instances.Instance`](http://godoc.org/github.com/huawei-clouds/golangsdk) struct).
 
 ## Advanced Usage
 
-Have a look at the [FAQ](./FAQ.md) for some tips on customizing the way Gophercloud works.
+Have a look at the [FAQ](./FAQ.md) for some tips on customizing the way Golangsdk works.
 
 ## Backwards-Compatibility Guarantees
 
@@ -140,7 +155,7 @@ See the [contributing guide](./.github/CONTRIBUTING.md).
 ## Help and feedback
 
 If you're struggling with something or have spotted a potential bug, feel free
-to submit an issue to our [bug tracker](/issues).
+to submit an issue to our [bug tracker](https://github.com/huawei-clouds/golangsdk/issues).
 
 ## Thank You
 
@@ -156,4 +171,9 @@ OpenLab is providing a full CI environment to test each PR and merge for a varie
 
 <a href="https://vexxhost.com/"><img src="assets/vexxhost.png" width="600px"></a>
 
-VEXXHOST is providing their services to assist with the development and testing of Gophercloud.
+VEXXHOST is providing their services to assist with the development and testing of Golangsdk.
+
+## License
+
+Golangsdk is under the Apache 2.0 license. See the [LICENSE](LICENSE) file for details.
+
