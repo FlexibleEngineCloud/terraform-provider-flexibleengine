@@ -35,7 +35,7 @@ import:
   - openstack/networking/v2/subnets
   - openstack/objectstorage/v1/swauth
   - pagination
-- package: github.com/huawei-clouds/golangsdk
+- package: github.com/huaweicloud/golangsdk
   subpackages:
   - openstack
   - openstack/autoscaling/v1/configurations

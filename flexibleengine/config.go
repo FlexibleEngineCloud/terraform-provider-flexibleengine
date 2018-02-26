@@ -21,8 +21,8 @@ import (
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform/helper/pathorcontents"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/huawei-clouds/golangsdk"
-	huaweisdk "github.com/huawei-clouds/golangsdk/openstack"
+	"github.com/huaweicloud/golangsdk"
+	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 )
 
 type Config struct {

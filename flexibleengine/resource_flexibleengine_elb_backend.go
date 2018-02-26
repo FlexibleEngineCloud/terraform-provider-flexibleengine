@@ -8,9 +8,9 @@ import (
 	// "github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 
-	"github.com/huawei-clouds/golangsdk"
-	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas"
-	"github.com/huawei-clouds/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
 const loadbalancerActiveTimeoutSeconds = 600
