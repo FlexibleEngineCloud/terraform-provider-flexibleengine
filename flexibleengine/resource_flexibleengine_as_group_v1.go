@@ -6,9 +6,9 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/huawei-clouds/golangsdk"
-	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/groups"
-	"github.com/huawei-clouds/golangsdk/openstack/autoscaling/v1/instances"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/groups"
+	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/instances"
 	"regexp"
 	"strings"
 	"time"
