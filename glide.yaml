@@ -1,4 +1,4 @@
-package: github.com/Karajan-project/terraform-provider-flexibleengine
+package: github.com/huaweicloud/terraform-provider-flexibleengine
 import:
 - package: github.com/gophercloud/gophercloud
   subpackages:

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Karajan-project/terraform-provider-flexibleengine/flexibleengine" // TODO: Revert path when merge
 	"github.com/hashicorp/terraform/plugin"
+	"github.com/huaweicloud/terraform-provider-flexibleengine/flexibleengine" // TODO: Revert path when merge
 )
 
 func main() {
