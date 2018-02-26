@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: "OpenStack: flexibleengine_as_policy_v1"
+page_title: "FlexibleEngine: flexibleengine_as_policy_v1"
 sidebar_current: "docs-flexibleengine-resource-as-policy-v1"
 description: |-
   Manages a V1 AS Policy resource within flexibleengine.
