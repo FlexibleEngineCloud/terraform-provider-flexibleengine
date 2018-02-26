@@ -414,6 +414,20 @@ func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClient, e
 	})
 }
 
+func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewSmnServiceV2(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}
+
+func (c *Config) RdsV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewRdsServiceV1(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}
+
 func (c *Config) getEndpointType() gophercloud.Availability {
 	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
 		return gophercloud.AvailabilityInternal
