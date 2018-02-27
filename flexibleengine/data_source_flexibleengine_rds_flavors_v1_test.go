@@ -19,8 +19,6 @@ func TestAccRdsFlavorV1DataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRdsFlavorV1DataSourceID("data.flexibleengine_rds_flavors_v1.flavor"),
 					resource.TestCheckResourceAttrSet(
-						"data.flexibleengine_rds_flavors_v1.flavor", "name"),
-					resource.TestCheckResourceAttrSet(
 						"data.flexibleengine_rds_flavors_v1.flavor", "id"),
 					resource.TestCheckResourceAttrSet(
 						"data.flexibleengine_rds_flavors_v1.flavor", "speccode"),
