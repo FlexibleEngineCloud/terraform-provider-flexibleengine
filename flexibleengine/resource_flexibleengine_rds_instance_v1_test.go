@@ -120,8 +120,8 @@ resource "flexibleengine_rds_instance_v1" "instance" {
   }
   dbport = "8635"
   backupstrategy = {
-    starttime = "01:00:00"
-    keepdays = 1
+    starttime = "00:00:00"
+    keepdays = 0
   }
   dbrtpd = "Huangwei-120521"
   ha = {
