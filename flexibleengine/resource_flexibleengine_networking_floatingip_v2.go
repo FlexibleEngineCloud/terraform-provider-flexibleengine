@@ -280,6 +280,10 @@ func waitForFloatingIPDelete(networkingClient *gophercloud.ServiceClient, fId st
 				log.Printf("[DEBUG] Successfully deleted OrangeCloud Floating IP %s", fId)
 				return f, "DELETED", nil
 			}
+			if _, ok := err.(gophercloud.ErrDefault500); ok {
+				log.Printf("[DEBUG] Got 500 error when delting OrangeCloud Floating IP %s, it should be stream control on API server, try again later", fId)
+				return f, "ACTIVE", nil
+			}
 			return f, "ACTIVE", err
 		}
 
@@ -288,6 +292,10 @@ func waitForFloatingIPDelete(networkingClient *gophercloud.ServiceClient, fId st
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
 				log.Printf("[DEBUG] Successfully deleted OrangeCloud Floating IP %s", fId)
 				return f, "DELETED", nil
+			}
+			if _, ok := err.(gophercloud.ErrDefault500); ok {
+				log.Printf("[DEBUG] Got 500 error when delting OrangeCloud Floating IP %s, it should be stream control on API server, try again later", fId)
+				return f, "ACTIVE", nil
 			}
 			return f, "ACTIVE", err
 		}
