@@ -203,6 +203,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_smn_topic_v2":                    resourceTopic(),
 			"flexibleengine_smn_subscription_v2":             resourceSubscription(),
 			"flexibleengine_rds_instance_v1":                 resourceRdsInstance(),
+			"flexibleengine_ces_alarmrule":                   resourceAlarmRule(),
 		},
 
 		ConfigureFunc: configureProvider,

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas"
 )
@@ -57,4 +58,16 @@ func waitForELBResource(networkingClient *golangsdk.ServiceClient, name string, 
 	}
 
 	return o, nil
+}
+
+func chooseCESClient(d *schema.ResourceData, config *Config) (*golangsdk.ServiceClient, error) {
+	return config.loadCESClient(GetRegion(d, config))
+}
+
+func isResourceNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	_, ok := err.(golangsdk.ErrDefault404)
+	return ok
 }
