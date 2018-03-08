@@ -124,7 +124,7 @@ The `disk` block supports:
 
 The `personality` block supports:
 
-* `file` - (Required) The absolute path of the destination file.
+* `path` - (Required) The absolute path of the destination file.
 
 * `contents` - (Required) The content of the injected file, which must be encoded with base64.
 
