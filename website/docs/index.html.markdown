@@ -36,6 +36,12 @@ resource "flexibleengine_compute_instance_v2" "test-server" {
 
 The following arguments are supported:
 
+* `access_key` - (Optional) The access key of the FlexibleEngine cloud to use.
+  If omitted, the `OS_ACCESS_KEY` environment variable is used.
+
+* `secret_key` - (Optional) The secret key of the FlexibleEngine cloud to use.
+  If omitted, the `OS_SECRET_KEY` environment variable is used.
+
 * `auth_url` - (Required) The Identity authentication URL. If omitted, the
   `OS_AUTH_URL` environment variable is used.
 
