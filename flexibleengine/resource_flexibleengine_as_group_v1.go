@@ -120,6 +120,7 @@ func resourceASGroup() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: resourceASGroupValidateHealthAuditMethod,
 				ForceNew:     false,
+				Default:      "NOVA_AUDIT",
 			},
 			"health_periodic_audit_time": &schema.Schema{
 				Type:         schema.TypeInt,
