@@ -93,7 +93,7 @@ data "flexibleengine_rds_flavors_v1" "flavor" {
     speccode = "rds.mysql.s1.medium"
 }
 
-resource "flexibleengine_compute_secgroup_v2" "secgrp_rds" {
+resource "flexibleengine_networking_secgroup_v2" "secgrp_rds" {
   name        = "secgrp-rds-instance"
   description = "Rds Security Group"
 }
@@ -116,7 +116,7 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     subnetid = "%s"
   }
   securitygroup {
-    id = "${flexibleengine_compute_secgroup_v2.secgrp_rds.id}"
+    id = "${flexibleengine_networking_secgroup_v2.secgrp_rds.id}"
   }
   dbport = "8635"
   backupstrategy = {
@@ -128,5 +128,5 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     enable = true
     replicationmode = "async"
   }
-  depends_on = ["flexibleengine_compute_secgroup_v2.secgrp_rds"]
+  depends_on = ["flexibleengine_networking_secgroup_v2.secgrp_rds"]
 }`, OS_VPC_ID, OS_NETWORK_ID)
