@@ -166,7 +166,6 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_blockstorage_volume_v2":          resourceBlockStorageVolumeV2(),
 			"flexibleengine_compute_instance_v2":             resourceComputeInstanceV2(),
 			"flexibleengine_compute_keypair_v2":              resourceComputeKeypairV2(),
-			"flexibleengine_compute_secgroup_v2":             resourceComputeSecGroupV2(),
 			"flexibleengine_compute_servergroup_v2":          resourceComputeServerGroupV2(),
 			"flexibleengine_compute_floatingip_v2":           resourceComputeFloatingIPV2(),
 			"flexibleengine_compute_floatingip_associate_v2": resourceComputeFloatingIPAssociateV2(),
