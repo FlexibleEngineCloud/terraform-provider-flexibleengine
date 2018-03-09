@@ -71,10 +71,11 @@ func resourceASPolicy() *schema.Resource {
 							ForceNew: false,
 						},
 						"start_time": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: false,
-							Default:  getCurrentUTCwithoutSec(),
+							Type:             schema.TypeString,
+							Optional:         true,
+							ForceNew:         false,
+							Default:          getCurrentUTCwithoutSec(),
+							DiffSuppressFunc: suppressDiffAll,
 						},
 						"end_time": &schema.Schema{
 							Type:     schema.TypeString,
