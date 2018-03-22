@@ -151,7 +151,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -171,7 +171,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -192,7 +192,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }

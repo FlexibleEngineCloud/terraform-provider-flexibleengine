@@ -447,7 +447,7 @@ func testAccCheckComputeV2InstanceInstanceIDsDoNotMatch(
 var testAccComputeV2Instance_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   availability_zone = "%s"
   metadata {
     foo = "bar"
@@ -466,7 +466,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"]
   network {
     uuid = "%s"
   }
@@ -486,7 +486,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -506,7 +506,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}", "${flexibleengine_networking_secgroup_v2.secgroup_2.name}"]
+  security_groups = ["default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}", "${flexibleengine_networking_secgroup_v2.secgroup_2.name}"]
   network {
     uuid = "%s"
   }
@@ -516,7 +516,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_bootFromVolumeImage = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   availability_zone = "%s"
   network {
     uuid = "%s"
@@ -541,7 +541,7 @@ resource "flexibleengine_blockstorage_volume_v2" "vol_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -558,7 +558,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_bootFromVolumeForceNew_1 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -576,7 +576,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_bootFromVolumeForceNew_2 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -594,7 +594,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_blockDeviceNewVolume = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -623,7 +623,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -647,7 +647,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_personality = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -665,7 +665,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_multiEphemeral = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "terraform-test"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -711,7 +711,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   depends_on = ["flexibleengine_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
 
   network {
     uuid = "%s"
@@ -728,7 +728,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_changeFixedIP_1 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
     fixed_ip_v4 = "172.16.10.24"
@@ -739,7 +739,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_changeFixedIP_2 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
     fixed_ip_v4 = "172.16.10.25"
@@ -750,7 +750,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_stopBeforeDestroy = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -761,7 +761,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_metadataRemove_1 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -775,7 +775,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_metadataRemove_2 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -790,7 +790,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_forceDelete = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -802,7 +802,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 var testAccComputeV2Instance_timeout = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -831,7 +831,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   depends_on = ["flexibleengine_networking_subnet_v2.subnet_1"]
 
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
 
   network {
     uuid = "%s"
@@ -924,7 +924,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   ]
 
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
 
   network {
     uuid = "%s"

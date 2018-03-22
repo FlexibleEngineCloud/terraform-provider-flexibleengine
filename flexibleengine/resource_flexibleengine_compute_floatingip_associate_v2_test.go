@@ -210,7 +210,7 @@ func testAccCheckComputeV2FloatingIPAssociateAssociated(
 var testAccComputeV2FloatingIPAssociate_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -228,7 +228,7 @@ resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
 var testAccComputeV2FloatingIPAssociate_fixedIP = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -247,7 +247,7 @@ resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
 var testAccComputeV2FloatingIPAssociate_attachToFirstNetwork = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
 
   network {
     uuid = "%s"
@@ -280,7 +280,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
 
   network {
     uuid = "${flexibleengine_networking_network_v2.network_1.id}"
@@ -304,7 +304,7 @@ resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
 var testAccComputeV2FloatingIPAssociate_attachNew_1 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
@@ -325,7 +325,7 @@ resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
 var testAccComputeV2FloatingIPAssociate_attachNew_2 = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["Sys-default"]
+  security_groups = ["default"]
   network {
     uuid = "%s"
   }
