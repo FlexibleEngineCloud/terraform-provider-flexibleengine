@@ -76,7 +76,6 @@ func resourceHealthCreate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	//adminStateUp := d.Get("admin_state_up").(bool)
 	createOpts := healthcheck.CreateOpts{
 		ListenerID:             d.Get("listener_id").(string),
 		HealthcheckProtocol:    d.Get("healthcheck_protocol").(string),

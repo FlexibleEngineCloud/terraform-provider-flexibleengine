@@ -12,7 +12,6 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/dns/v2/zones"
 )
 
-// PASS, but normally skip
 func TestAccDNSV2Zone_basic(t *testing.T) {
 	var zone zones.Zone
 	// TODO: Why does it lowercase names in back-end?
@@ -39,8 +38,6 @@ func TestAccDNSV2Zone_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "name", zoneName),
 					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "email", "email2@example.com"),
 					resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "ttl", "6000"),
-					// TODO: research why this is blank...
-					//resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "type", "PRIMARY"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_dns_zone_v2.zone_1", "description", "an updated zone"),
 				),
@@ -49,7 +46,6 @@ func TestAccDNSV2Zone_basic(t *testing.T) {
 	})
 }
 
-// PASS, but normally skip
 func TestAccDNSV2Zone_readTTL(t *testing.T) {
 	var zone zones.Zone
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))
@@ -64,7 +60,6 @@ func TestAccDNSV2Zone_readTTL(t *testing.T) {
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDNSV2ZoneExists("flexibleengine_dns_zone_v2.zone_1", &zone),
-					//resource.TestCheckResourceAttr("flexibleengine_dns_zone_v2.zone_1", "type", "PRIMARY"),
 					resource.TestMatchResourceAttr(
 						"flexibleengine_dns_zone_v2.zone_1", "ttl", regexp.MustCompile("^[0-9]+$")),
 				),
@@ -73,7 +68,6 @@ func TestAccDNSV2Zone_readTTL(t *testing.T) {
 	})
 }
 
-// PASS, but normally skip
 func TestAccDNSV2Zone_timeout(t *testing.T) {
 	var zone zones.Zone
 	var zoneName = fmt.Sprintf("ACPTTEST%s.com.", acctest.RandString(5))

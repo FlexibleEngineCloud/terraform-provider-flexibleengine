@@ -1,14 +1,12 @@
 package flexibleengine
 
 import (
-	//"bytes"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
 	"testing"
-	//"text/template"
 
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
@@ -18,22 +16,15 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	//"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-// PASS
 func TestAccS3Bucket_basic(t *testing.T) {
 	rInt := acctest.RandInt()
-	//arnRegexp := regexp.MustCompile("^arn:aws:s3:::")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-		/*
-			IDRefreshName:   "flexibleengine_s3_bucket.bucket",
-			IDRefreshIgnore: []string{"force_destroy"},
-		*/
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckS3BucketDestroy,
 		Steps: []resource.TestStep{
@@ -41,14 +32,10 @@ func TestAccS3Bucket_basic(t *testing.T) {
 				Config: testAccS3BucketConfig(rInt),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
-					/*resource.TestCheckResourceAttr(
-					"flexibleengine_s3_bucket.bucket", "hosted_zone_id", HostedZoneIDForRegion("us-west-2")), */
 					resource.TestCheckResourceAttr(
 						"flexibleengine_s3_bucket.bucket", "region", OS_REGION_NAME),
 					resource.TestCheckNoResourceAttr(
 						"flexibleengine_s3_bucket.bucket", "website_endpoint"),
-					/*resource.TestMatchResourceAttr(
-					"flexibleengine_s3_bucket.bucket", "arn", arnRegexp), */
 					resource.TestCheckResourceAttr(
 						"flexibleengine_s3_bucket.bucket", "bucket", testAccBucketName(rInt)),
 					resource.TestCheckResourceAttr(
@@ -59,7 +46,6 @@ func TestAccS3Bucket_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_namePrefix(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -78,7 +64,6 @@ func TestAccS3Bucket_namePrefix(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_generatedName(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -95,7 +80,6 @@ func TestAccS3Bucket_generatedName(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_region(t *testing.T) {
 	rInt := acctest.RandInt()
 
@@ -115,7 +99,6 @@ func TestAccS3Bucket_region(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_Policy(t *testing.T) {
 	rInt := acctest.RandInt()
 
@@ -152,7 +135,6 @@ func TestAccS3Bucket_Policy(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_UpdateAcl(t *testing.T) {
 	ri := acctest.RandInt()
 	preConfig := fmt.Sprintf(testAccS3BucketConfigWithAcl, ri)
@@ -183,7 +165,6 @@ func TestAccS3Bucket_UpdateAcl(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_Website_Simple(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
@@ -225,7 +206,6 @@ func TestAccS3Bucket_Website_Simple(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_WebsiteRedirect(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
@@ -267,7 +247,6 @@ func TestAccS3Bucket_WebsiteRedirect(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_WebsiteRoutingRules(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
@@ -336,7 +315,6 @@ func TestAccS3Bucket_shouldFailNotFound(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_Versioning(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
@@ -372,7 +350,6 @@ func TestAccS3Bucket_Versioning(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3Bucket_Cors(t *testing.T) {
 	rInt := acctest.RandInt()
 
@@ -456,29 +433,6 @@ func TestAccS3Bucket_Cors(t *testing.T) {
 	})
 }
 
-// This fails occasionally, need to dig more
-/*
-func TestAccS3Bucket_Logging(t *testing.T) {
-	rInt := acctest.RandInt()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckS3BucketDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccS3BucketConfigWithLogging(rInt),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketExists("flexibleengine_s3_bucket.bucket"),
-					testAccCheckS3BucketLogging(
-						"flexibleengine_s3_bucket.bucket", "flexibleengine_s3_bucket.log_bucket", "log/"),
-				),
-			},
-		},
-	})
-}
-*/
-
-// PASS
 func TestAccS3Bucket_Lifecycle(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{
