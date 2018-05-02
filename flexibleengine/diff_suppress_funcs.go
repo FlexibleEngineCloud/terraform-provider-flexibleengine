@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"strings"
 
-	//"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/jen20/awspolicyequivalence"
 )

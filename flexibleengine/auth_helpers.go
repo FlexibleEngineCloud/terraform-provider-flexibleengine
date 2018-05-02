@@ -1,7 +1,6 @@
 package flexibleengine
 
 import (
-	//"errors"
 	"fmt"
 	"log"
 	"os"
@@ -12,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	awsCredentials "github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	//"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/defaults"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"

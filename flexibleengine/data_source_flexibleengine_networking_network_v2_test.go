@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-// PASS
 func TestAccOrangeCloudNetworkingNetworkV2DataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -31,7 +30,6 @@ func TestAccOrangeCloudNetworkingNetworkV2DataSource_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccOrangeCloudNetworkingNetworkV2DataSource_subnet(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -54,7 +52,6 @@ func TestAccOrangeCloudNetworkingNetworkV2DataSource_subnet(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccOrangeCloudNetworkingNetworkV2DataSource_networkID(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-// PASS
 func TestAccComputeV2FloatingIP_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_compute_floatingip_v2.fip_1"
 

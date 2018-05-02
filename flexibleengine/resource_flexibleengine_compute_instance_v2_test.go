@@ -8,16 +8,12 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 
 	"github.com/gophercloud/gophercloud"
-	//"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/volumeattach"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
-	//"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
-	//"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/gophercloud/gophercloud/pagination"
 )
 
-// PASS
 func TestAccComputeV2Instance_basic(t *testing.T) {
 	var instance servers.Server
 
@@ -41,7 +37,6 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 	var instance_1 servers.Server
 	var secgroup_1 groups.SecGroup
@@ -64,7 +59,6 @@ func TestAccComputeV2Instance_secgroupMulti(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 	var instance_1 servers.Server
 	var secgroup_1, secgroup_2 groups.SecGroup
@@ -100,7 +94,6 @@ func TestAccComputeV2Instance_secgroupMultiUpdate(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2Instance_bootFromVolumeImage(t *testing.T) {
 	var instance servers.Server
 
@@ -120,7 +113,6 @@ func TestAccComputeV2Instance_bootFromVolumeImage(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2Instance_bootFromVolumeVolume(t *testing.T) {
 	var instance servers.Server
 
@@ -140,7 +132,6 @@ func TestAccComputeV2Instance_bootFromVolumeVolume(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2Instance_bootFromVolumeForceNew(t *testing.T) {
 	var instance1_1 servers.Server
 	var instance1_2 servers.Server

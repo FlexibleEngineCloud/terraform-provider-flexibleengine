@@ -16,7 +16,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-// PASS
 func TestAccS3BucketObject_source(t *testing.T) {
 	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-source")
 	if err != nil {
@@ -45,7 +44,6 @@ func TestAccS3BucketObject_source(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3BucketObject_content(t *testing.T) {
 	rInt := acctest.RandInt()
 	var obj s3.GetObjectOutput
@@ -64,7 +62,6 @@ func TestAccS3BucketObject_content(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3BucketObject_withContentCharacteristics(t *testing.T) {
 	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-content-characteristics")
 	if err != nil {
@@ -100,7 +97,6 @@ func TestAccS3BucketObject_withContentCharacteristics(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3BucketObject_updates(t *testing.T) {
 	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-updates")
 	if err != nil {
@@ -144,7 +140,6 @@ func TestAccS3BucketObject_updates(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccS3BucketObject_updatesWithVersioning(t *testing.T) {
 	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-updates-w-versions")
 	if err != nil {
@@ -264,47 +259,6 @@ func testAccCheckS3BucketObjectExists(n string, obj *s3.GetObjectOutput) resourc
 	}
 }
 
-// PASS
-/*
-func TestAccS3BucketObject_sse(t *testing.T) {
-	tmpFile, err := ioutil.TempFile("", "tf-acc-s3-obj-source-sse")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.Remove(tmpFile.Name())
-
-	// first write some data to the tempfile just so it's not 0 bytes.
-	err = ioutil.WriteFile(tmpFile.Name(), []byte("{anything will do}"), 0644)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	rInt := acctest.RandInt()
-	var obj s3.GetObjectOutput
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckS3BucketObjectDestroy,
-		Steps: []resource.TestStep{
-			resource.TestStep{
-				PreConfig: func() {},
-				Config:    testAccS3BucketObjectConfig_withSSE(rInt, tmpFile.Name()),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckS3BucketObjectExists(
-						"flexibleengine_s3_bucket_object.object",
-						&obj),
-					testAccCheckS3BucketObjectSSE(
-						"flexibleengine_s3_bucket_object.object",
-						"aws:kms"),
-				),
-			},
-		},
-	})
-}
-*/
-
-// PASS
 func TestAccS3BucketObject_acl(t *testing.T) {
 	rInt := acctest.RandInt()
 	var obj s3.GetObjectOutput
@@ -379,7 +333,6 @@ func testAccCheckS3BucketObjectAcl(n string, expectedPerms []string) resource.Te
 	}
 }
 
-// PASS
 func TestResourceS3BucketObjectAcl_validation(t *testing.T) {
 	_, errors := validateS3BucketObjectAclType("incorrect", "acl")
 	if len(errors) == 0 {
@@ -408,7 +361,6 @@ func TestResourceS3BucketObjectAcl_validation(t *testing.T) {
 	}
 }
 
-// PASS
 func TestResourceS3BucketObjectStorageClass_validation(t *testing.T) {
 	_, errors := validateS3BucketObjectStorageClassType("incorrect", "storage_class")
 	if len(errors) == 0 {

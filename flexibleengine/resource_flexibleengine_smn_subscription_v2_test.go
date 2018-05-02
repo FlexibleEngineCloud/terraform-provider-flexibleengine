@@ -9,9 +9,7 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/smn/v2/subscriptions"
 )
 
-// PASS
 func TestAccSMNV2Subscription_basic(t *testing.T) {
-	//var subscription1 subscriptions.SubscriptionGet
 	var subscription2 subscriptions.SubscriptionGet
 
 	resource.Test(t, resource.TestCase{
@@ -22,11 +20,7 @@ func TestAccSMNV2Subscription_basic(t *testing.T) {
 			resource.TestStep{
 				Config: TestAccSMNV2SubscriptionConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					//testAccCheckSMNV2SubscriptionExists("flexibleengine_smn_subscription_v2.subscription_1", &subscription1),
 					testAccCheckSMNV2SubscriptionExists("flexibleengine_smn_subscription_v2.subscription_2", &subscription2),
-					//resource.TestCheckResourceAttr(
-					//	"flexibleengine_smn_subscription_v2.subscription_1", "endpoint",
-					//	"mailtest@gmail.com"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_smn_subscription_v2.subscription_2", "endpoint",
 						"13600000000"),

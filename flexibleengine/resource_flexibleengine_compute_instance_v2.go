@@ -330,11 +330,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
-			/* "force_delete": &schema.Schema{
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
-			}, */
 			"all_metadata": &schema.Schema{
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -528,16 +523,6 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 	}
 
 	d.Set("all_metadata", server.Metadata)
-
-	// NOTE: As OrangeCloud returns security group description with the group's name
-	// We disable security_groups setting here as a workaround.
-	/*
-		secGrpNames := []string{}
-		for _, sg := range server.SecurityGroups {
-			secGrpNames = append(secGrpNames, sg["name"].(string))
-		}
-		d.Set("security_groups", secGrpNames)
-	*/
 
 	flavorId, ok := server.Flavor["id"].(string)
 	if !ok {
@@ -768,19 +753,11 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 		}
 	}
 
-	/* if d.Get("force_delete").(bool) {
-		log.Printf("[DEBUG] Force deleting OrangeCloud Instance %s", d.Id())
-		err = servers.ForceDelete(computeClient, d.Id()).ExtractErr()
-		if err != nil {
-			return fmt.Errorf("Error deleting OrangeCloud server: %s", err)
-		}
-	} else { */
 	log.Printf("[DEBUG] Deleting OrangeCloud Instance %s", d.Id())
 	err = servers.Delete(computeClient, d.Id()).ExtractErr()
 	if err != nil {
 		return fmt.Errorf("Error deleting OrangeCloud server: %s", err)
 	}
-	//}
 
 	// Wait for the instance to delete before moving on.
 	log.Printf("[DEBUG] Waiting for instance (%s) to delete", d.Id())
