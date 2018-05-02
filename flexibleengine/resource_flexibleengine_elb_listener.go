@@ -128,12 +128,6 @@ func resourceEListener() *schema.Resource {
 				ForceNew: true,
 			},
 
-			/* "certificates": &schema.Schema{
-				Type:     schema.TypeSet,
-				Optional: true,
-				ForceNew: true,
-			}, */
-
 			"udp_timeout": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -176,10 +170,9 @@ func resourceEListenerCreate(d *schema.ResourceData, meta interface{}) error {
 		TcpDraining:         d.Get("tcp_draining").(bool),
 		TcpDrainingTimeout:  d.Get("tcp_draining_timeout").(int),
 		CertificateID:       d.Get("certificate_id").(string),
-		//Certificates: 			d.Get("certificates")
-		UDPTimeout:   d.Get("udp_timeout").(int),
-		SSLProtocols: d.Get("ssl_protocols").(string),
-		SSLCiphers:   d.Get("ssl_ciphers").(string),
+		UDPTimeout:          d.Get("udp_timeout").(int),
+		SSLProtocols:        d.Get("ssl_protocols").(string),
+		SSLCiphers:          d.Get("ssl_ciphers").(string),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -222,7 +215,6 @@ func resourceEListenerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("lb_algorithm", listener.Algorithm)
 	d.Set("name", listener.Name)
 	d.Set("certificate_id", listener.CertificateID)
-	//d.Set("certificates", listener.Certificates)
 	d.Set("tcp_timeout", listener.TcpTimeout)
 	d.Set("udp_timeout", listener.UDPTimeout)
 	d.Set("ssl_protocols", listener.SSLProtocols)

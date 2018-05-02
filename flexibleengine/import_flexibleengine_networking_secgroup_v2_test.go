@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-// PASS
 func TestAccNetworkingV2SecGroup_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_networking_secgroup_v2.secgroup_1"
 

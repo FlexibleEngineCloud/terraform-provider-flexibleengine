@@ -184,9 +184,7 @@ func newopenstackClient(c *Config) error {
 		awsConfig := &aws.Config{
 			Credentials: creds,
 			Region:      aws.String(c.Region),
-			//MaxRetries:       aws.Int(c.MaxRetries),
-			HTTPClient: cleanhttp.DefaultClient(),
-			//S3ForcePathStyle: aws.Bool(c.S3ForcePathStyle),
+			HTTPClient:  cleanhttp.DefaultClient(),
 		}
 
 		if osDebug {
@@ -290,7 +288,6 @@ func newhwClient(c *Config) error {
 	}
 
 	c.HwClient = client
-	//fmt.Printf("[DEBUG] Region: %s.\n", c.Region)
 
 	return nil
 }

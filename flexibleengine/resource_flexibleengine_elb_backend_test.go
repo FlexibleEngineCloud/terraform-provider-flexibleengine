@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	//"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"

@@ -10,11 +10,8 @@ import (
 
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/loadbalancer_elbs"
-	//"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
-	//"regexp"
 )
 
-// PASS
 func TestAccELBLoadBalancer_basic(t *testing.T) {
 
 	var lb loadbalancer_elbs.LoadBalancer
@@ -41,7 +38,6 @@ func TestAccELBLoadBalancer_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccELBLoadBalancer_secGroup(t *testing.T) {
 	var lb loadbalancer_elbs.LoadBalancer
 	var sg_1, sg_2 groups.SecGroup
@@ -147,7 +143,7 @@ func testAccCheckELBLoadBalancerHasSecGroup(
 	lb *loadbalancer_elbs.LoadBalancer, sg *groups.SecGroup) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		_ /*networkingClient,*/, err := config.otcV1Client(OS_REGION_NAME)
+		_, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
 		}

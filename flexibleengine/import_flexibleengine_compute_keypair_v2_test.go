@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-// PASS
 func TestAccComputeV2Keypair_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_compute_keypair_v2.orange_acctest_kp"
 

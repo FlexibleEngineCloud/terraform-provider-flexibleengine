@@ -17,7 +17,6 @@ func randomZoneName() string {
 	return fmt.Sprintf("acpttest-zone-%s.com.", acctest.RandString(5))
 }
 
-// PASS, but normally skip
 func TestAccDNSV2RecordSet_basic(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
@@ -55,7 +54,6 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 	})
 }
 
-// PASS, but normally skip
 func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
@@ -78,7 +76,6 @@ func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 	})
 }
 
-// PASS, but normally skip
 func TestAccDNSV2RecordSet_timeout(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()

@@ -10,7 +10,6 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/volumeattach"
 )
 
-// PASS
 func TestAccComputeV2VolumeAttach_basic(t *testing.T) {
 	var va volumeattach.VolumeAttachment
 
@@ -29,7 +28,6 @@ func TestAccComputeV2VolumeAttach_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccComputeV2VolumeAttach_device(t *testing.T) {
 	var va volumeattach.VolumeAttachment
 
@@ -42,14 +40,12 @@ func TestAccComputeV2VolumeAttach_device(t *testing.T) {
 				Config: testAccComputeV2VolumeAttach_device,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
-					//testAccCheckComputeV2VolumeAttachDevice(&va, "/dev/vdc"),
 				),
 			},
 		},
 	})
 }
 
-// PASS
 func TestAccComputeV2VolumeAttach_timeout(t *testing.T) {
 	var va volumeattach.VolumeAttachment
 
