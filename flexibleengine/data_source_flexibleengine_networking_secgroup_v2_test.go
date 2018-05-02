@@ -8,40 +8,40 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccOrangeCloudNetworkingSecGroupV2DataSource_basic(t *testing.T) {
+func TestAccFlexibleEngineNetworkingSecGroupV2DataSource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_group,
+				Config: testAccFlexibleEngineNetworkingSecGroupV2DataSource_group,
 			},
 			resource.TestStep{
-				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_basic,
+				Config: testAccFlexibleEngineNetworkingSecGroupV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "orange_acctest_secgroup"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "flexibleengine_acctest_secgroup"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID(t *testing.T) {
+func TestAccFlexibleEngineNetworkingSecGroupV2DataSource_secGroupID(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_group,
+				Config: testAccFlexibleEngineNetworkingSecGroupV2DataSource_group,
 			},
 			resource.TestStep{
-				Config: testAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID,
+				Config: testAccFlexibleEngineNetworkingSecGroupV2DataSource_secGroupID,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingSecGroupV2DataSourceID("data.flexibleengine_networking_secgroup_v2.secgroup_1"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "orange_acctest_secgroup"),
+						"data.flexibleengine_networking_secgroup_v2.secgroup_1", "name", "flexibleengine_acctest_secgroup"),
 				),
 			},
 		},
@@ -63,25 +63,25 @@ func testAccCheckNetworkingSecGroupV2DataSourceID(n string) resource.TestCheckFu
 	}
 }
 
-const testAccOrangeCloudNetworkingSecGroupV2DataSource_group = `
+const testAccFlexibleEngineNetworkingSecGroupV2DataSource_group = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-        name        = "orange_acctest_secgroup"
-	description = "My neutron security group for orange acctest"
+        name        = "flexibleengine_acctest_secgroup"
+	description = "My neutron security group for flexibleengine acctest"
 }
 `
 
-var testAccOrangeCloudNetworkingSecGroupV2DataSource_basic = fmt.Sprintf(`
+var testAccFlexibleEngineNetworkingSecGroupV2DataSource_basic = fmt.Sprintf(`
 %s
 
 data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
 	name = "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"
 }
-`, testAccOrangeCloudNetworkingSecGroupV2DataSource_group)
+`, testAccFlexibleEngineNetworkingSecGroupV2DataSource_group)
 
-var testAccOrangeCloudNetworkingSecGroupV2DataSource_secGroupID = fmt.Sprintf(`
+var testAccFlexibleEngineNetworkingSecGroupV2DataSource_secGroupID = fmt.Sprintf(`
 %s
 
 data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
 	secgroup_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
 }
-`, testAccOrangeCloudNetworkingSecGroupV2DataSource_group)
+`, testAccFlexibleEngineNetworkingSecGroupV2DataSource_group)

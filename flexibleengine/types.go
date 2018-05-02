@@ -46,8 +46,8 @@ func (lrt *LogRoundTripper) RoundTrip(request *http.Request) (*http.Response, er
 	var err error
 
 	if lrt.OsDebug {
-		log.Printf("[DEBUG] OrangeCloud Request URL: %s %s", request.Method, request.URL)
-		log.Printf("[DEBUG] OrangeCloud Request Headers:\n%s", FormatHeaders(request.Header, "\n"))
+		log.Printf("[DEBUG] FlexibleEngine Request URL: %s %s", request.Method, request.URL)
+		log.Printf("[DEBUG] FlexibleEngine Request Headers:\n%s", FormatHeaders(request.Header, "\n"))
 
 		if request.Body != nil {
 			request.Body, err = lrt.logRequest(request.Body, request.Header.Get("Content-Type"))
@@ -63,8 +63,8 @@ func (lrt *LogRoundTripper) RoundTrip(request *http.Request) (*http.Response, er
 	}
 
 	if lrt.OsDebug {
-		log.Printf("[DEBUG] OrangeCloud Response Code: %d", response.StatusCode)
-		log.Printf("[DEBUG] OrangeCloud Response Headers:\n%s", FormatHeaders(response.Header, "\n"))
+		log.Printf("[DEBUG] FlexibleEngine Response Code: %d", response.StatusCode)
+		log.Printf("[DEBUG] FlexibleEngine Response Headers:\n%s", FormatHeaders(response.Header, "\n"))
 
 		response.Body, err = lrt.logResponse(response.Body, response.Header.Get("Content-Type"))
 	}
@@ -86,9 +86,9 @@ func (lrt *LogRoundTripper) logRequest(original io.ReadCloser, contentType strin
 	// Handle request contentType
 	if strings.HasPrefix(contentType, "application/json") {
 		debugInfo := lrt.formatJSON(bs.Bytes())
-		log.Printf("[DEBUG] OrangeCloud Request Body: %s", debugInfo)
+		log.Printf("[DEBUG] FlexibleEngine Request Body: %s", debugInfo)
 	} else {
-		log.Printf("[DEBUG] OrangeCloud Request Body: %s", bs.String())
+		log.Printf("[DEBUG] FlexibleEngine Request Body: %s", bs.String())
 	}
 
 	return ioutil.NopCloser(strings.NewReader(bs.String())), nil
@@ -106,12 +106,12 @@ func (lrt *LogRoundTripper) logResponse(original io.ReadCloser, contentType stri
 		}
 		debugInfo := lrt.formatJSON(bs.Bytes())
 		if debugInfo != "" {
-			log.Printf("[DEBUG] OrangeCloud Response Body: %s", debugInfo)
+			log.Printf("[DEBUG] FlexibleEngine Response Body: %s", debugInfo)
 		}
 		return ioutil.NopCloser(strings.NewReader(bs.String())), nil
 	}
 
-	log.Printf("[DEBUG] Not logging because OrangeCloud response body isn't JSON")
+	log.Printf("[DEBUG] Not logging because FlexibleEngine response body isn't JSON")
 	return original, nil
 }
 
@@ -122,7 +122,7 @@ func (lrt *LogRoundTripper) formatJSON(raw []byte) string {
 
 	err := json.Unmarshal(raw, &data)
 	if err != nil {
-		log.Printf("[DEBUG] Unable to parse OrangeCloud JSON: %s", err)
+		log.Printf("[DEBUG] Unable to parse FlexibleEngine JSON: %s", err)
 		return string(raw)
 	}
 
@@ -146,14 +146,14 @@ func (lrt *LogRoundTripper) formatJSON(raw []byte) string {
 
 	pretty, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
-		log.Printf("[DEBUG] Unable to re-marshal OrangeCloud JSON: %s", err)
+		log.Printf("[DEBUG] Unable to re-marshal FlexibleEngine JSON: %s", err)
 		return string(raw)
 	}
 
 	return string(pretty)
 }
 
-// FirewallGroup is an OrangeCloud firewall group.
+// FirewallGroup is an FlexibleEngine firewall group.
 type FirewallGroup struct {
 	firewall_groups.FirewallGroup
 	routerinsertion.FirewallGroupExt

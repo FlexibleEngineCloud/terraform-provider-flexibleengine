@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_secgroup_v2"
-sidebar_current: "docs-orangecloud-datasource-networking-secgroup-v2"
+layout: "flexibleengine"
+page_title: "FlexibleEngine: flexibleengine_networking_secgroup_v2"
+sidebar_current: "docs-flexibleengine-datasource-networking-secgroup-v2"
 description: |-
-  Get information on an OrangeCloud Security Group.
+  Get information on an FlexibleEngine Security Group.
 ---
 
-# orangecloud\_networking\_secgroup\_v2
+# flexibleengine\_networking\_secgroup\_v2
 
-Use this data source to get the ID of an available OrangeCloud security group.
+Use this data source to get the ID of an available FlexibleEngine security group.
 
 ## Example Usage
 
 ```hcl
-data "orangecloud_networking_secgroup_v2" "secgroup" {
+data "flexibleengine_networking_secgroup_v2" "secgroup" {
   name = "tf_test_secgroup"
 }
 ```

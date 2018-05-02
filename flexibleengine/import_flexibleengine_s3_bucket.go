@@ -20,7 +20,7 @@ func resourceS3BucketImportState(
 	config := meta.(*Config)
 	conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return nil, fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return nil, fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 	pol, err := conn.GetBucketPolicy(&s3.GetBucketPolicyInput{
 		Bucket: aws.String(d.Id()),

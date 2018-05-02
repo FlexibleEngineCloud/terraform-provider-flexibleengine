@@ -134,7 +134,7 @@ func resourceNetworkingNetworkV2Create(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	createOpts := NetworkCreateOpts{
@@ -182,7 +182,7 @@ func resourceNetworkingNetworkV2Create(d *schema.ResourceData, meta interface{})
 	}
 
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud Neutron network: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine Neutron network: %s", err)
 	}
 	d.SetId(FormatNidFromValS(strconv.FormatBool(asu), n.ID))
 
@@ -210,7 +210,7 @@ func resourceNetworkingNetworkV2Read(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	asu, id := ExtractValSFromNid(d.Id())
@@ -235,7 +235,7 @@ func resourceNetworkingNetworkV2Update(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	var updateOpts networks.UpdateOpts
@@ -271,7 +271,7 @@ func resourceNetworkingNetworkV2Update(d *schema.ResourceData, meta interface{})
 
 	_, err = networks.Update(networkingClient, id, updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud Neutron Network: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine Neutron Network: %s", err)
 	}
 
 	d.SetId(FormatNidFromValS(strconv.FormatBool(asu), id))
@@ -282,7 +282,7 @@ func resourceNetworkingNetworkV2Delete(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	_, id := ExtractValFromNid(d.Id())
@@ -297,7 +297,7 @@ func resourceNetworkingNetworkV2Delete(d *schema.ResourceData, meta interface{})
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud Neutron Network: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Neutron Network: %s", err)
 	}
 
 	d.SetId("")
@@ -334,7 +334,7 @@ func waitForNetworkActive(networkingClient *gophercloud.ServiceClient, networkId
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Neutron Network: %+v", n)
+		log.Printf("[DEBUG] FlexibleEngine Neutron Network: %+v", n)
 		if n.Status == "DOWN" || n.Status == "ACTIVE" {
 			return n, "ACTIVE", nil
 		}
@@ -345,12 +345,12 @@ func waitForNetworkActive(networkingClient *gophercloud.ServiceClient, networkId
 
 func waitForNetworkDelete(networkingClient *gophercloud.ServiceClient, networkId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		log.Printf("[DEBUG] Attempting to delete OrangeCloud Network %s.\n", networkId)
+		log.Printf("[DEBUG] Attempting to delete FlexibleEngine Network %s.\n", networkId)
 
 		n, err := networks.Get(networkingClient, networkId).Extract()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Network %s", networkId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Network %s", networkId)
 				return n, "DELETED", nil
 			}
 			return n, "ACTIVE", err
@@ -359,7 +359,7 @@ func waitForNetworkDelete(networkingClient *gophercloud.ServiceClient, networkId
 		err = networks.Delete(networkingClient, networkId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Network %s", networkId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Network %s", networkId)
 				return n, "DELETED", nil
 			}
 			if errCode, ok := err.(gophercloud.ErrUnexpectedResponseCode); ok {
@@ -370,7 +370,7 @@ func waitForNetworkDelete(networkingClient *gophercloud.ServiceClient, networkId
 			return n, "ACTIVE", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Network %s still active.\n", networkId)
+		log.Printf("[DEBUG] FlexibleEngine Network %s still active.\n", networkId)
 		return n, "ACTIVE", nil
 	}
 }

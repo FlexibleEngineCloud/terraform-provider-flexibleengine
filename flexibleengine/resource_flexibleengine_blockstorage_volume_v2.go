@@ -132,7 +132,7 @@ func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}
 	config := meta.(*Config)
 	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud block storage client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
 
 	createOpts := &volumes.CreateOpts{
@@ -152,7 +152,7 @@ func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	v, err := volumes.Create(blockStorageClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud volume: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine volume: %s", err)
 	}
 	log.Printf("[INFO] Volume ID: %s", v.ID)
 
@@ -187,7 +187,7 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud block storage client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
 
 	v, err := volumes.Get(blockStorageClient, d.Id()).Extract()
@@ -204,7 +204,7 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("snapshot_id", v.SnapshotID)
 	d.Set("source_vol_id", v.SourceVolID)
 	d.Set("volume_type", v.VolumeType)
-	//orange cloud will add metadata 'billing=1' additionally, so remove the metadata 'billing' from response
+	//flexibleengine will add metadata 'billing=1' additionally, so remove the metadata 'billing' from response
 	m := make(map[string]string)
 	for key, val := range v.Metadata {
 		if key == "billing" {
@@ -233,7 +233,7 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 	config := meta.(*Config)
 	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud block storage client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
 
 	updateOpts := volumes.UpdateOpts{
@@ -247,7 +247,7 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 
 	_, err = volumes.Update(blockStorageClient, d.Id(), updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud volume: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine volume: %s", err)
 	}
 
 	return resourceBlockStorageVolumeV2Read(d, meta)
@@ -257,7 +257,7 @@ func resourceBlockStorageVolumeV2Delete(d *schema.ResourceData, meta interface{}
 	config := meta.(*Config)
 	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud block storage client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
 
 	v, err := volumes.Get(blockStorageClient, d.Id()).Extract()
@@ -337,7 +337,7 @@ func resourceVolumeMetadataV2(d *schema.ResourceData) map[string]string {
 }
 
 // VolumeV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
-// an OrangeCloud volume.
+// an FlexibleEngine volume.
 func VolumeV2StateRefreshFunc(client *gophercloud.ServiceClient, volumeID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		v, err := volumes.Get(client, volumeID).Extract()

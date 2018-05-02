@@ -73,7 +73,7 @@ func resourceNetworkingRouterV2Create(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	createOpts := RouterCreateOpts{
@@ -105,11 +105,11 @@ func resourceNetworkingRouterV2Create(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	n, err := routers.Create(networkingClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud Neutron router: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine Neutron router: %s", err)
 	}
 	log.Printf("[INFO] Router ID: %s", n.ID)
 
-	log.Printf("[DEBUG] Waiting for OrangeCloud Neutron Router (%s) to become available", n.ID)
+	log.Printf("[DEBUG] Waiting for FlexibleEngine Neutron Router (%s) to become available", n.ID)
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"BUILD", "PENDING_CREATE", "PENDING_UPDATE"},
 		Target:     []string{"ACTIVE"},
@@ -130,7 +130,7 @@ func resourceNetworkingRouterV2Read(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	n, err := routers.Get(networkingClient, d.Id()).Extract()
@@ -140,7 +140,7 @@ func resourceNetworkingRouterV2Read(d *schema.ResourceData, meta interface{}) er
 			return nil
 		}
 
-		return fmt.Errorf("Error retrieving OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error retrieving FlexibleEngine Neutron Router: %s", err)
 	}
 
 	log.Printf("[DEBUG] Retrieved Router %s: %+v", d.Id(), n)
@@ -163,7 +163,7 @@ func resourceNetworkingRouterV2Update(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	var updateOpts routers.UpdateOpts
@@ -188,7 +188,7 @@ func resourceNetworkingRouterV2Update(d *schema.ResourceData, meta interface{}) 
 
 	_, err = routers.Update(networkingClient, d.Id(), updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine Neutron Router: %s", err)
 	}
 
 	return resourceNetworkingRouterV2Read(d, meta)
@@ -198,7 +198,7 @@ func resourceNetworkingRouterV2Delete(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
@@ -212,7 +212,7 @@ func resourceNetworkingRouterV2Delete(d *schema.ResourceData, meta interface{}) 
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Neutron Router: %s", err)
 	}
 
 	d.SetId("")
@@ -226,19 +226,19 @@ func waitForRouterActive(networkingClient *gophercloud.ServiceClient, routerId s
 			return nil, r.Status, err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Neutron Router: %+v", r)
+		log.Printf("[DEBUG] FlexibleEngine Neutron Router: %+v", r)
 		return r, r.Status, nil
 	}
 }
 
 func waitForRouterDelete(networkingClient *gophercloud.ServiceClient, routerId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		log.Printf("[DEBUG] Attempting to delete OrangeCloud Router %s.\n", routerId)
+		log.Printf("[DEBUG] Attempting to delete FlexibleEngine Router %s.\n", routerId)
 
 		r, err := routers.Get(networkingClient, routerId).Extract()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Router %s", routerId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Router %s", routerId)
 				return r, "DELETED", nil
 			}
 			return r, "ACTIVE", err
@@ -247,13 +247,13 @@ func waitForRouterDelete(networkingClient *gophercloud.ServiceClient, routerId s
 		err = routers.Delete(networkingClient, routerId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Router %s", routerId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Router %s", routerId)
 				return r, "DELETED", nil
 			}
 			return r, "ACTIVE", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Router %s still active.\n", routerId)
+		log.Printf("[DEBUG] FlexibleEngine Router %s still active.\n", routerId)
 		return r, "ACTIVE", nil
 	}
 }

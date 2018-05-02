@@ -33,7 +33,7 @@ func testAccCheckASV1PolicyDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating orangecloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating flexibleengine autoscaling client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -66,7 +66,7 @@ func testAccCheckASV1PolicyExists(n string, policy *policies.Policy) resource.Te
 		config := testAccProvider.Meta().(*Config)
 		asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating orangecloud autoscaling client: %s", err)
+			return fmt.Errorf("Error creating flexibleengine autoscaling client: %s", err)
 		}
 
 		found, err := policies.Get(asClient, rs.Primary.ID).Extract()

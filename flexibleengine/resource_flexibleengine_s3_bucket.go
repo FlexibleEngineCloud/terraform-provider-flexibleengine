@@ -282,7 +282,7 @@ func resourceS3BucketCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	// Get the bucket and acl
@@ -348,7 +348,7 @@ func resourceS3BucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	if d.HasChange("policy") {
@@ -399,7 +399,7 @@ func resourceS3BucketRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	_, err = retryOnAwsCode("NoSuchBucket", func() (interface{}, error) {
@@ -769,7 +769,7 @@ func resourceS3BucketDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] S3 Delete Bucket: %s", d.Id())

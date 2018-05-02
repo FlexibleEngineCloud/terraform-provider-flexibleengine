@@ -48,7 +48,7 @@ func resourceComputeKeypairV2Create(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	createOpts := KeyPairCreateOpts{
@@ -62,7 +62,7 @@ func resourceComputeKeypairV2Create(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	kp, err := keypairs.Create(computeClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud keypair: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine keypair: %s", err)
 	}
 
 	d.SetId(kp.Name)
@@ -74,7 +74,7 @@ func resourceComputeKeypairV2Read(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	kp, err := keypairs.Get(computeClient, d.Id()).Extract()
@@ -93,12 +93,12 @@ func resourceComputeKeypairV2Delete(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	err = keypairs.Delete(computeClient, d.Id()).ExtractErr()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud keypair: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine keypair: %s", err)
 	}
 	d.SetId("")
 	return nil

@@ -38,7 +38,7 @@ func testAccCheckELBListenerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -69,7 +69,7 @@ func testAccCheckELBListenerExists(n string, listener *listeners.Listener) resou
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
 
 		found, err := listeners.Get(client, rs.Primary.ID).Extract()

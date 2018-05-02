@@ -59,7 +59,7 @@ func resourceComputeFloatingIPV2Create(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	createOpts := &floatingips.CreateOpts{
@@ -80,7 +80,7 @@ func resourceComputeFloatingIPV2Read(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	fip, err := floatingips.Get(computeClient, d.Id()).Extract()
@@ -121,7 +121,7 @@ func resourceComputeFloatingIPV2Delete(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Attempting to delete Floating IP %s.\n", d.Id())
@@ -142,7 +142,7 @@ func resourceComputeFloatingIPV2Delete(d *schema.ResourceData, meta interface{})
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud Floating IP: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Floating IP: %s", err)
 	}
 
 	return nil

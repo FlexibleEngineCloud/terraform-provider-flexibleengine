@@ -40,7 +40,7 @@ func resourceS3BucketPolicyPut(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	bucket := d.Get("bucket").(string)
@@ -78,7 +78,7 @@ func resourceS3BucketPolicyRead(d *schema.ResourceData, meta interface{}) error 
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] S3 bucket policy, read for bucket: %s", d.Id())
@@ -101,7 +101,7 @@ func resourceS3BucketPolicyDelete(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	bucket := d.Get("bucket").(string)

@@ -354,7 +354,7 @@ func resourceASGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 	log.Printf("[DEBUG] asClient: %#v", asClient)
 
@@ -430,7 +430,7 @@ func resourceASGroupRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 
 	asg, err := groups.Get(asClient, d.Id()).Extract()
@@ -476,7 +476,7 @@ func resourceASGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 	d.Partial(true)
 	if d.HasChange("min_instance_number") || d.HasChange("max_instance_number") || d.HasChange("desire_instance_number") {
@@ -526,7 +526,7 @@ func resourceASGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Begin to get instances of ASGroup %q", d.Id())

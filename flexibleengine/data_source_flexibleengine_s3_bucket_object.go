@@ -103,7 +103,7 @@ func dataSourceS3BucketObjectRead(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	bucket := d.Get("bucket").(string)

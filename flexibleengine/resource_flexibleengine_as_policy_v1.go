@@ -183,7 +183,7 @@ func resourceASPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 	log.Printf("[DEBUG] asClient: %#v", asClient)
 	err = validateParameters(d)
@@ -224,7 +224,7 @@ func resourceASPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 
 	asPolicy, err := policies.Get(asClient, d.Id()).Extract()
@@ -266,7 +266,7 @@ func resourceASPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 
 	err = validateParameters(d)
@@ -304,7 +304,7 @@ func resourceASPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud autoscaling client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
 	log.Printf("[DEBUG] Begin to delete AS policy %q", d.Id())
 	if delErr := policies.Delete(asClient, d.Id()).ExtractErr(); delErr != nil {

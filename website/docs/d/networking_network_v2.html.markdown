@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_networking_network_v2"
-sidebar_current: "docs-orangecloud-datasource-networking-network-v2"
+layout: "flexibleengine"
+page_title: "FlexibleEngine: flexibleengine_networking_network_v2"
+sidebar_current: "docs-flexibleengine-datasource-networking-network-v2"
 description: |-
-  Get information on an OrangeCloud Network.
+  Get information on an FlexibleEngine Network.
 ---
 
-# orangecloud\_networking\_network\_v2
+# flexibleengine\_networking\_network\_v2
 
-Use this data source to get the ID of an available OrangeCloud network.
+Use this data source to get the ID of an available FlexibleEngine network.
 
 ## Example Usage
 
 ```hcl
-data "orangecloud_networking_network_v2" "network" {
+data "flexibleengine_networking_network_v2" "network" {
   name = "tf_test_network"
 }
 ```

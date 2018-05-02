@@ -151,7 +151,7 @@ func resourceEListenerCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	createOpts := listeners.CreateOpts{
@@ -192,7 +192,7 @@ func resourceEListenerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	listener, err := listeners.Get(client, d.Id()).Extract()
@@ -231,7 +231,7 @@ func resourceEListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	var updateOpts listeners.UpdateOpts
@@ -282,7 +282,7 @@ func resourceEListenerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	id := d.Id()

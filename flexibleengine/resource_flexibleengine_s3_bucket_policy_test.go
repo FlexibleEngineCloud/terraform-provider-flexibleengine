@@ -84,7 +84,7 @@ func testAccCheckS3BucketHasPolicy(n string, expectedPolicyText string) resource
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		policy, err := conn.GetBucketPolicy(&s3.GetBucketPolicyInput{

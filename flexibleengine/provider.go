@@ -9,7 +9,7 @@ import (
 // This is a global MutexKV for use within this plugin.
 var osMutexKV = mutexkv.NewMutexKV()
 
-// Provider returns a schema.Provider for OrangeCloud.
+// Provider returns a schema.Provider for FlexibleEngine.
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -212,7 +212,7 @@ func init() {
 
 		"auth_url": "The Identity authentication URL.",
 
-		"region": "The OrangeCloud region to connect to.",
+		"region": "The FlexibleEngine region to connect to.",
 
 		"user_name": "Username to login with.",
 
