@@ -386,7 +386,7 @@ func TestAccS3Bucket_Cors(t *testing.T) {
 			config := testAccProvider.Meta().(*Config)
 			conn, err := config.computeS3conn(OS_REGION_NAME)
 			if err != nil {
-				return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+				return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 			}
 			_, err = conn.PutBucketCors(&s3.PutBucketCorsInput{
 				Bucket: aws.String(rs.Primary.ID),
@@ -648,7 +648,7 @@ func testAccCheckS3BucketExistsWithProviders(n string, providers *[]*schema.Prov
 			config := testAccProvider.Meta().(*Config)
 			conn, err := config.computeS3conn(OS_REGION_NAME)
 			if err != nil {
-				return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+				return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 			}
 			_, err = conn.HeadBucket(&s3.HeadBucketInput{
 				Bucket: aws.String(rs.Primary.ID),
@@ -678,7 +678,7 @@ func testAccCheckS3DestroyBucket(n string) resource.TestCheckFunc {
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 		_, err = conn.DeleteBucket(&s3.DeleteBucketInput{
 			Bucket: aws.String(rs.Primary.ID),
@@ -697,7 +697,7 @@ func testAccCheckS3BucketPolicy(n string, policy string) resource.TestCheckFunc 
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketPolicy(&s3.GetBucketPolicyInput{
@@ -748,7 +748,7 @@ func testAccCheckS3BucketWebsite(n string, indexDoc string, errorDoc string, red
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketWebsite(&s3.GetBucketWebsiteInput{
@@ -808,7 +808,7 @@ func testAccCheckS3BucketWebsiteRoutingRules(n string, routingRules []*s3.Routin
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketWebsite(&s3.GetBucketWebsiteInput{
@@ -836,7 +836,7 @@ func testAccCheckS3BucketVersioning(n string, versioningStatus string) resource.
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketVersioning(&s3.GetBucketVersioningInput{
@@ -867,7 +867,7 @@ func testAccCheckS3BucketCors(n string, corsRules []*s3.CORSRule) resource.TestC
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketCors(&s3.GetBucketCorsInput{
@@ -892,7 +892,7 @@ func testAccCheckS3BucketLogging(n, b, p string) resource.TestCheckFunc {
 		config := testAccProvider.Meta().(*Config)
 		conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := conn.GetBucketLogging(&s3.GetBucketLoggingInput{

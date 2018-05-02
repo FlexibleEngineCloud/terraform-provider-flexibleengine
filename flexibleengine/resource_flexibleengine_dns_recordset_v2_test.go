@@ -103,7 +103,7 @@ func testAccCheckDNSV2RecordSetDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	dnsClient, err := config.dnsV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -139,7 +139,7 @@ func testAccCheckDNSV2RecordSetExists(n string, recordset *recordsets.RecordSet)
 		config := testAccProvider.Meta().(*Config)
 		dnsClient, err := config.dnsV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 		}
 
 		zoneID, recordsetID, err := parseDNSV2RecordSetID(rs.Primary.ID)

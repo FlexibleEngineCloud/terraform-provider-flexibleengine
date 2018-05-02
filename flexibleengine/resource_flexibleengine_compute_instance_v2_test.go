@@ -291,7 +291,7 @@ func testAccCheckComputeV2InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	computeClient, err := config.computeV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -324,7 +324,7 @@ func testAccCheckComputeV2InstanceExists(n string, instance *servers.Server) res
 		config := testAccProvider.Meta().(*Config)
 		computeClient, err := config.computeV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
 
 		found, err := servers.Get(computeClient, rs.Primary.ID).Extract()
@@ -347,7 +347,7 @@ func testAccCheckComputeV2InstanceDoesNotExist(n string, instance *servers.Serve
 		config := testAccProvider.Meta().(*Config)
 		computeClient, err := config.computeV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
 
 		_, err = servers.Get(computeClient, instance.ID).Extract()
@@ -460,7 +460,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
 var testAccComputeV2Instance_secgroupMulti = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "orange_acctest_secgroup_1"
+  name = "flexibleengine_acctest_secgroup_1"
   description = "a security group"
 }
 
@@ -475,12 +475,12 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
 var testAccComputeV2Instance_secgroupMultiUpdate_1 = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "orange_acctest_secgroup_1"
+  name = "flexibleengine_acctest_secgroup_1"
   description = "a security group"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "orange_acctest_secgroup_2"
+  name = "flexibleengine_acctest_secgroup_2"
   description = "another security group"
 }
 
@@ -495,12 +495,12 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
 var testAccComputeV2Instance_secgroupMultiUpdate_2 = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "orange_acctest_secgroup_1"
+  name = "flexibleengine_acctest_secgroup_1"
   description = "a security group"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "orange_acctest_secgroup_2"
+  name = "flexibleengine_acctest_secgroup_2"
   description = "another security group"
 }
 

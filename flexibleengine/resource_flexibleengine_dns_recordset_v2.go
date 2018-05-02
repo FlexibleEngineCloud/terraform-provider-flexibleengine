@@ -82,7 +82,7 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	recordsraw := d.Get("records").([]interface{})
@@ -107,7 +107,7 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	n, err := recordsets.Create(dnsClient, zoneID, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS record set: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS record set: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS record set (%s) to become available", n.ID)
@@ -125,7 +125,7 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 	id := fmt.Sprintf("%s/%s", zoneID, n.ID)
 	d.SetId(id)
 
-	log.Printf("[DEBUG] Created OrangeCloud DNS record set %s: %#v", n.ID, n)
+	log.Printf("[DEBUG] Created FlexibleEngine DNS record set %s: %#v", n.ID, n)
 	return resourceDNSRecordSetV2Read(d, meta)
 }
 
@@ -133,7 +133,7 @@ func resourceDNSRecordSetV2Read(d *schema.ResourceData, meta interface{}) error 
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	// Obtain relevant info from parsing the ID
@@ -164,7 +164,7 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	var updateOpts recordsets.UpdateOpts
@@ -195,7 +195,7 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 
 	_, err = recordsets.Update(dnsClient, zoneID, recordsetID, updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud DNS  record set: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine DNS  record set: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS record set (%s) to update", recordsetID)
@@ -217,7 +217,7 @@ func resourceDNSRecordSetV2Delete(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	// Obtain relevant info from parsing the ID
@@ -228,7 +228,7 @@ func resourceDNSRecordSetV2Delete(d *schema.ResourceData, meta interface{}) erro
 
 	err = recordsets.Delete(dnsClient, zoneID, recordsetID).ExtractErr()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud DNS  record set: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine DNS  record set: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS record set (%s) to be deleted", recordsetID)
@@ -258,7 +258,7 @@ func waitForDNSRecordSet(dnsClient *gophercloud.ServiceClient, zoneID, recordset
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud DNS record set (%s) current status: %s", recordset.ID, recordset.Status)
+		log.Printf("[DEBUG] FlexibleEngine DNS record set (%s) current status: %s", recordset.ID, recordset.Status)
 		return recordset, recordset.Status, nil
 	}
 }

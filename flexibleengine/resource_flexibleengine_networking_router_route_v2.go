@@ -54,7 +54,7 @@ func resourceNetworkingRouterRouteV2Create(d *schema.ResourceData, meta interfac
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	n, err := routers.Get(networkingClient, routerId).Extract()
@@ -64,7 +64,7 @@ func resourceNetworkingRouterRouteV2Create(d *schema.ResourceData, meta interfac
 			return nil
 		}
 
-		return fmt.Errorf("Error retrieving OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error retrieving FlexibleEngine Neutron Router: %s", err)
 	}
 
 	var updateOpts routers.UpdateOpts
@@ -94,7 +94,7 @@ func resourceNetworkingRouterRouteV2Create(d *schema.ResourceData, meta interfac
 
 		_, err = routers.Update(networkingClient, routerId, updateOpts).Extract()
 		if err != nil {
-			return fmt.Errorf("Error updating OrangeCloud Neutron Router: %s", err)
+			return fmt.Errorf("Error updating FlexibleEngine Neutron Router: %s", err)
 		}
 		d.SetId(fmt.Sprintf("%s-route-%s-%s", routerId, destCidr, nextHop))
 
@@ -112,7 +112,7 @@ func resourceNetworkingRouterRouteV2Read(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	n, err := routers.Get(networkingClient, routerId).Extract()
@@ -122,7 +122,7 @@ func resourceNetworkingRouterRouteV2Read(d *schema.ResourceData, meta interface{
 			return nil
 		}
 
-		return fmt.Errorf("Error retrieving OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error retrieving FlexibleEngine Neutron Router: %s", err)
 	}
 
 	log.Printf("[DEBUG] Retrieved Router %s: %+v", routerId, n)
@@ -157,7 +157,7 @@ func resourceNetworkingRouterRouteV2Delete(d *schema.ResourceData, meta interfac
 
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	n, err := routers.Get(networkingClient, routerId).Extract()
@@ -166,7 +166,7 @@ func resourceNetworkingRouterRouteV2Delete(d *schema.ResourceData, meta interfac
 			return nil
 		}
 
-		return fmt.Errorf("Error retrieving OrangeCloud Neutron Router: %s", err)
+		return fmt.Errorf("Error retrieving FlexibleEngine Neutron Router: %s", err)
 	}
 
 	var updateOpts routers.UpdateOpts
@@ -194,7 +194,7 @@ func resourceNetworkingRouterRouteV2Delete(d *schema.ResourceData, meta interfac
 
 		_, err = routers.Update(networkingClient, routerId, updateOpts).Extract()
 		if err != nil {
-			return fmt.Errorf("Error updating OrangeCloud Neutron Router: %s", err)
+			return fmt.Errorf("Error updating FlexibleEngine Neutron Router: %s", err)
 		}
 	} else {
 		return fmt.Errorf("Route did not exist already")

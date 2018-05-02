@@ -211,7 +211,7 @@ func testAccCheckS3BucketObjectDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	s3conn, err := config.computeS3conn(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -246,7 +246,7 @@ func testAccCheckS3BucketObjectExists(n string, obj *s3.GetObjectOutput) resourc
 		config := testAccProvider.Meta().(*Config)
 		s3conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 		out, err := s3conn.GetObject(
 			&s3.GetObjectInput{
@@ -353,7 +353,7 @@ func testAccCheckS3BucketObjectAcl(n string, expectedPerms []string) resource.Te
 		config := testAccProvider.Meta().(*Config)
 		s3conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := s3conn.GetObjectAcl(&s3.GetObjectAclInput{
@@ -443,7 +443,7 @@ func testAccCheckS3BucketObjectSSE(n, expectedSSE string) resource.TestCheckFunc
 		config := testAccProvider.Meta().(*Config)
 		s3conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 
 		out, err := s3conn.HeadObject(&s3.HeadObjectInput{

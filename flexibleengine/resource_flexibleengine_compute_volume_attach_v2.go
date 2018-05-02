@@ -61,7 +61,7 @@ func resourceComputeVolumeAttachV2Create(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	instanceId := d.Get("instance_id").(string)
@@ -94,7 +94,7 @@ func resourceComputeVolumeAttachV2Create(d *schema.ResourceData, meta interface{
 	}
 
 	if _, err = stateConf.WaitForState(); err != nil {
-		return fmt.Errorf("Error attaching OrangeCloud volume: %s", err)
+		return fmt.Errorf("Error attaching FlexibleEngine volume: %s", err)
 	}
 
 	log.Printf("[DEBUG] Created volume attachment: %#v", attachment)
@@ -112,7 +112,7 @@ func resourceComputeVolumeAttachV2Read(d *schema.ResourceData, meta interface{})
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	instanceId, attachmentId, err := parseComputeVolumeAttachmentId(d.Id())
@@ -139,7 +139,7 @@ func resourceComputeVolumeAttachV2Delete(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
 	instanceId, attachmentId, err := parseComputeVolumeAttachmentId(d.Id())
@@ -157,7 +157,7 @@ func resourceComputeVolumeAttachV2Delete(d *schema.ResourceData, meta interface{
 	}
 
 	if _, err = stateConf.WaitForState(); err != nil {
-		return fmt.Errorf("Error detaching OrangeCloud volume: %s", err)
+		return fmt.Errorf("Error detaching FlexibleEngine volume: %s", err)
 	}
 
 	return nil
@@ -181,7 +181,7 @@ func resourceComputeVolumeAttachV2AttachFunc(
 func resourceComputeVolumeAttachV2DetachFunc(
 	computeClient *gophercloud.ServiceClient, instanceId, attachmentId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		log.Printf("[DEBUG] Attempting to detach OrangeCloud volume %s from instance %s",
+		log.Printf("[DEBUG] Attempting to detach FlexibleEngine volume %s from instance %s",
 			attachmentId, instanceId)
 
 		va, err := volumeattach.Get(computeClient, instanceId, attachmentId).Extract()
@@ -205,7 +205,7 @@ func resourceComputeVolumeAttachV2DetachFunc(
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Volume Attachment (%s) is still active.", attachmentId)
+		log.Printf("[DEBUG] FlexibleEngine Volume Attachment (%s) is still active.", attachmentId)
 		return nil, "", nil
 	}
 }

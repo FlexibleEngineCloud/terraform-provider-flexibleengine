@@ -118,7 +118,7 @@ func resourceS3BucketObjectPut(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	var body io.ReadSeeker
@@ -197,7 +197,7 @@ func resourceS3BucketObjectRead(d *schema.ResourceData, meta interface{}) error 
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	//restricted := false //meta.(*AWSClient).IsGovCloud() || meta.(*AWSClient).IsChinaCloud()
@@ -240,7 +240,7 @@ func resourceS3BucketObjectDelete(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	s3conn, err := config.computeS3conn(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
 
 	bucket := d.Get("bucket").(string)

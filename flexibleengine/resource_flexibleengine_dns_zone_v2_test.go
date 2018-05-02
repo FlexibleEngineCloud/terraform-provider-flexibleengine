@@ -98,7 +98,7 @@ func testAccCheckDNSV2ZoneDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	dnsClient, err := config.dnsV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -129,7 +129,7 @@ func testAccCheckDNSV2ZoneExists(n string, zone *zones.Zone) resource.TestCheckF
 		config := testAccProvider.Meta().(*Config)
 		dnsClient, err := config.dnsV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 		}
 
 		found, err := zones.Get(dnsClient, rs.Primary.ID).Extract()

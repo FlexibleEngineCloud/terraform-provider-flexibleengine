@@ -91,7 +91,7 @@ func testAccCheckNetworkingV2RouterInterfaceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -122,7 +122,7 @@ func testAccCheckNetworkingV2RouterInterfaceExists(n string) resource.TestCheckF
 		config := testAccProvider.Meta().(*Config)
 		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
 
 		found, err := ports.Get(networkingClient, rs.Primary.ID).Extract()

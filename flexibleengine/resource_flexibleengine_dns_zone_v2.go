@@ -87,7 +87,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	mastersraw := d.Get("masters").(*schema.Set).List()
@@ -118,7 +118,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	n, err := zones.Create(dnsClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS zone: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS zone: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS Zone (%s) to become available", n.ID)
@@ -135,7 +135,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(n.ID)
 
-	log.Printf("[DEBUG] Created OrangeCloud DNS Zone %s: %#v", n.ID, n)
+	log.Printf("[DEBUG] Created FlexibleEngine DNS Zone %s: %#v", n.ID, n)
 	return resourceDNSZoneV2Read(d, meta)
 }
 
@@ -143,7 +143,7 @@ func resourceDNSZoneV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	n, err := zones.Get(dnsClient, d.Id()).Extract()
@@ -169,7 +169,7 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	var updateOpts zones.UpdateOpts
@@ -195,7 +195,7 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 
 	_, err = zones.Update(dnsClient, d.Id(), updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud DNS Zone: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine DNS Zone: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS Zone (%s) to update", d.Id())
@@ -217,12 +217,12 @@ func resourceDNSZoneV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud DNS client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
 	_, err = zones.Delete(dnsClient, d.Id()).Extract()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud DNS Zone: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine DNS Zone: %s", err)
 	}
 
 	log.Printf("[DEBUG] Waiting for DNS Zone (%s) to become available", d.Id())
@@ -270,7 +270,7 @@ func waitForDNSZone(dnsClient *gophercloud.ServiceClient, zoneId string) resourc
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud DNS Zone (%s) current status: %s", zone.ID, zone.Status)
+		log.Printf("[DEBUG] FlexibleEngine DNS Zone (%s) current status: %s", zone.ID, zone.Status)
 		return zone, zone.Status, nil
 	}
 }

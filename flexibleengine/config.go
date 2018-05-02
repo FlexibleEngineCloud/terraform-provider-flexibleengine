@@ -314,7 +314,7 @@ func (c *Config) determineRegion(region string) string {
 		region = c.Region
 	}
 
-	log.Printf("[DEBUG] OrangeCloud Region is: %s", region)
+	log.Printf("[DEBUG] FlexibleEngine Region is: %s", region)
 	return region
 }
 

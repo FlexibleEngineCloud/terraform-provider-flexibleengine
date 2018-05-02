@@ -53,7 +53,7 @@ func testAccCheckNetworkingV2FloatingIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkClient, err := config.networkingV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud floating IP: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine floating IP: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -84,7 +84,7 @@ func testAccCheckNetworkingV2FloatingIPExists(n string, kp *floatingips.Floating
 		config := testAccProvider.Meta().(*Config)
 		networkClient, err := config.networkingV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
 
 		found, err := floatingips.Get(networkClient, rs.Primary.ID).Extract()

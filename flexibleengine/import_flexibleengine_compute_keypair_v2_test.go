@@ -8,7 +8,7 @@ import (
 
 // PASS
 func TestAccComputeV2Keypair_importBasic(t *testing.T) {
-	resourceName := "flexibleengine_compute_keypair_v2.orange_acctest_kp"
+	resourceName := "flexibleengine_compute_keypair_v2.flexibleengine_acctest_kp"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

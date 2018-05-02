@@ -24,7 +24,7 @@ func TestAccELBBackend_basic(t *testing.T) {
 				Config:             TestAccELBBackendConfig_basic,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckELBBackendExists("flexibleengine_elb_backend.backend_orange_acctest", &backend),
+					testAccCheckELBBackendExists("flexibleengine_elb_backend.backend_flexibleengine_acctest", &backend),
 				),
 			},
 		},
@@ -35,7 +35,7 @@ func testAccCheckELBBackendDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	client, err := config.otcV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -66,7 +66,7 @@ func testAccCheckELBBackendExists(n string, backend *backendmember.Backend) reso
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.otcV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
 
 		founds, err := backendmember.Get(client, rs.Primary.Attributes["listener_id"], rs.Primary.ID).Extract()
@@ -86,26 +86,26 @@ func testAccCheckELBBackendExists(n string, backend *backendmember.Backend) reso
 }
 
 var TestAccELBBackendConfig_basic = fmt.Sprintf(`
-resource "flexibleengine_elb_loadbalancer" "lb_orange_acctest" {
-  name = "lb_orange_acctest"
+resource "flexibleengine_elb_loadbalancer" "lb_flexibleengine_acctest" {
+  name = "lb_flexibleengine_acctest"
   vpc_id = "%s"
   type = "External"
   bandwidth = 5
 }
 
-resource "flexibleengine_elb_listener" "ls_orange_acctest" {
-  name = "ls_orange_acctest"
+resource "flexibleengine_elb_listener" "ls_flexibleengine_acctest" {
+  name = "ls_flexibleengine_acctest"
   protocol = "TCP"
   protocol_port = 8080
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.lb_orange_acctest.id}"
+  loadbalancer_id = "${flexibleengine_elb_loadbalancer.lb_flexibleengine_acctest.id}"
 }
 
 
-resource "flexibleengine_elb_health" "health_orange_acctest" {
-  listener_id = "${flexibleengine_elb_listener.ls_orange_acctest.id}"
+resource "flexibleengine_elb_health" "health_flexibleengine_acctest" {
+  listener_id = "${flexibleengine_elb_listener.ls_flexibleengine_acctest.id}"
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
   healthcheck_timeout = 10
@@ -117,23 +117,23 @@ resource "flexibleengine_elb_health" "health_orange_acctest" {
   }
 }
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup_orange_acc_test" {
-  name = "secgroup_orange_acc_test"
-  description = "orange security group acceptance test"
+resource "flexibleengine_networking_secgroup_v2" "secgroup_flexibleengine_acc_test" {
+  name = "secgroup_flexibleengine_acc_test"
+  description = "flexibleengine security group acceptance test"
 }
 
-resource "flexibleengine_compute_instance_v2" "instance_orange_backend_test" {
-  name = "instance_orange_backend_test"
-  security_groups = ["${flexibleengine_networking_secgroup_v2.secgroup_orange_acc_test.name}"]
+resource "flexibleengine_compute_instance_v2" "instance_flexibleengine_backend_test" {
+  name = "instance_flexibleengine_backend_test"
+  security_groups = ["${flexibleengine_networking_secgroup_v2.secgroup_flexibleengine_acc_test.name}"]
   network {
     uuid = "%s"
   }
 }
 
-resource "flexibleengine_elb_backend" "backend_orange_acctest" {
-  address = "${flexibleengine_compute_instance_v2.instance_orange_backend_test.access_ip_v4}"
-  listener_id = "${flexibleengine_elb_listener.ls_orange_acctest.id}"
-  server_id = "${flexibleengine_compute_instance_v2.instance_orange_backend_test.id}"
+resource "flexibleengine_elb_backend" "backend_flexibleengine_acctest" {
+  address = "${flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.access_ip_v4}"
+  listener_id = "${flexibleengine_elb_listener.ls_flexibleengine_acctest.id}"
+  server_id = "${flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.id}"
   timeouts {
     create = "5m"
     delete = "5m"

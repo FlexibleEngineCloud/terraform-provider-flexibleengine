@@ -73,7 +73,7 @@ func resourceHealthCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	//adminStateUp := d.Get("admin_state_up").(bool)
@@ -103,7 +103,7 @@ func resourceHealthRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	networkingClient, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	health, err := healthcheck.Get(networkingClient, d.Id()).Extract()
@@ -132,7 +132,7 @@ func resourceHealthUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	networkingClient, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	var updateOpts healthcheck.UpdateOpts
@@ -172,7 +172,7 @@ func resourceHealthDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	id := d.Id()

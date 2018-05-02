@@ -144,14 +144,14 @@ func TestProvider_impl(t *testing.T) {
 	var _ terraform.ResourceProvider = Provider()
 }
 
-// Steps for configuring OrangeCloud with SSL validation are here:
+// Steps for configuring FlexibleEngine with SSL validation are here:
 // https://github.com/hashicorp/terraform/pull/6279#issuecomment-219020144
 func TestAccProvider_caCertFile(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" || os.Getenv("OS_SSL_TESTS") == "" {
-		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping OrangeCloud SSL test.")
+		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping FlexibleEngine SSL test.")
 	}
 	if os.Getenv("OS_CACERT") == "" {
-		t.Skip("OS_CACERT is not set; skipping OrangeCloud CA test.")
+		t.Skip("OS_CACERT is not set; skipping FlexibleEngine CA test.")
 	}
 
 	p := Provider()
@@ -172,16 +172,16 @@ func TestAccProvider_caCertFile(t *testing.T) {
 
 	err = p.Configure(terraform.NewResourceConfig(rawConfig))
 	if err != nil {
-		t.Fatalf("Unexpected err when specifying OrangeCloud CA by file: %s", err)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by file: %s", err)
 	}
 }
 
 func TestAccProvider_caCertString(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" || os.Getenv("OS_SSL_TESTS") == "" {
-		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping OrangeCloud SSL test.")
+		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping FlexibleEngine SSL test.")
 	}
 	if os.Getenv("OS_CACERT") == "" {
-		t.Skip("OS_CACERT is not set; skipping OrangeCloud CA test.")
+		t.Skip("OS_CACERT is not set; skipping FlexibleEngine CA test.")
 	}
 
 	p := Provider()
@@ -200,16 +200,16 @@ func TestAccProvider_caCertString(t *testing.T) {
 
 	err = p.Configure(terraform.NewResourceConfig(rawConfig))
 	if err != nil {
-		t.Fatalf("Unexpected err when specifying OrangeCloud CA by string: %s", err)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by string: %s", err)
 	}
 }
 
 func TestAccProvider_clientCertFile(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" || os.Getenv("OS_SSL_TESTS") == "" {
-		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping OrangeCloud SSL test.")
+		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping FlexibleEngine SSL test.")
 	}
 	if os.Getenv("OS_CERT") == "" || os.Getenv("OS_KEY") == "" {
-		t.Skip("OS_CERT or OS_KEY is not set; skipping OrangeCloud client SSL auth test.")
+		t.Skip("OS_CERT or OS_KEY is not set; skipping FlexibleEngine client SSL auth test.")
 	}
 
 	p := Provider()
@@ -236,16 +236,16 @@ func TestAccProvider_clientCertFile(t *testing.T) {
 
 	err = p.Configure(terraform.NewResourceConfig(rawConfig))
 	if err != nil {
-		t.Fatalf("Unexpected err when specifying OrangeCloud Client keypair by file: %s", err)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by file: %s", err)
 	}
 }
 
 func TestAccProvider_clientCertString(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" || os.Getenv("OS_SSL_TESTS") == "" {
-		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping OrangeCloud SSL test.")
+		t.Skip("TF_ACC or OS_SSL_TESTS not set, skipping FlexibleEngine SSL test.")
 	}
 	if os.Getenv("OS_CERT") == "" || os.Getenv("OS_KEY") == "" {
-		t.Skip("OS_CERT or OS_KEY is not set; skipping OrangeCloud client SSL auth test.")
+		t.Skip("OS_CERT or OS_KEY is not set; skipping FlexibleEngine client SSL auth test.")
 	}
 
 	p := Provider()
@@ -270,7 +270,7 @@ func TestAccProvider_clientCertString(t *testing.T) {
 
 	err = p.Configure(terraform.NewResourceConfig(rawConfig))
 	if err != nil {
-		t.Fatalf("Unexpected err when specifying OrangeCloud Client keypair by contents: %s", err)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by contents: %s", err)
 	}
 }
 

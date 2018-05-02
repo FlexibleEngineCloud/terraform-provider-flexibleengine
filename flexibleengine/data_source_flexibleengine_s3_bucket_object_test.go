@@ -143,7 +143,7 @@ func testAccCheckS3ObjectDataSourceExists(n string, obj *s3.GetObjectOutput) res
 		config := testAccProvider.Meta().(*Config)
 		s3conn, err := config.computeS3conn(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OrangeCloud s3 client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
 		out, err := s3conn.GetObject(
 			&s3.GetObjectInput{

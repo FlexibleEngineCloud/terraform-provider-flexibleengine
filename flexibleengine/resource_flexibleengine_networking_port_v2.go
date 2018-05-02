@@ -139,7 +139,7 @@ func resourceNetworkingPortV2Create(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	asu, id := ExtractValFromNid(d.Get("network_id").(string))
@@ -170,11 +170,11 @@ func resourceNetworkingPortV2Create(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	p, err := ports.Create(networkingClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud Neutron network: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine Neutron network: %s", err)
 	}
 	log.Printf("[INFO] Network ID: %s", p.ID)
 
-	log.Printf("[DEBUG] Waiting for OrangeCloud Neutron Port (%s) to become available.", p.ID)
+	log.Printf("[DEBUG] Waiting for FlexibleEngine Neutron Port (%s) to become available.", p.ID)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{"ACTIVE"},
@@ -195,7 +195,7 @@ func resourceNetworkingPortV2Read(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	p, err := ports.Get(networkingClient, d.Id()).Extract()
@@ -244,13 +244,13 @@ func resourceNetworkingPortV2Update(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	// security_group_ids and allowed_address_pairs are able to send empty arrays
 	// to denote the removal of each. But their default zero-value is translated
 	// to "null", which has been reported to cause problems in vendor-modified
-	// OrangeCloud clouds. Therefore, we must set them in each request update.
+	// FlexibleEngine clouds. Therefore, we must set them in each request update.
 	addrPairs := resourceAllowedAddressPairsV2(d)
 	sg := resourcePortSecurityGroupsV2(d)
 	updateOpts := ports.UpdateOpts{
@@ -287,7 +287,7 @@ func resourceNetworkingPortV2Update(d *schema.ResourceData, meta interface{}) er
 
 	_, err = ports.Update(networkingClient, d.Id(), updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating OrangeCloud Neutron Network: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine Neutron Network: %s", err)
 	}
 
 	return resourceNetworkingPortV2Read(d, meta)
@@ -297,7 +297,7 @@ func resourceNetworkingPortV2Delete(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
@@ -311,7 +311,7 @@ func resourceNetworkingPortV2Delete(d *schema.ResourceData, meta interface{}) er
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting OrangeCloud Neutron Network: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Neutron Network: %s", err)
 	}
 
 	d.SetId("")
@@ -385,7 +385,7 @@ func waitForNetworkPortActive(networkingClient *gophercloud.ServiceClient, portI
 			return nil, "", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Neutron Port: %+v", p)
+		log.Printf("[DEBUG] FlexibleEngine Neutron Port: %+v", p)
 		if p.Status == "DOWN" || p.Status == "ACTIVE" {
 			return p, "ACTIVE", nil
 		}
@@ -396,12 +396,12 @@ func waitForNetworkPortActive(networkingClient *gophercloud.ServiceClient, portI
 
 func waitForNetworkPortDelete(networkingClient *gophercloud.ServiceClient, portId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		log.Printf("[DEBUG] Attempting to delete OrangeCloud Neutron Port %s", portId)
+		log.Printf("[DEBUG] Attempting to delete FlexibleEngine Neutron Port %s", portId)
 
 		p, err := ports.Get(networkingClient, portId).Extract()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Port %s", portId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Port %s", portId)
 				return p, "DELETED", nil
 			}
 			return p, "ACTIVE", err
@@ -410,13 +410,13 @@ func waitForNetworkPortDelete(networkingClient *gophercloud.ServiceClient, portI
 		err = ports.Delete(networkingClient, portId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(gophercloud.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted OrangeCloud Port %s", portId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Port %s", portId)
 				return p, "DELETED", nil
 			}
 			return p, "ACTIVE", err
 		}
 
-		log.Printf("[DEBUG] OrangeCloud Port %s still active.\n", portId)
+		log.Printf("[DEBUG] FlexibleEngine Port %s still active.\n", portId)
 		return p, "ACTIVE", nil
 	}
 }

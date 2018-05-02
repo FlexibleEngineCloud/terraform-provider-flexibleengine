@@ -105,7 +105,7 @@ func resourceELoadBalancerCreate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
@@ -153,7 +153,7 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	networkingClient, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	lb, err := loadbalancer_elbs.Get(networkingClient, d.Id()).Extract()
@@ -177,7 +177,7 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("vip_subnet_id", lb.VipSubnetID)
 	d.Set("vip_address", lb.VipAddress)
 	secgroup_Id := lb.SecurityGroupID
-	// orange cloud will return empty string of security_group_id when lb type is External
+	// flexibleengine will return empty string of security_group_id when lb type is External
 	if lb.Type == "External" {
 		if secgroup_Id == "" {
 			secgroup_Id = d.Get("security_group_id").(string)
@@ -193,7 +193,7 @@ func resourceELoadBalancerUpdate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	var updateOpts loadbalancer_elbs.UpdateOpts
@@ -224,7 +224,7 @@ func resourceELoadBalancerDelete(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 	client, err := config.otcV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
 	id := d.Id()

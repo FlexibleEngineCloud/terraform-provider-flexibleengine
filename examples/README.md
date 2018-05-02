@@ -22,9 +22,9 @@ This example will, by default not create Volumes. This is to show how to enable 
 
 ### Required
 
-* **username** (your orange cloud username)
-* **password** (your orange cloud password)
-* **domain\_name** (your orange cloud domain name)
+* **username** (your flexibleengine username)
+* **password** (your flexibleengine password)
+* **domain\_name** (your flexibleengine domain name)
 * You must have a **ssh\_pub\_key** file defined, or terraform will complain, see default path below.
 
 ### Optional
