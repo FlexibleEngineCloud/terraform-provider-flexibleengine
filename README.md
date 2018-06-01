@@ -17,16 +17,16 @@ Requirements
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/huaweicloud/terraform-provider-flexibleengine`
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-flexibleengine`
 
 ```sh
-$ go get github.com/huaweicloud/terraform-provider-flexibleengine
+$ go get github.com/terraform-providers/terraform-provider-flexibleengine
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/huaweicloud/terraform-provider-flexibleengine
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-flexibleengine
 $ make build
 ```
 
@@ -38,8 +38,8 @@ $ wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
 $ sudo tar -C /usr/local -xzf go1.9.1.linux-amd64.tar.gz
 $ export PATH=$PATH:/usr/local/go/bin # You should put in your .profile or .bashrc
 $ go version # to verify it runs and version #
-$ go get github.com/huaweicloud/terraform-provider-flexibleengine
-$ cd ~/go/src/github.com/huaweicloud/terraform-provider-flexibleengine/
+$ go get github.com/terraform-providers/terraform-provider-flexibleengine
+$ cd ~/go/src/github.com/terraform-providers/terraform-provider-flexibleengine/
 $ make build
 $ export PATH=$PATH:~/go/bin # You should put in your .profile or .bashrc
 $ wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
@@ -79,7 +79,7 @@ resource "flexibleengine_compute_instance_v2" "test-server" {
 
 ### Full Example
 ----------------------
-Please see full example at https://github.com/huaweicloud/fe-terraform, 
+Please see full example at https://github.com/terraform-providers/terraform-provider-flexibleengine/tree/master/examples,
 you must fill in the required variables in variables.tf.
 
 Using the provider
