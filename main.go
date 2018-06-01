@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform/plugin"
-	"github.com/terraform-providers/terraform-provider-flexibleengine/flexibleengine" 
+	"github.com/terraform-providers/terraform-provider-flexibleengine/flexibleengine"
 )
 
 func main() {
