@@ -2,21 +2,10 @@ Terraform FlexibleEngine Provider
 ============================
 
 - Website: https://www.terraform.io
-- Tools: comming soon...
-- Mailing list: comming soon...
+- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
-
-Terraform-Provider-FlexibleEngine is a Terraform Provider for FlexibleEngine.
-It is based on [Terraform-Provider-OpenStack](https://github.com/terraform-providers/terraform-provider-openstack)
-which is a standard Terraform OpenStack Provider. Terraform-Provider-FlexibleEngine has renamed OpenStack with FlexibleEngine
-and added some enhancements to interact with the many resources supported by FlexibleEngine.
-
-## Enhancements
-
-- **autoscaling**: auto scaling service
-- **obs**: object storage service
-- **elb**: elastic load balance service
 
 Requirements
 ------------
