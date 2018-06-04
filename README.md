@@ -2,21 +2,10 @@ Terraform FlexibleEngine Provider
 ============================
 
 - Website: https://www.terraform.io
-- Tools: comming soon...
-- Mailing list: comming soon...
+- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
-
-Terraform-Provider-FlexibleEngine is a Terraform Provider for FlexibleEngine.
-It is based on [Terraform-Provider-OpenStack](https://github.com/terraform-providers/terraform-provider-openstack)
-which is a standard Terraform OpenStack Provider. Terraform-Provider-FlexibleEngine has renamed OpenStack with FlexibleEngine
-and added some enhancements to interact with the many resources supported by FlexibleEngine.
-
-## Enhancements
-
-- **autoscaling**: auto scaling service
-- **obs**: object storage service
-- **elb**: elastic load balance service
 
 Requirements
 ------------
@@ -28,16 +17,16 @@ Requirements
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/huaweicloud/terraform-provider-flexibleengine`
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-flexibleengine`
 
 ```sh
-$ go get github.com/huaweicloud/terraform-provider-flexibleengine
+$ go get github.com/terraform-providers/terraform-provider-flexibleengine
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/huaweicloud/terraform-provider-flexibleengine
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-flexibleengine
 $ make build
 ```
 
@@ -49,8 +38,8 @@ $ wget https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
 $ sudo tar -C /usr/local -xzf go1.9.1.linux-amd64.tar.gz
 $ export PATH=$PATH:/usr/local/go/bin # You should put in your .profile or .bashrc
 $ go version # to verify it runs and version #
-$ go get github.com/huaweicloud/terraform-provider-flexibleengine
-$ cd ~/go/src/github.com/huaweicloud/terraform-provider-flexibleengine/
+$ go get github.com/terraform-providers/terraform-provider-flexibleengine
+$ cd ~/go/src/github.com/terraform-providers/terraform-provider-flexibleengine/
 $ make build
 $ export PATH=$PATH:~/go/bin # You should put in your .profile or .bashrc
 $ wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip
@@ -90,7 +79,7 @@ resource "flexibleengine_compute_instance_v2" "test-server" {
 
 ### Full Example
 ----------------------
-Please see full example at https://github.com/huaweicloud/fe-terraform, 
+Please see full example at https://github.com/terraform-providers/terraform-provider-flexibleengine/tree/master/examples,
 you must fill in the required variables in variables.tf.
 
 Using the provider
