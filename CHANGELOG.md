@@ -1,4 +1,9 @@
 ## 1.0.1 (Unreleased)
+
+BUG FIXES:
+
+* resource/flexibleengine_elb_backend: Correct ELB Backend parameter names [GH-7]
+
 ## 1.0.0 (June 01, 2018)
 
 FEATURES:
