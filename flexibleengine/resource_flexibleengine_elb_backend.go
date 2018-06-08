@@ -114,8 +114,8 @@ func resourceBackendRead(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Retrieved backend: %#v", b)
 
 	backend := b[0]
-	d.Set("server_address", backend.ServerAddress)
-	d.Set("address", backend.Address)
+	d.Set("server_address", backend.Address)
+	d.Set("address", backend.ServerAddress)
 	d.Set("status", backend.Status)
 	d.Set("health_status", backend.HealthStatus)
 	d.Set("update_time", backend.UpdateTime)
