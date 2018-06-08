@@ -1,8 +1,8 @@
-## 1.0.1 (Unreleased)
+## 1.0.1 (June 08, 2018)
 
 BUG FIXES:
 
-* resource/flexibleengine_elb_backend: Correct ELB Backend parameter names [GH-7]
+* resource/flexibleengine_elb_backend: Correct ELB Backend parameter names ([#7](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/7))
 
 ## 1.0.0 (June 01, 2018)
 
