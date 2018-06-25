@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: ""FlexibleEngine: flexibleengine_s3_bucket"
+page_title: "FlexibleEngine: flexibleengine_s3_bucket"
 sidebar_current: "docs-flexibleengine-resource-s3-bucket"
 description: |-
   Provides a S3 bucket resource.
