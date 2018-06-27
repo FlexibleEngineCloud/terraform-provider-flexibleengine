@@ -451,3 +451,10 @@ func (c *Config) fwV2Client(region string) (*golangsdk.ServiceClient, error) {
 		Availability: c.getHwEndpointType(),
 	})
 }
+
+func (c *Config) natV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}

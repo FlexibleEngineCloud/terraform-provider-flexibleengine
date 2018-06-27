@@ -194,6 +194,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_smn_topic_v2":                    resourceTopic(),
 			"flexibleengine_smn_subscription_v2":             resourceSubscription(),
 			"flexibleengine_rds_instance_v1":                 resourceRdsInstance(),
+			"flexibleengine_nat_gateway_v2":                  resourceNatGatewayV2(),
+			"flexibleengine_nat_snat_rule_v2":                resourceNatSnatRuleV2(),
 		},
 
 		ConfigureFunc: configureProvider,
