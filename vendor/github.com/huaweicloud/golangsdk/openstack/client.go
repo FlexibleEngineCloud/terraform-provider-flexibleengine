@@ -398,3 +398,9 @@ func NewRdsServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts
 	newsc.Type = "rds"
 	return newsc, err
 }
+
+// NewDRSServiceV2 creates a ServiceClient that may be used to access the v2 Data Replication Service.
+func NewDRSServiceV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "volumev2")
+	return sc, err
+}
