@@ -198,7 +198,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_vip_associate_v2":        resourceNetworkingVIPAssociateV2(),
 			"flexibleengine_drs_replication_v2":                 resourceReplication(),
 			"flexibleengine_drs_replicationconsistencygroup_v2": resourceReplicationConsistencyGroup(),
-      "flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
+                        "flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
 		},
 
