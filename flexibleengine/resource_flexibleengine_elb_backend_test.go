@@ -10,7 +10,6 @@ import (
 	"log"
 )
 
-// PASS with diff
 func TestAccELBBackend_basic(t *testing.T) {
 	var backend backendmember.Backend
 
@@ -20,8 +19,7 @@ func TestAccELBBackend_basic(t *testing.T) {
 		CheckDestroy: testAccCheckELBBackendDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config:             TestAccELBBackendConfig_basic,
-				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
+				Config: TestAccELBBackendConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckELBBackendExists("flexibleengine_elb_backend.backend_flexibleengine_acctest", &backend),
 				),
