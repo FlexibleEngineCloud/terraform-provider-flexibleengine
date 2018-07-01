@@ -160,6 +160,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_secgroup_v2": dataSourceNetworkingSecGroupV2(),
 			"flexibleengine_s3_bucket_object":       dataSourceS3BucketObject(),
 			"flexibleengine_rds_flavors_v1":         dataSourceRdsFlavorV1(),
+			"flexibleengine_vpc_v1":                 dataSourceVirtualPrivateCloudVpcV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -198,6 +199,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_vip_associate_v2":        resourceNetworkingVIPAssociateV2(),
 			"flexibleengine_drs_replication_v2":                 resourceReplication(),
 			"flexibleengine_drs_replicationconsistencygroup_v2": resourceReplicationConsistencyGroup(),
+			"flexibleengine_vpc_v1":                             resourceVirtualPrivateCloudV1(),
 		},
 
 		ConfigureFunc: configureProvider,
