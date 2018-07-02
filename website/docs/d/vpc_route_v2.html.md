@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "FlexibleEngine: opentelekcomcloud_vpc_route_v2"
+page_title: "FlexibleEngine: flexibleengine_vpc_route_v2"
 sidebar_current: "docs-flexibleengine-datasource-vpc-route-v2"
 description: |-
   Provides details about a specific VPC Route.
 ---
 
-# Data Source: opentelekcomcloud_vpc_route_v2
+# Data Source: flexibleengine_vpc_route_v2
 
-`opentelekcomcloud_vpc_route_v2` provides details about a specific VPC route.
+`flexibleengine_vpc_route_v2` provides details about a specific VPC route.
 
 ## Example Usage
 

@@ -1,6 +1,6 @@
 ---
 layout: "flexibleengine"
-page_title: "FlexibleEngine: opentelekcomcloud_subnet_ids_v1"
+page_title: "FlexibleEngine: flexibleengine_subnet_ids_v1"
 sidebar_current: "docs-flexibleengine-datasource-subnet-ids-v1"
 description: |-
   Provides a list of subnet Ids for a VPC
