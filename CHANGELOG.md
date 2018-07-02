@@ -1,4 +1,19 @@
 ## 1.0.2 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_vpc_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_subnet_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_subnet_ids_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_route_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_route_ids_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_peering_connection_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_subnet_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_route_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_peering_connection_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_peering_connection_accepter_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+
 ## 1.0.1 (June 08, 2018)
 
 BUG FIXES:
