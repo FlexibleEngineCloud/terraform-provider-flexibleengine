@@ -242,7 +242,7 @@ func resourceReplicationRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("failure_detail", replication.FailureDetail)
 	// TypeMap => NoChange
 	// RecordMetadata includes volume_type and multiattach currently.
-	d.Set("record_metadata", replication.RecordMetadata)
+	d.Set("record_metadata", string(replication.RecordMetadata))
 	d.Set("fault_level", replication.FaultLevel)
 
 	return nil

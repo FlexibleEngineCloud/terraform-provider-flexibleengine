@@ -156,10 +156,16 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"flexibleengine_networking_network_v2":  dataSourceNetworkingNetworkV2(),
-			"flexibleengine_networking_secgroup_v2": dataSourceNetworkingSecGroupV2(),
-			"flexibleengine_s3_bucket_object":       dataSourceS3BucketObject(),
-			"flexibleengine_rds_flavors_v1":         dataSourceRdsFlavorV1(),
+			"flexibleengine_networking_network_v2":     dataSourceNetworkingNetworkV2(),
+			"flexibleengine_networking_secgroup_v2":    dataSourceNetworkingSecGroupV2(),
+			"flexibleengine_s3_bucket_object":          dataSourceS3BucketObject(),
+			"flexibleengine_rds_flavors_v1":            dataSourceRdsFlavorV1(),
+			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
+			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
+			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
+			"flexibleengine_vpc_route_v2":              dataSourceVPCRouteV2(),
+			"flexibleengine_vpc_route_ids_v2":          dataSourceVPCRouteIdsV2(),
+			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -200,6 +206,11 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_drs_replicationconsistencygroup_v2": resourceReplicationConsistencyGroup(),
 			"flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
+			"flexibleengine_vpc_v1":                             resourceVirtualPrivateCloudV1(),
+			"flexibleengine_vpc_subnet_v1":                      resourceVpcSubnetV1(),
+			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
+			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
+			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
 		},
 
 		ConfigureFunc: configureProvider,
