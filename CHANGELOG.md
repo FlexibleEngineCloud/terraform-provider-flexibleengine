@@ -1,24 +1,24 @@
-## 1.1.0 (Unreleased)
+## 1.1.0 (July 20, 2018)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_vpc_v1` [GH-15]
-* **New Data Source:** `flexibleengine_vpc_subnet_v1` [GH-15]
-* **New Data Source:** `flexibleengine_vpc_subnet_ids_v1` [GH-15]
-* **New Data Source:** `flexibleengine_vpc_route_v2` [GH-15]
-* **New Data Source:** `flexibleengine_vpc_route_ids_v2` [GH-15]
-* **New Data Source:** `flexibleengine_vpc_peering_connection_v2` [GH-15]
-* **New Resource:** `flexibleengine_drs_replication_v2` [GH-13]
-* **New Resource:** `flexibleengine_drs_replicationconsistencygroup_v2` [GH-13]
-* **New Resource:** `flexibleengine_networking_vip_v2` [GH-13]
-* **New Resource:** `flexibleengine_networking_vip_associate_v2` [GH-13]
-* **New Resource:** `flexibleengine_nat_gateway_v2` [GH-14]
-* **New Resource:** `flexibleengine_nat_snat_rule_v2` [GH-14]
-* **New Resource:** `flexibleengine_vpc_v1` [GH-15]
-* **New Resource:** `flexibleengine_vpc_subnet_v1` [GH-15]
-* **New Resource:** `flexibleengine_vpc_route_v2` [GH-15]
-* **New Resource:** `flexibleengine_vpc_peering_connection_v2` [GH-15]
-* **New Resource:** `flexibleengine_vpc_peering_connection_accepter_v2` [GH-15]
+* **New Data Source:** `flexibleengine_vpc_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_subnet_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_subnet_ids_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_route_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_route_ids_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Data Source:** `flexibleengine_vpc_peering_connection_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_drs_replication_v2` ([#13](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/13))
+* **New Resource:** `flexibleengine_drs_replicationconsistencygroup_v2` ([#13](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/13))
+* **New Resource:** `flexibleengine_networking_vip_v2` ([#13](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/13))
+* **New Resource:** `flexibleengine_networking_vip_associate_v2` ([#13](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/13))
+* **New Resource:** `flexibleengine_nat_gateway_v2` ([#14](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/14))
+* **New Resource:** `flexibleengine_nat_snat_rule_v2` ([#14](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/14))
+* **New Resource:** `flexibleengine_vpc_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_subnet_v1` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_route_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_peering_connection_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
+* **New Resource:** `flexibleengine_vpc_peering_connection_accepter_v2` ([#15](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/15))
 
 ## 1.0.1 (June 08, 2018)
 
