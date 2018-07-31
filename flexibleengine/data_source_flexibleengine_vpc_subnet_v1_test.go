@@ -87,6 +87,7 @@ data "flexibleengine_vpc_subnet_v1" "by_id" {
 }
 
 data "flexibleengine_vpc_subnet_v1" "by_name" {
+	id = "${flexibleengine_vpc_subnet_v1.subnet_1.id}"
 	name = "${flexibleengine_vpc_subnet_v1.subnet_1.name}"
 }
 
