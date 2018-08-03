@@ -4,24 +4,29 @@ import (
 	"fmt"
 	"testing"
 
+	"math/rand"
+	"time"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccFlexibleEngineVpcSubnetV1DataSource_basic(t *testing.T) {
-
+	rand.Seed(time.Now().UTC().UnixNano())
+	rInt := rand.Intn(50)
+	name := fmt.Sprintf("terraform-testacc-subnet-data-source-%d", rInt)
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFlexibleEngineVpcSubnetV1Config,
+				Config: testAccDataSourceFlexibleEngineVpcSubnetV1Config(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_id", "flexibleengine_subnet", "192.168.0.0/16",
+					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_id", name, "192.168.0.0/16",
 						"192.168.0.1"),
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_name", "flexibleengine_subnet", "192.168.0.0/16",
+					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_name", name, "192.168.0.0/16",
 						"192.168.0.1"),
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_vpc_id", "flexibleengine_subnet", "192.168.0.0/16",
+					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_vpc_id", name, "192.168.0.0/16",
 						"192.168.0.1"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_vpc_subnet_v1.by_id", "status", "ACTIVE"),
@@ -69,14 +74,15 @@ func testAccDataSourceFlexibleEngineVpcSubnetV1Check(n, name, cidr, gateway_ip s
 	}
 }
 
-const testAccDataSourceFlexibleEngineVpcSubnetV1Config = `
+func testAccDataSourceFlexibleEngineVpcSubnetV1Config(name string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_vpc_v1" "vpc_1" {
-	name = "test_vpc"
-	cidr= "192.168.0.0/16"
+  name = "test_vpc"
+  cidr= "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "flexibleengine_subnet"
+  name = "%s"
   cidr = "192.168.0.0/16"
   gateway_ip = "192.168.0.1"
   vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
@@ -87,10 +93,11 @@ data "flexibleengine_vpc_subnet_v1" "by_id" {
 }
 
 data "flexibleengine_vpc_subnet_v1" "by_name" {
-	name = "${flexibleengine_vpc_subnet_v1.subnet_1.name}"
+  name = "${flexibleengine_vpc_subnet_v1.subnet_1.name}"
 }
 
 data "flexibleengine_vpc_subnet_v1" "by_vpc_id" {
-	vpc_id = "${flexibleengine_vpc_subnet_v1.subnet_1.vpc_id}"
+  vpc_id = "${flexibleengine_vpc_subnet_v1.subnet_1.vpc_id}"
 }
-`
+`, name)
+}

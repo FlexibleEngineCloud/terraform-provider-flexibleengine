@@ -41,7 +41,6 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccFlexibleEngineVpcSubnetV1_timeout(t *testing.T) {
 	var subnet subnets.Subnet
 
