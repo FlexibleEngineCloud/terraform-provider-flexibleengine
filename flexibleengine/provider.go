@@ -156,6 +156,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			"flexibleengine_images_image_v2":           dataSourceImagesImageV2(),
 			"flexibleengine_networking_network_v2":     dataSourceNetworkingNetworkV2(),
 			"flexibleengine_networking_secgroup_v2":    dataSourceNetworkingSecGroupV2(),
 			"flexibleengine_s3_bucket_object":          dataSourceS3BucketObject(),
@@ -178,6 +179,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_compute_volume_attach_v2":           resourceComputeVolumeAttachV2(),
 			"flexibleengine_dns_recordset_v2":                   resourceDNSRecordSetV2(),
 			"flexibleengine_dns_zone_v2":                        resourceDNSZoneV2(),
+			"flexibleengine_images_image_v2":                    resourceImagesImageV2(),
 			"flexibleengine_networking_network_v2":              resourceNetworkingNetworkV2(),
 			"flexibleengine_networking_subnet_v2":               resourceNetworkingSubnetV2(),
 			"flexibleengine_networking_floatingip_v2":           resourceNetworkingFloatingIPV2(),
