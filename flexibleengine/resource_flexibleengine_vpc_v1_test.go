@@ -10,7 +10,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 )
 
-// PASS
 func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 	var vpc vpcs.Vpc
 
@@ -65,7 +64,6 @@ func TestAccFlexibleEngineVpcV1_update(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccFlexibleEngineVpcV1_timeout(t *testing.T) {
 	var vpc vpcs.Vpc
 

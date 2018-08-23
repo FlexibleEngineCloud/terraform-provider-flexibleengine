@@ -6,22 +6,29 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccNetworkingV2SecGroupRule_importBasic(t *testing.T) {
-	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
+// PASS, but Taking 15m+ in time...
+func TestAccImagesImageV2_importBasic(t *testing.T) {
+	resourceName := "flexibleengine_images_image_v2.image_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2SecGroupRuleDestroy,
+		CheckDestroy: testAccCheckImagesImageV2Destroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccNetworkingV2SecGroupRule_basic,
+				Config: testAccImagesImageV2_basic,
 			},
 
 			resource.TestStep{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"region",
+					"local_file_path",
+					"image_cache_path",
+					"image_source_url",
+				},
 			},
 		},
 	})

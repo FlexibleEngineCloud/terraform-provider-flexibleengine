@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-// PASS
 func TestAccFlexibleEngineVpcSubnetV1_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_vpc_subnet_v1.subnet_1"
 

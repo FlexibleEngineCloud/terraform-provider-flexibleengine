@@ -295,7 +295,6 @@ func TestAccS3Bucket_WebsiteRoutingRules(t *testing.T) {
 // Test TestAccS3Bucket_shouldFailNotFound is designed to fail with a "plan
 // not empty" error in Terraform, to check against regresssions.
 // See https://github.com/hashicorp/terraform/pull/2925
-// PASS
 func TestAccS3Bucket_shouldFailNotFound(t *testing.T) {
 	rInt := acctest.RandInt()
 	resource.Test(t, resource.TestCase{

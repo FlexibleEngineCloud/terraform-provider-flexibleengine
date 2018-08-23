@@ -38,7 +38,6 @@ func TestAccFlexibleEngineVpcPeeringConnectionV2_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccFlexibleEngineVpcPeeringConnectionV2_timeout(t *testing.T) {
 	var peering peerings.Peering
 
