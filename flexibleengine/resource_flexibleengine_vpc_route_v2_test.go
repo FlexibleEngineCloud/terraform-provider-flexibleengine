@@ -10,7 +10,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
 )
 
-// PASS
 func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 	var route routes.Route
 
@@ -33,7 +32,6 @@ func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 	})
 }
 
-// PASS
 func TestAccFlexibleEngineVpcRouteV2_timeout(t *testing.T) {
 	var route routes.Route
 
