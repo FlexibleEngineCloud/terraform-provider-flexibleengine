@@ -208,6 +208,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_drs_replicationconsistencygroup_v2": resourceReplicationConsistencyGroup(),
 			"flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
+			"flexibleengine_vpc_eip_v1":                         resourceVpcEIPV1(),
 			"flexibleengine_vpc_v1":                             resourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1":                      resourceVpcSubnetV1(),
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
