@@ -115,7 +115,7 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
 }
 
 resource "flexibleengine_lb_member_v2" "member_1" {
-  address = "10.0.0.10"
+  address = "172.16.10.10"
   protocol_port = 8080
   pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
   subnet_id = "%s"
@@ -128,7 +128,7 @@ resource "flexibleengine_lb_member_v2" "member_1" {
 }
 
 resource "flexibleengine_lb_member_v2" "member_2" {
-  address = "10.0.0.11"
+  address = "172.16.10.11"
   protocol_port = 8080
   pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
   subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
@@ -163,7 +163,7 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
 }
 
 resource "flexibleengine_lb_member_v2" "member_1" {
-  address = "10.0.0.10"
+  address = "172.16.10.10"
   protocol_port = 8080
   weight = 10
   admin_state_up = "true"
@@ -178,7 +178,7 @@ resource "flexibleengine_lb_member_v2" "member_1" {
 }
 
 resource "flexibleengine_lb_member_v2" "member_2" {
-  address = "10.0.0.11"
+  address = "172.16.10.11"
   protocol_port = 8080
   weight = 15
   admin_state_up = "true"
