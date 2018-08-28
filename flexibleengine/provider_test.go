@@ -28,6 +28,7 @@ var (
 	OS_SWIFT_ENVIRONMENT      = os.Getenv("OS_SWIFT_ENVIRONMENT")
 	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
 	OS_VPC_ID                 = os.Getenv("OS_VPC_ID")
+	OS_SUBNET_ID              = os.Getenv("OS_SUBNET_ID")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -131,6 +132,14 @@ func testAccPreCheckAdminOnly(t *testing.T) {
 	v := os.Getenv("OS_USERNAME")
 	if v != "admin" {
 		t.Skip("Skipping test because it requires the admin user")
+	}
+}
+
+func testAccPreCheckLB(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_SUBNET_ID == "" {
+		t.Skip("OS_SUBNET_ID must be set for acceptance tests")
 	}
 }
 
