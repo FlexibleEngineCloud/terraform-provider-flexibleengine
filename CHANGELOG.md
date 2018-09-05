@@ -1,4 +1,20 @@
 ## 1.2.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_images_image_v2` [GH-20]
+* **New Resource:** `flexibleengine_images_image_v2` [GH-20]
+* **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
+* **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]
+* **New Resource:** `flexibleengine_lb_listener_v2` [GH-22]
+* **New Resource:** `flexibleengine_lb_pool_v2` [GH-22]
+* **New Resource:** `flexibleengine_lb_member_v2` [GH-22]
+* **New Resource:** `flexibleengine_lb_monitor_v2` [GH-22]
+
+ENHANCEMENTS:
+
+* resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter [GH-19]
+
 ## 1.1.0 (July 20, 2018)
 
 FEATURES:
