@@ -13,7 +13,7 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter [#19]
+* resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter [GH-19]
 
 ## 1.1.0 (July 20, 2018)
 
