@@ -167,6 +167,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpc_route_v2":              dataSourceVPCRouteV2(),
 			"flexibleengine_vpc_route_ids_v2":          dataSourceVPCRouteIdsV2(),
 			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
+			"flexibleengine_compute_bms_flavors_v2":     dataSourceBMSFlavorV2(),
+			"flexibleengine_compute_bms_nic_v2":         dataSourceBMSNicV2(),
+			"flexibleengine_compute_bms_server_v2":      dataSourceBMSServersV2(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -219,6 +222,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
 			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
 			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
+			"flexibleengine_compute_bms_tags_v2":                resourceBMSTagsV2(),
 		},
 
 		ConfigureFunc: configureProvider,
