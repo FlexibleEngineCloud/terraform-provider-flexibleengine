@@ -59,4 +59,3 @@ data "flexibleengine_compute_bms_server_v2" "server1" {
   id = "${flexibleengine_compute_instance_v2.instance_1.id}"
 }
 `, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
-

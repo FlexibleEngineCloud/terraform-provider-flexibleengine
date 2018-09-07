@@ -45,4 +45,3 @@ data "flexibleengine_compute_bms_flavors_v2" "flavor" {
   name = "%s"
 }
 `, OS_BMS_FLAVOR_NAME)
-

@@ -45,4 +45,3 @@ data "flexibleengine_compute_bms_keypairs_v2" "keypair" {
   name = "%s"
 }
 `, OS_KEYPAIR_NAME)
-

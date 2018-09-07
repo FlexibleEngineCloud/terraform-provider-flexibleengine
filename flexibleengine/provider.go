@@ -168,10 +168,10 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpc_route_ids_v2":          dataSourceVPCRouteIdsV2(),
 			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
 			"flexibleengine_sfs_file_system_v2":        dataSourceSFSFileSystemV2(),
-			"flexibleengine_compute_bms_flavors_v2":     dataSourceBMSFlavorV2(),
-			"flexibleengine_compute_bms_nic_v2":         dataSourceBMSNicV2(),
-			"flexibleengine_compute_bms_server_v2":      dataSourceBMSServersV2(),
-			"flexibleengine_compute_bms_keypairs_v2":    dataSourceBMSKeyPairV2(),
+			"flexibleengine_compute_bms_flavors_v2":    dataSourceBMSFlavorV2(),
+			"flexibleengine_compute_bms_nic_v2":        dataSourceBMSNicV2(),
+			"flexibleengine_compute_bms_server_v2":     dataSourceBMSServersV2(),
+			"flexibleengine_compute_bms_keypairs_v2":   dataSourceBMSKeyPairV2(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
