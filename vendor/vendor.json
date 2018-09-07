@@ -818,12 +818,6 @@
 			"revisionTime": "2018-09-05T09:58:59Z"
 		},
 		{
-			"checksumSHA1": "GTGUR3Y9716GCgWQaGHcOdLbN0s=",
-			"path": "github.com/huaweicloud/golangsdk/openstack/bms/v2/tags",
-			"revision": "1ef4c250ce2ea6c28095385c1800ac8a74492ca9",
-			"revisionTime": "2018-09-05T09:58:59Z"
-		},
-		{
 			"checksumSHA1": "plsG8kyRJhFGnhGfO0scQk5kRLw=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets",
 			"revision": "888f77744ab7c65bb4d448d5b5313edba29e76c7",
