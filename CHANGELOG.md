@@ -3,6 +3,7 @@
 FEATURES:
 
 * **New Data Source:** `flexibleengine_images_image_v2` [GH-20]
+* **New Data Source:** `flexibleengine_sfs_file_system_v2` [GH-23]
 * **New Resource:** `flexibleengine_images_image_v2` [GH-20]
 * **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
 * **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]
@@ -10,6 +11,7 @@ FEATURES:
 * **New Resource:** `flexibleengine_lb_pool_v2` [GH-22]
 * **New Resource:** `flexibleengine_lb_member_v2` [GH-22]
 * **New Resource:** `flexibleengine_lb_monitor_v2` [GH-22]
+* **New Resource:** `flexibleengine_sfs_file_system_v2` [GH-23]
 
 ENHANCEMENTS:
 
