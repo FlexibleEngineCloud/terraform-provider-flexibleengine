@@ -962,6 +962,12 @@
 			"revisionTime": "2018-02-24T07:23:49Z"
 		},
 		{
+			"checksumSHA1": "XcAPonx64IMpPDqjCsXwh4ZKQTs=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/sfs/v2/shares",
+			"revision": "dfc9afb7c801cc2a2ba4a62fdd5510a1c9597aec",
+			"revisionTime": "2018-08-07T06:36:50Z"
+		},
+		{
 			"checksumSHA1": "RV9GKwWK04J4e9L2kbfZnyO+0+U=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/smn/v2/subscriptions",
 			"revision": "888f77744ab7c65bb4d448d5b5313edba29e76c7",
