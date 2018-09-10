@@ -14,7 +14,6 @@ import (
 
 var (
 	OS_DEPRECATED_ENVIRONMENT = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
-	OS_DNS_ENVIRONMENT        = os.Getenv("OS_DNS_ENVIRONMENT")
 	OS_EXTGW_ID               = os.Getenv("OS_EXTGW_ID")
 	OS_FLAVOR_ID              = os.Getenv("OS_FLAVOR_ID")
 	OS_FLAVOR_NAME            = os.Getenv("OS_FLAVOR_NAME")
@@ -25,7 +24,6 @@ var (
 	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
 	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
 	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
-	OS_SWIFT_ENVIRONMENT      = os.Getenv("OS_SWIFT_ENVIRONMENT")
 	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
 	OS_VPC_ID                 = os.Getenv("OS_VPC_ID")
 	OS_SUBNET_ID              = os.Getenv("OS_SUBNET_ID")
@@ -93,11 +91,6 @@ func testAccPreCheck(t *testing.T) {
 	if OS_DEPRECATED_ENVIRONMENT != "" {
 		t.Skip("This environment only runs deprecated tests")
 	}
-
-	// Do not run the test if this is a standalone DNS environment.
-	if OS_DNS_ENVIRONMENT != "" {
-		t.Skip("This environment only runs DNS tests")
-	}
 }
 
 func testAccPreCheckDeprecated(t *testing.T) {
@@ -105,28 +98,6 @@ func testAccPreCheckDeprecated(t *testing.T) {
 
 	if OS_DEPRECATED_ENVIRONMENT == "" {
 		t.Skip("This environment does not support deprecated tests")
-	}
-}
-
-func testAccPreCheckDNS(t *testing.T) {
-	v := os.Getenv("OS_AUTH_URL")
-	if v == "" {
-		t.Fatalf("OS_AUTH_URL must be set for acceptance tests")
-	}
-
-	if OS_DNS_ENVIRONMENT == "" {
-		t.Skip("This environment does not support DNS tests")
-	}
-}
-
-func testAccPreCheckSwift(t *testing.T) {
-	v := os.Getenv("OS_AUTH_URL")
-	if v == "" {
-		t.Fatalf("OS_AUTH_URL must be set for acceptance tests")
-	}
-
-	if OS_SWIFT_ENVIRONMENT == "" {
-		t.Skip("This environment does not support Swift tests")
 	}
 }
 
