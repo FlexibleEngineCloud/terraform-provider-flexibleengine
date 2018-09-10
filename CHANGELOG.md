@@ -4,6 +4,10 @@ FEATURES:
 
 * **New Data Source:** `flexibleengine_images_image_v2` [GH-20]
 * **New Data Source:** `flexibleengine_sfs_file_system_v2` [GH-23]
+* **New Data Source:** `flexibleengine_compute_bms_flavor_v2` [GH-26]
+* **New Data Source:** `flexibleengine_compute_bms_keypair_v2` [GH-26]
+* **New Data Source:** `flexibleengine_compute_bms_nic_v2` [GH-26]
+* **New Data Source:** `flexibleengine_compute_bms_server_v2` [GH-26]
 * **New Resource:** `flexibleengine_images_image_v2` [GH-20]
 * **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
 * **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]

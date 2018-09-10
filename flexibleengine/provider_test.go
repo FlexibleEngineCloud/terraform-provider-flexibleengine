@@ -29,6 +29,8 @@ var (
 	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
 	OS_VPC_ID                 = os.Getenv("OS_VPC_ID")
 	OS_SUBNET_ID              = os.Getenv("OS_SUBNET_ID")
+	OS_KEYPAIR_NAME           = os.Getenv("OS_KEYPAIR_NAME")
+	OS_BMS_FLAVOR_NAME        = os.Getenv("OS_BMS_FLAVOR_NAME")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -310,4 +312,18 @@ func envVarFile(varName string) (string, error) {
 		return "", fmt.Errorf("Error closing temp file: %s", err)
 	}
 	return tmpFile.Name(), nil
+}
+
+func testAccBmsKeyPairPreCheck(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_KEYPAIR_NAME == "" {
+		t.Skip("Provide the key pair name")
+	}
+}
+
+func testAccBmsFlavorPreCheck(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_BMS_FLAVOR_NAME == "" {
+		t.Skip("Provide the bms name starting with 'physical'")
+	}
 }
