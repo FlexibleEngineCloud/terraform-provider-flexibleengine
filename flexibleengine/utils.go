@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"encoding/json"
 	"reflect"
+	"regexp"
 )
 
 func jsonBytesEqual(b1, b2 []byte) bool {
@@ -17,4 +18,8 @@ func jsonBytesEqual(b1, b2 []byte) bool {
 	}
 
 	return reflect.DeepEqual(o1, o2)
+}
+
+func looksLikeJsonString(s interface{}) bool {
+	return regexp.MustCompile(`^\s*{`).MatchString(s.(string))
 }
