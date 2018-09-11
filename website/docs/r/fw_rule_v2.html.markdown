@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OpenTelekomCloud: flexibleengine_fw_rule_v2"
+page_title: "FlexibleEngine: flexibleengine_fw_rule_v2"
 sidebar_current: "docs-flexibleengine-resource-fw-rule-v1"
 description: |-
-  Manages a v1 firewall group rule resource within OpenTelekomCloud.
+  Manages a v1 firewall group rule resource within FlexibleEngine.
 ---
 
 # flexibleengine\_fw\_rule_v2
 
-Manages a v2 firewall rule resource within OpenTelekomCloud.
+Manages a v2 firewall rule resource within FlexibleEngine.
 
 ## Example Usage
 

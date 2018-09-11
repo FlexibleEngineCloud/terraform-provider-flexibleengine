@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OpenTelekomCloud: flexibleengine_fw_policy_v2"
+page_title: "FlexibleEngine: flexibleengine_fw_policy_v2"
 sidebar_current: "docs-flexibleengine-resource-fw-policy-v1"
 description: |-
-  Manages a v1 firewall policy resource within OpenTelekomCloud.
+  Manages a v1 firewall policy resource within FlexibleEngine.
 ---
 
 # flexibleengine\_fw\_policy_v2
 
-Manages a v1 firewall policy resource within OpenTelekomCloud.
+Manages a v1 firewall policy resource within FlexibleEngine.
 
 ## Example Usage
 

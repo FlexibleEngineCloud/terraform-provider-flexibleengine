@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "OpenTelekomCloud: flexibleengine_fw_firewall_group_v1"
+page_title: "FlexibleEngine: flexibleengine_fw_firewall_group_v1"
 sidebar_current: "docs-flexibleengine-resource-fw-firewall-group-v1"
 description: |-
-  Manages a v1 firewall group resource within OpenTelekomCloud.
+  Manages a v1 firewall group resource within FlexibleEngine.
 ---
 
 # flexibleengine\_fw\_firewall_group_v2
 
-Manages a v1 firewall group resource within OpenTelekomCloud.
+Manages a v1 firewall group resource within FlexibleEngine.
 
 ## Example Usage
 
