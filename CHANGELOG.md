@@ -16,6 +16,7 @@ FEATURES:
 * **New Resource:** `flexibleengine_lb_member_v2` [GH-22]
 * **New Resource:** `flexibleengine_lb_monitor_v2` [GH-22]
 * **New Resource:** `flexibleengine_sfs_file_system_v2` [GH-23]
+* **New Resource:** `flexibleengine_compute_bms_server_v2` [GH-31]
 
 ENHANCEMENTS:
 
