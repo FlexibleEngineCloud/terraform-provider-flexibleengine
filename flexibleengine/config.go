@@ -459,7 +459,7 @@ func (c *Config) getHwEndpointType() golangsdk.Availability {
 	return golangsdk.AvailabilityPublic
 }
 
-func (c *Config) fwV2Client(region string) (*golangsdk.ServiceClient, error) {
+func (c *Config) hwNetworkV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNetworkV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
