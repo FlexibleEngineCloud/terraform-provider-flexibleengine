@@ -228,6 +228,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
 			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
 			"flexibleengine_sfs_file_system_v2":                 resourceSFSFileSystemV2(),
+			"flexibleengine_compute_bms_server_v2":              resourceComputeBMSInstanceV2(),
 		},
 
 		ConfigureFunc: configureProvider,
