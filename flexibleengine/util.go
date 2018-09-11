@@ -10,6 +10,7 @@ import (
 	"github.com/gophercloud/gophercloud"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/huaweicloud/golangsdk"
 )
 
 // BuildRequest takes an opts struct and builds a request body for
@@ -111,4 +112,13 @@ func checkForRetryableError(err error) *resource.RetryError {
 	default:
 		return resource.NonRetryableError(err)
 	}
+}
+
+func isResourceNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	_, ok := err.(golangsdk.ErrDefault404)
+	_, ok1 := err.(gophercloud.ErrDefault404)
+	return ok || ok1
 }
