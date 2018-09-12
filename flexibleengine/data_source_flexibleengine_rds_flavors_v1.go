@@ -55,7 +55,7 @@ func dataSourceRdsFlavorV1() *schema.Resource {
 
 func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config.OsClient %+v ", config.OsClient)
+	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config.OsClient %+v ", config.HwClient)
 	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config %+v ", config)
 	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read d %+v ", d)
 

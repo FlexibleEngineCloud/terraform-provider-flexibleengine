@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 func resourceNetworkingVIPV2() *schema.Resource {
@@ -157,7 +157,7 @@ func resourceNetworkingVIPV2Delete(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func waitForNetworkVIPActive(networkingClient *gophercloud.ServiceClient, vipid string) resource.StateRefreshFunc {
+func waitForNetworkVIPActive(networkingClient *golangsdk.ServiceClient, vipid string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		p, err := ports.Get(networkingClient, vipid).Extract()
 		if err != nil {
@@ -173,13 +173,13 @@ func waitForNetworkVIPActive(networkingClient *gophercloud.ServiceClient, vipid 
 	}
 }
 
-func waitForNetworkVIPDelete(networkingClient *gophercloud.ServiceClient, vipid string) resource.StateRefreshFunc {
+func waitForNetworkVIPDelete(networkingClient *golangsdk.ServiceClient, vipid string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		log.Printf("[DEBUG] Attempting to delete FlexibleEngine Neutron VIP %s", vipid)
 
 		p, err := ports.Get(networkingClient, vipid).Extract()
 		if err != nil {
-			if _, ok := err.(gophercloud.ErrDefault404); ok {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[DEBUG] Successfully deleted FlexibleEngine VIP %s", vipid)
 				return p, "DELETED", nil
 			}
@@ -188,7 +188,7 @@ func waitForNetworkVIPDelete(networkingClient *gophercloud.ServiceClient, vipid 
 
 		err = ports.Delete(networkingClient, vipid).ExtractErr()
 		if err != nil {
-			if _, ok := err.(gophercloud.ErrDefault404); ok {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[DEBUG] Successfully deleted FlexibleEngine VIP %s", vipid)
 				return p, "DELETED", nil
 			}

@@ -5,10 +5,10 @@ import (
 	"log"
 	"testing"
 
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 // TestAccNetworkingV2VIPAssociate_basic is basic acc test.
@@ -58,7 +58,7 @@ func testAccCheckNetworkingV2VIPAssociateDestroy(s *terraform.State) error {
 		if err != nil {
 			// If the error is a 404, then the vip port does not exist,
 			// and therefore the floating IP cannot be associated to it.
-			if _, ok := err.(gophercloud.ErrDefault404); ok {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				return nil
 			}
 			return err
@@ -70,7 +70,7 @@ func testAccCheckNetworkingV2VIPAssociateDestroy(s *terraform.State) error {
 			if err != nil {
 				// If the error is a 404, then the port does not exist,
 				// and therefore the floating IP cannot be associated to it.
-				if _, ok := err.(gophercloud.ErrDefault404); ok {
+				if _, ok := err.(golangsdk.ErrDefault404); ok {
 					return nil
 				}
 				return err
@@ -103,7 +103,7 @@ func testAccCheckNetworkingV2VIPAssociateAssociated(p *ports.Port, vip *ports.Po
 		if err != nil {
 			// If the error is a 404, then the port does not exist,
 			// and therefore the VIP cannot be associated to it.
-			if _, ok := err.(gophercloud.ErrDefault404); ok {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				return nil
 			}
 			return err
@@ -113,7 +113,7 @@ func testAccCheckNetworkingV2VIPAssociateAssociated(p *ports.Port, vip *ports.Po
 		if err != nil {
 			// If the error is a 404, then the vip port does not exist,
 			// and therefore the VIP cannot be associated to it.
-			if _, ok := err.(gophercloud.ErrDefault404); ok {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				return nil
 			}
 			return err
