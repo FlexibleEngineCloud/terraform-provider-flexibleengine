@@ -147,6 +147,7 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   flavor_id = "%s"
   flavor_name = "%s"
   security_groups = ["default"]
+  availability_zone = "%s"
   network {
     uuid = "%s"
   }
@@ -155,4 +156,4 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
     create = "20m"
   }
 }
-`, OS_BMS_FLAVOR_NAME, OS_BMS_FLAVOR_NAME, OS_NETWORK_ID)
+`, OS_BMS_FLAVOR_NAME, OS_BMS_FLAVOR_NAME, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
