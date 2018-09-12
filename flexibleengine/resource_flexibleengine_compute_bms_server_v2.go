@@ -63,14 +63,14 @@ func resourceComputeBMSInstanceV2() *schema.Resource {
 				Optional:    true,
 				ForceNew:    false,
 				Computed:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_ID", nil),
+				DefaultFunc: schema.EnvDefaultFunc("OS_BMS_FLAVOR_NAME", nil),
 			},
 			"flavor_name": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    false,
 				Computed:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_NAME", nil),
+				DefaultFunc: schema.EnvDefaultFunc("OS_BMS_FLAVOR_NAME", nil),
 			},
 
 			"user_data": &schema.Schema{
