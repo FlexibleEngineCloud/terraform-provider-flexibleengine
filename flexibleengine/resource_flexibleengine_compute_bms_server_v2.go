@@ -212,7 +212,7 @@ func resourceComputeBMSInstanceV2() *schema.Resource {
 func bmsTagsCreate(client *golangsdk.ServiceClient, server_id string) error {
 
 	createOpts := tags.CreateOpts{
-		Tag: []string{"_type_baremetal"},
+		Tag: []string{"__type_baremetal"},
 	}
 
 	_, err := tags.Create(client, server_id, createOpts).Extract()
