@@ -6,12 +6,12 @@ import (
 
 	"crypto/sha1"
 	"encoding/hex"
+	"regexp"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/configurations"
 	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/groups"
-	"os"
-	"regexp"
 )
 
 func resourceASConfiguration() *schema.Resource {
@@ -46,9 +46,9 @@ func resourceASConfiguration() *schema.Resource {
 							Optional: true,
 						},
 						"flavor": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  getDefaultFlavor(),
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_ID", nil),
 						},
 						"image": &schema.Schema{
 							Type:     schema.TypeString,
@@ -170,16 +170,6 @@ func resourceASConfiguration() *schema.Resource {
 	}
 }
 
-func getDefaultFlavor() string {
-	flavorId := os.Getenv("OS_FLAVOR_ID")
-
-	if flavorId != "" {
-		return flavorId
-	}
-
-	flavorName := os.Getenv("OS_FLAVOR_NAME")
-	return flavorName
-}
 func getDisk(diskMeta []interface{}) ([]configurations.DiskOpts, error) {
 	var diskOptsList []configurations.DiskOpts
 

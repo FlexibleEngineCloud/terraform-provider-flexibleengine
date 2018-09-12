@@ -187,6 +187,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_compute_volume_attach_v2":           resourceComputeVolumeAttachV2(),
 			"flexibleengine_dns_recordset_v2":                   resourceDNSRecordSetV2(),
 			"flexibleengine_dns_zone_v2":                        resourceDNSZoneV2(),
+			"flexibleengine_fw_firewall_group_v2":               resourceFWFirewallGroupV2(),
+			"flexibleengine_fw_policy_v2":                       resourceFWPolicyV2(),
+			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
 			"flexibleengine_images_image_v2":                    resourceImagesImageV2(),
 			"flexibleengine_lb_loadbalancer_v2":                 resourceLoadBalancerV2(),
 			"flexibleengine_lb_listener_v2":                     resourceListenerV2(),
@@ -230,6 +233,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_sfs_file_system_v2":                 resourceSFSFileSystemV2(),
 			"flexibleengine_rts_software_config_v1":             resourceSoftwareConfigV1(),
 			"flexibleengine_rts_stack_v1":                       resourceRTSStackV1(),
+			"flexibleengine_compute_bms_server_v2":              resourceComputeBMSInstanceV2(),
+			"flexibleengine_ces_alarmrule":                      resourceAlarmRule(),
 		},
 
 		ConfigureFunc: configureProvider,

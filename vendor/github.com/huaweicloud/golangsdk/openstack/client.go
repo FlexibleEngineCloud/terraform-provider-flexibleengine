@@ -283,7 +283,7 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 	v3Client.ProjectID = options.ProjectId
 
 	var entries = make([]tokens3.CatalogEntry, 0, 1)
-	services.List(v3Client, services.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
+	err = services.List(v3Client, services.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
 		serviceLst, err := services.ExtractServices(page)
 		if err != nil {
 			return false, err
@@ -301,7 +301,11 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 		return true, nil
 	})
 
-	endpoints.List(v3Client, endpoints.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
+	if err != nil {
+		return err
+	}
+
+	err = endpoints.List(v3Client, endpoints.ListOpts{}).EachPage(func(page pagination.Page) (bool, error) {
 		endpoints, err := endpoints.ExtractEndpoints(page)
 		if err != nil {
 			return false, err
@@ -331,6 +335,10 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 
 		return true, nil
 	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -513,10 +521,12 @@ func NewRdsServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts
 }
 
 func NewCESClient(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "ces")
+	sc, err := initClientOpts(client, eo, "volumev2")
 	if err != nil {
 		return nil, err
 	}
+	e := strings.Replace(sc.Endpoint, "v2", "V1.0", 1)
+	sc.Endpoint = strings.Replace(e, "evs", "ces", 1)
 	sc.ResourceBase = sc.Endpoint
 	return sc, err
 }
@@ -538,7 +548,13 @@ func NewComputeV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (
 //NewAutoScalingService creates a ServiceClient that may be used to access the
 //auto-scaling service of huawei public cloud
 func NewAutoScalingService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "as")
+	sc, err := initClientOpts(client, eo, "volumev2")
+	if err != nil {
+		return nil, err
+	}
+	e := strings.Replace(sc.Endpoint, "v2", "autoscaling-api/v1", 1)
+	sc.Endpoint = strings.Replace(e, "evs", "as", 1)
+	sc.ResourceBase = sc.Endpoint
 	return sc, err
 }
 
