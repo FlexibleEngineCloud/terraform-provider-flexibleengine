@@ -55,8 +55,32 @@ $ terraform apply # Should all work if everything is correct.
 
 ## Quick Start
 
+1. AK/SK Configuration
+
 ```hcl
-# Configure the FlexibleEngine Provider
+# Configure the FlexibleEngine Provider with AK/SK
+# This will work with a single defined/default network, otherwise you need to specify network
+# to fix errrors about multiple networks found.
+provider "flexibleengine" {
+  access_key  = "access key"
+  secret_key  = "secret key"
+  # the auth url format follows: https://iam.{region_id}.prod-cloud-ocb.orange-business.com:443/v3
+  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com:443/v3"
+  region      = "eu-west-0"
+}
+
+# Create a web server
+resource "flexibleengine_compute_instance_v2" "test-server" {
+  name            = "test-server"
+  image_name  = "Standard_CentOS_7_latest"
+  flavor_name = "s1.medium"
+}
+```
+
+2. Username/Password Configuration
+
+```hcl
+# Configure the FlexibleEngine Provider with Username/Password 
 # This will work with a single defined/default network, otherwise you need to specify network
 # to fix errrors about multiple networks found.
 provider "flexibleengine" {
