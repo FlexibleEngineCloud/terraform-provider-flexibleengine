@@ -295,7 +295,7 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine bms tag: %s", err)
 	}
-	
+
 	// Wait for the instance to become running so we can get some attributes
 	// that aren't available until later.
 	log.Printf(
