@@ -286,6 +286,16 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 	// Store the ID now
 	d.SetId(server.ID)
 
+	// Set bms sepcific tag
+	bmsClient, err := config.bmsClient(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine bms client: %s", err)
+	}
+	err = bmsTagsCreate(bmsClient, d.Id())
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine bms tag: %s", err)
+	}
+	
 	// Wait for the instance to become running so we can get some attributes
 	// that aren't available until later.
 	log.Printf(
@@ -306,16 +316,6 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf(
 			"Error waiting for instance (%s) to become ready: %s",
 			server.ID, err)
-	}
-
-	// Set bms sepcific tag
-	bmsClient, err := config.bmsClient(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine bms client: %s", err)
-	}
-	err = bmsTagsCreate(bmsClient, d.Id())
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine bms tag: %s", err)
 	}
 
 	return resourceComputeInstanceV2Read(d, meta)
