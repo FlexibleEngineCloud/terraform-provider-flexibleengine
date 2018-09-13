@@ -5,9 +5,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 // TestAccNetworkingV2VIP_basic is basic acc test.

@@ -6,11 +6,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes"
-	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/startstop"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
 	"github.com/huaweicloud/golangsdk/openstack/drs/v2/replications"
 )
 

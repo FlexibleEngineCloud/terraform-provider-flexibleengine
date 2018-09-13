@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 func resourceNetworkingVIPAssociateV2() *schema.Resource {

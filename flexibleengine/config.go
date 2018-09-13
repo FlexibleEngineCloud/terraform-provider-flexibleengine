@@ -14,15 +14,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/gophercloud/gophercloud"
-	"github.com/gophercloud/gophercloud/openstack"
-	"github.com/gophercloud/gophercloud/openstack/objectstorage/v1/swauth"
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform/helper/pathorcontents"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
+	"github.com/huaweicloud/golangsdk/openstack/objectstorage/v1/swauth"
 )
 
 type Config struct {
@@ -45,7 +43,6 @@ type Config struct {
 	Username         string
 	UserID           string
 
-	OsClient *gophercloud.ProviderClient
 	HwClient *golangsdk.ProviderClient
 	s3sess   *session.Session
 }
@@ -68,161 +65,39 @@ func (c *Config) LoadAndValidate() error {
 	if !validEndpoint {
 		return fmt.Errorf("Invalid endpoint type provided")
 	}
-	err := newopenstackClient(c)
-	if err != nil {
-		return err
-	}
 
 	return newhwClient(c)
 
 }
 
-func newopenstackClient(c *Config) error {
-	ao := gophercloud.AuthOptions{
-		DomainID:         c.DomainID,
-		DomainName:       c.DomainName,
-		IdentityEndpoint: c.IdentityEndpoint,
-		Password:         c.Password,
-		TenantID:         c.TenantID,
-		TenantName:       c.TenantName,
-		TokenID:          c.Token,
-		Username:         c.Username,
-		UserID:           c.UserID,
-	}
-
-	client, err := openstack.NewClient(ao.IdentityEndpoint)
-	if err != nil {
-		return err
-	}
-
-	// Set UserAgent
-	client.UserAgent.Prepend(terraform.UserAgentString())
-
-	config := &tls.Config{}
-	if c.CACertFile != "" {
-		caCert, _, err := pathorcontents.Read(c.CACertFile)
-		if err != nil {
-			return fmt.Errorf("Error reading CA Cert: %s", err)
-		}
-
-		caCertPool := x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM([]byte(caCert))
-		config.RootCAs = caCertPool
-	}
-
-	if c.Insecure {
-		config.InsecureSkipVerify = true
-	}
-
-	if c.ClientCertFile != "" && c.ClientKeyFile != "" {
-		clientCert, _, err := pathorcontents.Read(c.ClientCertFile)
-		if err != nil {
-			return fmt.Errorf("Error reading Client Cert: %s", err)
-		}
-		clientKey, _, err := pathorcontents.Read(c.ClientKeyFile)
-		if err != nil {
-			return fmt.Errorf("Error reading Client Key: %s", err)
-		}
-
-		cert, err := tls.X509KeyPair([]byte(clientCert), []byte(clientKey))
-		if err != nil {
-			return err
-		}
-
-		config.Certificates = []tls.Certificate{cert}
-		config.BuildNameToCertificate()
-	}
-
-	// if OS_DEBUG is set, log the requests and responses
-	var osDebug bool
-	if os.Getenv("OS_DEBUG") != "" {
-		osDebug = true
-	}
-
-	transport := &http.Transport{Proxy: http.ProxyFromEnvironment, TLSClientConfig: config}
-	client.HTTPClient = http.Client{
-		Transport: &LogRoundTripper{
-			Rt:      transport,
-			OsDebug: osDebug,
-		},
-	}
-
-	// If using Swift Authentication, there's no need to validate authentication normally.
-	if !c.Swauth {
-		err = openstack.Authenticate(client, ao)
-		if err != nil {
-			return err
-		}
-	}
-
-	c.OsClient = client
-	//fmt.Printf("[DEBUG] Region: %s.\n", c.Region)
-
-	// Don't get AWS session unless we need it for Accesskey, SecretKey.
-	if c.AccessKey != "" && c.SecretKey != "" {
-		// Setup AWS/S3 client/config information for Swift S3 buckets
-		log.Println("[INFO] Building Swift S3 auth structure")
-		creds, err := GetCredentials(c)
-		if err != nil {
-			return err
-		}
-		// Call Get to check for credential provider. If nothing found, we'll get an
-		// error, and we can present it nicely to the user
-		cp, err := creds.Get()
-		if err != nil {
-			if awsErr, ok := err.(awserr.Error); ok && awsErr.Code() == "NoCredentialProviders" {
-				return fmt.Errorf(`No valid credential sources found for Swift S3 Provider.
-																																																																																																																																																																																																							  Please see https://terraform.io/docs/providers/aws/index.html for more information on
-																																																																																																																																																																																																							    providing credentials for the S3 Provider`)
-			}
-
-			return fmt.Errorf("Error loading credentials for Swift S3 Provider: %s", err)
-		}
-
-		log.Printf("[INFO] Swift S3 Auth provider used: %q", cp.ProviderName)
-
-		awsConfig := &aws.Config{
-			Credentials: creds,
-			Region:      aws.String(c.Region),
-			HTTPClient:  cleanhttp.DefaultClient(),
-		}
-
-		if osDebug {
-			awsConfig.LogLevel = aws.LogLevel(aws.LogDebugWithHTTPBody | aws.LogDebugWithRequestRetries | aws.LogDebugWithRequestErrors)
-			awsConfig.Logger = awsLogger{}
-		}
-
-		if c.Insecure {
-			transport := awsConfig.HTTPClient.Transport.(*http.Transport)
-			transport.TLSClientConfig = &tls.Config{
-				InsecureSkipVerify: true,
-			}
-		}
-
-		// Set up base session for AWS/Swift S3
-		c.s3sess, err = session.NewSession(awsConfig)
-		if err != nil {
-			return errwrap.Wrapf("Error creating Swift S3 session: {{err}}", err)
-		}
-	}
-
-	return nil
-}
-
 func newhwClient(c *Config) error {
-	ao := golangsdk.AuthOptions{
-		DomainID:         c.DomainID,
-		DomainName:       c.DomainName,
-		IdentityEndpoint: c.IdentityEndpoint,
-		Password:         c.Password,
-		TenantID:         c.TenantID,
-		TenantName:       c.TenantName,
-		TokenID:          c.Token,
-		Username:         c.Username,
-		UserID:           c.UserID,
+
+	var ao golangsdk.AuthOptionsProvider
+
+	if c.AccessKey != "" && c.SecretKey != "" {
+		ao = golangsdk.AKSKAuthOptions{
+			IdentityEndpoint: c.IdentityEndpoint,
+			ProjectId:        c.TenantID,
+			Region:           c.Region,
+			//			Domain:           c.DomainName,
+			AccessKey: c.AccessKey,
+			SecretKey: c.SecretKey,
+		}
+	} else {
+		ao = golangsdk.AuthOptions{
+			DomainID:         c.DomainID,
+			DomainName:       c.DomainName,
+			IdentityEndpoint: c.IdentityEndpoint,
+			Password:         c.Password,
+			TenantID:         c.TenantID,
+			TenantName:       c.TenantName,
+			TokenID:          c.Token,
+			Username:         c.Username,
+			UserID:           c.UserID,
+		}
 	}
 
-	client, err := huaweisdk.NewClient(ao.IdentityEndpoint)
+	client, err := huaweisdk.NewClient(ao.GetIdentityEndpoint())
 	if err != nil {
 		return err
 	}
@@ -289,6 +164,51 @@ func newhwClient(c *Config) error {
 
 	c.HwClient = client
 
+	if c.AccessKey != "" && c.SecretKey != "" {
+		// Setup S3 client/config information for Swift S3 buckets
+		log.Println("[INFO] Building Swift S3 auth structure")
+		creds, err := GetCredentials(c)
+		if err != nil {
+			return err
+		}
+		// Call Get to check for credential provider. If nothing found, we'll get an
+		// error, and we can present it nicely to the user
+		cp, err := creds.Get()
+		if err != nil {
+			if sErr, ok := err.(awserr.Error); ok && sErr.Code() == "NoCredentialProviders" {
+				return fmt.Errorf("No valid credential sources found for S3 Provider.")
+			}
+
+			return fmt.Errorf("Error loading credentials for S3 Provider: %s", err)
+		}
+
+		log.Printf("[INFO] S3 Auth provider used: %q", cp.ProviderName)
+
+		sConfig := &aws.Config{
+			Credentials: creds,
+			Region:      aws.String(c.Region),
+			HTTPClient:  cleanhttp.DefaultClient(),
+		}
+
+		if osDebug {
+			sConfig.LogLevel = aws.LogLevel(aws.LogDebugWithHTTPBody | aws.LogDebugWithRequestRetries | aws.LogDebugWithRequestErrors)
+			sConfig.Logger = awsLogger{}
+		}
+
+		if c.Insecure {
+			transport := sConfig.HTTPClient.Transport.(*http.Transport)
+			transport.TLSClientConfig = &tls.Config{
+				InsecureSkipVerify: true,
+			}
+		}
+
+		// Set up base session for S3
+		c.s3sess, err = session.NewSession(sConfig)
+		if err != nil {
+			return errwrap.Wrapf("Error creating Swift S3 session: {{err}}", err)
+		}
+	}
+
 	return nil
 }
 
@@ -320,9 +240,9 @@ func (c *Config) computeS3conn(region string) (*s3.S3, error) {
 		return nil, fmt.Errorf("Missing credentials for Swift S3 Provider, need access_key and secret_key values for provider.")
 	}
 
-	client, err := openstack.NewImageServiceV2(c.OsClient, gophercloud.EndpointOpts{
+	client, err := huaweisdk.NewImageServiceV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 	// Bit of a hack, seems the only way to compute this.
 	endpoint := strings.Replace(client.Endpoint, "//ims", "//oss", 1)
@@ -333,52 +253,52 @@ func (c *Config) computeS3conn(region string) (*s3.S3, error) {
 	return s3conn, err
 }
 
-func (c *Config) blockStorageV1Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewBlockStorageV1(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) blockStorageV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewBlockStorageV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) blockStorageV2Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewBlockStorageV2(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewBlockStorageV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) computeV2Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewComputeV2(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) computeV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewComputeV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) dnsV2Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewDNSV2(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) dnsV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewDNSV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) identityV3Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewIdentityV3(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewIdentityV3(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) imageV2Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewImageServiceV2(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) imageV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewImageServiceV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
-func (c *Config) networkingV2Client(region string) (*gophercloud.ServiceClient, error) {
-	return openstack.NewNetworkV2(c.OsClient, gophercloud.EndpointOpts{
+func (c *Config) networkingV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewNetworkV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
@@ -396,18 +316,18 @@ func (c *Config) networkingV1Client(region string) (*golangsdk.ServiceClient, er
 	})
 }
 
-func (c *Config) objectStorageV1Client(region string) (*gophercloud.ServiceClient, error) {
+func (c *Config) objectStorageV1Client(region string) (*golangsdk.ServiceClient, error) {
 	// If Swift Authentication is being used, return a swauth client.
 	if c.Swauth {
-		return swauth.NewObjectStorageV1(c.OsClient, swauth.AuthOpts{
+		return swauth.NewObjectStorageV1(c.HwClient, swauth.AuthOpts{
 			User: c.Username,
 			Key:  c.Password,
 		})
 	}
 
-	return openstack.NewObjectStorageV1(c.OsClient, gophercloud.EndpointOpts{
+	return huaweisdk.NewObjectStorageV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
-		Availability: c.getEndpointType(),
+		Availability: c.getHwEndpointType(),
 	})
 }
 
@@ -437,16 +357,6 @@ func (c *Config) RdsV1Client(region string) (*golangsdk.ServiceClient, error) {
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
-}
-
-func (c *Config) getEndpointType() gophercloud.Availability {
-	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
-		return gophercloud.AvailabilityInternal
-	}
-	if c.EndpointType == "admin" || c.EndpointType == "adminURL" {
-		return gophercloud.AvailabilityAdmin
-	}
-	return gophercloud.AvailabilityPublic
 }
 
 func (c *Config) getHwEndpointType() golangsdk.Availability {
