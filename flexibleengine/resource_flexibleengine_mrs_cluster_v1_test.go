@@ -98,9 +98,9 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   billing_type = 12
   master_node_num = 2
   core_node_num = 3
-  master_node_size = "c2.4xlarge.linux.bigdata"
-  core_node_size = "s1.xlarge.linux.bigdata"
-  available_zone_id = "sa-chile-1a"
+  master_node_size = "s1.xlarge.linux.mrs"
+  core_node_size = "s1.xlarge.linux.mrs"
+  available_zone_id = "%s"
   vpc_id = "%s"
   vpc = "%s"
   subnet_id = "%s"
@@ -121,4 +121,4 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   component_list {
       component_name = "Hive"
   }
-}`, OS_REGION_NAME, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
+}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
