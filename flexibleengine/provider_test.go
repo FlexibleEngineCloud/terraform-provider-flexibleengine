@@ -29,6 +29,8 @@ var (
 	OS_SUBNET_ID              = os.Getenv("OS_SUBNET_ID")
 	OS_KEYPAIR_NAME           = os.Getenv("OS_KEYPAIR_NAME")
 	OS_BMS_FLAVOR_NAME        = os.Getenv("OS_BMS_FLAVOR_NAME")
+	OS_SUBNET_NAME            = os.Getenv("OS_SUBNET_NAME")
+	OS_VPC_NAME               = os.Getenv("OS_VPC_NAME")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
