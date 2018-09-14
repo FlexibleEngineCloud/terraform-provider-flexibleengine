@@ -91,7 +91,7 @@ func testAccCheckMRSV1JobExists(n string, jobGet *job.Job) resource.TestCheckFun
 var TestAccMRSV1JobConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   cluster_name = "mrs-cluster-acc"
-  region = "sa-chile-1"
+  region = "%s"
   billing_type = 12
   master_node_num = 2
   core_node_num = 3
@@ -129,4 +129,4 @@ resource "flexibleengine_mrs_job_v1" "job1" {
   output = "s3a://wordcount/output/"
   job_log = "s3a://wordcount/log/"
   arguments = "wordcount"
-}`, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
+}`, OS_REGION_NAME, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
