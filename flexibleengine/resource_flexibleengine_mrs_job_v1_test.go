@@ -129,4 +129,4 @@ resource "flexibleengine_mrs_job_v1" "job1" {
   output = "s3a://wordcount/output/"
   job_log = "s3a://wordcount/log/"
   arguments = "wordcount"
-}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
+}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_NETWORK_ID, OS_SUBNET_NAME)

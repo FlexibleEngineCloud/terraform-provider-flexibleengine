@@ -121,4 +121,4 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   component_list {
       component_name = "Hive"
   }
-}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_SUBNET_ID, OS_SUBNET_NAME)
+}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_NETWORK_ID, OS_SUBNET_NAME)
