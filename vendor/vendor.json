@@ -715,6 +715,18 @@
 			"revisionTime": "2018-09-11T14:09:45Z"
 		},
 		{
+			"checksumSHA1": "tygtE2L8EFD/6t9LzeJAKj3bKR4=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/mrs/v1/cluster",
+			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
+			"revisionTime": "2018-09-11T14:09:45Z"
+		},
+		{
+			"checksumSHA1": "k2AkFhzGVeTEMOLzm2v03qELRDI=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/mrs/v1/job",
+			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
+			"revisionTime": "2018-09-11T14:09:45Z"
+		},
+		{
 			"checksumSHA1": "S03meuz/zX857hIqfpgyCUfrcFs=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/networking/v1/bandwidths",
 			"revision": "dfc9afb7c801cc2a2ba4a62fdd5510a1c9597aec",
@@ -1064,5 +1076,5 @@
 			"versionExact": "v1.6.1"
 		}
 	],
-	"rootPath": "github.com/freesky-edward/terraform-provider-flexibleengine"
+	"rootPath": "github.com/terraform-providers/terraform-provider-flexibleengine"
 }

@@ -360,6 +360,13 @@ func (c *Config) RdsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
+func (c *Config) MrsV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewMapReduceV1(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}
+
 func (c *Config) getHwEndpointType() golangsdk.Availability {
 	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
 		return golangsdk.AvailabilityInternal
