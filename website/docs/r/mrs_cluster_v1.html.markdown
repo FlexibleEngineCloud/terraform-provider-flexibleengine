@@ -22,10 +22,8 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   master_node_size = "c2.4xlarge.linux.bigdata"
   core_node_size = "s1.xlarge.linux.bigdata"
   available_zone_id = "sa-chile-1a"
-  vpc = "terraform-provider-flexibleengine-vpc"
   vpc_id = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
   subnet_id = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
-  subnet_name = "terraform-provider-flexibleengine-subnet"
   cluster_version = "MRS 1.5.0"
   volume_type = "SATA"
   volume_size = 100
@@ -58,14 +56,18 @@ The following arguments are supported:
 
 * `master_node_size` - (Required) Best match based on several years of commissioning
     experience. MRS supports specifications of hosts, and host specifications are
-    determined by CPUs, memory, and disks space. Master nodes support c2.4xlarge,
-    s1.4xlarge and s1.8xlarge. Core nodes of a streaming cluster support s1.xlarge,
-    c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge. Core nodes of an analysis cluster
-    support all specifications. s1.xlarge.linux.bigdata CPU: 4-core Memory: 16 GB
-    System Disk: 40 GB c2.2xlarge.linux.bigdata CPU: 8-core Memory: 16 GB System
-    Disk: 40 GB c2.4xlarge.linux.bigdata CPU: 16-core Memory: 32 GB System Disk:
-    40 GB s1.4xlarge.linux.bigdata CPU: 16-core Memory: 64 GB System Disk: 40 GB
-    s1.8xlarge.linux.bigdata CPU: 32-core Memory: 128 GB System Disk: 40 GB
+    determined by CPUs, memory, and disks space. Master nodes support s1.4xlarge.linux.mrs,
+    and s1.8xlarge.linux.mrs. Core nodes of a streaming cluster support s1.xlarge.linux.mrs,
+    c2.2xlarge.linux.mrs, s1.2xlarge.linux.mrs, s1.4xlarge.linux.mrs, s1.8xlarge.linux.mrs,
+    and d1.8xlarge.linux.mrs. Core nodes of an analysis cluster support all specifications.
+    s1.xlarge.linux.mrs CPU: 4-core Memory: 16 GB System Disk: 40 GB
+    c2.2xlarge.linux.mrs CPU: 8-core Memory: 16 GB System Disk: 40 GB
+    s1.4xlarge.linux.mrs CPU: 16-core Memory: 64 GB System Disk: 40 GB
+    s1.8xlarge.linux.mrs CPU: 32-core Memory: 128 GB System Disk: 40 GB
+    d1.xlarge.linux.mrs CPU: 6-core Memory: 55 GB System Disk: 40 GB Data Disk: 1.8 TB x 3 HDDs
+    d1.2xlarge.linux.mrs CPU: 12-core Memory: 110 GB System Disk: 40 GB Data Disk: 1.8 TB x 6 HDDs
+    d1.4xlarge.linux.mrs CPU: 24-core Memory: 220 GB System Disk: 40 GB Data Disk: 1.8 TB x 12 HDDs
+    d1.8xlarge.linux.mrs CPU: 48-core Memory: 440 GB System Disk: 40 GB Data Disk: 1.8 TB x 24 HDDs
 
 * `core_node_num` - (Required) Number of Core nodes Value range: 3 to 100 A
     maximum of 100 Core nodes are supported by default. If more than 100 Core nodes
@@ -81,12 +83,6 @@ The following arguments are supported:
 * `cluster_name` - (Required) Cluster name, which is globally unique and contains
     only 1 to 64 letters, digits, hyphens (-), and underscores (_).
 
-* `vpc` - (Required) Name of the VPC where the subnet locates Obtain the VPC
-    name from the management console as follows: Register an account and log in
-    to the management console. Click Virtual Private Cloud and select Virtual Private
-    Cloud from the left list. On the Virtual Private Cloud page, obtain the VPC
-    name from the list.
-
 * `vpc_id` - (Required) ID of the VPC where the subnet locates Obtain the VPC
     ID from the management console as follows: Register an account and log in to
     the management console. Click Virtual Private Cloud and select Virtual Private
@@ -97,12 +93,6 @@ The following arguments are supported:
     console as follows: Register an account and log in to the management console.
     Click Virtual Private Cloud and select Virtual Private Cloud from the left list.
     On the Virtual Private Cloud page, obtain the subnet ID from the list.
-
-* `subnet_name` - (Required) Name of the subnet Obtain the subnet name from
-    the management console as follows: Register an account and log in to the management
-    console. Click Virtual Private Cloud and select Virtual Private Cloud from the
-    left list. On the Virtual Private Cloud page, obtain the subnet name from the
-    list.
 
 * `cluster_version` - (Optional) Version of the clusters Currently, MRS 1.3.0
     and MRS 1.5.0 are supported. The latest version of MRS is used by default. Currently,
@@ -250,10 +240,8 @@ The following attributes are exported:
 * `core_node_size` - See Argument Reference above.
 * `available_zone_id` - See Argument Reference above.
 * `cluster_name` - See Argument Reference above.
-* `vpc` - See Argument Reference above.
 * `vpc_id` - See Argument Reference above.
 * `subnet_id` - See Argument Reference above.
-* `subnet_name` - See Argument Reference above.
 * `cluster_version` - See Argument Reference above.
 * `cluster_type` - See Argument Reference above.
 * `volume_type` - See Argument Reference above.

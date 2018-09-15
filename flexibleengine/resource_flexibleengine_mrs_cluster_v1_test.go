@@ -102,9 +102,7 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   core_node_size = "s1.xlarge.linux.mrs"
   available_zone_id = "%s"
   vpc_id = "%s"
-  vpc = "%s"
   subnet_id = "%s"
-  subnet_name = "%s"
   cluster_version = "MRS 1.5.0"
   volume_type = "SATA"
   volume_size = 100
@@ -121,4 +119,4 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   component_list {
       component_name = "Hive"
   }
-}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_VPC_NAME, OS_NETWORK_ID, OS_SUBNET_NAME)
+}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)

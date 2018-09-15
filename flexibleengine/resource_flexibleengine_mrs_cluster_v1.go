@@ -10,6 +10,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/mrs/v1/cluster"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v1/subnets"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 )
 
 func resourceMRSClusterV1() *schema.Resource {
@@ -70,22 +72,12 @@ func resourceMRSClusterV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"vpc": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
 			"vpc_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 			"subnet_id": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"subnet_name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -427,6 +419,21 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine MRS client: %s", err)
 	}
+	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
+	}
+
+	// Get vpc name
+	vpc, err := vpcs.Get(vpcClient, d.Id()).Extract()
+	if err != nil {
+		return fmt.Errorf("Error retrieving FlexibleEngine Vpc: %s", err)
+	}
+	// Get subnet name
+	subnet, err := subnets.Get(vpcClient, d.Id()).Extract()
+	if err != nil {
+		return fmt.Errorf("Error retrieving FlexibleEngine Subnet: %s", err)
+	}
 
 	createOpts := &cluster.CreateOpts{
 		BillingType:        d.Get("billing_type").(int),
@@ -437,10 +444,10 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 		CoreNodeSize:       d.Get("core_node_size").(string),
 		AvailableZoneID:    d.Get("available_zone_id").(string),
 		ClusterName:        d.Get("cluster_name").(string),
-		Vpc:                d.Get("vpc").(string),
+		Vpc:                vpc.Name,
 		VpcID:              d.Get("vpc_id").(string),
 		SubnetID:           d.Get("subnet_id").(string),
-		SubnetName:         d.Get("subnet_name").(string),
+		SubnetName:         subnet.Name,
 		ClusterVersion:     d.Get("cluster_version").(string),
 		ClusterType:        d.Get("cluster_type").(int),
 		VolumeType:         d.Get("volume_type").(string),
@@ -516,7 +523,6 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("node_public_cert_name", clusterGet.Nodepubliccertname)
 	d.Set("safe_mode", clusterGet.Safemode)
 	d.Set("master_node_size", clusterGet.Masternodesize)
-	d.Set("subnet_name", clusterGet.Subnetname)
 	d.Set("instance_id", clusterGet.Instanceid)
 	d.Set("hadoop_version", clusterGet.Hadoopversion)
 	d.Set("master_node_ip", clusterGet.Masternodeip)
