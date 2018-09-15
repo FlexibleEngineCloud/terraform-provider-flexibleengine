@@ -78,6 +78,7 @@ func newhwClient(c *Config) error {
 		ao = golangsdk.AKSKAuthOptions{
 			IdentityEndpoint: c.IdentityEndpoint,
 			ProjectId:        c.TenantID,
+			ProjectName:      c.TenantName,
 			Region:           c.Region,
 			//			Domain:           c.DomainName,
 			AccessKey: c.AccessKey,

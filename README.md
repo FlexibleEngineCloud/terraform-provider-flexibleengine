@@ -62,6 +62,7 @@ $ terraform apply # Should all work if everything is correct.
 # This will work with a single defined/default network, otherwise you need to specify network
 # to fix errrors about multiple networks found.
 provider "flexibleengine" {
+  tenant_name = "tenant name"
   access_key  = "access key"
   secret_key  = "secret key"
   # the auth url format follows: https://iam.{region_id}.prod-cloud-ocb.orange-business.com:443/v3
