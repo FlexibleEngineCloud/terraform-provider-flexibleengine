@@ -425,12 +425,12 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Get vpc name
-	vpc, err := vpcs.Get(vpcClient, d.Id()).Extract()
+	vpc, err := vpcs.Get(vpcClient, d.Get("vpc_id")).Extract()
 	if err != nil {
 		return fmt.Errorf("Error retrieving FlexibleEngine Vpc: %s", err)
 	}
 	// Get subnet name
-	subnet, err := subnets.Get(vpcClient, d.Id()).Extract()
+	subnet, err := subnets.Get(vpcClient, d.Get("subnet_id")).Extract()
 	if err != nil {
 		return fmt.Errorf("Error retrieving FlexibleEngine Subnet: %s", err)
 	}
