@@ -112,8 +112,8 @@ func testAccCheckComputeV2BmsInstanceExists(n string, instance *servers.Server) 
 var testAccComputeV2BmsInstance_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   name = "instance_1"
-  flavor_id = "%s"
-  flavor_name = "%s"
+  flavor_id = "physical.o2.medium"
+  flavor_name = "physical.o2.medium"
   security_groups = ["default"]
   availability_zone = "%s"
   metadata {
@@ -123,13 +123,13 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
     uuid = "%s"
   }
 }
-`, OS_BMS_FLAVOR_NAME, OS_BMS_FLAVOR_NAME, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
+`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
 
 var testAccComputeV2BmsInstance_update = fmt.Sprintf(`
 resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   name = "instance_2"
-  flavor_id = "%s"
-  flavor_name = "%s"
+  flavor_id = "physical.o2.medium"
+  flavor_name = "physical.o2.medium"
   security_groups = ["default"]
   availability_zone = "%s"
   metadata {
@@ -139,13 +139,13 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
     uuid = "%s"
   }
 }
-`, OS_BMS_FLAVOR_NAME, OS_BMS_FLAVOR_NAME, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
+`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
 
 var testAccComputeV2BmsInstance_timeout = fmt.Sprintf(`
 resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   name = "instance_1"
-  flavor_id = "%s"
-  flavor_name = "%s"
+  flavor_id = "physical.o2.medium"
+  flavor_name = "physical.o2.medium"
   security_groups = ["default"]
   availability_zone = "%s"
   network {
@@ -156,4 +156,4 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
     create = "20m"
   }
 }
-`, OS_BMS_FLAVOR_NAME, OS_BMS_FLAVOR_NAME, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
+`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
