@@ -715,10 +715,10 @@
 			"revisionTime": "2018-09-11T14:09:45Z"
 		},
 		{
-			"checksumSHA1": "9BmUzCSD1k1ZZZ/uQ8UpeqmhOvU=",
+			"checksumSHA1": "yWHZuJZ6RUHY2wC7oAWlPPZc0PM=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/mls/v1/instances",
-			"revision": "e34849c8729ba7e64c29a993f7f7eff358897ecd",
-			"revisionTime": "2018-09-21T07:12:38Z"
+			"revision": "1d8a2d2776a596972047b59404b2e898847fbaea",
+			"revisionTime": "2018-09-21T09:37:12Z"
 		},
 		{
 			"checksumSHA1": "tygtE2L8EFD/6t9LzeJAKj3bKR4=",

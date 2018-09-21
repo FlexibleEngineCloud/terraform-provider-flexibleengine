@@ -4,6 +4,10 @@ import (
 	"github.com/huaweicloud/golangsdk"
 )
 
+var RequestOpts golangsdk.RequestOpts = golangsdk.RequestOpts{
+	MoreHeaders: map[string]string{"Content-Type": "application/json", "X-Language": "en-us"},
+}
+
 //CreateOptsBuilder is used for creating instance parameters.
 //any struct providing the parameters should implement this interface
 type CreateOptsBuilder interface {
@@ -56,24 +60,20 @@ func Create(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r CreateRe
 	}
 
 	_, r.Err = client.Post(createURL(client), b, &r.Body, &golangsdk.RequestOpts{
-		OkCodes: []int{202},
+		OkCodes:     []int{202},
+		MoreHeaders: RequestOpts.MoreHeaders,
 	})
 	return
 }
 
 //delete an instance via id
 func Delete(client *golangsdk.ServiceClient, id string) (r DeleteResult) {
-	_, r.Err = client.Delete(resourceURL(client, id), &golangsdk.RequestOpts{
-		OkCodes: []int{202},
-	})
+	_, r.Err = client.Delete(resourceURL(client, id), &RequestOpts)
 	return
 }
 
 //get an instance with detailed information by id
 func Get(client *golangsdk.ServiceClient, id string) (r GetResult) {
-
-	_, r.Err = client.Get(resourceURL(client, id), &r.Body, &golangsdk.RequestOpts{
-		OkCodes: []int{200},
-	})
+	_, r.Err = client.Get(resourceURL(client, id), &r.Body, &RequestOpts)
 	return
 }
