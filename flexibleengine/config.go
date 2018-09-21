@@ -360,6 +360,13 @@ func (c *Config) RdsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
+func (c *Config) MlsV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewMLSV1(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}
+
 func (c *Config) MrsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewMapReduceV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
