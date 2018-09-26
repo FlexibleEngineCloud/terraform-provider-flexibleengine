@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	bms "github.com/huaweicloud/golangsdk/openstack/bms/v2/servers"
+	"github.com/huaweicloud/golangsdk/openstack/bms/v2/tags"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/secgroups"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
@@ -208,6 +209,20 @@ func resourceComputeBMSInstanceV2() *schema.Resource {
 	}
 }
 
+func bmsTagsCreate(client *golangsdk.ServiceClient, server_id string) error {
+
+	createOpts := tags.CreateOpts{
+		Tag: []string{"__type_baremetal"},
+	}
+
+	_, err := tags.Create(client, server_id, createOpts).Extract()
+
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine Tags: %s", err)
+	}
+	return nil
+}
+
 func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	computeClient, err := config.computeV2HWClient(GetRegion(d, config))
@@ -270,6 +285,16 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 
 	// Store the ID now
 	d.SetId(server.ID)
+
+	// Set bms sepcific tag
+	bmsClient, err := config.bmsClient(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine bms client: %s", err)
+	}
+	err = bmsTagsCreate(bmsClient, d.Id())
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine bms tag: %s", err)
+	}
 
 	// Wait for the instance to become running so we can get some attributes
 	// that aren't available until later.

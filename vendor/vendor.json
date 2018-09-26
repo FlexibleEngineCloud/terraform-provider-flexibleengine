@@ -571,6 +571,12 @@
 			"revisionTime": "2018-09-05T09:58:59Z"
 		},
 		{
+			"checksumSHA1": "0Z02DmoM+U+QhVekZXansXDDopU=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/bms/v2/tags",
+			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
+			"revisionTime": "2018-09-11T14:09:45Z"
+		},
+		{
 			"checksumSHA1": "q1aqMo0piceUY8M6d6xzbL1mgdo=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/cloudeyeservice/alarmrule",
 			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
