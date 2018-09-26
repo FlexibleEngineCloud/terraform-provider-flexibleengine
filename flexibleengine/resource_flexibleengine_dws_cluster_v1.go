@@ -46,6 +46,7 @@ func resourceDWSClusterV1() *schema.Resource {
 			"endpoints": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"connect_info": &schema.Schema{
@@ -93,6 +94,7 @@ func resourceDWSClusterV1() *schema.Resource {
 			"public_endpoints": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"jdbc_url": &schema.Schema{
@@ -246,7 +248,6 @@ func resourceWarehouseClusterV1Create(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) error {
-	return fmt.Errorf("error")
 	config := meta.(*Config)
 	client, err := config.loadDWSClient(GetRegion(d, config))
 	if err != nil {
@@ -264,12 +265,12 @@ func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) er
 	d.Set("status", r.Status)
 	d.Set("sub_status", r.SubStatus)
 	d.Set("updated", r.Updated)
-	d.Set("endpoints", r.Endpoints)
+	d.Set("endpoints", []interface{}{r.Endpoints})
 	d.Set("name", r.Name)
 	d.Set("number_of_node", r.NumberOfNode)
 	d.Set("availability_zone", r.AvailabilityZone)
 	d.Set("subnet_id", r.SubnetID)
-	d.Set("public_endpoints", r.PublicEndpoints)
+	d.Set("public_endpoints", []interface{}{r.PublicEndpoints})
 	d.Set("created", r.Created)
 	d.Set("security_group_id", r.SecurityGroupID)
 	d.Set("port", r.Port)
@@ -284,7 +285,6 @@ func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceWarehouseClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
-	return fmt.Errorf("error")
 	config := meta.(*Config)
 	client, err := config.loadDWSClient(GetRegion(d, config))
 	if err != nil {

@@ -6,12 +6,12 @@ type Cluster struct {
 	Status           string              `json:"status"`
 	SubStatus        string              `json:"sub_status"`
 	Updated          string              `json:"updated"`
-	Endpoints        []Endpoints         `json:"endpoints"`
+	Endpoints        Endpoints           `json:"endPoints"`
 	Name             string              `json:"name"`
 	NumberOfNode     int                 `json:"number_of_node"`
 	AvailabilityZone string              `json:"availability_zone"`
 	SubnetID         string              `json:"subnet_id"`
-	PublicEndpoints  []PublicEndpoints   `json:"public_endpoints"`
+	PublicEndpoints  PublicEndpoints     `json:"public_endpoints"`
 	Created          string              `json:"created"`
 	SecurityGroupID  string              `json:"security_group_id"`
 	Port             int                 `json:"port"`

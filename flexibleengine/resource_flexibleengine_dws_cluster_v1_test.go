@@ -80,7 +80,7 @@ func testDWSClusterExists(n string, ar *cluster.Cluster) resource.TestCheckFunc 
 
 var testDWSClusterBasic = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "terraform_security_group_test1"
+  name = "terraform_security_group_test"
   description = "terraform security group acceptance test"
 }
 
@@ -91,7 +91,7 @@ resource "flexibleengine_dws_cluster_v1" "cluster" {
   "vpc_id" = "%s"
   "security_group_id" = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
   "availability_zone" = "%s"
-  "name" = "terraform_dws_cluster_test1"
+  "name" = "terraform_dws_cluster_test"
   "user_name" = "test_cluster_admin"
   "user_pwd" = "cluster123@!"
 

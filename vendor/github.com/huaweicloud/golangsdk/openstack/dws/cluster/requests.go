@@ -51,7 +51,12 @@ func Get(c *golangsdk.ServiceClient, id string) (r GetResult) {
 }
 
 func Delete(c *golangsdk.ServiceClient, id string) (r DeleteResult) {
-	reqOpt := &golangsdk.RequestOpts{OkCodes: []int{202}}
+	reqOpt := &golangsdk.RequestOpts{
+		OkCodes: []int{202},
+		JSONBody: map[string]interface{}{
+			"keep_last_manual_snapshot": 0,
+		},
+	}
 	_, r.Err = c.Delete(resourceURL(c, id), reqOpt)
 	return
 }
