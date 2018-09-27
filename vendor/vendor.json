@@ -589,10 +589,10 @@
 			"revisionTime": "2018-09-05T09:58:59Z"
 		},
 		{
-			"checksumSHA1": "ZEHpHlp6ky+VALhGAkYsn60P+Zw=",
+			"checksumSHA1": "sAFxIo3Pdgy9PBf9yIMIWIll/7I=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/bootfromvolume",
-			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
-			"revisionTime": "2018-09-11T14:09:45Z"
+			"revision": "ebb46b707271a6f18a5275a063911fab218832a5",
+			"revisionTime": "2018-09-27T12:41:01Z"
 		},
 		{
 			"checksumSHA1": "nB5B/ZG6UgR/fk0b8OhA7En4F0Y=",
