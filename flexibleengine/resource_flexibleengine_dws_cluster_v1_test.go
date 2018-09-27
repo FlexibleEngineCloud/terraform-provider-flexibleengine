@@ -20,7 +20,7 @@ func TestDWSClusterBasic(t *testing.T) {
 			resource.TestStep{
 				Config: testDWSClusterBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testDWSClusterExists("flexibleengine_dws_cluster.cluster", &ar),
+					testDWSClusterExists("flexibleengine_dws_cluster_v1.cluster", &ar),
 				),
 			},
 		},
@@ -35,7 +35,7 @@ func testDWSClusterDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_dws_cluster" {
+		if rs.Type != "flexibleengine_dws_cluster_v1" {
 			continue
 		}
 

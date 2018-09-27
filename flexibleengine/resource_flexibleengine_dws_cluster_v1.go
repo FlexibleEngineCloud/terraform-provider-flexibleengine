@@ -234,7 +234,7 @@ func resourceWarehouseClusterV1Create(d *schema.ResourceData, meta interface{}) 
 		Refresh:    getWarehouseCluster(client, c.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      5 * time.Second,
-		MinTimeout: 2 * time.Second,
+		MinTimeout: 3 * time.Second,
 	}
 	_, err = stateConf.WaitForState()
 	if err != nil {
@@ -260,23 +260,28 @@ func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) er
 	}
 	log.Printf("[DEBUG] Retrieved Warehouse-Cluster %s: %#v", d.Id(), r)
 
+	m, err := convertStructToMap(r, map[string]string{"endPoints": "endpoints"})
+	if err != nil {
+		return fmt.Errorf("Error converting struct to map, err=%s", err)
+	}
+
 	d.Set("region", GetRegion(d, config))
 
 	d.Set("status", r.Status)
 	d.Set("sub_status", r.SubStatus)
 	d.Set("updated", r.Updated)
-	d.Set("endpoints", []interface{}{r.Endpoints})
+	d.Set("endpoints", []interface{}{m["endpoints"]})
 	d.Set("name", r.Name)
 	d.Set("number_of_node", r.NumberOfNode)
 	d.Set("availability_zone", r.AvailabilityZone)
 	d.Set("subnet_id", r.SubnetID)
-	d.Set("public_endpoints", []interface{}{r.PublicEndpoints})
+	d.Set("public_endpoints", []interface{}{m["public_endpoints"]})
 	d.Set("created", r.Created)
 	d.Set("security_group_id", r.SecurityGroupID)
 	d.Set("port", r.Port)
 	d.Set("node_type", r.NodeType)
 	d.Set("version", r.Version)
-	d.Set("public_ip", []interface{}{r.PublicIp})
+	d.Set("public_ip", []interface{}{m["public_ip"]})
 	d.Set("vpc_id", r.VpcID)
 	d.Set("task_status", r.TaskStatus)
 	d.Set("user_name", r.UserName)
