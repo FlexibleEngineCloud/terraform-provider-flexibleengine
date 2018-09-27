@@ -13,33 +13,50 @@ Manages mls instance resource within FlexibleEngine
 ## Example Usage:  Creating a MLS instance
 ```hcl
 
-resource "flexibleengine_rds_instance_v1" "instance" {
-  name = "rds-instance"
-  datastore {
-    type = "SQLServer"
-    version = "2014 SP2 SE"
-  }
-  flavorref = "${data.flexibleengine_rds_flavors_v1.flavor.id}"
-  volume {
-    type = "COMMON"
-    size = 200
-  }
+resource "flexibleengine_mrs_cluster_v1" "cluster1" {
+  cluster_name = "mrs-cluster-acc"
   region = "eu-west-0"
-  availabilityzone = "eu-west-0a"
-  vpc = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  nics {
-    subnetid = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+  billing_type = 12
+  master_node_num = 2
+  core_node_num = 3
+  master_node_size = "s1.4xlarge.linux.mrs"
+  core_node_size = "s1.xlarge.linux.mrs"
+  available_zone_id = "eu-west-0a"
+  vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
+  subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+  cluster_version = "MRS 1.3.0"
+  volume_type = "SATA"
+  volume_size = 100
+  safe_mode = 0
+  cluster_type = 0
+  node_public_cert_name = "KeyPair-ci"
+  cluster_admin_secret = ""
+  component_list {
+      component_name = "Hadoop"
   }
-  securitygroup {
-    id = "${flexibleengine_compute_secgroup_v2.secgrp_rds.id}"
+  component_list {
+      component_name = "Spark"
   }
-  dbport = "8635"
-  backupstrategy = {
-    starttime = "04:00:00"
-    keepdays = 4
+  component_list {
+      component_name = "Hive"
   }
-  dbrtpd = "Huangwei!120521"
-  depends_on = ["flexibleengine_compute_secgroup_v2.secgrp_rds"]
+}
+
+resource "flexibleengine_mls_instance_v1" "instance" {
+  name = "terraform-mls-instance"
+  version = "1.2.0"
+  flavor = "mls.c2.2xlarge.common"
+  network {
+    vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
+    subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+	available_zone = "eu-west-0a"
+	public_ip {
+	  bind_type = "not_use"
+	}
+  }
+  mrs_cluster {
+    id = "${flexibleengine_mrs_cluster_v1.cluster1.id}"
+  }
 }
 ```
 

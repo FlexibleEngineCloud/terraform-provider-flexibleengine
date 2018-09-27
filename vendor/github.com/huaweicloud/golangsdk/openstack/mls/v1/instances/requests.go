@@ -68,7 +68,10 @@ func Create(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r CreateRe
 
 //delete an instance via id
 func Delete(client *golangsdk.ServiceClient, id string) (r DeleteResult) {
-	_, r.Err = client.Delete(resourceURL(client, id), &RequestOpts)
+	b := make(map[string]interface{})
+	_, r.Err = client.DeleteWithBody(resourceURL(client, id), b, &golangsdk.RequestOpts{
+		OkCodes: []int{202},
+	})
 	return
 }
 

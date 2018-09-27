@@ -82,6 +82,35 @@ func testAccCheckMLSV1InstanceExists(n string, instance *instances.Instance) res
 }
 
 var TestAccMLSInstanceV1Config_basic = fmt.Sprintf(`
+resource "flexibleengine_mrs_cluster_v1" "cluster1" {
+  cluster_name = "mrs-cluster-acc"
+  region = "%s"
+  billing_type = 12
+  master_node_num = 2
+  core_node_num = 3
+  master_node_size = "s1.4xlarge.linux.mrs"
+  core_node_size = "s1.xlarge.linux.mrs"
+  available_zone_id = "%s"
+  vpc_id = "%s"
+  subnet_id = "%s"
+  cluster_version = "MRS 1.3.0"
+  volume_type = "SATA"
+  volume_size = 100
+  safe_mode = 0
+  cluster_type = 0
+  node_public_cert_name = "KeyPair-ci"
+  cluster_admin_secret = ""
+  component_list {
+      component_name = "Hadoop"
+  }
+  component_list {
+      component_name = "Spark"
+  }
+  component_list {
+      component_name = "Hive"
+  }
+}
+
 resource "flexibleengine_mls_instance_v1" "instance" {
   name = "terraform-mls-instance"
   version = "1.2.0"
@@ -95,6 +124,6 @@ resource "flexibleengine_mls_instance_v1" "instance" {
 	}
   }
   mrs_cluster {
-    id = "349cf735-8544-471f-af77-ccee1d10bcfa"
+    id = "${flexibleengine_mrs_cluster_v1.cluster1.id}"
   }
-}`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE)
+}`, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE)
