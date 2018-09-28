@@ -13,9 +13,9 @@ import (
 
 func resourceDWSClusterV1() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceWarehouseClusterV1Create,
-		Read:   resourceWarehouseClusterV1Read,
-		Delete: resourceWarehouseClusterV1Delete,
+		Create: resourceDWSClusterV1Create,
+		Read:   resourceDWSClusterV1Read,
+		Delete: resourceDWSClusterV1Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -200,7 +200,7 @@ func getPublicIP(d *schema.ResourceData) *cluster.PublicIpOpts {
 	}
 }
 
-func resourceWarehouseClusterV1Create(d *schema.ResourceData, meta interface{}) error {
+func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.loadDWSClient(GetRegion(d, config))
 	if err != nil {
@@ -220,34 +220,34 @@ func resourceWarehouseClusterV1Create(d *schema.ResourceData, meta interface{}) 
 		UserName:         d.Get("user_name").(string),
 		Port:             d.Get("port").(int),
 	}
-	log.Printf("[DEBUG] Create Warehouse-Cluster Options: %#v", opts)
+	log.Printf("[DEBUG] Create DWS-Cluster Options: %#v", opts)
 
 	c, err := cluster.Create(client, opts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating Warehouse-Cluster: %s", err)
+		return fmt.Errorf("Error creating DWS-Cluster: %s", err)
 	}
 
 	// Wait for Cluster to become active before continuing
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{"AVAILABLE"},
 		Pending:    []string{"CREATING"},
-		Refresh:    getWarehouseCluster(client, c.ID),
+		Refresh:    getDWSCluster(client, c.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      5 * time.Second,
 		MinTimeout: 3 * time.Second,
 	}
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error waiting for warehouse cluster %s(%s) to become AVAILABLE, error=%s",
+		return fmt.Errorf("Error waiting for DWS cluster %s(%s) to become AVAILABLE, error=%s",
 			opts.Name, c.ID, err)
 	}
 
 	d.SetId(c.ID)
 
-	return resourceWarehouseClusterV1Read(d, meta)
+	return resourceDWSClusterV1Read(d, meta)
 }
 
-func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) error {
+func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.loadDWSClient(GetRegion(d, config))
 	if err != nil {
@@ -256,9 +256,9 @@ func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) er
 
 	r, err := cluster.Get(client, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "Warehouse-Cluster")
+		return CheckDeleted(d, err, "DWS-Cluster")
 	}
-	log.Printf("[DEBUG] Retrieved Warehouse-Cluster %s: %#v", d.Id(), r)
+	log.Printf("[DEBUG] Retrieved DWS-Cluster %s: %#v", d.Id(), r)
 
 	m, err := convertStructToMap(r, map[string]string{"endPoints": "endpoints"})
 	if err != nil {
@@ -289,7 +289,7 @@ func resourceWarehouseClusterV1Read(d *schema.ResourceData, meta interface{}) er
 	return nil
 }
 
-func resourceWarehouseClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
+func resourceDWSClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.loadDWSClient(GetRegion(d, config))
 	if err != nil {
@@ -297,7 +297,7 @@ func resourceWarehouseClusterV1Delete(d *schema.ResourceData, meta interface{}) 
 	}
 
 	rID := d.Id()
-	log.Printf("[DEBUG] Deleting Warehouse-Cluster %s", rID)
+	log.Printf("[DEBUG] Deleting DWS-Cluster %s", rID)
 
 	timeout := d.Timeout(schema.TimeoutDelete)
 	err = resource.Retry(timeout, func() *resource.RetryError {
@@ -309,16 +309,16 @@ func resourceWarehouseClusterV1Delete(d *schema.ResourceData, meta interface{}) 
 	})
 	if err != nil {
 		if isResourceNotFound(err) {
-			log.Printf("[INFO] deleting an unavailable Warehouse-Cluster: %s", rID)
+			log.Printf("[INFO] deleting an unavailable DWS-Cluster: %s", rID)
 			return nil
 		}
-		return fmt.Errorf("Error deleting Warehouse-Cluster %s: %s", rID, err)
+		return fmt.Errorf("Error deleting DWS-Cluster %s: %s", rID, err)
 	}
 
 	return nil
 }
 
-func getWarehouseCluster(client *golangsdk.ServiceClient, clusterID string) resource.StateRefreshFunc {
+func getDWSCluster(client *golangsdk.ServiceClient, clusterID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		r, err := cluster.Get(client, clusterID).Extract()
 		if err != nil {
