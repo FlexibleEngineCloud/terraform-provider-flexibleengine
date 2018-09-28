@@ -191,6 +191,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_fw_policy_v2":                       resourceFWPolicyV2(),
 			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
 			"flexibleengine_images_image_v2":                    resourceImagesImageV2(),
+			"flexibleengine_lb_certificate_v2":                  resourceCertificateV2(),
 			"flexibleengine_lb_loadbalancer_v2":                 resourceLoadBalancerV2(),
 			"flexibleengine_lb_listener_v2":                     resourceListenerV2(),
 			"flexibleengine_lb_pool_v2":                         resourcePoolV2(),
