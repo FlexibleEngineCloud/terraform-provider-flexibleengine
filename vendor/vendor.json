@@ -685,6 +685,12 @@
 			"revisionTime": "2018-03-07T03:17:28Z"
 		},
 		{
+			"checksumSHA1": "iHR/LOdy1NTZXoRmDudKYHciCJ4=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/dws/cluster",
+			"revision": "824aea0ed0decd7a36623f49b1610e7af6c58c3c",
+			"revisionTime": "2018-09-28T03:11:13Z"
+		},
+		{
 			"checksumSHA1": "6cxgVwctlHbqIqO9rHVTwmDtxhk=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants",
 			"revision": "888f77744ab7c65bb4d448d5b5313edba29e76c7",

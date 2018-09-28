@@ -441,3 +441,10 @@ func (c *Config) loadCESClient(region string) (*golangsdk.ServiceClient, error) 
 		Availability: c.getHwEndpointType(),
 	})
 }
+
+func (c *Config) loadDWSClient(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewDWSClient(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
+}
