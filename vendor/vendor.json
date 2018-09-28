@@ -781,6 +781,12 @@
 			"revisionTime": "2018-09-11T14:09:45Z"
 		},
 		{
+			"checksumSHA1": "z4l+Gl7DDeM51PDfo3FcpA4EU+Q=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/certificates",
+			"revision": "02234c041f693ec39067f110661bb38680003a7c",
+			"revisionTime": "2018-09-28T08:16:35Z"
+		},
+		{
 			"checksumSHA1": "DfFGd1O4mWx0x1UbupgdnE+iWgQ=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/listeners",
 			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
