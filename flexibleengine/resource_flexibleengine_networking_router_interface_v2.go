@@ -39,11 +39,13 @@ func resourceNetworkingRouterInterfaceV2() *schema.Resource {
 			"subnet_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ForceNew: true,
 			},
 			"port_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ForceNew: true,
 			},
 		},
