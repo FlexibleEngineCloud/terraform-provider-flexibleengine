@@ -1,3 +1,4 @@
+---
 layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_dws_cluster_v1"
 sidebar_current: "docs-flexibleengine-resource-dws-cluster-v1"
