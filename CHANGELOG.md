@@ -8,6 +8,9 @@ FEATURES:
 * **New Data Source:** `flexibleengine_compute_bms_keypair_v2` [GH-26]
 * **New Data Source:** `flexibleengine_compute_bms_nic_v2` [GH-26]
 * **New Data Source:** `flexibleengine_compute_bms_server_v2` [GH-26]
+* **New Data Source:** `flexibleengine_rts_software_config_v1` [GH-28]
+* **New Data Source:** `flexibleengine_rts_stack_v1` [GH-28]
+* **New Data Source:** `flexibleengine_rts_stack_resource_v1` [GH-28]
 * **New Resource:** `flexibleengine_images_image_v2` [GH-20]
 * **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
 * **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]
@@ -16,11 +19,23 @@ FEATURES:
 * **New Resource:** `flexibleengine_lb_member_v2` [GH-22]
 * **New Resource:** `flexibleengine_lb_monitor_v2` [GH-22]
 * **New Resource:** `flexibleengine_sfs_file_system_v2` [GH-23]
+* **New Resource:** `flexibleengine_rts_software_config_v1` [GH-28]
+* **New Resource:** `flexibleengine_rts_stack_v1` [GH-28]
+* **New Resource:** `flexibleengine_ces_alarmrule` [GH-29]
+* **New Resource:** `flexibleengine_fw_firewall_group_v2` [GH-30]
+* **New Resource:** `flexibleengine_fw_policy_v2` [GH-30]
+* **New Resource:** `flexibleengine_fw_rule_v2` [GH-30]
 * **New Resource:** `flexibleengine_compute_bms_server_v2` [GH-31]
+* **New Resource:** `flexibleengine_mrs_cluster_v1` [GH-36]
+* **New Resource:** `flexibleengine_mrs_job_v1` [GH-36]
+* **New Resource:** `flexibleengine_mls_instance_v1` [GH-44]
+* **New Resource:** `flexibleengine_dws_cluster_v1` [GH-47]
+* **New Resource:** `flexibleengine_lb_certificate_v2` [GH-48]
 
 ENHANCEMENTS:
 
 * resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter [GH-19]
+* provider: Add AK/SK authentication support [GH-35]
 
 ## 1.1.0 (July 20, 2018)
 
