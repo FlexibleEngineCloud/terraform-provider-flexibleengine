@@ -451,7 +451,7 @@ func (c *Config) loadDWSClient(region string) (*golangsdk.ServiceClient, error) 
 
 func (c *Config) csbsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewCSBSService(c.HwClient, golangsdk.EndpointOpts{
-    Region:       c.determineRegion(region),
+		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
 }
