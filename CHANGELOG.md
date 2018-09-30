@@ -11,6 +11,10 @@ FEATURES:
 * **New Data Source:** `flexibleengine_rts_software_config_v1` [GH-28]
 * **New Data Source:** `flexibleengine_rts_stack_v1` [GH-28]
 * **New Data Source:** `flexibleengine_rts_stack_resource_v1` [GH-28]
+* **New Data Source:** `flexibleengine_csbs_backup_v1` [GH-49]
+* **New Data Source:** `flexibleengine_csbs_backup_policy_v1` [GH-49]
+* **New Data Source:** `flexibleengine_vbs_backup_policy_v2` [GH-54]
+* **New Data Source:** `flexibleengine_vbs_backup_v2` [GH-54]
 * **New Resource:** `flexibleengine_images_image_v2` [GH-20]
 * **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
 * **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]
@@ -31,6 +35,10 @@ FEATURES:
 * **New Resource:** `flexibleengine_mls_instance_v1` [GH-44]
 * **New Resource:** `flexibleengine_dws_cluster_v1` [GH-47]
 * **New Resource:** `flexibleengine_lb_certificate_v2` [GH-48]
+* **New Resource:** `flexibleengine_csbs_backup_v1` [GH-49]
+* **New Resource:** `flexibleengine_csbs_backup_policy_v1` [GH-49]
+* **New Resource:** `flexibleengine_vbs_backup_policy_v2` [GH-54]
+* **New Resource:** `flexibleengine_vbs_backup_v2` [GH-54]
 
 ENHANCEMENTS:
 
