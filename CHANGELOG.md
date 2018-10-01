@@ -1,49 +1,49 @@
-## 1.2.0 (Unreleased)
+## 1.2.0 (October 01, 2018)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_images_image_v2` [GH-20]
-* **New Data Source:** `flexibleengine_sfs_file_system_v2` [GH-23]
-* **New Data Source:** `flexibleengine_compute_bms_flavor_v2` [GH-26]
-* **New Data Source:** `flexibleengine_compute_bms_keypair_v2` [GH-26]
-* **New Data Source:** `flexibleengine_compute_bms_nic_v2` [GH-26]
-* **New Data Source:** `flexibleengine_compute_bms_server_v2` [GH-26]
-* **New Data Source:** `flexibleengine_rts_software_config_v1` [GH-28]
-* **New Data Source:** `flexibleengine_rts_stack_v1` [GH-28]
-* **New Data Source:** `flexibleengine_rts_stack_resource_v1` [GH-28]
-* **New Data Source:** `flexibleengine_csbs_backup_v1` [GH-49]
-* **New Data Source:** `flexibleengine_csbs_backup_policy_v1` [GH-49]
-* **New Data Source:** `flexibleengine_vbs_backup_policy_v2` [GH-54]
-* **New Data Source:** `flexibleengine_vbs_backup_v2` [GH-54]
-* **New Resource:** `flexibleengine_images_image_v2` [GH-20]
-* **New Resource:** `flexibleengine_vpc_eip_v1` [GH-21]
-* **New Resource:** `flexibleengine_lb_loadbalancer_v2` [GH-22]
-* **New Resource:** `flexibleengine_lb_listener_v2` [GH-22]
-* **New Resource:** `flexibleengine_lb_pool_v2` [GH-22]
-* **New Resource:** `flexibleengine_lb_member_v2` [GH-22]
-* **New Resource:** `flexibleengine_lb_monitor_v2` [GH-22]
-* **New Resource:** `flexibleengine_sfs_file_system_v2` [GH-23]
-* **New Resource:** `flexibleengine_rts_software_config_v1` [GH-28]
-* **New Resource:** `flexibleengine_rts_stack_v1` [GH-28]
-* **New Resource:** `flexibleengine_ces_alarmrule` [GH-29]
-* **New Resource:** `flexibleengine_fw_firewall_group_v2` [GH-30]
-* **New Resource:** `flexibleengine_fw_policy_v2` [GH-30]
-* **New Resource:** `flexibleengine_fw_rule_v2` [GH-30]
-* **New Resource:** `flexibleengine_compute_bms_server_v2` [GH-31]
-* **New Resource:** `flexibleengine_mrs_cluster_v1` [GH-36]
-* **New Resource:** `flexibleengine_mrs_job_v1` [GH-36]
-* **New Resource:** `flexibleengine_mls_instance_v1` [GH-44]
-* **New Resource:** `flexibleengine_dws_cluster_v1` [GH-47]
-* **New Resource:** `flexibleengine_lb_certificate_v2` [GH-48]
-* **New Resource:** `flexibleengine_csbs_backup_v1` [GH-49]
-* **New Resource:** `flexibleengine_csbs_backup_policy_v1` [GH-49]
-* **New Resource:** `flexibleengine_vbs_backup_policy_v2` [GH-54]
-* **New Resource:** `flexibleengine_vbs_backup_v2` [GH-54]
+* **New Data Source:** `flexibleengine_images_image_v2` ([#20](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/20))
+* **New Data Source:** `flexibleengine_sfs_file_system_v2` ([#23](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/23))
+* **New Data Source:** `flexibleengine_compute_bms_flavor_v2` ([#26](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/26))
+* **New Data Source:** `flexibleengine_compute_bms_keypair_v2` ([#26](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/26))
+* **New Data Source:** `flexibleengine_compute_bms_nic_v2` ([#26](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/26))
+* **New Data Source:** `flexibleengine_compute_bms_server_v2` ([#26](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/26))
+* **New Data Source:** `flexibleengine_rts_software_config_v1` ([#28](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/28))
+* **New Data Source:** `flexibleengine_rts_stack_v1` ([#28](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/28))
+* **New Data Source:** `flexibleengine_rts_stack_resource_v1` ([#28](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/28))
+* **New Data Source:** `flexibleengine_csbs_backup_v1` ([#49](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/49))
+* **New Data Source:** `flexibleengine_csbs_backup_policy_v1` ([#49](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/49))
+* **New Data Source:** `flexibleengine_vbs_backup_policy_v2` ([#54](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/54))
+* **New Data Source:** `flexibleengine_vbs_backup_v2` ([#54](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/54))
+* **New Resource:** `flexibleengine_images_image_v2` ([#20](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/20))
+* **New Resource:** `flexibleengine_vpc_eip_v1` ([#21](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/21))
+* **New Resource:** `flexibleengine_lb_loadbalancer_v2` ([#22](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/22))
+* **New Resource:** `flexibleengine_lb_listener_v2` ([#22](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/22))
+* **New Resource:** `flexibleengine_lb_pool_v2` ([#22](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/22))
+* **New Resource:** `flexibleengine_lb_member_v2` ([#22](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/22))
+* **New Resource:** `flexibleengine_lb_monitor_v2` ([#22](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/22))
+* **New Resource:** `flexibleengine_sfs_file_system_v2` ([#23](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/23))
+* **New Resource:** `flexibleengine_rts_software_config_v1` ([#28](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/28))
+* **New Resource:** `flexibleengine_rts_stack_v1` ([#28](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/28))
+* **New Resource:** `flexibleengine_ces_alarmrule` ([#29](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/29))
+* **New Resource:** `flexibleengine_fw_firewall_group_v2` ([#30](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/30))
+* **New Resource:** `flexibleengine_fw_policy_v2` ([#30](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/30))
+* **New Resource:** `flexibleengine_fw_rule_v2` ([#30](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/30))
+* **New Resource:** `flexibleengine_compute_bms_server_v2` ([#31](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/31))
+* **New Resource:** `flexibleengine_mrs_cluster_v1` ([#36](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/36))
+* **New Resource:** `flexibleengine_mrs_job_v1` ([#36](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/36))
+* **New Resource:** `flexibleengine_mls_instance_v1` ([#44](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/44))
+* **New Resource:** `flexibleengine_dws_cluster_v1` ([#47](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/47))
+* **New Resource:** `flexibleengine_lb_certificate_v2` ([#48](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/48))
+* **New Resource:** `flexibleengine_csbs_backup_v1` ([#49](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/49))
+* **New Resource:** `flexibleengine_csbs_backup_policy_v1` ([#49](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/49))
+* **New Resource:** `flexibleengine_vbs_backup_policy_v2` ([#54](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/54))
+* **New Resource:** `flexibleengine_vbs_backup_v2` ([#54](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/54))
 
 ENHANCEMENTS:
 
-* resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter [GH-19]
-* provider: Add AK/SK authentication support [GH-35]
+* resource/flexibleengine_vpc_subnet_v1: Add `subnet_id` parameter ([#19](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/19))
+* provider: Add AK/SK authentication support ([#35](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/35))
 
 ## 1.1.0 (July 20, 2018)
 
