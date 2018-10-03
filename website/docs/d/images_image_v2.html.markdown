@@ -1,19 +1,19 @@
 ---
-layout: "orangecloud"
-page_title: "OrangeCloud: orangecloud_images_image_v2"
-sidebar_current: "docs-orangecloud-datasource-images-image-v2"
+layout: "flexibleengine"
+page_title: "FlexibleEngine: flexibleengine_images_image_v2"
+sidebar_current: "docs-flexibleengine-datasource-images-image-v2"
 description: |-
-  Get information on an OrangeCloud Image.
+  Get information on an FlexibleEngine Image.
 ---
 
-# orangecloud\_images\_image\_v2
+# flexibleengine\_images\_image\_v2
 
-Use this data source to get the ID of an available OrangeCloud image.
+Use this data source to get the ID of an available FlexibleEngine image.
 
 ## Example Usage
 
 ```hcl
-data "orangecloud_images_image_v2" "ubuntu" {
+data "flexibleengine_images_image_v2" "ubuntu" {
   name = "Ubuntu 16.04"
   most_recent = true
 }
