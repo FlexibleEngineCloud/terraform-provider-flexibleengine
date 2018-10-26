@@ -15,7 +15,7 @@ func TestAccASV1Configuration_basic(t *testing.T) {
 	var asConfig configurations.Configuration
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccAsConfigPreCheck(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckASV1ConfigurationDestroy,
 		Steps: []resource.TestStep{
