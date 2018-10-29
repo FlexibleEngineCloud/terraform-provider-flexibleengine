@@ -108,14 +108,6 @@ func testAccPreCheckAdminOnly(t *testing.T) {
 	}
 }
 
-func testAccPreCheckLB(t *testing.T) {
-	testAccPreCheckRequiredEnvVars(t)
-
-	if OS_SUBNET_ID == "" {
-		t.Skip("OS_SUBNET_ID must be set for acceptance tests")
-	}
-}
-
 func TestProvider(t *testing.T) {
 	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)

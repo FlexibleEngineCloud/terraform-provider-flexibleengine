@@ -13,7 +13,7 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 	var pool pools.Pool
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckLB(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBV2PoolDestroy,
 		Steps: []resource.TestStep{
@@ -86,10 +86,10 @@ func testAccCheckLBV2PoolExists(n string, pool *pools.Pool) resource.TestCheckFu
 	}
 }
 
-var TestAccLBV2PoolConfig_basic = fmt.Sprintf(`
+const TestAccLBV2PoolConfig_basic = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
@@ -111,12 +111,12 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
     delete = "5m"
   }
 }
-`, OS_SUBNET_ID)
+`
 
-var TestAccLBV2PoolConfig_update = fmt.Sprintf(`
+const TestAccLBV2PoolConfig_update = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
@@ -139,4 +139,4 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
     delete = "5m"
   }
 }
-`, OS_SUBNET_ID)
+`

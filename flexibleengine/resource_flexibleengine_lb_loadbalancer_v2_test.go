@@ -17,7 +17,7 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckLB(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBV2LoadBalancerDestroy,
 		Steps: []resource.TestStep{
@@ -46,7 +46,7 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 	var sg_1, sg_2 groups.SecGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckLB(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBV2LoadBalancerDestroy,
 		Steps: []resource.TestStep{
@@ -175,10 +175,10 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 	}
 }
 
-var testAccLBV2LoadBalancerConfig_basic = fmt.Sprintf(`
+const testAccLBV2LoadBalancerConfig_basic = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 
   timeouts {
     create = "5m"
@@ -186,13 +186,13 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     delete = "5m"
   }
 }
-`, OS_SUBNET_ID)
+`
 
-var testAccLBV2LoadBalancerConfig_update = fmt.Sprintf(`
+const testAccLBV2LoadBalancerConfig_update = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1_updated"
   admin_state_up = "true"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 
   timeouts {
     create = "5m"
@@ -200,9 +200,9 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     delete = "5m"
   }
 }
-`, OS_SUBNET_ID)
+`
 
-var testAccLBV2LoadBalancer_secGroup = fmt.Sprintf(`
+const testAccLBV2LoadBalancer_secGroup = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
@@ -215,14 +215,14 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "%s"
+    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
     security_group_ids = [
       "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
     ]
 }
-`, OS_SUBNET_ID)
+`
 
-var testAccLBV2LoadBalancer_secGroup_update1 = fmt.Sprintf(`
+const testAccLBV2LoadBalancer_secGroup_update1 = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
@@ -235,15 +235,15 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "%s"
+    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
     security_group_ids = [
       "${flexibleengine_networking_secgroup_v2.secgroup_1.id}",
       "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
     ]
 }
-`, OS_SUBNET_ID)
+`
 
-var testAccLBV2LoadBalancer_secGroup_update2 = fmt.Sprintf(`
+const testAccLBV2LoadBalancer_secGroup_update2 = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_1"
   description = "secgroup_1"
@@ -256,10 +256,10 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
     name = "loadbalancer_1"
-    vip_subnet_id = "%s"
+    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
     security_group_ids = [
       "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
     ]
     depends_on = ["flexibleengine_networking_secgroup_v2.secgroup_1"]
 }
-`, OS_SUBNET_ID)
+`
