@@ -1,4 +1,9 @@
-## 1.3.0 (Unreleased)
+## 1.2.1 (Unreleased)
+
+BUG FIXES:
+
+* resource/flexibleengine_as_configuration_v1: Fix AutoScaling client error [GH-60]
+
 ## 1.2.0 (October 01, 2018)
 
 FEATURES:
