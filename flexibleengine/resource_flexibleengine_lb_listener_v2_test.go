@@ -13,7 +13,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 	var listener listeners.Listener
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckLB(t) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBV2ListenerDestroy,
 		Steps: []resource.TestStep{
@@ -87,10 +87,10 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 	}
 }
 
-var TestAccLBV2ListenerConfig_basic = fmt.Sprintf(`
+const TestAccLBV2ListenerConfig_basic = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
@@ -99,18 +99,18 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol_port = 8080
   loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 
-	timeouts {
-		create = "5m"
-		update = "5m"
-		delete = "5m"
-	}
+  timeouts {
+    create = "5m"
+    update = "5m"
+    delete = "5m"
+  }
 }
-`, OS_SUBNET_ID)
+`
 
-var TestAccLBV2ListenerConfig_update = fmt.Sprintf(`
+const TestAccLBV2ListenerConfig_update = `
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "%s"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
@@ -121,10 +121,10 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   admin_state_up = "true"
   loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
 
-	timeouts {
-		create = "5m"
-		update = "5m"
-		delete = "5m"
-	}
+  timeouts {
+    create = "5m"
+    update = "5m"
+    delete = "5m"
+  }
 }
-`, OS_SUBNET_ID)
+`
