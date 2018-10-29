@@ -1,8 +1,8 @@
-## 1.2.1 (Unreleased)
+## 1.2.1 (October 29, 2018)
 
 BUG FIXES:
 
-* `resource/flexibleengine_as_configuration_v1`: Fix AutoScaling client error [GH-60]
+* `resource/flexibleengine_as_configuration_v1`: Fix AutoScaling client error ([#60](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/60))
 
 ## 1.2.0 (October 01, 2018)
 
