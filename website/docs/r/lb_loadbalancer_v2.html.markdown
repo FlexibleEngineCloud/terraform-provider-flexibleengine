@@ -47,11 +47,11 @@ The following arguments are supported:
 * `admin_state_up` - (Optional) The administrative state of the Loadbalancer.
     A valid value is true (UP) or false (DOWN).
 
-* `flavor` - (Optional) The UUID of a flavor. Changing this creates a new
-    loadbalancer.
+* `flavor` - (Optional) The UUID of a flavor. Currently, this is not supported.
+    Changing this creates a new loadbalancer.
 
-* `loadbalancer_provider` - (Optional) The name of the provider. Changing this
-  creates a new loadbalancer.
+* `loadbalancer_provider` - (Optional) The name of the provider. Currently, only
+    vlb is supported. Changing this creates a new loadbalancer.
 
 * `security_group_ids` - (Optional) A list of security group IDs to apply to the
     loadbalancer. The security groups must be specified by ID and not name (as
