@@ -179,6 +179,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_csbs_backup_policy_v1":     dataSourceCSBSBackupPolicyV1(),
 			"flexibleengine_vbs_backup_policy_v2":      dataSourceVBSBackupPolicyV2(),
 			"flexibleengine_vbs_backup_v2":             dataSourceVBSBackupV2(),
+			"flexibleengine_cts_tracker_v1":            dataSourceCTSTrackerV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -248,6 +249,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_csbs_backup_policy_v1":              resourceCSBSBackupPolicyV1(),
 			"flexibleengine_vbs_backup_policy_v2":               resourceVBSBackupPolicyV2(),
 			"flexibleengine_vbs_backup_v2":                      resourceVBSBackupV2(),
+			"flexibleengine_cts_tracker_v1":                     resourceCTSTrackerV1(),
 		},
 
 		ConfigureFunc: configureProvider,
