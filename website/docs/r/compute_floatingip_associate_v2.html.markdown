@@ -13,6 +13,35 @@ Associate a floating IP to an instance. This can be used instead of the
 
 ## Example Usage
 
+### Associate with EIP
+
+```hcl
+resource "flexibleengine_compute_instance_v2" "instance_1" {
+  name            = "instance_1"
+  image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  flavor_id       = 3
+  key_pair        = "my_key_pair_name"
+  security_groups = ["default"]
+}
+
+resource "flexibleengine_vpc_eip_v1" "eip_1" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name = "test"
+    size = 8
+    share_type = "PER"
+    charge_mode = "traffic"
+  }
+}
+
+resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
+  floating_ip = "${flexibleengine_vpc_eip_v1.eip_1.publicip.0.ip_address}"
+  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+}
+```
+
 ### Automatically detect the correct network
 
 ```hcl
@@ -25,7 +54,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-  pool = "my_pool"
+  pool = "admin_external_net"
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
@@ -54,7 +83,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-  pool = "my_pool"
+  pool = "admin_external_net"
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
