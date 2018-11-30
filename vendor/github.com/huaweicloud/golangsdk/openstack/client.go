@@ -646,9 +646,7 @@ func NewMapReduceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts)
 // NewAntiDDoSV1 creates a ServiceClient that may be used with the v1 Anti DDoS Service
 // package.
 func NewAntiDDoSV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
-	sc, err := initClientOpts(client, eo, "antiddos")
-	sc.ResourceBase = sc.Endpoint + "v1/" + client.ProjectID + "/"
-	return sc, err
+	return initClientOpts(client, eo, "antiddos")
 }
 
 // NewAntiDDoSV2 creates a ServiceClient that may be used with the v2 Anti DDoS Service
@@ -761,5 +759,34 @@ func NewVBS(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golan
 	}
 	sc.Endpoint = strings.Replace(sc.Endpoint, "evs", "vbs", 1)
 	sc.ResourceBase = sc.Endpoint
+	return sc, err
+}
+
+func NewHwAntiDDoSV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "volumev2")
+	if err != nil {
+		return nil, err
+	}
+	e := strings.Replace(sc.Endpoint, "v2", "v1", 1)
+	sc.Endpoint = strings.Replace(e, "evs", "antiddos", 1)
+	sc.ResourceBase = sc.Endpoint
+	return sc, err
+}
+
+// NewCTSService creates a ServiceClient that can be used to access the Cloud Trace service.
+func NewCTSService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "cts")
+	return sc, err
+}
+
+// NewELBV1 creates a ServiceClient that may be used to access the ELB service.
+func NewELBV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "elbv1")
+	return sc, err
+}
+
+// NewRDSV1 creates a ServiceClient that may be used to access the RDS service.
+func NewRDSV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "rdsv1")
 	return sc, err
 }
