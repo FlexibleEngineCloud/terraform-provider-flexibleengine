@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/huaweicloud/golangsdk"
@@ -17,7 +16,6 @@ func resourceDNSZoneV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDNSZoneV2Create,
 		Read:   resourceDNSZoneV2Read,
-		Update: resourceDNSZoneV2Update,
 		Delete: resourceDNSZoneV2Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -44,27 +42,32 @@ func resourceDNSZoneV2() *schema.Resource {
 			"email": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-			"type": &schema.Schema{
-                                Type:         schema.TypeString,
-                                Optional:     true,
-                                Computed:     true,
-                                ForceNew:     true,
-                                ValidateFunc: resourceDNSZoneV2ValidType,
-                        },
-                        "attributes": &schema.Schema{
-                                Type:     schema.TypeMap,
-				Optional: true,
 				ForceNew: true,
 			},
+			"zone_type": &schema.Schema{
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      "public",
+				ValidateFunc: resourceZoneValidateType,
+			},
 			"ttl": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  300,
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      300,
+				ValidateFunc: resourceValidateTTL,
 			},
 			"description": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: resourceValidateDescription,
+			},
+			"masters": &schema.Schema{
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"router": {
 				Type:     schema.TypeSet,
@@ -83,11 +86,7 @@ func resourceDNSZoneV2() *schema.Resource {
 					},
 				},
 			},
-			"masters": &schema.Schema{
-				Type:     schema.TypeSet,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
+
 			"value_specs": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -122,7 +121,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	zone_type := d.Get("type").(string)
+	zone_type := d.Get("zone_type").(string)
 	router := d.Get("router").(*schema.Set).List()
 
 	// router is required when creating private zone
@@ -135,7 +134,6 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	// Add zone_type to the list.  We do this to keep GopherCloud FlexibleEngine standard.
 	vs["zone_type"] = zone_type
 	vs["router"] = resourceDNSRouter(d)
-
 	createOpts := ZoneCreateOpts{
 		zones.CreateOpts{
 			Name:        d.Get("name").(string),
@@ -165,7 +163,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	_, err = stateConf.WaitForState()
 	if err != nil {
 		return fmt.Errorf(
-			"Error waiting for DNS Zone (%s) to become ACTIVE: %s",
+			"Error waiting for DNS Zone (%s) to become ACTIVE for creation: %s",
 			n.ID, err)
 	}
 
@@ -193,11 +191,11 @@ func resourceDNSZoneV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("email", n.Email)
 	d.Set("description", n.Description)
 	d.Set("ttl", n.TTL)
-	d.Set("type", n.ZoneType)
 	if err = d.Set("masters", n.Masters); err != nil {
 		return fmt.Errorf("[DEBUG] Error saving masters to state for FlexibleEngine DNS zone (%s): %s", d.Id(), err)
 	}
 	d.Set("region", GetRegion(d, config))
+	d.Set("zone_type", n.ZoneType)
 
 	return nil
 }
@@ -294,12 +292,6 @@ func resourceDNSZoneV2ValidType(v interface{}, k string) (ws []string, errors []
 	return
 }
 
-func parseStatus(rawStatus string) string {
-	// rawStatus maybe one of PENDING_CREATE, PENDING_UPDATE, PENDING_DELETE, ACTIVE, or ERROR
-	splits := strings.Split(rawStatus, "_")
-	return splits[0]
-}
-
 func waitForDNSZone(dnsClient *golangsdk.ServiceClient, zoneId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		zone, err := zones.Get(dnsClient, zoneId).Extract()
@@ -314,4 +306,18 @@ func waitForDNSZone(dnsClient *golangsdk.ServiceClient, zoneId string) resource.
 		log.Printf("[DEBUG] FlexibleEngine DNS Zone (%s) current status: %s", zone.ID, zone.Status)
 		return zone, parseStatus(zone.Status), nil
 	}
+}
+
+var zoneTypes = [2]string{"public", "private"}
+
+func resourceZoneValidateType(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	for i := range zoneTypes {
+		if value == zoneTypes[i] {
+			return
+		}
+	}
+	errors = append(errors, fmt.Errorf("%q must be one of %v", k, zoneTypes))
+
+	return
 }
