@@ -16,7 +16,6 @@ func resourceDNSZoneV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDNSZoneV2Create,
 		Read:   resourceDNSZoneV2Read,
-		Update: resourceDNSZoneV2Update,
 		Delete: resourceDNSZoneV2Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -43,37 +42,51 @@ func resourceDNSZoneV2() *schema.Resource {
 			"email": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: false,
-			},
-			"type": &schema.Schema{
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ForceNew:     true,
-				ValidateFunc: resourceDNSZoneV2ValidType,
-			},
-			"attributes": &schema.Schema{
-				Type:     schema.TypeMap,
-				Optional: true,
 				ForceNew: true,
 			},
+			"zone_type": &schema.Schema{
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      "public",
+				ValidateFunc: resourceZoneValidateType,
+			},
 			"ttl": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				ForceNew: false,
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      300,
+				ValidateFunc: resourceValidateTTL,
 			},
 			"description": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: false,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: resourceValidateDescription,
 			},
 			"masters": &schema.Schema{
 				Type:     schema.TypeSet,
-				Optional: true,
-				ForceNew: false,
+				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"router": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"router_id": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"router_region": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
+
 			"value_specs": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -83,6 +96,24 @@ func resourceDNSZoneV2() *schema.Resource {
 	}
 }
 
+func resourceDNSRouter(d *schema.ResourceData) map[string]string {
+	router := d.Get("router").(*schema.Set).List()
+
+	if len(router) > 0 {
+		mp := make(map[string]string)
+		c := router[0].(map[string]interface{})
+
+		if val, ok := c["router_id"]; ok {
+			mp["router_id"] = val.(string)
+		}
+		if val, ok := c["router_region"]; ok {
+			mp["router_region"] = val.(string)
+		}
+		return mp
+	}
+	return nil
+}
+
 func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dnsClient, err := config.dnsV2Client(GetRegion(d, config))
@@ -90,29 +121,27 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	mastersraw := d.Get("masters").(*schema.Set).List()
-	masters := make([]string, len(mastersraw))
-	for i, masterraw := range mastersraw {
-		masters[i] = masterraw.(string)
-	}
+	zone_type := d.Get("zone_type").(string)
+	router := d.Get("router").(*schema.Set).List()
 
-	attrsraw := d.Get("attributes").(map[string]interface{})
-	attrs := make(map[string]string, len(attrsraw))
-	for k, v := range attrsraw {
-		attrs[k] = v.(string)
+	// router is required when creating private zone
+	if zone_type == "private" {
+		if len(router) < 1 {
+			return fmt.Errorf("The argument (router) is required when creating FlexibleEngine DNS private zone")
+		}
 	}
-
+	vs := MapResourceProp(d, "value_specs")
+	// Add zone_type to the list.  We do this to keep GopherCloud FlexibleEngine standard.
+	vs["zone_type"] = zone_type
+	vs["router"] = resourceDNSRouter(d)
 	createOpts := ZoneCreateOpts{
 		zones.CreateOpts{
 			Name:        d.Get("name").(string),
-			Type:        d.Get("type").(string),
-			Attributes:  attrs,
 			TTL:         d.Get("ttl").(int),
 			Email:       d.Get("email").(string),
 			Description: d.Get("description").(string),
-			Masters:     masters,
 		},
-		MapValueSpecs(d),
+		vs,
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -132,6 +161,11 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for DNS Zone (%s) to become ACTIVE for creation: %s",
+			n.ID, err)
+	}
 
 	d.SetId(n.ID)
 
@@ -157,10 +191,11 @@ func resourceDNSZoneV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("email", n.Email)
 	d.Set("description", n.Description)
 	d.Set("ttl", n.TTL)
-	d.Set("type", n.Type)
-	d.Set("attributes", n.Attributes)
-	d.Set("masters", n.Masters)
+	if err = d.Set("masters", n.Masters); err != nil {
+		return fmt.Errorf("[DEBUG] Error saving masters to state for FlexibleEngine DNS zone (%s): %s", d.Id(), err)
+	}
 	d.Set("region", GetRegion(d, config))
+	d.Set("zone_type", n.ZoneType)
 
 	return nil
 }
@@ -178,14 +213,6 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 	if d.HasChange("ttl") {
 		updateOpts.TTL = d.Get("ttl").(int)
-	}
-	if d.HasChange("masters") {
-		mastersraw := d.Get("masters").(*schema.Set).List()
-		masters := make([]string, len(mastersraw))
-		for i, masterraw := range mastersraw {
-			masters[i] = masterraw.(string)
-		}
-		updateOpts.Masters = masters
 	}
 	if d.HasChange("description") {
 		updateOpts.Description = d.Get("description").(string)
@@ -227,8 +254,9 @@ func resourceDNSZoneV2Delete(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Waiting for DNS Zone (%s) to become available", d.Id())
 	stateConf := &resource.StateChangeConf{
-		Target:     []string{"DELETED"},
-		Pending:    []string{"ACTIVE", "PENDING"},
+		Target: []string{"DELETED"},
+		//we allow to try to delete ERROR zone
+		Pending:    []string{"ACTIVE", "PENDING", "ERROR"},
 		Refresh:    waitForDNSZone(dnsClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
@@ -236,6 +264,11 @@ func resourceDNSZoneV2Delete(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for DNS Zone (%s) to delete: %s",
+			d.Id(), err)
+	}
 
 	d.SetId("")
 	return nil
@@ -271,6 +304,20 @@ func waitForDNSZone(dnsClient *golangsdk.ServiceClient, zoneId string) resource.
 		}
 
 		log.Printf("[DEBUG] FlexibleEngine DNS Zone (%s) current status: %s", zone.ID, zone.Status)
-		return zone, zone.Status, nil
+		return zone, parseStatus(zone.Status), nil
 	}
+}
+
+var zoneTypes = [2]string{"public", "private"}
+
+func resourceZoneValidateType(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	for i := range zoneTypes {
+		if value == zoneTypes[i] {
+			return
+		}
+	}
+	errors = append(errors, fmt.Errorf("%q must be one of %v", k, zoneTypes))
+
+	return
 }

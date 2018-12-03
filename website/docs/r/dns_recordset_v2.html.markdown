@@ -20,7 +20,7 @@ resource "flexibleengine_dns_zone_v2" "example_zone" {
   email = "email2@example.com"
   description = "a zone"
   ttl = 6000
-  type = "PRIMARY"
+  zone_type = "public"
 }
 
 resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
@@ -39,22 +39,23 @@ The following arguments are supported:
 
 * `region` - (Optional) The region in which to obtain the V2 DNS client.
     If omitted, the `region` argument of the provider is used.
-    Changing this creates a new DNS  record set.
+    Changing this creates a new DNS record set.
 
 * `zone_id` - (Required) The ID of the zone in which to create the record set.
   Changing this creates a new DNS  record set.
 
 * `name` - (Required) The name of the record set. Note the `.` at the end of the name.
-  Changing this creates a new DNS  record set.
+  Changing this creates a new DNS record set.
 
-* `type` - (Optional) The type of record set. Examples: "A", "MX".
-  Changing this creates a new DNS  record set.
+* `type` - (Optional) The type of record set. The options include `A`, `AAAA`, `MX`,
+  `CNAME`, `TXT`, `NS`, `SRV`, and `PTR`. Changing this creates a new DNS record set.
 
-* `ttl` - (Optional) The time to live (TTL) of the record set.
+* `ttl` - (Optional) The time to live (TTL) of the record set (in seconds). The value
+  range is 300–2147483647. The default value is 300.
 
-* `description` - (Optional) A description of the  record set.
+* `description` - (Optional) A description of the record set.
 
-* `records` - (Optional) An array of DNS records.
+* `records` - (Required) An array of DNS records.
 
 * `value_specs` - (Optional) Map of additional options. Changing this creates a
   new record set.
