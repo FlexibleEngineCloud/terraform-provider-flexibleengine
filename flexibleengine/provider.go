@@ -180,6 +180,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vbs_backup_policy_v2":      dataSourceVBSBackupPolicyV2(),
 			"flexibleengine_vbs_backup_v2":             dataSourceVBSBackupV2(),
 			"flexibleengine_cts_tracker_v1":            dataSourceCTSTrackerV1(),
+			"flexibleengine_dcs_az_v1":                 dataSourceDcsAZV1(),
+			"flexibleengine_dcs_maintainwindow_v1":     dataSourceDcsMaintainWindowV1(),
+			"flexibleengine_dcs_product_v1":            dataSourceDcsProductV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -192,6 +195,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_compute_volume_attach_v2":           resourceComputeVolumeAttachV2(),
 			"flexibleengine_dns_recordset_v2":                   resourceDNSRecordSetV2(),
 			"flexibleengine_dns_zone_v2":                        resourceDNSZoneV2(),
+			"flexibleengine_dcs_instance_v1":                    resourceDcsInstanceV1(),
 			"flexibleengine_fw_firewall_group_v2":               resourceFWFirewallGroupV2(),
 			"flexibleengine_fw_policy_v2":                       resourceFWPolicyV2(),
 			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
