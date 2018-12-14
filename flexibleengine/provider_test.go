@@ -59,14 +59,6 @@ func testAccPreCheckRequiredEnvVars(t *testing.T) {
 		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
 	}
 
-	if OS_ACCESS_KEY == "" {
-		t.Fatal("OS_ACCESS_KEY must be set for acceptance tests")
-	}
-
-	if OS_SECRET_KEY == "" {
-		t.Fatal("OS_SECRET_KEY must be set for acceptance tests")
-	}
-
 	if OS_REGION_NAME == "" {
 		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
 	}
@@ -105,6 +97,14 @@ func testAccPreCheckAdminOnly(t *testing.T) {
 	v := os.Getenv("OS_USERNAME")
 	if v != "admin" {
 		t.Skip("Skipping test because it requires the admin user")
+	}
+}
+
+func testAccPreCheckS3(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_ACCESS_KEY == "" || OS_SECRET_KEY == "" {
+		t.Skip("OS_ACCESS_KEY and OS_SECRET_KEY must be set for S3 acceptance tests")
 	}
 }
 
