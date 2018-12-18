@@ -10,6 +10,55 @@ description: |-
 
 Manages rds instance resource within FlexibleEngine
 
+## Example Usage:  Creating a PostgreSQL RDS instance
+
+```hcl
+data "flexibleengine_rds_flavors_v1" "flavor" {
+    region = "eu-de"
+    datastore_name = "PostgreSQL"
+    datastore_version = "9.5.5"
+    speccode = "rds.pg.s1.large.ha"
+}
+
+resource "flexibleengine_compute_secgroup_v2" "secgrp_rds" {
+  name        = "secgrp-rds-instance"
+  description = "Rds Security Group"
+}
+
+resource "flexibleengine_rds_instance_v1" "instance" {
+  name = "rds-instance"
+  datastore {
+    type = "PostgreSQL"
+    version = "9.5.5"
+  }
+  flavorref = "${data.flexibleengine_rds_flavors_v1.flavor.id}"
+  volume {
+    type = "COMMON"
+    size = 200
+  }
+  region = "eu-de"
+  availabilityzone = "eu-de-01"
+  vpc = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
+  nics {
+    subnetid = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+  }
+  securitygroup {
+    id = "${flexibleengine_compute_secgroup_v2.secgrp_rds.id}"
+  }
+  dbport = "8635"
+  backupstrategy = {
+    starttime = "04:00:00"
+    keepdays = 4
+  }
+  dbrtpd = "Huangwei!120521"
+  ha = {
+    enable = true
+    replicationmode = "async"
+  }
+  depends_on = ["flexibleengine_compute_secgroup_v2.secgrp_rds"]
+}
+```
+
 ## Example Usage:  Creating a SQLServer RDS instance
 ```hcl
 data "flexibleengine_rds_flavors_v1" "flavor" {
@@ -146,8 +195,8 @@ The following arguments are supported:
 
 The `datastore` block supports:
 
-* `type` - (Required) Specifies the DB engine. Currently, MySQL, and
-    Microsoft SQL Server are supported. The value is MySQL, or SQLServer.
+* `type` - (Required) Specifies the DB engine. Currently, MySQL, PostgreSQL, and
+    Microsoft SQL Server are supported. The value is MySQL, PostgreSQL, or SQLServer.
 
 * `version` - (Required) Specifies the DB instance version.
 
@@ -156,7 +205,9 @@ The `datastore` block supports:
 
 type | version
 ---- | ---
+PostgreSQL | 9.5.5 <br> 9.6.3 <br> 9.6.5
 MySQL| 5.6.33 <br>5.6.30  <br>5.6.34 <br>5.6.35 <br>5.7.17
+SQLServer| 2014 SP2 SE
 
 
 The `volume` block supports:
