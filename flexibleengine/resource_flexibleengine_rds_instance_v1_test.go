@@ -39,7 +39,7 @@ func TestAccRDSV1Instance_PostgreSQL(t *testing.T) {
 		CheckDestroy: testAccCheckRDSV1InstanceDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: TestAccSInstanceV1Config_PostgreSQL,
+				Config:             TestAccSInstanceV1Config_PostgreSQL,
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRDSV1InstanceExists("flexibleengine_rds_instance_v1.instance", &instance),
