@@ -116,7 +116,7 @@ func resourceNetworkingFloatingIPAssociateV2Delete(d *schema.ResourceData, meta 
 	return nil
 }
 
-func resourceNetworkingFloatingIPAssociateV2IP2ID(client *gophercloud.ServiceClient, floatingIP string) (string, error) {
+func resourceNetworkingFloatingIPAssociateV2IP2ID(client *golangsdk.ServiceClient, floatingIP string) (string, error) {
 	listOpts := floatingips.ListOpts{
 		FloatingIP: floatingIP,
 	}
