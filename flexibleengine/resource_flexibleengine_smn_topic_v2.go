@@ -141,15 +141,11 @@ func resourceTopicUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateOpts.DisplayName = d.Get("display_name").(string)
 	}
 
-	topic, err := topics.Update(client, updateOpts, id).Extract()
+	_, err = topics.Update(client, updateOpts, id).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating topic from result: %s", err)
 	}
 
-	log.Printf("[DEBUG] Update : topic.TopicUrn: %s", topic.TopicUrn)
-	if topic.TopicUrn != "" {
-		d.SetId(topic.TopicUrn)
-		return resourceTopicRead(d, meta)
-	}
-	return nil
+	log.Printf("[DEBUG] Update : topic.TopicUrn: %s", id)
+	return resourceTopicRead(d, meta)
 }
