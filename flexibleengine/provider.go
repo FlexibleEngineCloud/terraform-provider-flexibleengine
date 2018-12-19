@@ -212,6 +212,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_network_v2":              resourceNetworkingNetworkV2(),
 			"flexibleengine_networking_subnet_v2":               resourceNetworkingSubnetV2(),
 			"flexibleengine_networking_floatingip_v2":           resourceNetworkingFloatingIPV2(),
+			"flexibleengine_networking_floatingip_associate_v2": resourceNetworkingFloatingIPAssociateV2(),
 			"flexibleengine_networking_port_v2":                 resourceNetworkingPortV2(),
 			"flexibleengine_networking_router_v2":               resourceNetworkingRouterV2(),
 			"flexibleengine_networking_router_interface_v2":     resourceNetworkingRouterInterfaceV2(),
