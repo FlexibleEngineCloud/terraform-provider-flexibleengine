@@ -1,9 +1,9 @@
 ---
 layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_fw_rule_v2"
-sidebar_current: "docs-flexibleengine-resource-fw-rule-v1"
+sidebar_current: "docs-flexibleengine-resource-fw-rule-v2"
 description: |-
-  Manages a v1 firewall group rule resource within FlexibleEngine.
+  Manages a v2 firewall group rule resource within FlexibleEngine.
 ---
 
 # flexibleengine\_fw\_rule_v2
@@ -27,7 +27,7 @@ resource "flexibleengine_fw_rule_v2" "rule_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the v1 Compute client.
+* `region` - (Optional) The region in which to obtain the v2 networking client.
     A Compute client is needed to create a firewall rule. If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     firewall rule.
