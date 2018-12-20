@@ -177,6 +177,11 @@ func resourceEListenerCreate(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 
+	switch {
+	case (createOpts.Protocol == "HTTPS" || createOpts.Protocol == "SSL") && !hasFilledOpt(d, "certificate_id"):
+		return fmt.Errorf("certificate_id is mandatory when protocol is set to HTTPS or SSL")
+	}
+
 	listener, err := listeners.Create(client, createOpts).Extract()
 	if err != nil {
 		return err

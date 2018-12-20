@@ -130,3 +130,8 @@ func isResourceNotFound(err error) bool {
 	_, ok1 := err.(golangsdk.ErrDefault404)
 	return ok || ok1
 }
+
+func hasFilledOpt(d *schema.ResourceData, param string) bool {
+	_, b := d.GetOkExists(param)
+	return b
+}
