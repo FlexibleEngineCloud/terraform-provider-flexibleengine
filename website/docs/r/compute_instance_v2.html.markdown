@@ -74,6 +74,7 @@ resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
     boot_index            = 0
     destination_type      = "volume"
     delete_on_termination = true
+    volume_type           = "SSD"
   }
 
   network {
@@ -388,6 +389,9 @@ The `block_device` block supports:
     in the following combinations: source=image and destination=volume,
     source=blank and destination=local, and source=blank and destination=volume.
     Changing this creates a new server.
+
+* `volume_type` - (Optional) Currently, the value can be `SSD` (ultra-I/O disk type),
+    `SAS` (high I/O disk type), or `SATA` (common I/O disk type)
 
 * `boot_index` - (Optional) The boot index of the volume. It defaults to 0.
     Changing this creates a new server.
