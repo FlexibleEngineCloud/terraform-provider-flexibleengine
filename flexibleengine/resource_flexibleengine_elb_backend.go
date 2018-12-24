@@ -12,9 +12,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
-const loadbalancerActiveTimeoutSeconds = 600
-const loadbalancerDeleteTimeoutSeconds = 600
-
 func resourceBackend() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceBackendCreate,
@@ -144,7 +141,7 @@ func resourceBackendDelete(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("Waiting for backend member %s to delete", id)
 
-	if err := golangsdk.WaitForJobSuccess(client, job.URI, loadbalancerActiveTimeoutSeconds); err != nil {
+	if err := golangsdk.WaitForJobSuccess(client, job.URI, int(d.Timeout(schema.TimeoutDelete)/time.Second)); err != nil {
 		return err
 	}
 
