@@ -50,9 +50,6 @@ The following arguments are supported:
 
 * `description` - (Optional) Human-readable description for the Listener.
 
-* `connection_limit` - (Optional) The maximum number of connections allowed
-    for the Listener.
-
 * `default_tls_container_ref` - (Optional) A reference to a Barbican Secrets
     container which stores TLS information. This is required if the protocol
     is `TERMINATED_HTTPS`. See

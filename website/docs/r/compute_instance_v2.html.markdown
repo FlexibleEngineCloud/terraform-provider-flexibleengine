@@ -53,7 +53,7 @@ resource "flexibleengine_compute_instance_v2" "myinstance" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "attached" {
-  compute_id = "${flexibleengine_compute_instance_v2.myinstance.id}"
+  instance_id = "${flexibleengine_compute_instance_v2.myinstance.id}"
   volume_id = "${flexibleengine_blockstorage_volume_v2.myvol.id}"
 }
 ```
