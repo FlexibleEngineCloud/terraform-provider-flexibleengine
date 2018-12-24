@@ -162,7 +162,8 @@ The following arguments are supported:
     described below.
 
 * `flavorref` - (Required) Specifies the specification ID (flavors.id in the
-    response message in Obtaining All DB Instance Specifications).
+    response message in Obtaining All DB Instance Specifications). If you want
+	to enable ha for the rds instance, a flavor with ha speccode is required.
 
 * `volume` - (Required) Specifies the volume information. The structure is described
     below.
