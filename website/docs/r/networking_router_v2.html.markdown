@@ -3,12 +3,12 @@ layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_networking_router_v2"
 sidebar_current: "docs-flexibleengine-resource-networking-router-v2"
 description: |-
-  Manages a V2 router resource within FlexibleEngine.
+  Manages a V2 router resource within FlexibleEngine. The router is the top-level resource for the VPC within FlexibleEngine.
 ---
 
 # flexibleengine\_networking\_router_v2
 
-Manages a V2 router resource within FlexibleEngine.
+Manages a V2 router resource within FlexibleEngine. The router is the top-level resource for the VPC within FlexibleEngine.
 
 ## Example Usage
 
