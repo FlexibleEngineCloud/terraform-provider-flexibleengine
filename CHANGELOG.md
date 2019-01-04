@@ -1,4 +1,30 @@
 ## 1.3.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_cts_tracker_v1` [GH-64]
+* **New Data Source:** `flexibleengine_dcs_az_v1` [GH-76]
+* **New Data Source:** `flexibleengine_dcs_maintainwindow_v1` [GH-76]
+* **New Data Source:** `flexibleengine_dcs_product_v1` [GH-76]
+* **New Resource:** `flexibleengine_cts_tracker_v1` [GH-64]
+* **New Resource:** `flexibleengine_antiddos_v1` [GH-66]
+* **New Resource:** `flexibleengine_dcs_instance_v1` [GH-76]
+* **New Resource:** `flexibleengine_networking_floatingip_associate_v2` [GH-83]
+
+BUG FIXES:
+
+* `resource/flexibleengine_vpc_subnet_v1`: Remove UNKNOWN status to avoid error [GH-73]
+* `resource/flexibleengine_rds_instance_v1`: Add PostgreSQL support [GH-81]
+* `resource/flexibleengine_rds_instance_v1`: Suppress rds name change [GH-82]
+* `resource/flexibleengine_smn_topic_v2`: Fix smn update error [GH-84]
+* `resource/flexibleengine_elb_listener`: Add check for elb listener certificate_id [GH-85]
+* `all resources`: Expose real error message of BadRequest error [GH-91]
+* `resource/flexibleengine_sfs_file_system_v2`: Suppress sfs system metadata [GH-98]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_networking_router_v2`: Add enable_snat option support [GH-97]
+
 ## 1.2.1 (October 29, 2018)
 
 BUG FIXES:
