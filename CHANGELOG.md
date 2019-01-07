@@ -1,29 +1,29 @@
-## 1.3.0 (Unreleased)
+## 1.3.0 (January 07, 2019)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_cts_tracker_v1` [GH-64]
-* **New Data Source:** `flexibleengine_dcs_az_v1` [GH-76]
-* **New Data Source:** `flexibleengine_dcs_maintainwindow_v1` [GH-76]
-* **New Data Source:** `flexibleengine_dcs_product_v1` [GH-76]
-* **New Resource:** `flexibleengine_cts_tracker_v1` [GH-64]
-* **New Resource:** `flexibleengine_antiddos_v1` [GH-66]
-* **New Resource:** `flexibleengine_dcs_instance_v1` [GH-76]
-* **New Resource:** `flexibleengine_networking_floatingip_associate_v2` [GH-83]
+* **New Data Source:** `flexibleengine_cts_tracker_v1` ([#64](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/64))
+* **New Data Source:** `flexibleengine_dcs_az_v1` ([#76](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/76))
+* **New Data Source:** `flexibleengine_dcs_maintainwindow_v1` ([#76](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/76))
+* **New Data Source:** `flexibleengine_dcs_product_v1` ([#76](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/76))
+* **New Resource:** `flexibleengine_cts_tracker_v1` ([#64](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/64))
+* **New Resource:** `flexibleengine_antiddos_v1` ([#66](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/66))
+* **New Resource:** `flexibleengine_dcs_instance_v1` ([#76](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/76))
+* **New Resource:** `flexibleengine_networking_floatingip_associate_v2` ([#83](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/83))
 
 BUG FIXES:
 
-* `resource/flexibleengine_vpc_subnet_v1`: Remove UNKNOWN status to avoid error [GH-73]
-* `resource/flexibleengine_rds_instance_v1`: Add PostgreSQL support [GH-81]
-* `resource/flexibleengine_rds_instance_v1`: Suppress rds name change [GH-82]
-* `resource/flexibleengine_smn_topic_v2`: Fix smn update error [GH-84]
-* `resource/flexibleengine_elb_listener`: Add check for elb listener certificate_id [GH-85]
-* `all resources`: Expose real error message of BadRequest error [GH-91]
-* `resource/flexibleengine_sfs_file_system_v2`: Suppress sfs system metadata [GH-98]
+* `resource/flexibleengine_vpc_subnet_v1`: Remove UNKNOWN status to avoid error ([#73](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/73))
+* `resource/flexibleengine_rds_instance_v1`: Add PostgreSQL support ([#81](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/81))
+* `resource/flexibleengine_rds_instance_v1`: Suppress rds name change ([#82](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/82))
+* `resource/flexibleengine_smn_topic_v2`: Fix smn update error ([#84](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/84))
+* `resource/flexibleengine_elb_listener`: Add check for elb listener certificate_id ([#85](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/85))
+* `all resources`: Expose real error message of BadRequest error ([#91](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/91))
+* `resource/flexibleengine_sfs_file_system_v2`: Suppress sfs system metadata ([#98](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/98))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_networking_router_v2`: Add enable_snat option support [GH-97]
+* `resource/flexibleengine_networking_router_v2`: Add enable_snat option support ([#97](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/97))
 
 ## 1.2.1 (October 29, 2018)
 
