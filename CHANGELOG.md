@@ -1,4 +1,9 @@
-## 1.4.0 (Unreleased)
+## 1.3.1 (Unreleased)
+
+BUG FIXES:
+
+* Fix ak/sk authentication issue [GH-102]
+
 ## 1.3.0 (January 07, 2019)
 
 FEATURES:
