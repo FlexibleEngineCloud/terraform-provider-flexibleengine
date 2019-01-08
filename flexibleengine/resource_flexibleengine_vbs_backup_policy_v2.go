@@ -25,49 +25,49 @@ func resourceVBSBackupPolicyV2() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateVBSPolicyName,
 			},
 
-			"start_time": &schema.Schema{
+			"start_time": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"frequency": &schema.Schema{
+			"frequency": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateVBSPolicyFrequency,
 			},
-			"rentention_num": &schema.Schema{
+			"rentention_num": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateVBSPolicyRetentionNum,
 			},
-			"retain_first_backup": &schema.Schema{
+			"retain_first_backup": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateVBSPolicyRetainBackup,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateVBSPolicyStatus,
 			},
-			"policy_resource_count": &schema.Schema{
+			"policy_resource_count": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},

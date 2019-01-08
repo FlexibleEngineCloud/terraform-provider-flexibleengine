@@ -17,7 +17,7 @@ func TestAccFlexibleEngineVpcPeeringConnectionV2_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineVpcPeeringConnectionV2Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcPeeringConnectionV2_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineVpcPeeringConnectionV2Exists("flexibleengine_vpc_peering_connection_v2.peering_1", &peering),
@@ -27,7 +27,7 @@ func TestAccFlexibleEngineVpcPeeringConnectionV2_basic(t *testing.T) {
 						"flexibleengine_vpc_peering_connection_v2.peering_1", "status", "ACTIVE"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcPeeringConnectionV2_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -46,7 +46,7 @@ func TestAccFlexibleEngineVpcPeeringConnectionV2_timeout(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineVpcPeeringConnectionV2Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcPeeringConnectionV2_timeout,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineVpcPeeringConnectionV2Exists("flexibleengine_vpc_peering_connection_v2.peering_1", &peering),

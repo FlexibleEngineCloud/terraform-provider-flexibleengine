@@ -13,10 +13,10 @@ func TestAccOrangeCloudImagesV2ImageDataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_cirros,
 			},
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImagesV2DataSourceID("data.flexibleengine_images_image_v2.image_1"),
@@ -45,28 +45,28 @@ func TestAccOrangeCloudImagesV2ImageDataSource_testQueries(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_cirros,
 			},
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_queryTag,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImagesV2DataSourceID("data.flexibleengine_images_image_v2.image_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_querySizeMin,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImagesV2DataSourceID("data.flexibleengine_images_image_v2.image_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_querySizeMax,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImagesV2DataSourceID("data.flexibleengine_images_image_v2.image_1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccOrangeCloudImagesV2ImageDataSource_cirros,
 			},
 		},

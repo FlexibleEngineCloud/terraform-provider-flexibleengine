@@ -17,7 +17,7 @@ func TestDWSClusterBasic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testDWSClusterDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testDWSClusterBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testDWSClusterExists("flexibleengine_dws_cluster_v1.cluster", &ar),

@@ -13,7 +13,7 @@ func TestAccBMSV2FlavorDataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccBmsFlavorPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccBMSV2FlavorDataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBMSV2FlavorDataSourceID("data.flexibleengine_compute_bms_flavors_v2.flavor"),

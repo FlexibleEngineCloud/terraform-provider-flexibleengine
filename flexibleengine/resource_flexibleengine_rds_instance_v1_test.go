@@ -18,7 +18,7 @@ func TestAccRDSV1Instance_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRDSV1InstanceDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccSInstanceV1Config_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRDSV1InstanceExists("flexibleengine_rds_instance_v1.instance", &instance),
@@ -38,7 +38,7 @@ func TestAccRDSV1Instance_PostgreSQL(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRDSV1InstanceDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccSInstanceV1Config_PostgreSQL,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRDSV1InstanceExists("flexibleengine_rds_instance_v1.instance", &instance),

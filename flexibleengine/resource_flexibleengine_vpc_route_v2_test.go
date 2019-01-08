@@ -18,7 +18,7 @@ func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineRouteV2Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccRouteV2_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineRouteV2Exists("flexibleengine_vpc_route_v2.route_1", &route),
@@ -40,7 +40,7 @@ func TestAccFlexibleEngineVpcRouteV2_timeout(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineRouteV2Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccRouteV2_timeout,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineRouteV2Exists("flexibleengine_vpc_route_v2.route_1", &route),

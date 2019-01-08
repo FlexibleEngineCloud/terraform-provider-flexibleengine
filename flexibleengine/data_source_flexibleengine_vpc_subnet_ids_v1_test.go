@@ -13,10 +13,10 @@ func TestAccFlexibleEngineVpcSubnetIdsV2DataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineSubnetIdV2DataSource_vpcsubnet,
 			},
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineSubnetIdV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccFlexibleEngineSubnetIdV2DataSourceID("data.flexibleengine_vpc_subnet_ids_v1.subnet_ids"),

@@ -20,51 +20,51 @@ func resourceReplicationConsistencyGroup() *schema.Resource {
 		Update: resourceReplicationConsistencyGroupUpdate,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"replication_ids": &schema.Schema{
+			"replication_ids": {
 				Type:     schema.TypeSet,
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set:      schema.HashString,
 			},
-			"priority_station": &schema.Schema{
+			"priority_station": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
 			// Default:  "hypermetro",
-			"replication_model": &schema.Schema{
+			"replication_model": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "hypermetro",
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"replication_status": &schema.Schema{
+			"replication_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"created_at": &schema.Schema{
+			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"updated_at": &schema.Schema{
+			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"failure_detail": &schema.Schema{
+			"failure_detail": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"fault_level": &schema.Schema{
+			"fault_level": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

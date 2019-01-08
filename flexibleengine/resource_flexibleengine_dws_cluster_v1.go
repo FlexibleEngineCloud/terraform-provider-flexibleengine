@@ -26,35 +26,35 @@ func resourceDWSClusterV1() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"availability_zone": &schema.Schema{
+			"availability_zone": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"created": &schema.Schema{
+			"created": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"endpoints": &schema.Schema{
+			"endpoints": {
 				Type:     schema.TypeList,
 				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"connect_info": &schema.Schema{
+						"connect_info": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 
-						"jdbc_url": &schema.Schema{
+						"jdbc_url": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -62,47 +62,47 @@ func resourceDWSClusterV1() *schema.Resource {
 				},
 			},
 
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"node_type": &schema.Schema{
+			"node_type": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"number_of_node": &schema.Schema{
+			"number_of_node": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"port": &schema.Schema{
+			"port": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
 			},
 
-			"public_endpoints": &schema.Schema{
+			"public_endpoints": {
 				Type:     schema.TypeList,
 				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"jdbc_url": &schema.Schema{
+						"jdbc_url": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 
-						"public_connect_info": &schema.Schema{
+						"public_connect_info": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -110,19 +110,19 @@ func resourceDWSClusterV1() *schema.Resource {
 				},
 			},
 
-			"public_ip": &schema.Schema{
+			"public_ip": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"eip_id": &schema.Schema{
+						"eip_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 
-						"public_bind_type": &schema.Schema{
+						"public_bind_type": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -130,56 +130,56 @@ func resourceDWSClusterV1() *schema.Resource {
 				},
 			},
 
-			"security_group_id": &schema.Schema{
+			"security_group_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"sub_status": &schema.Schema{
+			"sub_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"subnet_id": &schema.Schema{
+			"subnet_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"task_status": &schema.Schema{
+			"task_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"updated": &schema.Schema{
+			"updated": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"user_name": &schema.Schema{
+			"user_name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"user_pwd": &schema.Schema{
+			"user_pwd": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"version": &schema.Schema{
+			"version": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,

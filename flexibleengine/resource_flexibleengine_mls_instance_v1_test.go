@@ -17,7 +17,7 @@ func TestAccMLSV1Instance_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMLSV1InstanceDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccMLSInstanceV1Config_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMLSV1InstanceExists("flexibleengine_mls_instance_v1.instance", &instance),

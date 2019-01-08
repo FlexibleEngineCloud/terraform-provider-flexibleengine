@@ -13,10 +13,10 @@ func TestAccFlexibleEngineVpcRouteIdsV2DataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineRouteIdV2DataSource_vpcroute,
 			},
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineRouteIdV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccFlexibleEngineRouteIdV2DataSourceID("data.flexibleengine_vpc_route_ids_v2.route_ids"),

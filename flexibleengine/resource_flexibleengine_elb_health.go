@@ -24,44 +24,44 @@ func resourceHealth() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
 
-			"listener_id": &schema.Schema{
+			"listener_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"healthcheck_protocol": &schema.Schema{
+			"healthcheck_protocol": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"healthcheck_uri": &schema.Schema{
+			"healthcheck_uri": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"healthcheck_connect_port": &schema.Schema{
+			"healthcheck_connect_port": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"healthy_threshold": &schema.Schema{
+			"healthy_threshold": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"unhealthy_threshold": &schema.Schema{
+			"unhealthy_threshold": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
 			},
-			"healthcheck_timeout": &schema.Schema{
+			"healthcheck_timeout": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"healthcheck_interval": &schema.Schema{
+			"healthcheck_interval": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},

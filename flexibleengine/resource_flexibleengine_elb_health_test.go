@@ -19,7 +19,7 @@ func TestAccELBHealth_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBHealthDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccELBHealthConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckELBHealthExists(t, "flexibleengine_elb_health.health_1", &health),
@@ -27,7 +27,7 @@ func TestAccELBHealth_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthcheck_timeout", "10"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: TestAccELBHealthConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("flexibleengine_elb_health.health_1", "healthy_threshold", "5"),
