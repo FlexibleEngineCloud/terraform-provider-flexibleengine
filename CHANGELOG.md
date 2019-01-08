@@ -1,8 +1,8 @@
-## 1.3.1 (Unreleased)
+## 1.3.1 (January 08, 2019)
 
 BUG FIXES:
 
-* Fix ak/sk authentication issue [GH-102]
+* Fix ak/sk authentication issue ([#102](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/102))
 
 ## 1.3.0 (January 07, 2019)
 
