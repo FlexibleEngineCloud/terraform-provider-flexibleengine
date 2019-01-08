@@ -13,7 +13,7 @@ func TestAccRdsFlavorV1DataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccRdsFlavorV1DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRdsFlavorV1DataSourceID("data.flexibleengine_rds_flavors_v1.flavor"),
@@ -32,7 +32,7 @@ func TestAccRdsFlavorV1DataSource_speccode(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccRdsFlavorV1DataSource_speccode,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingNetworkV2DataSourceID("data.flexibleengine_rds_flavors_v1.flavor"),

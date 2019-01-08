@@ -27,26 +27,26 @@ func resourceCTSTrackerV1() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"tracker_name": &schema.Schema{
+			"tracker_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"bucket_name": &schema.Schema{
+			"bucket_name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"file_prefix_name": &schema.Schema{
+			"file_prefix_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,

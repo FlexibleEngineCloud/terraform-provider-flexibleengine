@@ -13,28 +13,28 @@ func dataSourceCTSTrackerV1() *schema.Resource {
 		Read: dataSourceCTSTrackerV1Read,
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"bucket_name": &schema.Schema{
+			"bucket_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"file_prefix_name": &schema.Schema{
+			"file_prefix_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"tracker_name": &schema.Schema{
+			"tracker_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,

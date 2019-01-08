@@ -19,7 +19,7 @@ func TestAccDRSV2Replication_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDRSV2ReplicationDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccDRSV2ReplicationConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDRSV2ReplicationExists("flexibleengine_drs_replication_v2.replication_1", &replication),

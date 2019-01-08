@@ -28,14 +28,14 @@ func resourceRdsInstance() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
 
-			"name": &schema.Schema{
+			"name": {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Computed:         true,
@@ -43,14 +43,14 @@ func resourceRdsInstance() *schema.Resource {
 				DiffSuppressFunc: suppressRdsNameDiffs,
 			},
 
-			"datastore": &schema.Schema{
+			"datastore": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"type": &schema.Schema{
+						"type": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
@@ -58,7 +58,7 @@ func resourceRdsInstance() *schema.Resource {
 								return ValidateStringList(v, k, []string{"PostgreSQL", "SQLServer", "MySQL"})
 							},
 						},
-						"version": &schema.Schema{
+						"version": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
@@ -66,25 +66,25 @@ func resourceRdsInstance() *schema.Resource {
 					}},
 			},
 
-			"flavorref": &schema.Schema{
+			"flavorref": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: false,
 			},
 
-			"volume": &schema.Schema{
+			"volume": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: false,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"type": &schema.Schema{
+						"type": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
 						},
-						"size": &schema.Schema{
+						"size": {
 							Type:     schema.TypeInt,
 							Required: true,
 							ForceNew: false,
@@ -92,26 +92,26 @@ func resourceRdsInstance() *schema.Resource {
 					}},
 			},
 
-			"availabilityzone": &schema.Schema{
+			"availabilityzone": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"vpc": &schema.Schema{
+			"vpc": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"nics": &schema.Schema{
+			"nics": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"subnetid": &schema.Schema{
+						"subnetid": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
@@ -119,14 +119,14 @@ func resourceRdsInstance() *schema.Resource {
 					}},
 			},
 
-			"securitygroup": &schema.Schema{
+			"securitygroup": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
@@ -134,47 +134,47 @@ func resourceRdsInstance() *schema.Resource {
 					}},
 			},
 
-			"dbport": &schema.Schema{
+			"dbport": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
 
-			"backupstrategy": &schema.Schema{
+			"backupstrategy": {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: false,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"starttime": &schema.Schema{
+						"starttime": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"keepdays": &schema.Schema{
+						"keepdays": {
 							Type:     schema.TypeInt,
 							Optional: true,
 						},
 					}},
 			},
 
-			"dbrtpd": &schema.Schema{
+			"dbrtpd": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"ha": &schema.Schema{
+			"ha": {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"enable": &schema.Schema{
+						"enable": {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
-						"replicationmode": &schema.Schema{
+						"replicationmode": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
@@ -184,31 +184,31 @@ func resourceRdsInstance() *schema.Resource {
 					}},
 			},
 
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"hostname": &schema.Schema{
+			"hostname": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"created": &schema.Schema{
+			"created": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"updated": &schema.Schema{
+			"updated": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,

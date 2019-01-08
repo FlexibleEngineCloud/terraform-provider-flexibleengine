@@ -15,7 +15,7 @@ func TestAccFlexibleEngineVpcPeeringConnectionAccepterV2_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineVpcPeeringConnectionAccepterDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config:      testAccFlexibleEngineVpcPeeringConnectionAccepterV2_basic, //TODO: Research why normal scenario with peer tenant id is not working in acceptance tests
 				ExpectError: regexp.MustCompile(`VPC peering action not permitted: Can not accept/reject peering request not in PENDING_ACCEPTANCE state.`),
 			},

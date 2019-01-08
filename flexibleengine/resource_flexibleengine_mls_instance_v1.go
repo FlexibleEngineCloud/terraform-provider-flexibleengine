@@ -26,66 +26,66 @@ func resourceMlsInstanceV1() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
 
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"version": &schema.Schema{
+			"version": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"network": &schema.Schema{
+			"network": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"vpc_id": &schema.Schema{
+						"vpc_id": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
 						},
-						"subnet_id": &schema.Schema{
+						"subnet_id": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
 						},
-						"security_group": &schema.Schema{
+						"security_group": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
 							ForceNew: true,
 						},
-						"available_zone": &schema.Schema{
+						"available_zone": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
 						},
-						"public_ip": &schema.Schema{
+						"public_ip": {
 							Type:     schema.TypeList,
 							Required: true,
 							ForceNew: true,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"bind_type": &schema.Schema{
+									"bind_type": {
 										Type:     schema.TypeString,
 										Required: true,
 										ForceNew: true,
 									},
-									"eip_id": &schema.Schema{
+									"eip_id": {
 										Type:     schema.TypeString,
 										Optional: true,
 										Computed: true,
@@ -97,37 +97,37 @@ func resourceMlsInstanceV1() *schema.Resource {
 				},
 			},
 
-			"flavor": &schema.Schema{
+			"flavor": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"agency": &schema.Schema{
+			"agency": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
 
-			"mrs_cluster": &schema.Schema{
+			"mrs_cluster": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
 						},
-						"user_name": &schema.Schema{
+						"user_name": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
 						},
-						"user_password": &schema.Schema{
+						"user_password": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
@@ -136,31 +136,31 @@ func resourceMlsInstanceV1() *schema.Resource {
 				},
 			},
 
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"inner_endpoint": &schema.Schema{
+			"inner_endpoint": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"public_endpoint": &schema.Schema{
+			"public_endpoint": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"created": &schema.Schema{
+			"created": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
 
-			"updated": &schema.Schema{
+			"updated": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,

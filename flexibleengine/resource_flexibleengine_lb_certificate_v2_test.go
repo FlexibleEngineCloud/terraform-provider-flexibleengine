@@ -18,13 +18,13 @@ func TestAccLBV2Certificate_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBV2CertificateDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccLBV2CertificateConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2CertificateExists("flexibleengine_lb_certificate_v2.certificate_1", &c),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccLBV2CertificateConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

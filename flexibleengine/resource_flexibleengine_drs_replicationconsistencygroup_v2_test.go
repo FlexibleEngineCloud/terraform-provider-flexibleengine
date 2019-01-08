@@ -19,7 +19,7 @@ func TestAccDRSV2ReplicationConsistencyGroup_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDRSV2ReplicationConsistencyGroupDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: TestAccDRSV2ReplicationConsistencyGroupConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDRSV2ReplicationConsistencyGroupExists(
@@ -27,7 +27,7 @@ func TestAccDRSV2ReplicationConsistencyGroup_basic(t *testing.T) {
 						&rcg),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: TestAccDRSV2ReplicationConsistencyGroupConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

@@ -13,41 +13,41 @@ func dataSourceVBSBackupPolicyV2() *schema.Resource {
 		Read: dataSourceVBSPolicyV2Read,
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
+			"region": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
 			},
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"frequency": &schema.Schema{
+			"frequency": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"remain_first_backup": &schema.Schema{
+			"remain_first_backup": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"rentention_num": &schema.Schema{
+			"rentention_num": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"policy_resource_count": &schema.Schema{
+			"policy_resource_count": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"start_time": &schema.Schema{
+			"start_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

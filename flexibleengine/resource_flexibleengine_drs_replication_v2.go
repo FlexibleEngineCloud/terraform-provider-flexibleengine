@@ -22,68 +22,68 @@ func resourceReplication() *schema.Resource {
 		Delete: resourceReplicationDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
 			// volume_ids maybe list[Request] or string[Response]
-			"volume_ids": &schema.Schema{
+			"volume_ids": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"priority_station": &schema.Schema{
+			"priority_station": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 			// Default:  "hypermetro",
-			"replication_model": &schema.Schema{
+			"replication_model": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Default:  "hypermetro",
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"replication_consistency_group_id": &schema.Schema{
+			"replication_consistency_group_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"created_at": &schema.Schema{
+			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"updated_at": &schema.Schema{
+			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"replication_status": &schema.Schema{
+			"replication_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"progress": &schema.Schema{
+			"progress": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"failure_detail": &schema.Schema{
+			"failure_detail": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"record_metadata": &schema.Schema{
+			"record_metadata": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"fault_level": &schema.Schema{
+			"fault_level": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

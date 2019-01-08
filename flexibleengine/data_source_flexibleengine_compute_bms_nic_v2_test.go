@@ -13,7 +13,7 @@ func TestAccBMSNicV2DataSource_basic(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccBMSNicV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBMSNicV2DataSourceID("data.flexibleengine_compute_bms_nic_v2.nic_1"),

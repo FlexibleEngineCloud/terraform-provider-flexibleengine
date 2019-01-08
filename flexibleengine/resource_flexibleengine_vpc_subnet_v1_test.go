@@ -18,7 +18,7 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineVpcSubnetV1Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcSubnetV1_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineVpcSubnetV1Exists("flexibleengine_vpc_subnet_v1.subnet_1", &subnet),
@@ -30,7 +30,7 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 						"flexibleengine_vpc_subnet_v1.subnet_1", "gateway_ip", "192.168.0.1"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcSubnetV1_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -49,7 +49,7 @@ func TestAccFlexibleEngineVpcSubnetV1_timeout(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineVpcSubnetV1Destroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccFlexibleEngineVpcSubnetV1_timeout,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlexibleEngineVpcSubnetV1Exists("flexibleengine_vpc_subnet_v1.subnet_1", &subnet),
