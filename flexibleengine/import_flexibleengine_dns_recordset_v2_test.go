@@ -17,7 +17,6 @@ func TestAccDNSV2RecordSet_importBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:             testAccDNSV2RecordSet_basic(zoneName),
-				ExpectNonEmptyPlan: true,
 			},
 			{
 				ResourceName:      resourceName,
