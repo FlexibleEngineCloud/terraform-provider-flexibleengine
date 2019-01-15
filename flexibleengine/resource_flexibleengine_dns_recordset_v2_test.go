@@ -32,8 +32,6 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_dns_recordset_v2.recordset_1", "description", "a record set"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dns_recordset_v2.recordset_1", "records.0", "10.1.0.0"),
 				),
 			},
 			{
@@ -44,8 +42,6 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "type", "A"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_dns_recordset_v2.recordset_1", "description", "an updated record set"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dns_recordset_v2.recordset_1", "records.0", "10.1.0.1"),
 				),
 			},
 		},
@@ -231,7 +227,7 @@ func testAccDNSV2RecordSet_timeout(zoneName string) string {
 			name = "%s"
 			type = "A"
 			ttl = 3000
-			records = ["10.1.0.3"]
+			records = ["10.1.0.3", "10.1.0.2"]
 
 			timeouts {
 				create = "5m"

@@ -16,8 +16,7 @@ func TestAccDNSV2RecordSet_importBasic(t *testing.T) {
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:             testAccDNSV2RecordSet_basic(zoneName),
-				ExpectNonEmptyPlan: true,
+				Config: testAccDNSV2RecordSet_basic(zoneName),
 			},
 			{
 				ResourceName:      resourceName,
