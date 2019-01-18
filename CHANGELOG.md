@@ -1,4 +1,17 @@
 ## 1.4.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_cce_node_v3` [GH-105]
+* **New Data Source:** `flexibleengine_cce_cluster_v3` [GH-105]
+* **New Resource:** `flexibleengine_cce_node_v3` [GH-105]
+* **New Resource:** `flexibleengine_cce_cluster_v3` [GH-105]
+
+BUG FIXES:
+
+* `resource/flexibleengine_dns_recordset_v2`: Fix dns records update error [GH-101]
+* `resource/flexibleengine_dns_recordset_v2`: Fix dns entries re-sort issue [GH-103]
+
 ## 1.3.1 (January 08, 2019)
 
 BUG FIXES:
