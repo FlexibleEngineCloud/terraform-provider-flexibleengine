@@ -1,16 +1,16 @@
-## 1.4.0 (Unreleased)
+## 1.4.0 (January 18, 2019)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_cce_node_v3` [GH-105]
-* **New Data Source:** `flexibleengine_cce_cluster_v3` [GH-105]
-* **New Resource:** `flexibleengine_cce_node_v3` [GH-105]
-* **New Resource:** `flexibleengine_cce_cluster_v3` [GH-105]
+* **New Data Source:** `flexibleengine_cce_node_v3` ([#105](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/105))
+* **New Data Source:** `flexibleengine_cce_cluster_v3` ([#105](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/105))
+* **New Resource:** `flexibleengine_cce_node_v3` ([#105](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/105))
+* **New Resource:** `flexibleengine_cce_cluster_v3` ([#105](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/105))
 
 BUG FIXES:
 
-* `resource/flexibleengine_dns_recordset_v2`: Fix dns records update error [GH-101]
-* `resource/flexibleengine_dns_recordset_v2`: Fix dns entries re-sort issue [GH-103]
+* `resource/flexibleengine_dns_recordset_v2`: Fix dns records update error ([#101](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/101))
+* `resource/flexibleengine_dns_recordset_v2`: Fix dns entries re-sort issue ([#103](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/103))
 
 ## 1.3.1 (January 08, 2019)
 
