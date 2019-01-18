@@ -338,7 +338,7 @@ func waitForCSBSBackupDelete(backupClient *golangsdk.ServiceClient, backupId str
 		if err != nil {
 
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[INFO] Successfully deleted OpenTelekomCloud Backup %s", backupId)
+				log.Printf("[INFO] Successfully deleted FlexibleEngine Backup %s", backupId)
 				return r, "deleted", nil
 			}
 			if errCode, ok := err.(golangsdk.ErrUnexpectedResponseCode); ok {

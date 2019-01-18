@@ -87,7 +87,7 @@ func testAccCheckVBSBackupV2Exists(n string, configs *backups.Backup) resource.T
 		config := testAccProvider.Meta().(*Config)
 		vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating OpenTelekomCloud vbs client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine vbs client: %s", err)
 		}
 
 		found, err := backups.Get(vbsClient, rs.Primary.ID).Extract()

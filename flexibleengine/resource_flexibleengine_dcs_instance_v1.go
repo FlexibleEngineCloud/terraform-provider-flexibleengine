@@ -177,7 +177,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating HuaweiCloud dcs instance client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
 
 	no_password_access := "true"
@@ -206,7 +206,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	v, err := instances.Create(dcsV1Client, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating HuaweiCloud instance: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine instance: %s", err)
 	}
 	log.Printf("[INFO] instance ID: %s", v.InstanceID)
 
@@ -236,7 +236,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating HuaweiCloud dcs instance client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
 	v, err := instances.Get(dcsV1Client, d.Id()).Extract()
 	if err != nil {
@@ -279,7 +279,7 @@ func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error updating HuaweiCloud dcs instance client: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine dcs instance client: %s", err)
 	}
 	var updateOpts instances.UpdateOpts
 	if d.HasChange("name") {
@@ -304,7 +304,7 @@ func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) erro
 
 	err = instances.Update(dcsV1Client, d.Id(), updateOpts).Err
 	if err != nil {
-		return fmt.Errorf("Error updating HuaweiCloud Dcs Instance: %s", err)
+		return fmt.Errorf("Error updating FlexibleEngine Dcs Instance: %s", err)
 	}
 
 	return resourceDcsInstancesV1Read(d, meta)
@@ -314,7 +314,7 @@ func resourceDcsInstancesV1Delete(d *schema.ResourceData, meta interface{}) erro
 	config := meta.(*Config)
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating HuaweiCloud dcs instance client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
 
 	_, err = instances.Get(dcsV1Client, d.Id()).Extract()
@@ -324,7 +324,7 @@ func resourceDcsInstancesV1Delete(d *schema.ResourceData, meta interface{}) erro
 
 	err = instances.Delete(dcsV1Client, d.Id()).ExtractErr()
 	if err != nil {
-		return fmt.Errorf("Error deleting HuaweiCloud instance: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine instance: %s", err)
 	}
 
 	// Wait for the instance to delete before moving on.
