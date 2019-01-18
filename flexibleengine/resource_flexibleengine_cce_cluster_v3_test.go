@@ -31,7 +31,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "flavor_id", "cce.s1.small"),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_version", "v1.9.2-r2"),
+						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_version", "v1.9.7-r1"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "container_network_type", "overlay_l2"),
 				),
@@ -123,7 +123,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "flexibleengine-cce"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.2-r2"
+  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -134,7 +134,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "flexibleengine-cce"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.2-r2"
+  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -146,7 +146,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "flexibleengine-cce"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.2-r2"
+  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
