@@ -290,3 +290,10 @@ func testAccBmsFlavorPreCheck(t *testing.T) {
 		t.Skip("Provide the bms name starting with 'physical'")
 	}
 }
+
+func testAccCCEKeyPairPreCheck(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_KEYPAIR_NAME == "" {
+		t.Skip("OS_KEYPAIR_NAME must be set for acceptance tests")
+	}
+}

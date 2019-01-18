@@ -607,6 +607,18 @@
 			"revisionTime": "2018-09-11T14:09:45Z"
 		},
 		{
+			"checksumSHA1": "5BaedO0V8dhmS+Wif7hD2cKlECI=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/cce/v3/clusters",
+			"revision": "84496fef78f629363a38dc8d1d9024413ef8b9e2",
+			"revisionTime": "2019-01-17T09:49:09Z"
+		},
+		{
+			"checksumSHA1": "HCmm9wI5kEDxREOxnz4FxLRwt44=",
+			"path": "github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes",
+			"revision": "84496fef78f629363a38dc8d1d9024413ef8b9e2",
+			"revisionTime": "2019-01-17T09:49:09Z"
+		},
+		{
 			"checksumSHA1": "q1aqMo0piceUY8M6d6xzbL1mgdo=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/cloudeyeservice/alarmrule",
 			"revision": "6fc3d61913767e91d1ce9be30649f52913f1d787",
