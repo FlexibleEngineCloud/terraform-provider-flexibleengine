@@ -100,6 +100,7 @@ func resourceL7RuleV2() *schema.Resource {
 				Type:     schema.TypeBool,
 				Default:  true,
 				Optional: true,
+				ValidateFunc: validateTrueOnly,
 			},
 		},
 	}
