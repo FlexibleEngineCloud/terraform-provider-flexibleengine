@@ -135,3 +135,14 @@ func hasFilledOpt(d *schema.ResourceData, param string) bool {
 	_, b := d.GetOkExists(param)
 	return b
 }
+
+// strSliceContains checks if a given string is contained in a slice
+// When anybody asks why Go needs generics, here you go.
+func strSliceContains(haystack []string, needle string) bool {
+	for _, s := range haystack {
+		if s == needle {
+			return true
+		}
+	}
+	return false
+}
