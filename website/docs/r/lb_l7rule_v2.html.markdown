@@ -79,7 +79,7 @@ The following arguments are supported:
     evaluate. Valid when `type` is set to COOKIE or HEADER. Changing this creates a new L7 Rule.
 
 * `admin_state_up` - (Optional) The administrative state of the L7 Rule.
-    A valid value is true (UP) or false (DOWN).
+    The value can only be true (UP).
 
 ## Attributes Reference
 
