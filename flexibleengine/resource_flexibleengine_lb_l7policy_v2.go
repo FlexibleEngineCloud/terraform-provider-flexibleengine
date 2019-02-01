@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-	"net/url"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -80,28 +79,21 @@ func resourceL7PolicyV2() *schema.Resource {
 
 			"redirect_pool_id": {
 				Type:          schema.TypeString,
-				ConflictsWith: []string{"redirect_url"},
+				ConflictsWith: []string{"redirect_listener_id"},
 				Optional:      true,
 			},
 
-			"redirect_url": {
+			"redirect_listener_id": {
 				Type:          schema.TypeString,
 				ConflictsWith: []string{"redirect_pool_id"},
 				Optional:      true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					_, err := url.ParseRequestURI(value)
-					if err != nil {
-						errors = append(errors, fmt.Errorf("URL is not valid: %s", err))
-					}
-					return
-				},
 			},
 
 			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
-				Optional: true,
+				Type:         schema.TypeBool,
+				Default:      true,
+				Optional:     true,
+				ValidateFunc: validateTrueOnly,
 			},
 		},
 	}
@@ -118,24 +110,24 @@ func resourceL7PolicyV2Create(d *schema.ResourceData, meta interface{}) error {
 	listenerID := d.Get("listener_id").(string)
 	action := d.Get("action").(string)
 	redirectPoolID := d.Get("redirect_pool_id").(string)
-	redirectURL := d.Get("redirect_url").(string)
+	redirectListenerID := d.Get("redirect_listener_id").(string)
 
 	// Ensure the right combination of options have been specified.
-	err = checkL7PolicyAction(action, redirectURL, redirectPoolID)
+	err = checkL7PolicyAction(action, redirectListenerID, redirectPoolID)
 	if err != nil {
 		return fmt.Errorf("Unable to create L7 Policy: %s", err)
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
 	createOpts := l7policies.CreateOpts{
-		TenantID:       d.Get("tenant_id").(string),
-		Name:           d.Get("name").(string),
-		Description:    d.Get("description").(string),
-		Action:         l7policies.Action(action),
-		ListenerID:     listenerID,
-		RedirectPoolID: redirectPoolID,
-		RedirectURL:    redirectURL,
-		AdminStateUp:   &adminStateUp,
+		TenantID:           d.Get("tenant_id").(string),
+		Name:               d.Get("name").(string),
+		Description:        d.Get("description").(string),
+		Action:             l7policies.Action(action),
+		ListenerID:         listenerID,
+		RedirectPoolID:     redirectPoolID,
+		RedirectListenerID: redirectListenerID,
+		AdminStateUp:       &adminStateUp,
 	}
 
 	if v, ok := d.GetOk("position"); ok {
@@ -215,7 +207,7 @@ func resourceL7PolicyV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tenant_id", l7Policy.TenantID)
 	d.Set("name", l7Policy.Name)
 	d.Set("position", int(l7Policy.Position))
-	d.Set("redirect_url", l7Policy.RedirectURL)
+	d.Set("redirect_listener_id", l7Policy.RedirectListenerID)
 	d.Set("redirect_pool_id", l7Policy.RedirectPoolID)
 	d.Set("region", GetRegion(d, config))
 	d.Set("admin_state_up", l7Policy.AdminStateUp)
@@ -234,7 +226,7 @@ func resourceL7PolicyV2Update(d *schema.ResourceData, meta interface{}) error {
 	listenerID := d.Get("listener_id").(string)
 	action := d.Get("action").(string)
 	redirectPoolID := d.Get("redirect_pool_id").(string)
-	redirectURL := d.Get("redirect_url").(string)
+	redirectListenerID := d.Get("redirect_listener_id").(string)
 
 	var updateOpts l7policies.UpdateOpts
 
@@ -257,7 +249,7 @@ func resourceL7PolicyV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Ensure the right combination of options have been specified.
-	err = checkL7PolicyAction(action, redirectURL, redirectPoolID)
+	err = checkL7PolicyAction(action, redirectListenerID, redirectPoolID)
 	if err != nil {
 		return err
 	}
@@ -399,19 +391,12 @@ func resourceL7PolicyV2Import(d *schema.ResourceData, meta interface{}) ([]*sche
 	return []*schema.ResourceData{d}, nil
 }
 
-func checkL7PolicyAction(action, redirectURL, redirectPoolID string) error {
-	if action == "REJECT" {
-		if redirectURL != "" || redirectPoolID != "" {
-			return fmt.Errorf(
-				"redirect_url and redirect_pool_id must be empty when action is set to %s", action)
-		}
+func checkL7PolicyAction(action, redirectListenerID, redirectPoolID string) error {
+	if action == "REDIRECT_TO_POOL" && redirectListenerID != "" {
+		return fmt.Errorf("redirect_listener_id must be empty when action is set to %s", action)
 	}
 
-	if action == "REDIRECT_TO_POOL" && redirectURL != "" {
-		return fmt.Errorf("redirect_url must be empty when action is set to %s", action)
-	}
-
-	if action == "REDIRECT_TO_URL" && redirectPoolID != "" {
+	if action == "REDIRECT_TO_LISTENER" && redirectPoolID != "" {
 		return fmt.Errorf("redirect_pool_id must be empty when action is set to %s", action)
 	}
 

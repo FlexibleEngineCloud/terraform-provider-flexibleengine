@@ -34,9 +34,9 @@ type L7Policy struct {
 	// Only valid if action is REDIRECT_TO_POOL.
 	RedirectPoolID string `json:"redirect_pool_id"`
 
-	// Requests matching this policy will be redirected to this URL.
-	// Only valid if action is REDIRECT_TO_URL.
-	RedirectURL string `json:"redirect_url"`
+	// Requests matching this policy will be redirected to this Listener.
+	// Only valid if action is REDIRECT_TO_LISTENER.
+	RedirectListenerID string `json:"redirect_listener_id"`
 
 	// The administrative state of the L7 policy, which is up (true) or down (false).
 	AdminStateUp bool `json:"admin_state_up"`

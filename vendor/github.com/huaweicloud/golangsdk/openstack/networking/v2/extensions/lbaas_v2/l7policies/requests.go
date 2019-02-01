@@ -16,9 +16,9 @@ type RuleType string
 type CompareType string
 
 const (
-	ActionRedirectToPool Action = "REDIRECT_TO_POOL"
-	ActionRedirectToURL  Action = "REDIRECT_TO_URL"
-	ActionReject         Action = "REJECT"
+	ActionRedirectToPool     Action = "REDIRECT_TO_POOL"
+	ActionRedirectToListener Action = "REDIRECT_TO_LISTENER"
+	ActionReject             Action = "REJECT"
 
 	TypeCookie   RuleType = "COOKIE"
 	TypeFileType RuleType = "FILE_TYPE"
@@ -59,9 +59,9 @@ type CreateOpts struct {
 	// Only valid if action is REDIRECT_TO_POOL.
 	RedirectPoolID string `json:"redirect_pool_id,omitempty"`
 
-	// Requests matching this policy will be redirected to this URL.
-	// Only valid if action is REDIRECT_TO_URL.
-	RedirectURL string `json:"redirect_url,omitempty"`
+	// Requests matching this policy will be redirected to this Listener.
+	// Only valid if action is REDIRECT_TO_LISTENER.
+	RedirectListenerID string `json:"redirect_listener_id,omitempty"`
 
 	// The administrative state of the Loadbalancer. A valid value is true (UP)
 	// or false (DOWN).
@@ -93,20 +93,20 @@ type ListOptsBuilder interface {
 // ListOpts allows the filtering and sorting of paginated collections through
 // the API.
 type ListOpts struct {
-	Name           string `q:"name"`
-	Description    string `q:"description"`
-	ListenerID     string `q:"listener_id"`
-	Action         string `q:"action"`
-	TenantID       string `q:"tenant_id"`
-	RedirectPoolID string `q:"redirect_pool_id"`
-	RedirectURL    string `q:"redirect_url"`
-	Position       int32  `q:"position"`
-	AdminStateUp   bool   `q:"admin_state_up"`
-	ID             string `q:"id"`
-	Limit          int    `q:"limit"`
-	Marker         string `q:"marker"`
-	SortKey        string `q:"sort_key"`
-	SortDir        string `q:"sort_dir"`
+	Name               string `q:"name"`
+	Description        string `q:"description"`
+	ListenerID         string `q:"listener_id"`
+	Action             string `q:"action"`
+	TenantID           string `q:"tenant_id"`
+	RedirectPoolID     string `q:"redirect_pool_id"`
+	RedirectListenerID string `q:"redirect_listener_id"`
+	Position           int32  `q:"position"`
+	AdminStateUp       bool   `q:"admin_state_up"`
+	ID                 string `q:"id"`
+	Limit              int    `q:"limit"`
+	Marker             string `q:"marker"`
+	SortKey            string `q:"sort_key"`
+	SortDir            string `q:"sort_dir"`
 }
 
 // ToL7PolicyListQuery formats a ListOpts into a query string.
@@ -172,9 +172,9 @@ type UpdateOpts struct {
 	// Only valid if action is REDIRECT_TO_POOL.
 	RedirectPoolID *string `json:"redirect_pool_id,omitempty"`
 
-	// Requests matching this policy will be redirected to this URL.
-	// Only valid if action is REDIRECT_TO_URL.
-	RedirectURL *string `json:"redirect_url,omitempty"`
+	// Requests matching this policy will be redirected to this LISTENER.
+	// Only valid if action is REDIRECT_TO_LISTENER.
+	RedirectListenerID *string `json:"redirect_listener_id,omitempty"`
 
 	// The administrative state of the Loadbalancer. A valid value is true (UP)
 	// or false (DOWN).

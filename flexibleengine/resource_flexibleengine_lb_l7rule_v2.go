@@ -50,7 +50,7 @@ func resourceL7RuleV2() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
-					"COOKIE", "FILE_TYPE", "HEADER", "HOST_NAME", "PATH",
+					"HOST_NAME", "PATH",
 				}, true),
 			},
 
@@ -58,7 +58,7 @@ func resourceL7RuleV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ValidateFunc: validation.StringInSlice([]string{
-					"CONTAINS", "STARTS_WITH", "ENDS_WITH", "EQUAL_TO", "REGEX",
+					"STARTS_WITH", "EQUAL_TO", "REGEX",
 				}, true),
 			},
 
@@ -87,13 +87,7 @@ func resourceL7RuleV2() *schema.Resource {
 			"key": {
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-
-			"invert": {
-				Type:     schema.TypeBool,
-				Default:  false,
 				ForceNew: true,
-				Optional: true,
 			},
 
 			"admin_state_up": {
@@ -133,7 +127,6 @@ func resourceL7RuleV2Create(d *schema.ResourceData, meta interface{}) error {
 		CompareType:  l7policies.CompareType(compareType),
 		Value:        d.Get("value").(string),
 		Key:          key,
-		Invert:       d.Get("invert").(bool),
 		AdminStateUp: &adminStateUp,
 	}
 
@@ -217,7 +210,6 @@ func resourceL7RuleV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tenant_id", l7Rule.TenantID)
 	d.Set("value", l7Rule.Value)
 	d.Set("key", l7Rule.Key)
-	d.Set("invert", l7Rule.Invert)
 	d.Set("admin_state_up", l7Rule.AdminStateUp)
 
 	return nil

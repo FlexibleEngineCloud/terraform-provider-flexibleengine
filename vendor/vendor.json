@@ -1616,10 +1616,10 @@
 			"revisionTime": "2018-09-28T08:16:35Z"
 		},
 		{
-			"checksumSHA1": "HouZcpCZXqhcA4HDAnBcUmYiDQA=",
+			"checksumSHA1": "ZOVhFRihd8swmUzanV4LNmMgafk=",
 			"path": "github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/l7policies",
-			"revision": "ad393e2afc359cb9b70f4f78d190581dfeb3253d",
-			"revisionTime": "2019-01-31T09:42:47Z"
+			"revision": "602238cfd729e3242b791244bf72718a3effb5ee",
+			"revisionTime": "2019-02-01T07:37:18Z"
 		},
 		{
 			"checksumSHA1": "5+CSD+4lrdwyL2FGJ/+YiGfDcEc=",
