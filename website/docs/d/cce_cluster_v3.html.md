@@ -59,9 +59,3 @@ All above argument parameters can be exported as attribute parameters along with
 * `subnet_id` - The ID of the subnet used to create the node.
 
 * `highway_subnet_id` - The ID of the high speed network used to create bare metal nodes.
-
-* `internal` - The internal network address.
-
-* `external` - The external network address.
-
-* `external_otc` - The endpoint of the cluster to be accessed through API Gateway.
