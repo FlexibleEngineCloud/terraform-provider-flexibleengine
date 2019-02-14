@@ -62,6 +62,7 @@ func resourceCCEClusterV3() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
+				Default:  "v1.9.7-r1",
 			},
 			"cluster_type": {
 				Type:     schema.TypeString,
