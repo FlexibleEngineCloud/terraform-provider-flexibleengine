@@ -19,9 +19,10 @@ Use the navigation to the left to read about the available resources.
 ```hcl
 # Configure the FlexibleEngine Provider
 provider "flexibleengine" {
-  user_name   = "admin"
-  tenant_name = "admin"
-  password    = "pwd"
+  user_name   = "${var.user_name}"
+  password    = "${var.password}"
+  domain_name = "${var.domain_name}"
+  tenant_name = "${var.tenant_name}"
   auth_url    = "http://myauthurl:5000/v2.0"
   region      = "RegionOne"
 }
@@ -29,6 +30,52 @@ provider "flexibleengine" {
 # Create a web server
 resource "flexibleengine_compute_instance_v2" "test-server" {
   # ...
+}
+```
+
+## Authentication
+
+This provider offers 3 means for authentication.
+
+- User name + Password
+- AKSK
+- Token
+
+### User name + Password
+
+```hcl
+provider "flexibleengine" {
+  user_name   = "${var.user_name}"
+  password    = "${var.password}"
+  domain_name = "${var.domain_name}"
+  tenant_name = "${var.tenant_name}"
+  auth_url    = "http://myauthurl:5000/v2.0"
+  region      = "RegionOne"
+}
+```
+
+### AKSK
+
+```hcl
+provider "flexibleengine" {
+  access_key  = "${var.access_key}"
+  secret_key  = "${var.secret_key}"
+  domain_name = "${var.domain_name}"
+  tenant_name = "${var.tenant_name}"
+  auth_url    = "http://myauthurl:5000/v2.0"
+  region      = "RegionOne"
+}
+```
+
+### Token
+
+```hcl
+provider "flexibleengine" {
+  token       = "${var.token}"
+  domain_name = "${var.domain_name}"
+  tenant_name = "${var.tenant_name}"
+  auth_url    = "http://myauthurl:5000/v2.0"
+  region      = "RegionOne"
 }
 ```
 
