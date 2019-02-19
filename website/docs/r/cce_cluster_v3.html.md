@@ -41,9 +41,22 @@ The following arguments are supported:
 
 * `flavor_id` - (Required) Cluster specifications. Changing this parameter will create a new cluster resource.
 
+	* `cce.s1.small` - small-scale single cluster (up to 50 nodes).
+	* `cce.s1.medium` - medium-scale single cluster (up to 200 nodes).
+	* `cce.s1.large` - large-scale single cluster (up to 1000 nodes).
+	* `cce.s2.small` - small-scale HA cluster (up to 50 nodes).
+	* `cce.s2.medium` - medium-scale HA cluster (up to 200 nodes).
+	* `cce.s2.large` - large-scale HA cluster (up to 1000 nodes).
+	* `cce.t1.small` - small-scale single physical machine cluster (up to 10 nodes).
+	* `cce.t1.medium` - medium-scale single physical machine cluster (up to 100 nodes).
+	* `cce.t1.large` - large-scale single physical machine cluster (up to 500 nodes).
+	* `cce.t2.small` - small-scale HA physical machine cluster (up to 10 nodes).
+	* `cce.t2.medium` - medium-scale HA physical machine cluster (up to 100 nodes).
+	* `cce.t2.large` - large-scale HA physical machine cluster (up to 500 nodes).
+
 * `cluster_version` - (Optional) For the cluster version, possible value is v1.9.7-r1.
 
-* `cluster_type` - (Required) Cluster Type, Changing this parameter will create a new cluster resource.
+* `cluster_type` - (Required) Cluster Type, possible values are VirtualMachine and BareMetal. Changing this parameter will create a new cluster resource.
 
 * `description` - (Optional) Cluster description.
 
@@ -51,17 +64,15 @@ The following arguments are supported:
 
 * `extend_param` - (Optional) Extended parameter. Changing this parameter will create a new cluster resource.
 
-**hostNetwok - (Required)** Node network parameters
+* `vpc_id` - (Required) The ID of the VPC used to create the node. Changing this parameter will create a new cluster resource.
 
-  * `vpc_id` - (Required) The ID of the VPC used to create the node. Changing this parameter will create a new cluster resource.
+* `subnet_id` - (Required) The ID of the subnet used to create the node. Changing this parameter will create a new cluster resource.
 
-  * `subnet_id` - (Required) The ID of the subnet used to create the node. Changing this parameter will create a new cluster resource.
+* `highway_subnet_id` - (Optional) The ID of the high speed network used to create bare metal nodes. Changing this parameter will create a new cluster resource.
 
-  * `highway_subnet_id` - (Optional) The ID of the high speed network used to create bare metal nodes. Changing this parameter will create a new cluster resource.
+* `container_network_type` - (Required) Container network parameters.
 
-**container_network_type** **- (Required)** Container network parameters.
-
-  * `container_network_cidr` - (Optional) Container network segment. Changing this parameter will create a new cluster resource.
+* `container_network_cidr` - (Optional) Container network segment. Changing this parameter will create a new cluster resource.
 
 ## Attributes Reference
 
@@ -70,11 +81,11 @@ All above argument parameters can be exported as attribute parameters along with
   * `id` -  Id of the cluster resource.
 
   * `status` -  Cluster status information.
-  
+
 ## Import
 
  Cluster can be imported using the cluster id, e.g.
- 
+
  ```
  $ terraform import flexibleengine_cce_cluster_v3.cluster_1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d  
 ```
