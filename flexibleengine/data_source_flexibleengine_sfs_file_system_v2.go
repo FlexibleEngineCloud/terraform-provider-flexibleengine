@@ -151,7 +151,6 @@ func dataSourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) err
 	d.Set("availability_zone", share.AvailabilityZone)
 	d.Set("description", share.Description)
 	d.Set("host", share.Host)
-	d.Set("id", share.ID)
 	d.Set("is_public", share.IsPublic)
 	d.Set("name", share.Name)
 	d.Set("project_id", share.ProjectID)

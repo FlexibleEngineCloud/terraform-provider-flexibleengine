@@ -48,10 +48,6 @@ func resourceCCEClusterV3() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"flavor_id": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -217,7 +213,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error retrieving flexibleengine CCE: %s", err)
 	}
 
-	d.Set("id", n.Metadata.Id)
+	d.SetId(n.Metadata.Id)
 	d.Set("name", n.Metadata.Name)
 	d.Set("status", n.Status.Phase)
 	d.Set("flavor_id", n.Spec.Flavor)

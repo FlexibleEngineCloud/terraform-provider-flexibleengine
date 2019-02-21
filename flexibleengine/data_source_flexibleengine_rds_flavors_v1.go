@@ -108,7 +108,6 @@ func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{
 
 	d.SetId(rdsFlavor.ID)
 
-	d.Set("id", rdsFlavor.ID)
 	d.Set("name", rdsFlavor.Name)
 	d.Set("ram", rdsFlavor.Ram)
 	d.Set("speccode", rdsFlavor.SpecCode)

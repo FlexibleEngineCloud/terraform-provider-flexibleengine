@@ -2,10 +2,11 @@ package flexibleengine
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 	"log"
 	"time"
+
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/huaweicloud/golangsdk"
@@ -116,7 +117,7 @@ func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error retrieving FlexibleEngine Vpc: %s", err)
 	}
 
-	d.Set("id", n.ID)
+	d.SetId(n.ID)
 	d.Set("name", n.Name)
 	d.Set("cidr", n.CIDR)
 	d.Set("status", n.Status)

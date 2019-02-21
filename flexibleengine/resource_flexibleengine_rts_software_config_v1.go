@@ -51,10 +51,6 @@ func resourceSoftwareConfigV1() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"input_values": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -136,7 +132,7 @@ func resourceSoftwareConfigV1Read(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error retrieving Vpc: %s", err)
 	}
 
-	d.Set("id", n.Id)
+	d.SetId(n.Id)
 	d.Set("name", n.Name)
 	d.Set("config", n.Config)
 	d.Set("group", n.Group)

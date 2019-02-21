@@ -42,10 +42,6 @@ func resourceNetworkingVIPV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -125,7 +121,7 @@ func resourceNetworkingVIPV2Read(d *schema.ResourceData, meta interface{}) error
 	}
 	d.Set("name", vip.Name)
 	d.Set("status", vip.Status)
-	d.Set("id", vip.ID)
+	d.SetId(vip.ID)
 	d.Set("tenant_id", vip.TenantID)
 	d.Set("device_owner", vip.DeviceOwner)
 
