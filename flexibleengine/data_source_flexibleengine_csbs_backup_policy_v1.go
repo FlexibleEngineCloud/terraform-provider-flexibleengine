@@ -167,7 +167,6 @@ func dataSourceCSBSBackupPolicyV1Read(d *schema.ResourceData, meta interface{}) 
 	}
 
 	d.Set("name", backupPolicy.Name)
-	d.Set("id", backupPolicy.ID)
 	d.Set("common", backupPolicy.Parameters.Common)
 	d.Set("status", backupPolicy.Status)
 	d.Set("description", backupPolicy.Description)

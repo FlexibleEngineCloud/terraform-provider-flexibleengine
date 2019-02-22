@@ -146,7 +146,7 @@ func resourceDNSRecordSetV2Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	// Obtain relevant info from parsing the ID
-	zoneID, recordsetID, err := parseDNSV2RecordSetID(d.Id())
+	zoneID, recordsetID, err := parseDNSV2RecordSetId(d.Id())
 	if err != nil {
 		return err
 	}
@@ -198,7 +198,7 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	// Obtain relevant info from parsing the ID
-	zoneID, recordsetID, err := parseDNSV2RecordSetID(d.Id())
+	zoneID, recordsetID, err := parseDNSV2RecordSetId(d.Id())
 	if err != nil {
 		return err
 	}
@@ -238,7 +238,7 @@ func resourceDNSRecordSetV2Delete(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	// Obtain relevant info from parsing the ID
-	zoneID, recordsetID, err := parseDNSV2RecordSetID(d.Id())
+	zoneID, recordsetID, err := parseDNSV2RecordSetId(d.Id())
 	if err != nil {
 		return err
 	}
@@ -291,7 +291,7 @@ func waitForDNSRecordSet(dnsClient *golangsdk.ServiceClient, zoneID, recordsetId
 	}
 }
 
-func parseDNSV2RecordSetID(id string) (string, string, error) {
+func parseDNSV2RecordSetId(id string) (string, string, error) {
 	idParts := strings.Split(id, "/")
 	if len(idParts) != 2 {
 		return "", "", fmt.Errorf("Unable to determine DNS record set ID from raw ID: %s", id)

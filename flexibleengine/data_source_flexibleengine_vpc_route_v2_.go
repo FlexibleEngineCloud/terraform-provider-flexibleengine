@@ -2,10 +2,12 @@ package flexibleengine
 
 import (
 	"fmt"
+
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
+
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func dataSourceVPCRouteV2() *schema.Resource {
@@ -85,7 +87,6 @@ func dataSourceVpcRouteV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("destination", Route.Destination)
 	d.Set("tenant_id", Route.Tenant_Id)
 	d.Set("vpc_id", Route.VPC_ID)
-	d.Set("id", Route.RouteID)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

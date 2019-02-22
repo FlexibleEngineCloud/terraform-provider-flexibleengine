@@ -62,11 +62,6 @@ func resourceDWSClusterV1() *schema.Resource {
 				},
 			},
 
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,

@@ -149,7 +149,7 @@ func resourceReplicationConsistencyGroupRead(d *schema.ResourceData, meta interf
 
 	log.Printf("[DEBUG] Read replicationconsistencygroup (%s): %#v", id, rcg)
 
-	d.Set("id", rcg.ID)
+	d.SetId(rcg.ID)
 	d.Set("name", rcg.Name)
 	d.Set("description", rcg.Description)
 	d.Set("status", rcg.Status)

@@ -2,13 +2,14 @@ package flexibleengine
 
 import (
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/peerings"
-	"log"
-	"time"
 )
 
 func resourceVpcPeeringConnectionAccepterV2() *schema.Resource {
@@ -139,7 +140,7 @@ func resourceVpcPeeringAccepterRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error retrieving FlexibleEngine Vpc Peering Connection: %s", err)
 	}
 
-	d.Set("id", n.ID)
+	d.SetId(n.ID)
 	d.Set("name", n.Name)
 	d.Set("status", n.Status)
 	d.Set("vpc_id", n.RequestVpcInfo.VpcId)

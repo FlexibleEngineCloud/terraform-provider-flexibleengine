@@ -103,7 +103,6 @@ func dataSourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{
 	d.Set("name", Vpc.Name)
 	d.Set("cidr", Vpc.CIDR)
 	d.Set("status", Vpc.Status)
-	d.Set("id", Vpc.ID)
 	d.Set("shared", Vpc.EnableSharedSnat)
 	d.Set("region", GetRegion(d, config))
 	if err := d.Set("routes", s); err != nil {

@@ -226,7 +226,7 @@ func resourceReplicationRead(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Read replication (%s): %#v", id, replication)
 
-	d.Set("id", replication.ID)
+	d.SetId(replication.ID)
 	d.Set("name", replication.Name)
 	d.Set("description", replication.Description)
 	d.Set("status", replication.Status)

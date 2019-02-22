@@ -100,7 +100,7 @@ func testAccCheckDNSV2RecordSetDestroy(s *terraform.State) error {
 			continue
 		}
 
-		zoneID, recordsetID, err := parseDNSV2RecordSetID(rs.Primary.ID)
+		zoneID, recordsetID, err := parseDNSV2RecordSetId(rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -131,7 +131,7 @@ func testAccCheckDNSV2RecordSetExists(n string, recordset *recordsets.RecordSet)
 			return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 		}
 
-		zoneID, recordsetID, err := parseDNSV2RecordSetID(rs.Primary.ID)
+		zoneID, recordsetID, err := parseDNSV2RecordSetId(rs.Primary.ID)
 		if err != nil {
 			return err
 		}

@@ -109,12 +109,6 @@ func resourceListenerV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-
-			"id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
 		},
 	}
 }
@@ -199,7 +193,7 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Retrieved listener %s: %#v", d.Id(), listener)
 
-	d.Set("id", listener.ID)
+	d.SetId(listener.ID)
 	d.Set("name", listener.Name)
 	d.Set("protocol", listener.Protocol)
 	d.Set("tenant_id", listener.TenantID)

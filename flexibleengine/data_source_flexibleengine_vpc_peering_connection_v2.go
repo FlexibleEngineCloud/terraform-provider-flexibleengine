@@ -81,7 +81,6 @@ func dataSourceVpcPeeringConnectionV2Read(d *schema.ResourceData, meta interface
 	log.Printf("[INFO] Retrieved Vpc peering Connections using given filter %s: %+v", Peering.ID, Peering)
 	d.SetId(Peering.ID)
 
-	d.Set("id", Peering.ID)
 	d.Set("name", Peering.Name)
 	d.Set("status", Peering.Status)
 	d.Set("vpc_id", Peering.RequestVpcInfo.VpcId)
