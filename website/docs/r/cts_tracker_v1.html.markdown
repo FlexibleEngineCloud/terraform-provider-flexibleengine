@@ -28,11 +28,11 @@ The following arguments are supported:
 
 * `file_prefix_name` - (Optional) The prefix of a log that needs to be stored in an OBS bucket. 
 
+* `status` - The status of a tracker. The value should be **enabled** when creating a tracker, and when updating the value can be enabled or disabled.
+
 
 ## Attributes Reference
 In addition to all arguments above, the following attributes are exported:
-
-* `status` - The status of a tracker. The value is **enabled**.
 
 * `tracker_name` - The tracker name. Currently, only tracker **system** is available.
 
