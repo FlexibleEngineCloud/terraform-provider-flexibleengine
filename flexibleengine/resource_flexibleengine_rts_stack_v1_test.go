@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -12,6 +13,7 @@ import (
 
 func TestAccRTSStackV1_basic(t *testing.T) {
 	var stacks stacks.RetrievedStack
+	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,11 +21,11 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRTSStackV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRTSStackV1_basic,
+				Config: testAccRTSStackV1_basic(stackName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "name", "terraform_provider_stack"),
+						"flexibleengine_rts_stack_v1.stack_1", "name", stackName),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_rts_stack_v1.stack_1", "status", "CREATE_COMPLETE"),
 					resource.TestCheckResourceAttr(
@@ -33,7 +35,7 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccRTSStackV1_update,
+				Config: testAccRTSStackV1_update(stackName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 					resource.TestCheckResourceAttr(
@@ -50,6 +52,7 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 
 func TestAccRTSStackV1_timeout(t *testing.T) {
 	var stacks stacks.RetrievedStack
+	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -57,7 +60,7 @@ func TestAccRTSStackV1_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckRTSStackV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRTSStackV1_timeout,
+				Config: testAccRTSStackV1_timeout(stackName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 				),
@@ -122,9 +125,10 @@ func testAccCheckRTSStackV1Exists(n string, stack *stacks.RetrievedStack) resour
 	}
 }
 
-const testAccRTSStackV1_basic = `
+func testAccRTSStackV1_basic(stackName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "terraform_provider_stack"
+  name = "%s"
   disable_rollback= true
   timeout_mins=60
   template_body = <<JSON
@@ -158,11 +162,13 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
 JSON
 
 }
-`
+`, stackName)
+}
 
-const testAccRTSStackV1_update = `
+func testAccRTSStackV1_update(stackName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "terraform_provider_stack"
+  name = "%s"
   disable_rollback= false
   timeout_mins=50
   template_body = <<JSON
@@ -196,10 +202,13 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
 JSON
 
 }
-`
-const testAccRTSStackV1_timeout = `
+`, stackName)
+}
+
+func testAccRTSStackV1_timeout(stackName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "terraform_provider_stack"
+  name = "%s"
   disable_rollback= true
   timeout_mins=60
 
@@ -238,4 +247,5 @@ JSON
     delete = "10m"
   }
 }
-`
+`, stackName)
+}

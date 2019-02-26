@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -12,6 +13,7 @@ import (
 
 func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 	var config softwareconfig.SoftwareConfig
+	var rtsName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,11 +21,11 @@ func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRtsSoftwareConfigV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRtsSoftwareConfigV1_basic,
+				Config: testAccRtsSoftwareConfigV1_basic(rtsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRtsSoftwareConfigV1Exists("flexibleengine_rts_software_config_v1.config_1", &config),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_software_config_v1.config_1", "name", "rts-config"),
+						"flexibleengine_rts_software_config_v1.config_1", "name", rtsName),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_rts_software_config_v1.config_1", "group", "script"),
 				),
@@ -34,6 +36,7 @@ func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 
 func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
 	var config softwareconfig.SoftwareConfig
+	var rtsName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -41,7 +44,7 @@ func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckRtsSoftwareConfigV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRtsSoftwareConfigV1_timeout,
+				Config: testAccRtsSoftwareConfigV1_timeout(rtsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRtsSoftwareConfigV1Exists("flexibleengine_rts_software_config_v1.config_1", &config),
 				),
@@ -103,9 +106,10 @@ func testAccCheckRtsSoftwareConfigV1Exists(n string, configs *softwareconfig.Sof
 	}
 }
 
-const testAccRtsSoftwareConfigV1_basic = `
+func testAccRtsSoftwareConfigV1_basic(rtsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_software_config_v1" "config_1" {
-  name = "rts-config"
+  name = "%s"
   output_values = [{
     type = "String"
     name = "result"
@@ -120,11 +124,13 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
   }]
   group = "script"
 }
-`
+`, rtsName)
+}
 
-const testAccRtsSoftwareConfigV1_timeout = `
+func testAccRtsSoftwareConfigV1_timeout(rtsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_software_config_v1" "config_1" {
-  name = "rts-config"
+  name = "%s"
   output_values = [{
     type = "String"
     name = "result"
@@ -143,4 +149,5 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
     delete = "5m"
   }
 }
-`
+`, rtsName)
+}
