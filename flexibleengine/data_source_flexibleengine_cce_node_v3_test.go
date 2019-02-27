@@ -4,20 +4,22 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccCCENodesV3DataSource_basic(t *testing.T) {
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccCCEKeyPairPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCENodeV3DataSource_basic,
+				Config: testAccCCENodeV3DataSource_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3DataSourceID("data.flexibleengine_cce_node_v3.nodes"),
-					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_v3.nodes", "name", "test-node"),
+					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_v3.nodes", "name", cceName),
 					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_v3.nodes", "flavor_id", "s1.medium"),
 				),
 			},
@@ -40,9 +42,10 @@ func testAccCheckCCENodeV3DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-var testAccCCENodeV3DataSource_basic = fmt.Sprintf(`
+func testAccCCENodeV3DataSource_basic(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
@@ -53,7 +56,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
 
 resource "flexibleengine_cce_node_v3" "node_1" {
 cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-  name = "test-node"
+  name = "%s"
   flavor_id="s1.medium"
   availability_zone= "%s"
   key_pair="%s"
@@ -69,7 +72,8 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
   ]
 }
 data "flexibleengine_cce_node_v3" "nodes" {
-		cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-		name = "${flexibleengine_cce_node_v3.node_1.name}"
+	cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
+	name = "${flexibleengine_cce_node_v3.node_1.name}"
 }
-`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+`, cceName, OS_VPC_ID, OS_NETWORK_ID, cceName, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}

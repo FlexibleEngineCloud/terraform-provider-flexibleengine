@@ -1,13 +1,16 @@
 package flexibleengine
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
 func TestAccRtsSoftwareConfigV1_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_rts_software_config_v1.config_1"
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -15,7 +18,7 @@ func TestAccRtsSoftwareConfigV1_importBasic(t *testing.T) {
 		CheckDestroy: testAccCheckRtsSoftwareConfigV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRtsSoftwareConfigV1_basic,
+				Config: testAccRtsSoftwareConfigV1_basic(stackName),
 			},
 
 			{

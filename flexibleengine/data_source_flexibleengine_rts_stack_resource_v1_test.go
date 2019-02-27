@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccRTSStackResourcesV1_dataSource(t *testing.T) {
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRTSStackResourcesV1Config,
+				Config: testAccRTSStackResourcesV1Config(stackName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackResourcesV1DataSourceID("data.flexibleengine_rts_stack_resource_v1.resource_1"),
 					resource.TestCheckResourceAttr(
@@ -45,10 +47,10 @@ func testAccCheckRTSStackResourcesV1DataSourceID(n string) resource.TestCheckFun
 	}
 }
 
-const testAccRTSStackResourcesV1Config = `
-
+func testAccRTSStackResourcesV1Config(stackName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "rts_stack"
+  name = "%s"
   disable_rollback= true
   timeout_mins=60
   template_body = <<JSON
@@ -86,4 +88,5 @@ data "flexibleengine_rts_stack_resource_v1" "resource_1" {
   stack_name = "${flexibleengine_rts_stack_v1.stack_1.name}"
   resource_name = "random"
 }
-`
+`, stackName)
+}

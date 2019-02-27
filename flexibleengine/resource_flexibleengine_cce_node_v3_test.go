@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -12,6 +13,7 @@ import (
 
 func TestAccCCENodesV3_basic(t *testing.T) {
 	var node nodes.Nodes
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
@@ -19,7 +21,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCCENodeV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCENodeV3_basic,
+				Config: testAccCCENodeV3_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
 					resource.TestCheckResourceAttr(
@@ -29,7 +31,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCCENodeV3_update,
+				Config: testAccCCENodeV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_node_v3.node_1", "name", "test-node2"),
@@ -41,6 +43,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 
 func TestAccCCENodesV3_timeout(t *testing.T) {
 	var node nodes.Nodes
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
@@ -48,7 +51,7 @@ func TestAccCCENodesV3_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckCCENodeV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCENodeV3_timeout,
+				Config: testAccCCENodeV3_timeout(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
 				),
@@ -123,9 +126,10 @@ func testAccCheckCCENodeV3Exists(n string, cluster string, node *nodes.Nodes) re
 	}
 }
 
-var testAccCCENodeV3_basic = fmt.Sprintf(`
+func testAccCCENodeV3_basic(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
@@ -150,11 +154,13 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
       volumetype= "SATA"
     },
   ]
-}`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}
 
-var testAccCCENodeV3_update = fmt.Sprintf(`
+func testAccCCENodeV3_update(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
@@ -179,11 +185,13 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
       volumetype= "SATA"
     },
   ]
-}`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}
 
-var testAccCCENodeV3_timeout = fmt.Sprintf(`
+func testAccCCENodeV3_timeout(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
@@ -213,4 +221,5 @@ create = "10m"
 delete = "10m"
 } 
 }
-`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}

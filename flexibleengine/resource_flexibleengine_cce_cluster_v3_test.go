@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -12,6 +13,7 @@ import (
 
 func TestAccCCEClusterV3_basic(t *testing.T) {
 	var cluster clusters.Clusters
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,11 +21,11 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCCEClusterV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCEClusterV3_basic,
+				Config: testAccCCEClusterV3_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCEClusterV3Exists("flexibleengine_cce_cluster_v3.cluster_1", &cluster),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "name", "flexibleengine-cce"),
+						"flexibleengine_cce_cluster_v3.cluster_1", "name", cceName),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "status", "Available"),
 					resource.TestCheckResourceAttr(
@@ -37,7 +39,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCCEClusterV3_update,
+				Config: testAccCCEClusterV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "description", "new description"),
@@ -49,6 +51,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 
 func TestAccCCEClusterV3_timeout(t *testing.T) {
 	var cluster clusters.Clusters
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -56,7 +59,7 @@ func TestAccCCEClusterV3_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckCCEClusterV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCEClusterV3_timeout,
+				Config: testAccCCEClusterV3_timeout(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCEClusterV3Exists("flexibleengine_cce_cluster_v3.cluster_1", &cluster),
 				),
@@ -118,20 +121,23 @@ func testAccCheckCCEClusterV3Exists(n string, cluster *clusters.Clusters) resour
 	}
 }
 
-var testAccCCEClusterV3_basic = fmt.Sprintf(`
+func testAccCCEClusterV3_basic(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
-}`, OS_VPC_ID, OS_NETWORK_ID)
+}`, cceName, OS_VPC_ID, OS_NETWORK_ID)
+}
 
-var testAccCCEClusterV3_update = fmt.Sprintf(`
+func testAccCCEClusterV3_update(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   cluster_version = "v1.9.7-r1"
@@ -139,11 +145,13 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   subnet_id="%s"
   container_network_type="overlay_l2"
   description="new description"
-}`, OS_VPC_ID, OS_NETWORK_ID)
+}`, cceName, OS_VPC_ID, OS_NETWORK_ID)
+}
 
-var testAccCCEClusterV3_timeout = fmt.Sprintf(`
+func testAccCCEClusterV3_timeout(cceName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "flexibleengine-cce"
+  name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   vpc_id="%s"
@@ -154,4 +162,5 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
     delete = "10m"
   }
 }
-`, OS_VPC_ID, OS_NETWORK_ID)
+`, cceName, OS_VPC_ID, OS_NETWORK_ID)
+}

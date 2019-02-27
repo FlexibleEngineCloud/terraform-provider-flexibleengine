@@ -4,20 +4,23 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccRTSStackV1DataSource_basic(t *testing.T) {
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRTSStackV1DataSource_basic,
+				Config: testAccRTSStackV1DataSource_basic(stackName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1DataSourceID("data.flexibleengine_rts_stack_v1.stacks"),
-					resource.TestCheckResourceAttr("data.flexibleengine_rts_stack_v1.stacks", "name", "terraform_provider_stack"),
+					resource.TestCheckResourceAttr("data.flexibleengine_rts_stack_v1.stacks", "name", stackName),
 					resource.TestCheckResourceAttr("data.flexibleengine_rts_stack_v1.stacks", "disable_rollback", "true"),
 					resource.TestCheckResourceAttr("data.flexibleengine_rts_stack_v1.stacks", "parameters.%", "4"),
 					resource.TestCheckResourceAttr("data.flexibleengine_rts_stack_v1.stacks", "status", "CREATE_COMPLETE"),
@@ -42,9 +45,10 @@ func testAccCheckRTSStackV1DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-var testAccRTSStackV1DataSource_basic = `
+func testAccRTSStackV1DataSource_basic(stackName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "terraform_provider_stack"
+  name = "%s"
   disable_rollback= true
   timeout_mins=60
   template_body = <<JSON
@@ -79,6 +83,7 @@ JSON
 }
 
 data "flexibleengine_rts_stack_v1" "stacks" {
-        name = "${flexibleengine_rts_stack_v1.stack_1.name}"       
+        name = "${flexibleengine_rts_stack_v1.stack_1.name}"
 }
-`
+`, stackName)
+}

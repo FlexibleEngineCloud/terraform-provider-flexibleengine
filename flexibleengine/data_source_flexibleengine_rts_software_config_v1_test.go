@@ -4,20 +4,22 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccRtsConfigV1DataSource_basic(t *testing.T) {
+	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRtsSoftwareConfigV1DataSource_basic,
+				Config: testAccRtsSoftwareConfigV1DataSource_basic(rtsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRtsConfigV1DataSourceID("data.flexibleengine_rts_software_config_v1.configs"),
-					resource.TestCheckResourceAttr("data.flexibleengine_rts_software_config_v1.configs", "name", "rts-config"),
+					resource.TestCheckResourceAttr("data.flexibleengine_rts_software_config_v1.configs", "name", rtsName),
 					resource.TestCheckResourceAttr("data.flexibleengine_rts_software_config_v1.configs", "group", "script"),
 				),
 			},
@@ -40,9 +42,10 @@ func testAccCheckRtsConfigV1DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-var testAccRtsSoftwareConfigV1DataSource_basic = `
+func testAccRtsSoftwareConfigV1DataSource_basic(rtsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_rts_software_config_v1" "config_1" {
-  name = "rts-config"
+  name = "%s"
   output_values = [{
     type = "String"
     name = "result"
@@ -61,4 +64,5 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
 data "flexibleengine_rts_software_config_v1" "configs" {
   id = "${flexibleengine_rts_software_config_v1.config_1.id}"
 }
-`
+`, rtsName)
+}
