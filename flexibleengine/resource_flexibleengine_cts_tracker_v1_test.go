@@ -13,7 +13,7 @@ import (
 
 func TestAccCTSTrackerV1_basic(t *testing.T) {
 	var tracker tracker.Tracker
-	var bucketName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -30,21 +30,13 @@ func TestAccCTSTrackerV1_basic(t *testing.T) {
 						"flexibleengine_cts_tracker_v1.tracker_v1", "file_prefix_name", "yO8Q"),
 				),
 			},
-			{
-				Config: testAccCTSTrackerV1_update(bucketName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCTSTrackerV1Exists("flexibleengine_cts_tracker_v1.tracker_v1", &tracker),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cts_tracker_v1.tracker_v1", "file_prefix_name", "yO8Q1"),
-				),
-			},
 		},
 	})
 }
 
 func TestAccCTSTrackerV1_timeout(t *testing.T) {
 	var tracker tracker.Tracker
-	var bucketName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -128,21 +120,6 @@ resource "flexibleengine_s3_bucket" "bucket" {
 resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
   bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
   file_prefix_name      = "yO8Q"
-}
-`, bucketName)
-}
-
-func testAccCTSTrackerV1_update(bucketName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_s3_bucket" "bucket" {
-  bucket = "%s"
-  acl = "public-read"
-  force_destroy = true
-}
-
-resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
-  bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
-  file_prefix_name      = "yO8Q1"
 }
 `, bucketName)
 }

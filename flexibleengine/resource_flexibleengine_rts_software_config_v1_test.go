@@ -13,7 +13,7 @@ import (
 
 func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 	var config softwareconfig.SoftwareConfig
-	var rtsName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -36,7 +36,7 @@ func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 
 func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
 	var config softwareconfig.SoftwareConfig
-	var rtsName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

@@ -13,7 +13,7 @@ import (
 
 func TestAccCCEClusterV3_basic(t *testing.T) {
 	var cluster clusters.Clusters
-	var cceName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -51,7 +51,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 
 func TestAccCCEClusterV3_timeout(t *testing.T) {
 	var cluster clusters.Clusters
-	var cceName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

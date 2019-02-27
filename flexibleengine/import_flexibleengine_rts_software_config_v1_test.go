@@ -10,7 +10,7 @@ import (
 
 func TestAccRtsSoftwareConfigV1_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_rts_software_config_v1.config_1"
-	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

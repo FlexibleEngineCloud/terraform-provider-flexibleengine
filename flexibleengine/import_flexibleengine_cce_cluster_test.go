@@ -10,7 +10,7 @@ import (
 
 func TestAccCCEClusterV3_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_cce_cluster_v3.cluster_1"
-	var cceName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

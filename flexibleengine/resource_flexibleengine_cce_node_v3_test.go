@@ -13,7 +13,7 @@ import (
 
 func TestAccCCENodesV3_basic(t *testing.T) {
 	var node nodes.Nodes
-	var cceName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
@@ -43,7 +43,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 
 func TestAccCCENodesV3_timeout(t *testing.T) {
 	var node nodes.Nodes
-	var cceName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },

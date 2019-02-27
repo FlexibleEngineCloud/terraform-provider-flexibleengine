@@ -10,7 +10,7 @@ import (
 )
 
 func TestAccRTSStackResourcesV1_dataSource(t *testing.T) {
-	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

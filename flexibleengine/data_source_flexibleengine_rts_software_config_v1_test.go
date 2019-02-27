@@ -10,7 +10,7 @@ import (
 )
 
 func TestAccRtsConfigV1DataSource_basic(t *testing.T) {
-	var rtsName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

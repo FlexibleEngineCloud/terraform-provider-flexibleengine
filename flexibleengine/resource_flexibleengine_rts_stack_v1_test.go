@@ -13,7 +13,7 @@ import (
 
 func TestAccRTSStackV1_basic(t *testing.T) {
 	var stacks stacks.RetrievedStack
-	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -52,7 +52,7 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 
 func TestAccRTSStackV1_timeout(t *testing.T) {
 	var stacks stacks.RetrievedStack
-	var stackName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

@@ -10,7 +10,7 @@ import (
 
 func TestAccCTSTrackerV1_importBasic(t *testing.T) {
 	resourceName := "flexibleengine_cts_tracker_v1.tracker_v1"
-	var bucketName = fmt.Sprintf("terra_test_%s", acctest.RandString(5))
+	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
