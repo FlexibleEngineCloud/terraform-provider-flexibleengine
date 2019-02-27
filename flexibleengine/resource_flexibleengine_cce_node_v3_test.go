@@ -31,7 +31,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCCENodeV3_update,
+				Config: testAccCCENodeV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_node_v3.node_1", "name", "test-node2"),

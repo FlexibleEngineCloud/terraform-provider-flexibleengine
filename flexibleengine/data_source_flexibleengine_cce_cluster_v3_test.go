@@ -16,10 +16,7 @@ func TestAccCCEClusterV3DataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCEClusterV3DataSource_cluster(cceName),
-			},
-			{
-				Config: testAccCCEClusterV3DataSource_basic,
+				Config: testAccCCEClusterV3DataSource_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCEClusterV3DataSourceID("data.flexibleengine_cce_cluster_v3.clusters"),
 					resource.TestCheckResourceAttr("data.flexibleengine_cce_cluster_v3.clusters", "name", cceName),

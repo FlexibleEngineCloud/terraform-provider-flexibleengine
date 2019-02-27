@@ -42,7 +42,7 @@ func testAccCheckRtsConfigV1DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-func testAccRtsSoftwareConfigV1DataSource_basic(rtsName) string {
+func testAccRtsSoftwareConfigV1DataSource_basic(rtsName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_rts_software_config_v1" "config_1" {
   name = "%s"
