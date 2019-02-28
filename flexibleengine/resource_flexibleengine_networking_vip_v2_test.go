@@ -21,7 +21,7 @@ func TestAccNetworkingV2VIP_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2VIPDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccNetworkingV2VIPConfig_basic(routerName),
+				Config: testAccNetworkingV2VIPConfig_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2VIPExists("flexibleengine_networking_vip_v2.vip_1", &vip),
 				),
@@ -85,7 +85,7 @@ func testAccCheckNetworkingV2VIPExists(n string, vip *ports.Port) resource.TestC
 	}
 }
 
-func TestAccNetworkingV2VIPConfig_basic(routerName string) string {
+func testAccNetworkingV2VIPConfig_basic(routerName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
