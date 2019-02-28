@@ -22,7 +22,7 @@ func TestAccCSBSBackupV1_basic(t *testing.T) {
 		CheckDestroy: testAccCSBSBackupV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCSBSBackupV1_basici(csbsName),
+				Config: testAccCSBSBackupV1_basic(csbsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCSBSBackupV1Exists("flexibleengine_csbs_backup_v1.csbs", &backups),
 					resource.TestCheckResourceAttr(
