@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -16,13 +17,14 @@ func TestAccNetworkingV2RouterRoute_basic(t *testing.T) {
 	var router routers.Router
 	var network [2]networks.Network
 	var subnet [2]subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2RouterRoute_create,
+				Config: testAccNetworkingV2RouterRoute_create(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 					testAccCheckNetworkingV2NetworkExists(
@@ -42,7 +44,7 @@ func TestAccNetworkingV2RouterRoute_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccNetworkingV2RouterRoute_update,
+				Config: testAccNetworkingV2RouterRoute_update(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterRouteExists(
 						"flexibleengine_networking_router_route_v2.router_route_1"),
@@ -51,7 +53,7 @@ func TestAccNetworkingV2RouterRoute_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccNetworkingV2RouterRoute_destroy,
+				Config: testAccNetworkingV2RouterRoute_destroy(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterRouteEmpty("flexibleengine_networking_router_v2.router_1"),
 				),
@@ -169,9 +171,10 @@ func testAccCheckNetworkingV2RouterRouteDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccNetworkingV2RouterRoute_create = `
+func testAccNetworkingV2RouterRoute_create(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -236,11 +239,13 @@ resource "flexibleengine_networking_router_route_v2" "router_route_1" {
   depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2RouterRoute_update = `
+func testAccNetworkingV2RouterRoute_update(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -313,11 +318,13 @@ resource "flexibleengine_networking_router_route_v2" "router_route_2" {
   depends_on = ["flexibleengine_networking_router_interface_v2.int_2"]
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2RouterRoute_destroy = `
+func testAccNetworkingV2RouterRoute_destroy(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -374,4 +381,5 @@ resource "flexibleengine_networking_router_interface_v2" "int_2" {
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
   port_id = "${flexibleengine_networking_port_v2.port_2.id}"
 }
-`
+`, routerName)
+}

@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/huaweicloud/golangsdk"
@@ -39,6 +40,7 @@ func TestAccFWFirewallGroupV2_basic(t *testing.T) {
 
 func TestAccFWFirewallGroupV2_port0(t *testing.T) {
 	var firewall_group FirewallGroup
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -46,7 +48,7 @@ func TestAccFWFirewallGroupV2_port0(t *testing.T) {
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFWFirewallV2_port,
+				Config: testAccFWFirewallV2_port(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
@@ -78,6 +80,7 @@ func TestAccFWFirewallGroupV2_no_ports(t *testing.T) {
 
 func TestAccFWFirewallGroupV2_port_update(t *testing.T) {
 	var firewall_group FirewallGroup
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -85,14 +88,14 @@ func TestAccFWFirewallGroupV2_port_update(t *testing.T) {
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFWFirewallV2_port,
+				Config: testAccFWFirewallV2_port(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
 				),
 			},
 			{
-				Config: testAccFWFirewallV2_port_add,
+				Config: testAccFWFirewallV2_port_add(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 2),
@@ -104,6 +107,7 @@ func TestAccFWFirewallGroupV2_port_update(t *testing.T) {
 
 func TestAccFWFirewallGroupV2_port_remove(t *testing.T) {
 	var firewall_group FirewallGroup
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -111,7 +115,7 @@ func TestAccFWFirewallGroupV2_port_remove(t *testing.T) {
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFWFirewallV2_port,
+				Config: testAccFWFirewallV2_port(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFWFirewallGroupV2Exists("flexibleengine_fw_firewall_group_v2.fw_1", &firewall_group),
 					testAccCheckFWFirewallPortCount(&firewall_group, 1),
@@ -291,7 +295,8 @@ resource "flexibleengine_fw_policy_v2" "policy_2" {
 }
 `
 
-var testAccFWFirewallV2_port = fmt.Sprintf(`
+func testAccFWFirewallV2_port(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
@@ -306,7 +311,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
   external_gateway = "%s"
 }
@@ -341,9 +346,11 @@ resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   ]
   depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1"]
 }
-`, OS_EXTGW_ID)
+`, OS_EXTGW_ID, routerName)
+}
 
-var testAccFWFirewallV2_port_add = fmt.Sprintf(`
+func testAccFWFirewallV2_port_add(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
@@ -357,13 +364,13 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
   external_gateway = "%s"
 }
 
 resource "flexibleengine_networking_router_v2" "router_2" {
-  name = "router_2"
+  name = "terra-test-router2"
   admin_state_up = "true"
   external_gateway = "%s"
 }
@@ -415,7 +422,8 @@ resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   ]
   depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1", "flexibleengine_networking_router_interface_v2.router_interface_2"]
 }
-`, OS_EXTGW_ID, OS_EXTGW_ID)
+`, OS_EXTGW_ID, OS_EXTGW_ID, routerName)
+}
 
 const testAccFWFirewallV2_port_remove = `
 resource "flexibleengine_fw_policy_v2" "policy_1" {

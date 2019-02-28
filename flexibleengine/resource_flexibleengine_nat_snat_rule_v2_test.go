@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -19,6 +20,7 @@ func TestAccNatSnatRule_basic(t *testing.T) {
 	var network networks.Network
 	var router routers.Router
 	var subnet subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -26,7 +28,7 @@ func TestAccNatSnatRule_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNatV2SnatRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNatV2SnatRule_basic,
+				Config: testAccNatV2SnatRule_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -92,9 +94,10 @@ func testAccCheckNatV2SnatRuleExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccNatV2SnatRule_basic = `
+func testAccNatV2SnatRule_basic(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -131,4 +134,5 @@ resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
   network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   floating_ip_id = "${flexibleengine_networking_floatingip_v2.fip_1.id}"
 }
-`
+`, routerName)
+}

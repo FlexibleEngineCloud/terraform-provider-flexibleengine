@@ -4,20 +4,22 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccCSBSBackupPolicyV1DataSource_basic(t *testing.T) {
+	var csbsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCSBSBackupPolicyV1DataSource_basic,
+				Config: testAccCSBSBackupPolicyV1DataSource_basic(csbsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCSBSBackupPolicyV1DataSourceID("data.flexibleengine_csbs_backup_policy_v1.csbs_policy"),
-					resource.TestCheckResourceAttr("data.flexibleengine_csbs_backup_policy_v1.csbs_policy", "name", "backup-policy"),
+					resource.TestCheckResourceAttr("data.flexibleengine_csbs_backup_policy_v1.csbs_policy", "name", csbsName),
 					resource.TestCheckResourceAttr("data.flexibleengine_csbs_backup_policy_v1.csbs_policy", "status", "suspended"),
 				),
 			},
@@ -40,7 +42,8 @@ func testAccCheckCSBSBackupPolicyV1DataSourceID(n string) resource.TestCheckFunc
 	}
 }
 
-var testAccCSBSBackupPolicyV1DataSource_basic = fmt.Sprintf(`
+func testAccCSBSBackupPolicyV1DataSource_basic(csbsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   image_id = "%s"
@@ -55,7 +58,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-	name  = "backup-policy"
+	name  = "%s"
   	resource {
       id = "${flexibleengine_compute_instance_v2.instance_1.id}"
       type = "OS::Nova::Server"
@@ -73,4 +76,5 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
 data "flexibleengine_csbs_backup_policy_v1" "csbs_policy" {  
   id = "${flexibleengine_csbs_backup_policy_v1.backup_policy_v1.id}"
 }
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
+`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID, csbsName)
+}

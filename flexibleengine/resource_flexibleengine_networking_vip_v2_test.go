@@ -5,14 +5,15 @@ import (
 	"log"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
-// TestAccNetworkingV2VIP_basic is basic acc test.
 func TestAccNetworkingV2VIP_basic(t *testing.T) {
 	var vip ports.Port
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,7 +21,7 @@ func TestAccNetworkingV2VIP_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2VIPDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccNetworkingV2VIPConfig_basic,
+				Config: TestAccNetworkingV2VIPConfig_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2VIPExists("flexibleengine_networking_vip_v2.vip_1", &vip),
 				),
@@ -29,7 +30,6 @@ func TestAccNetworkingV2VIP_basic(t *testing.T) {
 	})
 }
 
-// testAccCheckNetworkingV2VIPDestroy checks destory.
 func testAccCheckNetworkingV2VIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
@@ -53,7 +53,6 @@ func testAccCheckNetworkingV2VIPDestroy(s *terraform.State) error {
 	return nil
 }
 
-// testAccCheckNetworkingV2VIPExists checks exist.
 func testAccCheckNetworkingV2VIPExists(n string, vip *ports.Port) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -86,8 +85,8 @@ func testAccCheckNetworkingV2VIPExists(n string, vip *ports.Port) resource.TestC
 	}
 }
 
-// TestAccNetworkingV2VIPConfig_basic is used to create.
-var TestAccNetworkingV2VIPConfig_basic = fmt.Sprintf(`
+func TestAccNetworkingV2VIPConfig_basic(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
@@ -106,7 +105,7 @@ resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   external_gateway = "%s"
 }
 
@@ -114,4 +113,5 @@ resource "flexibleengine_networking_vip_v2" "vip_1" {
   network_id = "${flexibleengine_networking_network_v2.network_1.id}"
   subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
-`, OS_EXTGW_ID)
+`, OS_EXTGW_ID, routerName)
+}

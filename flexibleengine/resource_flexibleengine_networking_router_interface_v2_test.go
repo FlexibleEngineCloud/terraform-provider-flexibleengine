@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -17,6 +18,7 @@ func TestAccNetworkingV2RouterInterface_basic_subnet(t *testing.T) {
 	var network networks.Network
 	var router routers.Router
 	var subnet subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,7 +26,7 @@ func TestAccNetworkingV2RouterInterface_basic_subnet(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterInterfaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2RouterInterface_basic_subnet,
+				Config: testAccNetworkingV2RouterInterface_basic_subnet(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -41,6 +43,7 @@ func TestAccNetworkingV2RouterInterface_basic_port(t *testing.T) {
 	var port ports.Port
 	var router routers.Router
 	var subnet subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -48,7 +51,7 @@ func TestAccNetworkingV2RouterInterface_basic_port(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterInterfaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2RouterInterface_basic_port,
+				Config: testAccNetworkingV2RouterInterface_basic_port(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -65,6 +68,7 @@ func TestAccNetworkingV2RouterInterface_timeout(t *testing.T) {
 	var network networks.Network
 	var router routers.Router
 	var subnet subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -72,7 +76,7 @@ func TestAccNetworkingV2RouterInterface_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterInterfaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2RouterInterface_timeout,
+				Config: testAccNetworkingV2RouterInterface_timeout(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -135,9 +139,10 @@ func testAccCheckNetworkingV2RouterInterfaceExists(n string) resource.TestCheckF
 	}
 }
 
-const testAccNetworkingV2RouterInterface_basic_subnet = `
+func testAccNetworkingV2RouterInterface_basic_subnet(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -156,11 +161,13 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   ip_version = 4
   network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2RouterInterface_basic_port = `
+func testAccNetworkingV2RouterInterface_basic_port(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -190,11 +197,13 @@ resource "flexibleengine_networking_port_v2" "port_1" {
     ip_address = "192.168.199.1"
   }
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2RouterInterface_timeout = `
+func testAccNetworkingV2RouterInterface_timeout(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -218,4 +227,5 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   ip_version = 4
   network_id = "${flexibleengine_networking_network_v2.network_1.id}"
 }
-`
+`, routerName)
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -41,6 +42,7 @@ func TestAccNetworkingV2Network_netstack(t *testing.T) {
 	var network networks.Network
 	var subnet subnets.Subnet
 	var router routers.Router
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -48,7 +50,7 @@ func TestAccNetworkingV2Network_netstack(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2NetworkDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Network_netstack,
+				Config: testAccNetworkingV2Network_netstack(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -170,7 +172,8 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 }
 `
 
-const testAccNetworkingV2Network_netstack = `
+func testAccNetworkingV2Network_netstack(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
@@ -184,14 +187,15 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
 }
 
 resource "flexibleengine_networking_router_interface_v2" "ri_1" {
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
   subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
 }
-`
+`, routerName)
+}
 
 const testAccNetworkingV2Network_fullstack = `
 resource "flexibleengine_networking_network_v2" "network_1" {

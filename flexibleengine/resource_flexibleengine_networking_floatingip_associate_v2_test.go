@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -13,6 +14,7 @@ import (
 
 func TestAccNetworkingV2FloatingIPAssociate_basic(t *testing.T) {
 	var fip floatingips.FloatingIP
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,7 +22,7 @@ func TestAccNetworkingV2FloatingIPAssociate_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2FloatingIPAssociateDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2FloatingIPAssociate_basic,
+				Config: testAccNetworkingV2FloatingIPAssociate_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2FloatingIPExists(
 						"flexibleengine_networking_floatingip_associate_v2.fip_1", &fip),
@@ -95,7 +97,8 @@ func testAccCheckNetworkingV2FloatingIPAssociateExists(n string, fip *floatingip
 	}
 }
 
-const testAccNetworkingV2FloatingIPAssociate_basic = `
+func testAccNetworkingV2FloatingIPAssociate_basic(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
   admin_state_up = "true"
@@ -114,7 +117,7 @@ resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -135,4 +138,5 @@ resource "flexibleengine_networking_floatingip_associate_v2" "fip_1" {
   floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
   port_id = "${flexibleengine_networking_port_v2.port_1.id}"
 }
-`
+`, routerName)
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -17,6 +18,7 @@ func TestAccNatGateway_basic(t *testing.T) {
 	var network networks.Network
 	var router routers.Router
 	var subnet subnets.Subnet
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,7 +26,7 @@ func TestAccNatGateway_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNatV2GatewayDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNatV2Gateway_basic,
+				Config: testAccNatV2Gateway_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
@@ -34,7 +36,7 @@ func TestAccNatGateway_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccNatV2Gateway_update,
+				Config: testAccNatV2Gateway_update(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("flexibleengine_nat_gateway_v2.nat_1", "name", "nat_1_updated"),
 					resource.TestCheckResourceAttr("flexibleengine_nat_gateway_v2.nat_1", "description", "nat_1 updated"),
@@ -96,9 +98,10 @@ func testAccCheckNatV2GatewayExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccNatV2Gateway_basic = `
+func testAccNatV2Gateway_basic(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -126,11 +129,13 @@ resource "flexibleengine_nat_gateway_v2" "nat_1" {
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
   depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
 }
-`
+`, routerName)
+}
 
-const testAccNatV2Gateway_update = `
+func testAccNatV2Gateway_update(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name = "%s"
   admin_state_up = "true"
 }
 
@@ -158,4 +163,5 @@ resource "flexibleengine_nat_gateway_v2" "nat_1" {
   router_id = "${flexibleengine_networking_router_v2.router_1.id}"
   depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
 }
-`
+`, routerName)
+}

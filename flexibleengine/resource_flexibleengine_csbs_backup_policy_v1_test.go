@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/huaweicloud/golangsdk/openstack/csbs/v1/policies"
@@ -11,6 +12,8 @@ import (
 
 func TestAccCSBSBackupPolicyV1_basic(t *testing.T) {
 	var policy policies.BackupPolicy
+	var csbsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	var csbsNameUpdate = fmt.Sprintf("%s-update", csbsName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,21 +21,21 @@ func TestAccCSBSBackupPolicyV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCSBSBackupPolicyV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCSBSBackupPolicyV1_basic,
+				Config: testAccCSBSBackupPolicyV1_basic(csbsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCSBSBackupPolicyV1Exists("flexibleengine_csbs_backup_policy_v1.backup_policy_v1", &policy),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_csbs_backup_policy_v1.backup_policy_v1", "name", "backup-policy"),
+						"flexibleengine_csbs_backup_policy_v1.backup_policy_v1", "name", csbsName),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_csbs_backup_policy_v1.backup_policy_v1", "status", "suspended"),
 				),
 			},
 			{
-				Config: testAccCSBSBackupPolicyV1_update,
+				Config: testAccCSBSBackupPolicyV1_update(csbsNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCSBSBackupPolicyV1Exists("flexibleengine_csbs_backup_policy_v1.backup_policy_v1", &policy),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_csbs_backup_policy_v1.backup_policy_v1", "name", "backup-policy-update"),
+						"flexibleengine_csbs_backup_policy_v1.backup_policy_v1", "name", csbsNameUpdate),
 				),
 			},
 		},
@@ -41,6 +44,7 @@ func TestAccCSBSBackupPolicyV1_basic(t *testing.T) {
 
 func TestAccCSBSBackupPolicyV1_timeout(t *testing.T) {
 	var policy policies.BackupPolicy
+	var csbsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -48,7 +52,7 @@ func TestAccCSBSBackupPolicyV1_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckCSBSBackupPolicyV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCSBSBackupPolicyV1_timeout,
+				Config: testAccCSBSBackupPolicyV1_timeout(csbsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCSBSBackupPolicyV1Exists("flexibleengine_csbs_backup_policy_v1.backup_policy_v1", &policy),
 				),
@@ -110,7 +114,8 @@ func testAccCheckCSBSBackupPolicyV1Exists(n string, policy *policies.BackupPolic
 	}
 }
 
-var testAccCSBSBackupPolicyV1_basic = fmt.Sprintf(`
+func testAccCSBSBackupPolicyV1_basic(csbsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   image_id = "%s"
@@ -125,7 +130,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-	name  = "backup-policy"
+	name  = "%s"
   	resource {
       id = "${flexibleengine_compute_instance_v2.instance_1.id}"
       type = "OS::Nova::Server"
@@ -139,9 +144,11 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
       trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
   	}
 }
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
+`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID, csbsName)
+}
 
-var testAccCSBSBackupPolicyV1_update = fmt.Sprintf(`
+func testAccCSBSBackupPolicyV1_update(csbsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   image_id = "%s"
@@ -156,7 +163,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-	name   = "backup-policy-update"
+	name   = "%s"
   	resource {
       id = "${flexibleengine_compute_instance_v2.instance_1.id}"
       type = "OS::Nova::Server"
@@ -170,9 +177,11 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
       trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
   	}
 }
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
+`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID, csbsName)
+}
 
-var testAccCSBSBackupPolicyV1_timeout = fmt.Sprintf(`
+func testAccCSBSBackupPolicyV1_timeout(csbsName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   image_id = "%s"
@@ -187,7 +196,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-	name  = "backup-policy"
+	name  = "%s"
   	resource {
       id = "${flexibleengine_compute_instance_v2.instance_1.id}"
       type = "OS::Nova::Server"
@@ -206,4 +215,5 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
     delete = "5m"
   }
 }
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
+`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID, csbsName)
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -12,6 +13,8 @@ import (
 
 func TestAccNetworkingV2Router_basic(t *testing.T) {
 	var router routers.Router
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	var routerNameUpdate = fmt.Sprintf("%s-update", routerName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,16 +22,16 @@ func TestAccNetworkingV2Router_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Router_basic,
+				Config: testAccNetworkingV2Router_basic(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
 			},
 			{
-				Config: testAccNetworkingV2Router_update,
+				Config: testAccNetworkingV2Router_update(routerNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_router_v2.router_1", "name", "router_2"),
+						"flexibleengine_networking_router_v2.router_1", "name", routerNameUpdate),
 				),
 			},
 		},
@@ -37,6 +40,7 @@ func TestAccNetworkingV2Router_basic(t *testing.T) {
 
 func TestAccNetworkingV2Router_update_external_gw(t *testing.T) {
 	var router routers.Router
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -44,13 +48,13 @@ func TestAccNetworkingV2Router_update_external_gw(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Router_update_external_gw_1,
+				Config: testAccNetworkingV2Router_update_external_gw_1(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
 			},
 			{
-				Config: testAccNetworkingV2Router_update_external_gw_2,
+				Config: testAccNetworkingV2Router_update_external_gw_2(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
 						"flexibleengine_networking_router_v2.router_1", "external_gateway", OS_EXTGW_ID),
@@ -62,6 +66,7 @@ func TestAccNetworkingV2Router_update_external_gw(t *testing.T) {
 
 func TestAccNetworkingV2Router_timeout(t *testing.T) {
 	var router routers.Router
+	var routerName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -69,7 +74,7 @@ func TestAccNetworkingV2Router_timeout(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2RouterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Router_timeout,
+				Config: testAccNetworkingV2Router_timeout(routerName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
 				),
@@ -131,42 +136,51 @@ func testAccCheckNetworkingV2RouterExists(n string, router *routers.Router) reso
 	}
 }
 
-const testAccNetworkingV2Router_basic = `
+func testAccNetworkingV2Router_basic(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-	name = "router_1"
+	name = "%s"
 	admin_state_up = "true"
 	distributed = "false"
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2Router_update = `
+func testAccNetworkingV2Router_update(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-	name = "router_2"
+	name = "%s"
 	admin_state_up = "true"
 	distributed = "false"
 }
-`
+`, routerName)
+}
 
-const testAccNetworkingV2Router_update_external_gw_1 = `
+func testAccNetworkingV2Router_update_external_gw_1(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-	name = "router"
+	name = "%s"
 	admin_state_up = "true"
 	distributed = "false"
 }
-`
+`, routerName)
+}
 
-var testAccNetworkingV2Router_update_external_gw_2 = fmt.Sprintf(`
+func testAccNetworkingV2Router_update_external_gw_2(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-	name = "router"
+	name = "%s"
 	admin_state_up = "true"
 	distributed = "false"
 	external_gateway = "%s"
 }
-`, OS_EXTGW_ID)
+`, OS_EXTGW_ID, routerName)
+}
 
-const testAccNetworkingV2Router_timeout = `
+func testAccNetworkingV2Router_timeout(routerName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_router_v2" "router_1" {
-	name = "router_1"
+	name = "%s"
 	admin_state_up = "true"
 	distributed = "false"
 
@@ -175,4 +189,5 @@ resource "flexibleengine_networking_router_v2" "router_1" {
     delete = "5m"
   }
 }
-`
+`, routerName)
+}
