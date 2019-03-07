@@ -53,24 +53,6 @@ func TestAccSFSFileSystemV2_basic(t *testing.T) {
 	})
 }
 
-func TestAccSFSFileSystemV2_timeout(t *testing.T) {
-	var share shares.Share
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSFSFileSystemV2Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccSFSFileSystemV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSFSFileSystemV2Exists("flexibleengine_sfs_file_system_v2.sfs_1", &share),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckSFSFileSystemV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	sfsClient, err := config.sfsV2Client(OS_REGION_NAME)
@@ -149,20 +131,3 @@ resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
 	description="sfs_c2c_test-file"
 }
 `, OS_AVAILABILITY_ZONE, OS_VPC_ID)
-
-var testAccSFSFileSystemV2_timeout = fmt.Sprintf(`
-resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
-	share_proto = "NFS"
-	size=1
-	name="sfs-test1"
-  	availability_zone="%s"
-	access_to="%s"
-  	access_type="cert"
-  	access_level="rw"
-	description="sfs_c2c_test-file"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}`, OS_AVAILABILITY_ZONE, OS_VPC_ID)

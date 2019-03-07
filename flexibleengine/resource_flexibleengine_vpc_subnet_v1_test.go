@@ -41,24 +41,6 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccFlexibleEngineVpcSubnetV1_timeout(t *testing.T) {
-	var subnet subnets.Subnet
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineVpcSubnetV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccFlexibleEngineVpcSubnetV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcSubnetV1Exists("flexibleengine_vpc_subnet_v1.subnet_1", &subnet),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckFlexibleEngineVpcSubnetV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	subnetClient, err := config.networkingV1Client(OS_REGION_NAME)
@@ -122,8 +104,6 @@ resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
   cidr = "192.168.0.0/16"
   gateway_ip = "192.168.0.1"
   vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-
-
 }
 `
 const testAccFlexibleEngineVpcSubnetV1_update = `
@@ -137,26 +117,5 @@ resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
   cidr = "192.168.0.0/16"
   gateway_ip = "192.168.0.1"
   vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-
  }
-`
-
-const testAccFlexibleEngineVpcSubnetV1_timeout = `
-resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = "vpc_test"
-  cidr = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "flexibleengine_subnet"
-  cidr = "192.168.0.0/16"
-  gateway_ip = "192.168.0.1"
-  vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-
- timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-
-}
 `

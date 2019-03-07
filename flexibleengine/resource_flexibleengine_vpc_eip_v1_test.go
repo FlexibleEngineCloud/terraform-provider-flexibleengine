@@ -28,24 +28,6 @@ func TestAccVpcV1EIP_basic(t *testing.T) {
 	})
 }
 
-func TestAccVpcV1EIP_timeout(t *testing.T) {
-	var eip eips.PublicIp
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckVpcV1EIPDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccVpcV1EIP_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVpcV1EIPExists("flexibleengine_vpc_eip_v1.eip_1", &eip),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckVpcV1EIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkingV1Client(OS_REGION_NAME)
@@ -109,24 +91,6 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
     size = 8
     share_type = "PER"
     charge_mode = "traffic"
-  }
-}
-`
-
-const testAccVpcV1EIP_timeout = `
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
-  publicip {
-    type = "5_bgp"
-  }
-  bandwidth {
-    name = "test"
-    size = 8
-    share_type = "PER"
-    charge_mode = "traffic"
-  }
-  timeouts {
-    create = "5m"
-    delete = "5m"
   }
 }
 `

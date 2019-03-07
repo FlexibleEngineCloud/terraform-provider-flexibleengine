@@ -69,25 +69,6 @@ func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 	})
 }
 
-func TestAccDNSV2RecordSet_timeout(t *testing.T) {
-	var recordset recordsets.RecordSet
-	zoneName := randomZoneName()
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccDNSV2RecordSet_timeout(zoneName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckDNSV2RecordSetDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	dnsClient, err := config.dnsV2Client(OS_REGION_NAME)
@@ -208,32 +189,6 @@ func testAccDNSV2RecordSet_readTTL(zoneName string) string {
 			name = "%s"
 			type = "A"
 			records = ["10.1.0.2"]
-		}
-	`, zoneName, zoneName)
-}
-
-func testAccDNSV2RecordSet_timeout(zoneName string) string {
-	return fmt.Sprintf(`
-		resource "flexibleengine_dns_zone_v2" "zone_1" {
-			name = "%s"
-			email = "email2@example.com"
-			description = "an updated zone"
-			ttl = 6000
-			#type = "PRIMARY"
-		}
-
-		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
-			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
-			name = "%s"
-			type = "A"
-			ttl = 3000
-			records = ["10.1.0.3", "10.1.0.2"]
-
-			timeouts {
-				create = "5m"
-				update = "5m"
-				delete = "5m"
-			}
 		}
 	`, zoneName, zoneName)
 }

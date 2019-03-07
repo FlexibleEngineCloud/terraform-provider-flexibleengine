@@ -61,24 +61,6 @@ func TestAccNetworkingV2Network_netstack(t *testing.T) {
 	})
 }
 
-func TestAccNetworkingV2Network_timeout(t *testing.T) {
-	var network networks.Network
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2NetworkDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkingV2Network_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
-				),
-			},
-		},
-	})
-}
-
 func TestAccNetworkingV2Network_multipleSegmentMappings(t *testing.T) {
 	var network networks.Network
 
@@ -235,18 +217,6 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
   network {
     port = "${flexibleengine_networking_port_v2.port_1.id}"
-  }
-}
-`
-
-const testAccNetworkingV2Network_timeout = `
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
   }
 }
 `

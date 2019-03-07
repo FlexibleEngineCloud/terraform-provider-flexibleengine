@@ -64,24 +64,6 @@ func TestAccFlexibleEngineVpcV1_update(t *testing.T) {
 	})
 }
 
-func TestAccFlexibleEngineVpcV1_timeout(t *testing.T) {
-	var vpc vpcs.Vpc
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineVpcV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccVpcV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists("flexibleengine_vpc_v1.vpc_1", &vpc),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckFlexibleEngineVpcV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	vpcClient, err := config.networkingV1Client(OS_REGION_NAME)
@@ -146,16 +128,5 @@ const testAccVpcV1_update = `
 resource "flexibleengine_vpc_v1" "vpc_1" {
     name = "terraform_provider_test1"
 	cidr="192.168.0.0/16"
-}
-`
-const testAccVpcV1_timeout = `
-resource "flexibleengine_vpc_v1" "vpc_1" {
-	name = "terraform_provider_test"
-	cidr="192.168.0.0/16"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `

@@ -62,23 +62,6 @@ func TestAccFWPolicyV2_deleteRules(t *testing.T) {
 	})
 }
 
-func TestAccFWPolicyV2_timeout(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFWPolicyV2Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccFWPolicyV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFWPolicyV2Exists(
-						"flexibleengine_fw_policy_v2.policy_1", "", "", 0),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckFWPolicyV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.hwNetworkV2Client(OS_REGION_NAME)
@@ -187,13 +170,5 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
 resource "flexibleengine_fw_rule_v2" "udp_deny" {
   protocol = "udp"
   action = "deny"
-}
-`
-
-const testAccFWPolicyV2_timeout = `
-resource "flexibleengine_fw_policy_v2" "policy_1" {
-  timeouts {
-    create = "5m"
-  }
 }
 `

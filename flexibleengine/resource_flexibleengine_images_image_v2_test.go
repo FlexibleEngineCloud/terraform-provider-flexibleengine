@@ -135,24 +135,6 @@ func TestAccImagesImageV2_visibility(t *testing.T) {
 	})
 }
 
-func TestAccImagesImageV2_timeout(t *testing.T) {
-	var image images.Image
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckImagesImageV2Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccImagesImageV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImagesImageV2Exists("flexibleengine_images_image_v2.image_1", &image),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckImagesImageV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	imageClient, err := config.imageV2Client(OS_REGION_NAME)
@@ -343,16 +325,4 @@ var testAccImagesImageV2_visibility_2 = `
       container_format = "bare"
       disk_format = "qcow2"
       visibility = "public"
-  }`
-
-var testAccImagesImageV2_timeout = `
-  resource "flexibleengine_images_image_v2" "image_1" {
-      name   = "Rancher TerraformAccTest"
-      image_source_url = "https://releases.rancher.com/os/latest/rancheros-openstack.img"
-      container_format = "bare"
-      disk_format = "qcow2"
-
-      timeouts {
-        create = "10m"
-      }
   }`

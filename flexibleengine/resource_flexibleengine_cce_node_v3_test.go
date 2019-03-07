@@ -41,25 +41,6 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 	})
 }
 
-func TestAccCCENodesV3_timeout(t *testing.T) {
-	var node nodes.Nodes
-	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCCENodeV3Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCCENodeV3_timeout(cceName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckCCENodeV3Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	cceClient, err := config.cceV3Client(OS_REGION_NAME)
@@ -186,40 +167,4 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
     },
   ]
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
-}
-
-func testAccCCENodeV3_timeout(cceName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
-  vpc_id="%s"
-  subnet_id="%s"
-  container_network_type="overlay_l2"
-}
-
-resource "flexibleengine_cce_node_v3" "node_1" {
-  cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-  name = "test-node2"
-  flavor_id="s1.medium"
-  availability_zone= "%s"
-  key_pair="%s"
-  root_volume = {
-    size= 40,
-    volumetype= "SATA"
-  }
-  data_volumes = [
-    {
-      size= 100,
-      volumetype= "SATA"
-    },
-  ]
-timeouts {
-create = "10m"
-delete = "10m"
-} 
-}
-`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }

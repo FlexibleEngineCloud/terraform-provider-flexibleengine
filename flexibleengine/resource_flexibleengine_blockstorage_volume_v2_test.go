@@ -61,24 +61,6 @@ func TestAccBlockStorageV2Volume_image(t *testing.T) {
 	})
 }
 
-func TestAccBlockStorageV2Volume_timeout(t *testing.T) {
-	var volume volumes.Volume
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckBlockStorageV2VolumeDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccBlockStorageV2Volume_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckBlockStorageV2VolumeDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	blockStorageClient, err := config.blockStorageV2Client(OS_REGION_NAME)
@@ -204,16 +186,3 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   image_id = "%s"
 }
 `, OS_IMAGE_ID)
-
-const testAccBlockStorageV2Volume_timeout = `
-resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  description = "first test volume"
-  size = 1
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}
-`

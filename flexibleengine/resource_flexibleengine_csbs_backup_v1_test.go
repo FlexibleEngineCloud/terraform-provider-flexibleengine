@@ -33,24 +33,6 @@ func TestAccCSBSBackupV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccCSBSBackupV1_timeout(t *testing.T) {
-	var backups backup.Backup
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCSBSBackupV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCSBSBackupV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCSBSBackupV1Exists("flexibleengine_csbs_backup_v1.csbs", &backups),
-				),
-			},
-		},
-	})
-}
-
 func testAccCSBSBackupV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	backupClient, err := config.csbsV1Client(OS_REGION_NAME)
@@ -105,28 +87,6 @@ func testAccCSBSBackupV1Exists(n string, backups *backup.Backup) resource.TestCh
 }
 
 var testAccCSBSBackupV1_basic = fmt.Sprintf(`
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  image_id = "%s"
-  security_groups = ["default"]
-  availability_zone = "%s"
-  flavor_id = "%s"
-  metadata {
-    foo = "bar"
-  }
-  network {
-    uuid = "%s"
-  }
-}
-resource "flexibleengine_csbs_backup_v1" "csbs" {
-  backup_name      = "csbs-test1"
-  description      = "test-code"
-  resource_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  resource_type = "OS::Nova::Server"
-}
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
-
-var testAccCSBSBackupV1_timeout = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   image_id = "%s"

@@ -59,25 +59,6 @@ func TestAccNetworkingV2SecGroup_noDefaultRules(t *testing.T) {
 	})
 }
 
-func TestAccNetworkingV2SecGroup_timeout(t *testing.T) {
-	var security_group groups.SecGroup
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2SecGroupDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkingV2SecGroup_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &security_group),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckNetworkingV2SecGroupDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
@@ -162,16 +143,5 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
 	name = "security_group_1"
 	description = "terraform security group acceptance test"
 	delete_default_rules = true
-}
-`
-
-const testAccNetworkingV2SecGroup_timeout = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "security_group"
-  description = "terraform security group acceptance test"
-
-  timeouts {
-    delete = "5m"
-  }
 }
 `

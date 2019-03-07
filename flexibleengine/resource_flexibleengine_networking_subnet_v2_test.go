@@ -103,24 +103,6 @@ func TestAccNetworkingV2Subnet_impliedGateway(t *testing.T) {
 	})
 }
 
-func TestAccNetworkingV2Subnet_timeout(t *testing.T) {
-	var subnet subnets.Subnet
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2SubnetDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkingV2Subnet_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckNetworkingV2SubnetDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
@@ -262,27 +244,5 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-}
-`
-
-const testAccNetworkingV2Subnet_timeout = `
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  cidr = "192.168.199.0/24"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-
-  allocation_pools {
-    start = "192.168.199.100"
-    end = "192.168.199.200"
-  }
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `

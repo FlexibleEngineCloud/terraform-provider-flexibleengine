@@ -43,24 +43,6 @@ func TestAccVBSBackupPolicyV2_basic(t *testing.T) {
 	})
 }
 
-func TestAccVBSBackupPolicyV2_timeout(t *testing.T) {
-	var policy policies.Policy
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccVBSBackupPolicyV2Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccVBSBackupPolicyV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccVBSBackupPolicyV2Exists("flexibleengine_vbs_backup_policy_v2.vbs", &policy),
-				),
-			},
-		},
-	})
-}
-
 func testAccVBSBackupPolicyV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
@@ -135,18 +117,3 @@ resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
   frequency = 1      
 }
 `)
-
-var testAccVBSBackupPolicyV2_timeout = fmt.Sprintf(`
-resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_002"
-  start_time  = "12:00"
-  status  = "ON"
-  retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1
-      
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}`)

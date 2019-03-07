@@ -39,24 +39,6 @@ func TestAccCSBSBackupPolicyV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccCSBSBackupPolicyV1_timeout(t *testing.T) {
-	var policy policies.BackupPolicy
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCSBSBackupPolicyV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCSBSBackupPolicyV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCSBSBackupPolicyV1Exists("flexibleengine_csbs_backup_policy_v1.backup_policy_v1", &policy),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckCSBSBackupPolicyV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	policyClient, err := config.csbsV1Client(OS_REGION_NAME)
@@ -169,41 +151,5 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
       max_backups = "2"
       trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
   	}
-}
-`, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
-
-var testAccCSBSBackupPolicyV1_timeout = fmt.Sprintf(`
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  image_id = "%s"
-  security_groups = ["default"]
-  availability_zone = "%s"
-  flavor_id = "%s"
-  metadata {
-    foo = "bar"
-  }
-  network {
-    uuid = "%s"
-  }
-}
-resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-	name  = "backup-policy"
-  	resource {
-      id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-      type = "OS::Nova::Server"
-      name = "resource4"
-  	}
-  	scheduled_operation {
-      name ="mybackup"
-      enabled = true
-      operation_type ="backup"
-      max_backups = "2"
-      trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
-  	}
-
-	timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)

@@ -34,25 +34,6 @@ func TestAccCTSTrackerV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccCTSTrackerV1_timeout(t *testing.T) {
-	var tracker tracker.Tracker
-	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCTSTrackerV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCTSTrackerV1_timeout(bucketName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCTSTrackerV1Exists("flexibleengine_cts_tracker_v1.tracker_v1", &tracker),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckCTSTrackerV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	ctsClient, err := config.ctsV1Client(OS_REGION_NAME)
@@ -120,26 +101,6 @@ resource "flexibleengine_s3_bucket" "bucket" {
 resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
   bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
   file_prefix_name      = "yO8Q"
-}
-`, bucketName)
-}
-
-func testAccCTSTrackerV1_timeout(bucketName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_s3_bucket" "bucket" {
-  bucket = "%s"
-  acl = "public-read"
-  force_destroy = true
-}
-
-resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
-  bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
-  file_prefix_name      = "yO8Q"
-
-timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `, bucketName)
 }

@@ -46,24 +46,6 @@ func TestAccComputeV2VolumeAttach_device(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2VolumeAttach_timeout(t *testing.T) {
-	var va volumeattach.VolumeAttachment
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeV2VolumeAttachDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeV2VolumeAttach_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckComputeV2VolumeAttachDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	computeClient, err := config.computeV2Client(OS_REGION_NAME)
@@ -177,30 +159,5 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
   instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
   volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
   device = "/dev/vdc"
-}
-`, OS_NETWORK_ID)
-
-var testAccComputeV2VolumeAttach_timeout = fmt.Sprintf(`
-resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  size = 1
-}
-
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  security_groups = ["default"]
-  network {
-    uuid = "%s"
-  }
-}
-
-resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `, OS_NETWORK_ID)

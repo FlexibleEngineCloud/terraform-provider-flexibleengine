@@ -34,25 +34,6 @@ func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
-	var config softwareconfig.SoftwareConfig
-	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRtsSoftwareConfigV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccRtsSoftwareConfigV1_timeout(rtsName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRtsSoftwareConfigV1Exists("flexibleengine_rts_software_config_v1.config_1", &config),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckRtsSoftwareConfigV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	orchestrationClient, err := config.orchestrationV1Client(OS_REGION_NAME)
@@ -123,31 +104,6 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
     description = "value2"
   }]
   group = "script"
-}
-`, rtsName)
-}
-
-func testAccRtsSoftwareConfigV1_timeout(rtsName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_rts_software_config_v1" "config_1" {
-  name = "%s"
-  output_values = [{
-    type = "String"
-    name = "result"
-    error_output = "false"
-    description = "value1"
-  }]
-  input_values=[{
-    default = "0"
-    type = "String"
-    name = "foo"
-    description = "value2"
-  }]
-  group = "script"
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `, rtsName)
 }

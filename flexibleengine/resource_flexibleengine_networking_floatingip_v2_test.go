@@ -29,24 +29,6 @@ func TestAccNetworkingV2FloatingIP_basic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkingV2FloatingIP_timeout(t *testing.T) {
-	var fip floatingips.FloatingIP
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2FloatingIPDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkingV2FloatingIP_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckNetworkingV2FloatingIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	networkClient, err := config.networkingV2Client(OS_REGION_NAME)
@@ -181,12 +163,3 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
   fixed_ip = "${flexibleengine_networking_port_v2.port_1.fixed_ip.1.ip_address}"
 }
 `, OS_EXTGW_ID, OS_POOL_NAME)
-
-const testAccNetworkingV2FloatingIP_timeout = `
-resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}
-`
