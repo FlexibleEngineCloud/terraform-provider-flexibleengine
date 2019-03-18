@@ -249,18 +249,16 @@ func v3auth(client *golangsdk.ProviderClient, endpoint string, opts tokens3.Auth
 }
 
 func v3authWithAgency(client *golangsdk.ProviderClient, endpoint string, opts *golangsdk.AuthOptions, eo golangsdk.EndpointOpts) error {
-	token := opts.TokenID
-	if token == "" {
+	if opts.TokenID == "" {
 		err := v3auth(client, endpoint, opts, eo)
 		if err != nil {
 			return err
 		}
-		token = client.TokenID
-		client.TokenID = ""
+	} else {
+		client.TokenID = opts.TokenID
 	}
 
 	opts1 := golangsdk.AgencyAuthOptions{
-		TokenID:          token,
 		AgencyName:       opts.AgencyName,
 		AgencyDomainName: opts.AgencyDomainName,
 		DelegatedProject: opts.DelegatedProject,
@@ -317,9 +315,11 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 
 	defer func() {
 		v3Client.AKSKAuthOptions.ProjectId = options.ProjectId
+		v3Client.AKSKAuthOptions.DomainID = options.DomainID
 	}()
 	v3Client.AKSKAuthOptions = options
 	v3Client.AKSKAuthOptions.ProjectId = ""
+	v3Client.AKSKAuthOptions.DomainID = ""
 
 	if options.ProjectId == "" && options.ProjectName != "" {
 		id, err := getProjectID(v3Client, options.ProjectName)
@@ -327,6 +327,14 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 			return err
 		}
 		options.ProjectId = id
+	}
+
+	if options.DomainID == "" && options.Domain != "" {
+		id, err := getDomainID(options.Domain, v3Client)
+		if err != nil {
+			return err
+		}
+		options.DomainID = id
 	}
 
 	client.ProjectID = options.ProjectId
@@ -373,20 +381,17 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 				})
 			}
 		}
-
-		client.EndpointLocator = func(opts golangsdk.EndpointOpts) (string, error) {
-			return V3EndpointURL(&tokens3.ServiceCatalog{
-				Entries: entries,
-			}, opts)
-		}
-
 		return true, nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	client.EndpointLocator = func(opts golangsdk.EndpointOpts) (string, error) {
+		return V3EndpointURL(&tokens3.ServiceCatalog{
+			Entries: entries,
+		}, opts)
+	}
 	return nil
 }
 
@@ -402,13 +407,11 @@ func authWithAgencyByAKSK(client *golangsdk.ProviderClient, endpoint string, opt
 		return err
 	}
 
-	domainID, err := getDomainID(opts.Domain, v3Client)
-	if err != nil {
-		return err
+	if v3Client.AKSKAuthOptions.DomainID == "" {
+		return fmt.Errorf("Must config domain name")
 	}
 
 	opts2 := golangsdk.AgencyAuthOptions{
-		DomainID:         domainID,
 		AgencyName:       opts.AgencyName,
 		AgencyDomainName: opts.AgencyDomainName,
 		DelegatedProject: opts.DelegatedProject,
@@ -451,31 +454,7 @@ func getDomainID(name string, client *golangsdk.ServiceClient) (string, error) {
 	old := client.Endpoint
 	defer func() { client.Endpoint = old }()
 
-	endpoint, err := client.EndpointLocator(
-		golangsdk.EndpointOpts{
-			Type:         "identity",
-			Availability: golangsdk.AvailabilityPublic,
-		})
-	if err != nil {
-		if v, ok := err.(ErrMultipleMatchingEndpointsV3); ok {
-			e := ""
-			for _, i := range v.Endpoints {
-				if i.Region == "" {
-					e = golangsdk.NormalizeURL(i.URL) + "auth/"
-					break
-				}
-			}
-
-			if e == "" {
-				return "", err
-			}
-			client.Endpoint = e
-		} else {
-			return "", err
-		}
-	} else {
-		client.Endpoint = endpoint + "auth/"
-	}
+	client.Endpoint = old + "auth/"
 
 	opts := domains.ListOpts{
 		Name: name,
@@ -506,18 +485,6 @@ func getDomainID(name string, client *golangsdk.ServiceClient) (string, error) {
 		err.Count = count
 		return "", err
 	}
-}
-
-func HeaderForAdminToken(c *golangsdk.ServiceClient) (map[string]string, error) {
-	if c.AKSKAuthOptions.AccessKey != "" {
-		i, err := getDomainID(c.AKSKAuthOptions.Domain, c)
-		if err != nil {
-			return nil, err
-		}
-
-		return map[string]string{"X-Domain-Id": i}, nil
-	}
-	return nil, nil
 }
 
 // NewIdentityV2 creates a ServiceClient that may be used to interact with the
@@ -987,6 +954,8 @@ func NewSDKClient(c *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, servic
 		return NewMLSV1(c, eo)
 	case "dws":
 		return NewDWSClient(c, eo)
+	case "nat":
+		return NewNatV2(c, eo)
 	}
 
 	return initClientOpts(c, eo, serviceType)
