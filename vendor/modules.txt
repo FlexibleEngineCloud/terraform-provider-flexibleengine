@@ -133,7 +133,7 @@ github.com/hashicorp/terraform/svchost
 github.com/hashicorp/terraform/svchost/auth
 # github.com/hashicorp/yamux v0.0.0-20160720233140-d1caa6c97c9f
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20190201073718-602238cfd729
+# github.com/huaweicloud/golangsdk v0.0.0-20190315091853-bbe185359182
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/openstack
 github.com/huaweicloud/golangsdk/openstack/antiddos/v1/antiddos
