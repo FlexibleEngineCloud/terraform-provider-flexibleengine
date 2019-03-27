@@ -109,7 +109,7 @@ data "flexibleengine_rds_flavors_v1" "flavor" {
     region = "eu-west-0"
     datastore_name = "MySQL"
     datastore_version = "5.6.30"
-    speccode = "rds.mysql.s1.medium"
+    speccode = "rds.mysql.s1.medium.ha"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgrp_rds" {
