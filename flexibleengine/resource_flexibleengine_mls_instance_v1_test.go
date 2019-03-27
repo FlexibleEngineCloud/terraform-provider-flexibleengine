@@ -13,7 +13,7 @@ func TestAccMLSV1Instance_basic(t *testing.T) {
 	var instance instances.Instance
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckMrs(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMLSV1InstanceDestroy,
 		Steps: []resource.TestStep{
