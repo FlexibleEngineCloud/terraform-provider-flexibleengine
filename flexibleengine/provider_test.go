@@ -29,6 +29,7 @@ var (
 	OS_SUBNET_ID              = os.Getenv("OS_SUBNET_ID")
 	OS_KEYPAIR_NAME           = os.Getenv("OS_KEYPAIR_NAME")
 	OS_BMS_FLAVOR_NAME        = os.Getenv("OS_BMS_FLAVOR_NAME")
+	OS_MRS_ENVIRONMENT        = os.Getenv("OS_MRS_ENVIRONMENT")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -90,6 +91,14 @@ func testAccPreCheckDeprecated(t *testing.T) {
 
 	if OS_DEPRECATED_ENVIRONMENT == "" {
 		t.Skip("This environment does not support deprecated tests")
+	}
+}
+
+func testAccPreCheckMrs(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_MRS_ENVIRONMENT == "" {
+		t.Skip("This environment does not support MRS tests")
 	}
 }
 
