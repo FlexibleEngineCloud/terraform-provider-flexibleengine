@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -13,7 +12,6 @@ import (
 
 func TestAccRTSStackV1_basic(t *testing.T) {
 	var stacks stacks.RetrievedStack
-	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,11 +19,11 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRTSStackV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRTSStackV1_basic(stackName),
+				Config: testAccRTSStackV1_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "name", stackName),
+						"flexibleengine_rts_stack_v1.stack_1", "name", "terra_stack"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_rts_stack_v1.stack_1", "status", "CREATE_COMPLETE"),
 					resource.TestCheckResourceAttr(
@@ -35,7 +33,7 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccRTSStackV1_update(stackName),
+				Config: testAccRTSStackV1_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 					resource.TestCheckResourceAttr(
@@ -44,25 +42,6 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 						"flexibleengine_rts_stack_v1.stack_1", "timeout_mins", "50"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_rts_stack_v1.stack_1", "status", "UPDATE_COMPLETE"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccRTSStackV1_timeout(t *testing.T) {
-	var stacks stacks.RetrievedStack
-	var stackName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRTSStackV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccRTSStackV1_timeout(stackName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
 				),
 			},
 		},
@@ -81,7 +60,7 @@ func testAccCheckRTSStackV1Destroy(s *terraform.State) error {
 			continue
 		}
 
-		stack, err := stacks.Get(orchestrationClient, "terraform_provider_stack").Extract()
+		stack, err := stacks.Get(orchestrationClient, "terra_stack").Extract()
 
 		if err == nil {
 			if stack.Status != "DELETE_COMPLETE" {
@@ -110,7 +89,7 @@ func testAccCheckRTSStackV1Exists(n string, stack *stacks.RetrievedStack) resour
 			return fmt.Errorf("Error creating RTS Client : %s", err)
 		}
 
-		found, err := stacks.Get(orchestrationClient, "terraform_provider_stack").Extract()
+		found, err := stacks.Get(orchestrationClient, "terra_stack").Extract()
 		if err != nil {
 			return err
 		}
@@ -125,10 +104,9 @@ func testAccCheckRTSStackV1Exists(n string, stack *stacks.RetrievedStack) resour
 	}
 }
 
-func testAccRTSStackV1_basic(stackName string) string {
-	return fmt.Sprintf(`
+const testAccRTSStackV1_basic = `
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "%s"
+  name = "terra_stack"
   disable_rollback= true
   timeout_mins=60
   template_body = <<JSON
@@ -162,13 +140,11 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
 JSON
 
 }
-`, stackName)
-}
+`
 
-func testAccRTSStackV1_update(stackName string) string {
-	return fmt.Sprintf(`
+const testAccRTSStackV1_update = `
 resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "%s"
+  name = "terra_stack"
   disable_rollback= false
   timeout_mins=50
   template_body = <<JSON
@@ -202,50 +178,4 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
 JSON
 
 }
-`, stackName)
-}
-
-func testAccRTSStackV1_timeout(stackName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_rts_stack_v1" "stack_1" {
-  name = "%s"
-  disable_rollback= true
-  timeout_mins=60
-
-  template_body = <<JSON
-          {
-    "outputs": {
-      "str1": {
-        "description": "The description of the nat server.",
-        "value": {
-          "get_resource": "random"
-        }
-      }
-    },
-    "heat_template_version": "2013-05-23",
-    "description": "A HOT template that create a single server and boot from volume.",
-    "parameters": {
-      "key_name": {
-        "type": "string",
-  		"default": "keysclick",
-        "description": "Name of existing key pair for the instance to be created."
-      }
-    },
-    "resources": {
-      "random": {
-        "type": "OS::Heat::RandomString",
-        "properties": {
-          "length": 6
-        }
-      }
-    }
-  }
-JSON
-
-  timeouts {
-    create = "10m"
-    delete = "10m"
-  }
-}
-`, stackName)
-}
+`
