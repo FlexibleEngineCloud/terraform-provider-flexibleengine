@@ -18,6 +18,10 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name        = "volume_1"
   description = "first test volume"
   size        = 3
+  metadata {
+    __system__encrypted = "1"
+    __system__cmkid     = "kms_id"
+  }
 }
 ```
 
@@ -46,6 +50,10 @@ The following arguments are supported:
 
 * `metadata` - (Optional) Metadata key/value pairs to associate with the volume.
     Changing this updates the existing volume metadata.
+    The EVS encryption capability with KMS key can be set with the following parameters:
+	* `__system__encrypted` - The default value is set to '0', which means
+      the volume is not encrypted, the value '1' indicates volume is encrypted.
+	* `__system__cmkid` - (Optional) The ID of the kms key.
 
 * `name` - (Optional) A unique name for the volume. Changing this updates the
     volume's name.
