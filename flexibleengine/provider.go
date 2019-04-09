@@ -192,6 +192,7 @@ func Provider() terraform.ResourceProvider {
 		ResourcesMap: map[string]*schema.Resource{
 			"flexibleengine_blockstorage_volume_v2":             resourceBlockStorageVolumeV2(),
 			"flexibleengine_compute_instance_v2":                resourceComputeInstanceV2(),
+			"flexibleengine_compute_interface_attach_v2":        resourceComputeInterfaceAttachV2(),
 			"flexibleengine_compute_keypair_v2":                 resourceComputeKeypairV2(),
 			"flexibleengine_compute_servergroup_v2":             resourceComputeServerGroupV2(),
 			"flexibleengine_compute_floatingip_v2":              resourceComputeFloatingIPV2(),
