@@ -506,3 +506,13 @@ func (c *Config) kmsKeyV1Client(region string) (*golangsdk.ServiceClient, error)
 		Availability: c.getHwEndpointType(),
 	})
 }
+
+func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewSDKClient(
+		c.HwClient,
+		golangsdk.EndpointOpts{
+			Region:       c.determineRegion(region),
+			Availability: c.getHwEndpointType(),
+		},
+		serviceType)
+}

@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.0
 	github.com/hashicorp/go-multierror v0.0.0-20150916205742-d30f09973e19
 	github.com/hashicorp/terraform v0.11.12-beta1.0.20190214175014-182daa619826
-	github.com/huaweicloud/golangsdk v0.0.0-20190201073718-602238cfd729
+	github.com/huaweicloud/golangsdk v0.0.0-20190409090145-58605860f214
 	github.com/jen20/awspolicyequivalence v0.0.0-20170831201602-3d48364a137a
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/kr/pretty v0.1.0 // indirect
