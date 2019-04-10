@@ -26,6 +26,8 @@ func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "1"),
 				),
 			},
 			{
@@ -35,6 +37,32 @@ func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1-updated"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "2"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccBlockStorageV2Volume_online_resize(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckBlockStorageV2VolumeDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBlockStorageV2Volume_online_resize,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "1"),
+				),
+			},
+			{
+				Config: testAccBlockStorageV2Volume_online_resize_update,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "2"),
 				),
 			},
 		},
@@ -193,9 +221,51 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   metadata {
     foo = "bar"
   }
-  size = 1
+  size = 2
 }
 `
+
+var testAccBlockStorageV2Volume_online_resize = fmt.Sprintf(`
+resource "flexibleengine_compute_instance_v2" "basic" {
+  name            = "instance_1"
+  security_groups = ["default"]
+  network {
+    uuid = "%s"
+  }
+}
+
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  description = "test volume"
+  size = 1
+}
+
+resource "flexibleengine_compute_volume_attach_v2" "va_1" {
+  instance_id = "${flexibleengine_compute_instance_v2.basic.id}"
+  volume_id   = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+}
+`, OS_NETWORK_ID)
+
+var testAccBlockStorageV2Volume_online_resize_update = fmt.Sprintf(`
+resource "flexibleengine_compute_instance_v2" "basic" {
+  name            = "instance_1"
+  security_groups = ["default"]
+  network {
+    uuid = "%s"
+  }
+}
+
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  description = "test volume"
+  size = 2
+}
+
+resource "flexibleengine_compute_volume_attach_v2" "va_1" {
+  instance_id = "${flexibleengine_compute_instance_v2.basic.id}"
+  volume_id   = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+}
+`, OS_NETWORK_ID)
 
 var testAccBlockStorageV2Volume_image = fmt.Sprintf(`
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
