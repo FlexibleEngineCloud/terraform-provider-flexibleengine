@@ -51,7 +51,7 @@ The following arguments are supported:
   and ANY is 6, 17, and 0, respectively.
   Changing this creates a new dnat rule.
 
-* `internal_service_port` - (Required) Specifies port used by ECSs or
+* `external_service_port` - (Required) Specifies port used by ECSs or
   BMSs to provide services for external systems.
   Changing this creates a new dnat rule.
 
