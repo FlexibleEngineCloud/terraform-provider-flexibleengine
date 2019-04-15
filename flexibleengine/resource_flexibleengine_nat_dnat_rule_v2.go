@@ -41,7 +41,7 @@ func resourceNatDnatRuleV2() *schema.Resource {
 			},
 
 			"internal_service_port": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
@@ -68,13 +68,13 @@ func resourceNatDnatRuleV2() *schema.Resource {
 
 			"protocol": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 			},
 
 			"external_service_port": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:     schema.TypeInt,
+				Required: true,
 				ForceNew: true,
 			},
 
@@ -294,6 +294,21 @@ func resourceNatDnatRuleRead(d *schema.ResourceData, meta interface{}) error {
 		}
 		if err = d.Set("internal_service_port", internalServicePortProp); err != nil {
 			return fmt.Errorf("Error setting Dnat:internal_service_port, err: %s", err)
+		}
+	}
+
+	externalServicePortProp, ok := opts["external_service_port"]
+	if externalServicePortProp != nil {
+		ok, _ = isEmptyValue(reflect.ValueOf(externalServicePortProp))
+		ok = !ok
+	}
+	if !ok {
+		externalServicePortProp, err = navigateValue(res, []string{"read", "dnat_rule", "external_service_port"}, nil)
+		if err != nil {
+			return fmt.Errorf("Error reading Dnat:external_service_port, err: %s", err)
+		}
+		if err = d.Set("external_service_port", externalServicePortProp); err != nil {
+			return fmt.Errorf("Error setting Dnat:external_service_port, err: %s", err)
 		}
 	}
 
