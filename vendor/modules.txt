@@ -177,6 +177,7 @@ github.com/huaweicloud/golangsdk/openstack/dns/v2/zones
 github.com/huaweicloud/golangsdk/openstack/drs/v2/replicationconsistencygroups
 github.com/huaweicloud/golangsdk/openstack/drs/v2/replications
 github.com/huaweicloud/golangsdk/openstack/dws/cluster
+github.com/huaweicloud/golangsdk/openstack/ecs/v1/auto_recovery
 github.com/huaweicloud/golangsdk/openstack/imageservice/v2/imagedata
 github.com/huaweicloud/golangsdk/openstack/imageservice/v2/images
 github.com/huaweicloud/golangsdk/openstack/kms/v1/keys

@@ -278,6 +278,34 @@ func TestAccComputeV2Instance_timeout(t *testing.T) {
 	})
 }
 
+func TestAccComputeV2Instance_auto_recovery(t *testing.T) {
+	var instance servers.Server
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeV2Instance_basic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_compute_instance_v2.instance_1", "auto_recovery", "false"),
+				),
+			},
+			{
+				Config: testAccComputeV2Instance_auto_recovery,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_compute_instance_v2.instance_1", "auto_recovery", "true"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckComputeV2InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	computeClient, err := config.computeV2Client(OS_REGION_NAME)
@@ -958,3 +986,18 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 `, OS_NETWORK_ID)
+
+var testAccComputeV2Instance_auto_recovery = fmt.Sprintf(`
+resource "flexibleengine_compute_instance_v2" "instance_1" {
+  name = "instance_1"
+  security_groups = ["default"]
+  availability_zone = "%s"
+  metadata {
+    foo = "bar"
+  }
+  network {
+    uuid = "%s"
+  }
+  auto_recovery = true
+}
+`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
