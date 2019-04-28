@@ -196,13 +196,7 @@ func resourcePoolV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Attempting to create pool")
 	var pool *pools.Pool
-	err = resource.Retry(timeout, func() *resource.RetryError {
-		pool, err = pools.Create(networkingClient, createOpts).Extract()
-		if err != nil {
-			return checkForRetryableError(err)
-		}
-		return nil
-	})
+	pool, err = pools.Create(networkingClient, createOpts).Extract()
 
 	if err != nil {
 		return fmt.Errorf("Error creating pool: %s", err)
