@@ -73,7 +73,7 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
 }
 data "flexibleengine_cce_node_v3" "nodes" {
 	cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-	name = "${flexibleengine_cce_node_v3.node_1.name}"
+	node_id = "${flexibleengine_cce_node_v3.node_1.id}"
 }
 `, cceName, OS_VPC_ID, OS_NETWORK_ID, cceName, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }
