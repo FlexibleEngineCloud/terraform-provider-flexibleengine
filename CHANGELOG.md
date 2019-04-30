@@ -23,6 +23,7 @@ ENHANCEMENTS:
 * `resource/flexibleengine_dns_zone_v2`: Add support for attaching multi routers to dns zone. [GH-143]
 * `resource/flexibleengine_blockstorage_volume_v2`: Add volume extending support. [GH-156]
 * `resource/flexibleengine_compute_instance_v2`: Add auto_recovery support. [GH-163]
+* `resource/flexibleengine_as_group_v1`: Add lbaas_listeners support. [GH-172]
 
 ## 1.4.0 (January 18, 2019)
 
