@@ -79,7 +79,7 @@ func resourceASGroup() *schema.Resource {
 			},
 			"lbaas_listeners": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"pool_id": {
