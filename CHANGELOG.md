@@ -1,29 +1,29 @@
-## 1.5.0 (Unreleased)
+## 1.5.0 (April 30, 2019)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_kms_key_v1` [GH-149]
-* **New Data Source:** `flexibleengine_kms_data_key_v1` [GH-149]
-* **New Resource:** `flexibleengine_lb_l7policy_v2` [GH-114]
-* **New Resource:** `flexibleengine_lb_l7rule_v2` [GH-114]
-* **New Resource:** `flexibleengine_kms_key_v1` [GH-149]
-* **New Resource:** `flexibleengine_compute_interface_attach_v2` [GH-152]
-* **New Resource:** `flexibleengine_nat_dnat_rule_v2` [GH-153]
+* **New Data Source:** `flexibleengine_kms_key_v1` ([#149](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/149))
+* **New Data Source:** `flexibleengine_kms_data_key_v1` ([#149](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/149))
+* **New Resource:** `flexibleengine_lb_l7policy_v2` ([#114](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/114))
+* **New Resource:** `flexibleengine_lb_l7rule_v2` ([#114](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/114))
+* **New Resource:** `flexibleengine_kms_key_v1` ([#149](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/149))
+* **New Resource:** `flexibleengine_compute_interface_attach_v2` ([#152](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/152))
+* **New Resource:** `flexibleengine_nat_dnat_rule_v2` ([#153](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/153))
 
 BUG FIXES:
 
-* `data_source/flexibleengine_cce_cluster_v3`: Remove wrong attributes internal, external, and external_otc. [GH-119]
-* `resource/flexibleengine_smn_topic_v2`: Fix SMN topic parameters issue. [GH-126]
-* `resource/flexibleengine_dcs_instance_v1`: Fix DCS instance parameters issue. [GH-128]
-* `resource/flexibleengine_cce_node_v3`: Remove Abnormal from create target state. [GH-168]
-* `resource/flexibleengine_lb_pool_v2`: Fix LB Pool stuck issue. [GH-169]
+* `data_source/flexibleengine_cce_cluster_v3`: Remove wrong attributes internal, external, and external_otc. ([#119](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/119))
+* `resource/flexibleengine_smn_topic_v2`: Fix SMN topic parameters issue. ([#126](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/126))
+* `resource/flexibleengine_dcs_instance_v1`: Fix DCS instance parameters issue. ([#128](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/128))
+* `resource/flexibleengine_cce_node_v3`: Remove Abnormal from create target state. ([#168](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/168))
+* `resource/flexibleengine_lb_pool_v2`: Fix LB Pool stuck issue. ([#169](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/169))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_dns_zone_v2`: Add support for attaching multi routers to dns zone. [GH-143]
-* `resource/flexibleengine_blockstorage_volume_v2`: Add volume extending support. [GH-156]
-* `resource/flexibleengine_compute_instance_v2`: Add auto_recovery support. [GH-163]
-* `resource/flexibleengine_as_group_v1`: Add lbaas_listeners support. [GH-172]
+* `resource/flexibleengine_dns_zone_v2`: Add support for attaching multi routers to dns zone. ([#143](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/143))
+* `resource/flexibleengine_blockstorage_volume_v2`: Add volume extending support. ([#156](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/156))
+* `resource/flexibleengine_compute_instance_v2`: Add auto_recovery support. ([#163](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/163))
+* `resource/flexibleengine_as_group_v1`: Add lbaas_listeners support. ([#172](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/172))
 
 ## 1.4.0 (January 18, 2019)
 
