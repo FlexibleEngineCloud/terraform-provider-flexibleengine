@@ -23,6 +23,8 @@ func TestAccASV1Group_basic(t *testing.T) {
 				Config: testASV1Group_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckASV1GroupExists("flexibleengine_as_group_v1.hth_as_group", &asGroup),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_as_group_v1.hth_as_group", "lbaas_listeners.0.protocol_port", "8080"),
 				),
 			},
 		},
@@ -95,6 +97,25 @@ resource "flexibleengine_compute_keypair_v2" "hth_key" {
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLo1BCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAT9+OfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZquwhvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TAIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIFuu1p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB jrp-hp-pc"
 }
 
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+  name = "loadbalancer_1"
+  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+}
+
+resource "flexibleengine_lb_listener_v2" "listener_1" {
+  name = "listener_1"
+  protocol = "HTTP"
+  protocol_port = 8080
+  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+}
+
+resource "flexibleengine_lb_pool_v2" "pool_1" {
+  name = "pool_1"
+  protocol = "HTTP"
+  lb_method = "ROUND_ROBIN"
+  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
+}
+
 resource "flexibleengine_as_configuration_v1" "hth_as_config"{
   scaling_configuration_name = "hth_as_config"
   instance_config = {
@@ -116,6 +137,12 @@ resource "flexibleengine_as_group_v1" "hth_as_group"{
   ]
   security_groups = [
     {id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"},
+  ]
+  lbaas_listeners = [
+    {
+      pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+      protocol_port = "${flexibleengine_lb_listener_v2.listener_1.protocol_port}"
+    },
   ]
   vpc_id = "%s"
 }
