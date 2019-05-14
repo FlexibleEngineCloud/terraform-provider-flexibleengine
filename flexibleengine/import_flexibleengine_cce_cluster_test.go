@@ -25,6 +25,9 @@ func TestAccCCEClusterV3_importBasic(t *testing.T) {
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"cluster_version",
+				},
 			},
 		},
 	})
