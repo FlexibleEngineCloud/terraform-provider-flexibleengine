@@ -29,7 +29,7 @@ resource "flexibleengine_compute_bms_server_v2" "basic" {
   security_groups = ["default"]
   availability_zone = "${var.availability_zone}"
 
-  metadata {
+  metadata = {
     this = "that"
   }
 

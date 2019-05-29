@@ -116,7 +116,7 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   flavor_name = "physical.o2.medium"
   security_groups = ["default"]
   availability_zone = "%s"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
@@ -132,7 +132,7 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
   flavor_name = "physical.o2.medium"
   security_groups = ["default"]
   availability_zone = "%s"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
