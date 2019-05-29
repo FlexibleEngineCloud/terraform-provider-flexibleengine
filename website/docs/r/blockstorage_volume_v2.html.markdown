@@ -18,7 +18,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name        = "volume_1"
   description = "first test volume"
   size        = 3
-  metadata {
+  metadata = {
     __system__encrypted = "1"
     __system__cmkid     = "kms_id"
   }

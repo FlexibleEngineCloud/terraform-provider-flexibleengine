@@ -468,7 +468,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["default"]
   availability_zone = "%s"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
@@ -784,7 +784,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   network {
     uuid = "%s"
   }
-  metadata {
+  metadata = {
     foo = "bar"
     abc = "def"
   }
@@ -798,7 +798,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   network {
     uuid = "%s"
   }
-  metadata {
+  metadata = {
     foo = "bar"
     ghi = "jkl"
   }
@@ -992,7 +992,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
   security_groups = ["default"]
   availability_zone = "%s"
-  metadata {
+  metadata = {
     foo = "bar"
   }
   network {
