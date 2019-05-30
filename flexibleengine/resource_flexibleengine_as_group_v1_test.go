@@ -118,13 +118,13 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
 
 resource "flexibleengine_as_configuration_v1" "hth_as_config"{
   scaling_configuration_name = "hth_as_config"
-  instance_config = {
+  instance_config {
     image = "%s"
-    disk = [
-      {size = 40
+    disk {
+      size = 40
       volume_type = "SATA"
-      disk_type = "SYS"}
-    ]
+      disk_type = "SYS"
+    }
     key_name = "${flexibleengine_compute_keypair_v2.hth_key.id}"
   }
 }
@@ -132,18 +132,16 @@ resource "flexibleengine_as_configuration_v1" "hth_as_config"{
 resource "flexibleengine_as_group_v1" "hth_as_group"{
   scaling_group_name = "hth_as_group"
   scaling_configuration_id = "${flexibleengine_as_configuration_v1.hth_as_config.id}"
-  networks = [
-    {id = "%s"},
-  ]
-  security_groups = [
-    {id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"},
-  ]
-  lbaas_listeners = [
-    {
-      pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
-      protocol_port = "${flexibleengine_lb_listener_v2.listener_1.protocol_port}"
-    },
-  ]
+  networks {
+    id = "%s"
+  }
+  security_groups {
+    id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
+  }
+  lbaas_listeners {
+    pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+    protocol_port = "${flexibleengine_lb_listener_v2.listener_1.protocol_port}"
+  }
   vpc_id = "%s"
 }
 `, OS_IMAGE_ID, OS_NETWORK_ID, OS_VPC_ID)
