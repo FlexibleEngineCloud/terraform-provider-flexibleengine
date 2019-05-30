@@ -138,12 +138,12 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     id = "${flexibleengine_networking_secgroup_v2.secgrp_rds.id}"
   }
   dbport = "8635"
-  backupstrategy = {
+  backupstrategy {
     starttime = "00:00:00"
     keepdays = 0
   }
   dbrtpd = "Huangwei-120521"
-  ha = {
+  ha {
     enable = true
     replicationmode = "async"
   }
@@ -184,12 +184,12 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     id = "${flexibleengine_networking_secgroup_v2.secgrp_rds.id}"
   }
   dbport = "8635"
-  backupstrategy = {
+  backupstrategy {
     starttime = "00:00:00"
     keepdays = 0
   }
   dbrtpd = "Huangwei-120521"
-  ha = {
+  ha {
     enable = true
     replicationmode = "async"
   }
