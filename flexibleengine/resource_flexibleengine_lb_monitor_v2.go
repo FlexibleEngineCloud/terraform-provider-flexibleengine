@@ -87,6 +87,10 @@ func resourceMonitorV2() *schema.Resource {
 				Default:  true,
 				Optional: true,
 			},
+			"port": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -111,6 +115,7 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 		ExpectedCodes: d.Get("expected_codes").(string),
 		Name:          d.Get("name").(string),
 		AdminStateUp:  &adminStateUp,
+		MonitorPort:   d.Get("port").(int),
 	}
 
 	timeout := d.Timeout(schema.TimeoutCreate)
@@ -166,6 +171,7 @@ func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("expected_codes", monitor.ExpectedCodes)
 	d.Set("admin_state_up", monitor.AdminStateUp)
 	d.Set("name", monitor.Name)
+	d.Set("port", monitor.MonitorPort)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
@@ -203,6 +209,9 @@ func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 	if d.HasChange("http_method") {
 		updateOpts.HTTPMethod = d.Get("http_method").(string)
+	}
+	if d.HasChange("port") {
+		updateOpts.MonitorPort = d.Get("port").(int)
 	}
 
 	log.Printf("[DEBUG] Updating monitor %s with options: %#v", d.Id(), updateOpts)
