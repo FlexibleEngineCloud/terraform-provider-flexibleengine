@@ -67,6 +67,8 @@ The following arguments are supported:
 * `admin_state_up` - (Optional) The administrative state of the monitor.
     A valid value is true (UP) or false (DOWN).
 
+* `port` - (Optional) Specifies the health check port. The value ranges from 1 to 65536.
+
 
 ## Attributes Reference
 
@@ -82,3 +84,4 @@ The following attributes are exported:
 * `http_method` - See Argument Reference above.
 * `expected_codes` - See Argument Reference above.
 * `admin_state_up` - See Argument Reference above.
+* `port` - See Argument Reference above.

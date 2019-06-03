@@ -21,6 +21,7 @@ func TestAccLBV2Monitor_basic(t *testing.T) {
 				Config: TestAccLBV2MonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2MonitorExists(t, "flexibleengine_lb_monitor_v2.monitor_1", &monitor),
+					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "port", "8888"),
 				),
 			},
 			{
@@ -30,6 +31,7 @@ func TestAccLBV2Monitor_basic(t *testing.T) {
 						"flexibleengine_lb_monitor_v2.monitor_1", "name", "monitor_1_updated"),
 					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "delay", "30"),
 					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "timeout", "15"),
+					resource.TestCheckResourceAttr("flexibleengine_lb_monitor_v2.monitor_1", "port", "9999"),
 				),
 			},
 		},
@@ -116,6 +118,7 @@ resource "flexibleengine_lb_monitor_v2" "monitor_1" {
   timeout = 10
   max_retries = 5
   pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  port = 8888
 
   timeouts {
     create = "5m"
@@ -153,6 +156,7 @@ resource "flexibleengine_lb_monitor_v2" "monitor_1" {
   max_retries = 10
   admin_state_up = "true"
   pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  port = 9999
 
   timeouts {
     create = "5m"
