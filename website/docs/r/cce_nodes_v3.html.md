@@ -28,7 +28,7 @@ Add a node to a container cluster.
        volumetype= "SATA"
      }
      sharetype= "PER"
-     bandwidth_size= 100,
+     bandwidth_size= 100
      data_volumes {
        size= 100
        volumetype= "SATA"
