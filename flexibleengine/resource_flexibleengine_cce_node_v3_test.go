@@ -144,16 +144,14 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
   flavor_id="s1.medium"
   availability_zone= "%s"
   key_pair="%s"
-  root_volume = {
+  root_volume {
     size= 40,
     volumetype= "SATA"
   }
-  data_volumes = [
-    {
-      size= 100,
-      volumetype= "SATA"
-    },
-  ]
+  data_volumes {
+    size= 100,
+    volumetype= "SATA"
+  }
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }
 
@@ -175,16 +173,14 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
   flavor_id="s1.medium"
   availability_zone= "%s"
   key_pair="%s"
-  root_volume = {
+  root_volume {
     size= 40,
     volumetype= "SATA"
   }
-  data_volumes = [
-    {
-      size= 100,
-      volumetype= "SATA"
-    },
-  ]
+  data_volumes {
+    size= 100,
+    volumetype= "SATA"
+  }
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }
 
@@ -206,16 +202,14 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   flavor_id="s1.medium"
   availability_zone= "%s"
   key_pair="%s"
-  root_volume = {
+  root_volume {
     size= 40,
     volumetype= "SATA"
   }
-  data_volumes = [
-    {
-      size= 100,
-      volumetype= "SATA"
-    },
-  ]
+  data_volumes {
+    size= 100,
+    volumetype= "SATA"
+  }
 timeouts {
 create = "10m"
 delete = "10m"

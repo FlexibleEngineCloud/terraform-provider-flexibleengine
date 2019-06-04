@@ -60,16 +60,14 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
   flavor_id="s1.medium"
   availability_zone= "%s"
   key_pair="%s"
-  root_volume = {
+  root_volume {
     size= 40,
     volumetype= "SATA"
   }
-  data_volumes = [
-    {
-      size= 100,
-      volumetype= "SATA"
-    },
-  ]
+  data_volumes {
+    size= 100,
+    volumetype= "SATA"
+  }
 }
 data "flexibleengine_cce_node_v3" "nodes" {
 	cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
