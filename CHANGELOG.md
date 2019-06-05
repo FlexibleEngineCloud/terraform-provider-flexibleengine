@@ -1,4 +1,14 @@
 ## 1.6.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_dns_zone_v2` [GH-190]
+
+ENHANCEMENTS:
+
+* The provider is now compatible with Terraform v0.12, while retaining compatibility with prior versions.
+* `resource/flexibleengine_lb_monitor_v2`: Add health port option support. [GH-189]
+
 ## 1.5.0 (April 30, 2019)
 
 FEATURES:
