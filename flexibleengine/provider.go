@@ -156,6 +156,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			"flexibleengine_blockstorage_volume_v2":    dataSourceBlockStorageVolumeV2(),
 			"flexibleengine_images_image_v2":           dataSourceImagesImageV2(),
 			"flexibleengine_networking_network_v2":     dataSourceNetworkingNetworkV2(),
 			"flexibleengine_networking_secgroup_v2":    dataSourceNetworkingSecGroupV2(),
