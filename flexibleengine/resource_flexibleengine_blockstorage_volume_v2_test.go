@@ -28,6 +28,8 @@ func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "1"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_blockstorage_volume_v2.volume_1", "multiattach", "true"),
 				),
 			},
 			{
@@ -211,6 +213,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
     foo = "bar"
   }
   size = 1
+  multiattach = true
 }
 `
 

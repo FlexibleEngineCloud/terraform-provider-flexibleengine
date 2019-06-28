@@ -70,6 +70,8 @@ The following arguments are supported:
 
 * `cascade` - (Optional, Default:false) Specifies to delete all snapshots associated with the EVS disk.
 
+* `multiattach` - (Optional) Specifies whether the EVS disk is shareable.
+
 ## Attributes Reference
 
 The following attributes are exported:
@@ -84,6 +86,7 @@ The following attributes are exported:
 * `snapshot_id` - See Argument Reference above.
 * `metadata` - See Argument Reference above.
 * `volume_type` - See Argument Reference above.
+* `multiattach` - See Argument Reference above.
 * `attachment` - If a volume is attached to an instance, this attribute will
     display the Attachment ID, Instance ID, and the Device as the Instance
     sees it.
