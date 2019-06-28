@@ -95,6 +95,11 @@ func resourceBlockStorageVolumeV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"multiattach": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+			},
 			"attachment": {
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -152,6 +157,7 @@ func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}
 		SourceReplica:      d.Get("source_replica").(string),
 		SourceVolID:        d.Get("source_vol_id").(string),
 		VolumeType:         d.Get("volume_type").(string),
+		Multiattach:        d.Get("multiattach").(bool),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -230,6 +236,7 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 		log.Printf("[DEBUG] attachment: %v", attachment)
 	}
 	d.Set("attachment", attachments)
+	d.Set("multiattach", v.Multiattach)
 
 	return nil
 }
