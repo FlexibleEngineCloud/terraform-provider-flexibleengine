@@ -395,8 +395,8 @@ The `block_device` block supports:
 * `volume_type` - (Optional) Currently, the value can be `SSD` (ultra-I/O disk type),
     `SAS` (high I/O disk type), or `SATA` (common I/O disk type)
 
-* `boot_index` - (Optional) The boot index of the volume. It defaults to 0.
-    Changing this creates a new server.
+* `boot_index` - (Optional) The boot index of the volume. It defaults to 0, which
+	indicates that it's a system disk. Changing this creates a new server.
 
 * `destination_type` - (Optional) The type that gets created. Possible values
     are "volume" and "local". Changing this creates a new server.
