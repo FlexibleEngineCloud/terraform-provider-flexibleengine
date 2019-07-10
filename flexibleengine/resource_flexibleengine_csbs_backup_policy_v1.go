@@ -64,7 +64,7 @@ func resourceCSBSBackupPolicyV1() *schema.Resource {
 						"name": {
 							Type:     schema.TypeString,
 							Optional: true,
-							Computed: true,
+							Default:  "default",
 						},
 						"description": {
 							Type:     schema.TypeString,
