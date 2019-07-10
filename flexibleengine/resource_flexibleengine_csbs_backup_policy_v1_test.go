@@ -194,7 +194,6 @@ resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
       name = "resource4"
   	}
   	scheduled_operation {
-      name ="mybackup"
       enabled = true
       operation_type ="backup"
       max_backups = "2"
