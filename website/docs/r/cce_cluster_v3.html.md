@@ -86,6 +86,12 @@ All above argument parameters can be exported as attribute parameters along with
 
   * `status` -  Cluster status information.
 
+  * `internal` - The internal network address.
+
+  * `external` - The external network address.
+
+  * `external_otc` - The endpoint of the cluster to be accessed through API Gateway.
+
 ## Import
 
  Cluster can be imported using the cluster id, e.g.
