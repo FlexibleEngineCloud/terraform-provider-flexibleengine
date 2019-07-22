@@ -164,6 +164,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_kms_key_v1":                dataSourceKmsKeyV1(),
 			"flexibleengine_kms_data_key_v1":           dataSourceKmsDataKeyV1(),
 			"flexibleengine_rds_flavors_v1":            dataSourceRdsFlavorV1(),
+			"flexibleengine_rds_flavors_v3":            dataSourceRdsFlavorV3(),
 			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
