@@ -17,7 +17,6 @@ but only networking floating IPs can be used with load balancers.
 
 ```hcl
 resource "flexibleengine_compute_floatingip_v2" "floatip_1" {
-  pool = "admin_external_net"
 }
 ```
 
@@ -31,8 +30,8 @@ The following arguments are supported:
     is used. Changing this creates a new floating IP (which may or may not
     have a different address).
 
-* `pool` - (Required) The name of the pool from which to obtain the floating
-    IP. Changing this creates a new floating IP.
+* `pool` - (Optional) The name of the pool from which to obtain the floating
+    IP. Default value is admin_external_net. Changing this creates a new floating IP.
 
 ## Attributes Reference
 
