@@ -1,4 +1,24 @@
-## 1.6.1 (Unreleased)
+## 1.7.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_blockstorage_volume_v2` [GH-192]
+* **New Data Source:** `flexibleengine_rds_flavors_v3` [GH-209]
+* **New Resource:** `flexibleengine_rds_instance_v3` [GH-209]
+* **New Resource:** `flexibleengine_rds_parametergroup_v3` [GH-209]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_blockstorage_volume_v2`: Add multiattach support [GH-195]
+* `resource/flexibleengine_cce_cluster_v3`: Add endpoints to CCE cluster [GH-202]
+* `resource/flexibleengine_cce_node_v3`: Add public_ip/private_ip to CCE node [GH-205]
+* `resource/flexibleengine_networking_floatingip_v2`: Add default value for floating_ip pool [GH-211]
+* `resource/flexibleengine_lb_listener_v2`: Add example for lb_listener with TERMINATED_HTTPS [GH-217]
+
+BUG FIXES:
+
+* `resource/flexibleengine_csbs_backup_policy_v1`: Fix CSBS backup policy name issue [GH-201]
+
 ## 1.6.0 (June 05, 2019)
 
 FEATURES:
