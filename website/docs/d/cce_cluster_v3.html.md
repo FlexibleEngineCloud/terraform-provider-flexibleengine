@@ -60,8 +60,8 @@ All above argument parameters can be exported as attribute parameters along with
 
 * `highway_subnet_id` - The ID of the high speed network used to create bare metal nodes.
 
-* `internal` - The internal network address.
+* `internal_endpoint` - The internal network address.
 
-* `external` - The external network address.
+* `external_endpoint` - The external network address.
 
-* `external_otc` - The endpoint of the cluster to be accessed through API Gateway.
+* `external_apig_endpoint` - The endpoint of the cluster to be accessed through API Gateway.

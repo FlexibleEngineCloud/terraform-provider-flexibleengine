@@ -111,15 +111,15 @@ func resourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"internal": {
+			"internal_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"external": {
+			"external_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"external_otc": {
+			"external_apig_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -237,9 +237,9 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("highway_subnet_id", n.Spec.HostNetwork.HighwaySubnet)
 	d.Set("container_network_type", n.Spec.ContainerNetwork.Mode)
 	d.Set("container_network_cidr", n.Spec.ContainerNetwork.Cidr)
-	d.Set("internal", n.Status.Endpoints[0].Internal)
-	d.Set("external", n.Status.Endpoints[0].External)
-	d.Set("external_otc", n.Status.Endpoints[0].ExternalOTC)
+	d.Set("internal_endpoint", n.Status.Endpoints[0].Internal)
+	d.Set("external_endpoint", n.Status.Endpoints[0].External)
+	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
