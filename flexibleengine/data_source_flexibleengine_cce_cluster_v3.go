@@ -71,15 +71,15 @@ func dataSourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"internal": {
+			"internal_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"external": {
+			"external_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"external_otc": {
+			"external_apig_endpoint": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -137,9 +137,9 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("container_network_cidr", Cluster.Spec.ContainerNetwork.Cidr)
 	d.Set("container_network_type", Cluster.Spec.ContainerNetwork.Mode)
 	d.Set("status", Cluster.Status.Phase)
-	d.Set("internal", Cluster.Status.Endpoints[0].Internal)
-	d.Set("external", Cluster.Status.Endpoints[0].External)
-	d.Set("external_otc", Cluster.Status.Endpoints[0].ExternalOTC)
+	d.Set("internal_endpoint", Cluster.Status.Endpoints[0].Internal)
+	d.Set("external_endpoint", Cluster.Status.Endpoints[0].External)
+	d.Set("external_apig_endpoint", Cluster.Status.Endpoints[0].ExternalOTC)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
