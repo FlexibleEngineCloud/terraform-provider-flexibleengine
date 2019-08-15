@@ -1,13 +1,13 @@
 ---
 layout: "flexibleengine"
-page_title: "FlexibleEngine: flexibleengine_cce_nodes_v3"
-sidebar_current: "docs-flexibleengine-datasource-cce-nodes-v3"
+page_title: "FlexibleEngine: flexibleengine_cce_node_v3"
+sidebar_current: "docs-flexibleengine-datasource-cce-node-v3"
 description: |-
   To get the specified node in a cluster.
 ---
 
 
-# flexibleengine_cce_nodes_v3
+# flexibleengine_cce_node_v3
 
 To get the specified node in a cluster.
 
