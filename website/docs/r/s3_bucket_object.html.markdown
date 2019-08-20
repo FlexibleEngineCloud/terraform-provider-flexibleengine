@@ -21,7 +21,6 @@ resource "flexibleengine_s3_bucket_object" "object" {
   source = "path/to/file"
   etag   = "${md5(file("path/to/file"))}"
 }
-```
 
 resource "flexibleengine_s3_bucket" "examplebucket" {
   bucket = "examplebuckettftest"
