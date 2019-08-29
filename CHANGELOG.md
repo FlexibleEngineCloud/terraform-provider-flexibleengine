@@ -14,10 +14,14 @@ ENHANCEMENTS:
 * `resource/flexibleengine_cce_node_v3`: Add public_ip/private_ip to CCE node [GH-205]
 * `resource/flexibleengine_networking_floatingip_v2`: Add default value for floating_ip pool [GH-211]
 * `resource/flexibleengine_lb_listener_v2`: Add example for lb_listener with TERMINATED_HTTPS [GH-217]
+* Add detailed error message for 404 [GH-225]
 
 BUG FIXES:
 
 * `resource/flexibleengine_csbs_backup_policy_v1`: Fix CSBS backup policy name issue [GH-201]
+* `datasource/flexibleengine_cce_node_v3`: Fix cce_node datasource naming issue [GH-222]
+* `resource/flexibleengine_cce_node_v3`: Fix data_volumes type issue [GH-229]
+* `resource/flexibleengine_vpc_subnet_v1`: Fix dns_list type issue [GH-230]
 
 ## 1.6.0 (June 05, 2019)
 
