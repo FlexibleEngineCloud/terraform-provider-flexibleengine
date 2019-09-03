@@ -33,9 +33,11 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "flavor_id", "cce.s1.small"),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_version", "v1.9.7-r1"),
+						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_version", "v1.11.7"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_cce_cluster_v3.cluster_1", "container_network_type", "overlay_l2"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_cce_cluster_v3.cluster_1", "authentication_mode", "x509"),
 				),
 			},
 			{
@@ -62,6 +64,8 @@ func TestAccCCEClusterV3_timeout(t *testing.T) {
 				Config: testAccCCEClusterV3_timeout(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCEClusterV3Exists("flexibleengine_cce_cluster_v3.cluster_1", &cluster),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_cce_cluster_v3.cluster_1", "authentication_mode", "rbac"),
 				),
 			},
 		},
@@ -127,7 +131,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
+  cluster_version = "v1.11.7"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -140,7 +144,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
+  cluster_version = "v1.11.7"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -156,6 +160,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   flavor_id="cce.s1.small"
   vpc_id="%s"
   subnet_id="%s"
+  authentication_mode = "rbac"
   container_network_type="overlay_l2"
     timeouts {
     create = "10m"

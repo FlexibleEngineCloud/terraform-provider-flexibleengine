@@ -107,6 +107,12 @@ func resourceCCEClusterV3() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"authentication_mode": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Default:  "x509",
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -179,6 +185,8 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 				HighwaySubnet: d.Get("highway_subnet_id").(string)},
 			ContainerNetwork: clusters.ContainerNetworkSpec{Mode: d.Get("container_network_type").(string),
 				Cidr: d.Get("container_network_cidr").(string)},
+			Authentication: clusters.AuthenticationSpec{Mode: d.Get("authentication_mode").(string),
+				AuthenticatingProxy: make(map[string]string)},
 			BillingMode: d.Get("billing_mode").(int),
 			ExtendParam: resourceClusterExtendParamV3(d),
 		},
@@ -240,6 +248,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("internal_endpoint", n.Status.Endpoints[0].Internal)
 	d.Set("external_endpoint", n.Status.Endpoints[0].External)
 	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)
+	d.Set("authentication_mode", n.Spec.Authentication.Mode)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
