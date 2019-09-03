@@ -163,12 +163,6 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Unable to create flexibleengine CCE client : %s", err)
 	}
 
-	//TOOD: remove this hardcoding when API behavior changed on cloud side
-	cluster_version := "v1.9.7-r1"
-	if v, ok := d.GetOk("cluster_version"); ok {
-		cluster_version = v.(string)
-	}
-
 	createOpts := clusters.CreateOpts{
 		Kind:       "Cluster",
 		ApiVersion: "v3",
@@ -178,7 +172,7 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 		Spec: clusters.Spec{
 			Type:        d.Get("cluster_type").(string),
 			Flavor:      d.Get("flavor_id").(string),
-			Version:     cluster_version,
+			Version:     d.Get("cluster_version").(string),
 			Description: d.Get("description").(string),
 			HostNetwork: clusters.HostNetworkSpec{VpcId: d.Get("vpc_id").(string),
 				SubnetId:      d.Get("subnet_id").(string),
