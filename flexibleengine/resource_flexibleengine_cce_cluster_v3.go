@@ -111,7 +111,6 @@ func resourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default:  "x509",
 			},
 			"status": {
 				Type:     schema.TypeString,
@@ -163,27 +162,33 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Unable to create flexibleengine CCE client : %s", err)
 	}
 
+	spec := clusters.Spec{
+		Type:        d.Get("cluster_type").(string),
+		Flavor:      d.Get("flavor_id").(string),
+		Version:     d.Get("cluster_version").(string),
+		Description: d.Get("description").(string),
+		HostNetwork: clusters.HostNetworkSpec{VpcId: d.Get("vpc_id").(string),
+			SubnetId:      d.Get("subnet_id").(string),
+			HighwaySubnet: d.Get("highway_subnet_id").(string)},
+		ContainerNetwork: clusters.ContainerNetworkSpec{Mode: d.Get("container_network_type").(string),
+			Cidr: d.Get("container_network_cidr").(string)},
+		BillingMode: d.Get("billing_mode").(int),
+		ExtendParam: resourceClusterExtendParamV3(d),
+	}
+	if hasFilledOpt(d, "authentication_mode") {
+		spec.Authentication = clusters.AuthenticationSpec{
+			Mode:                d.Get("authentication_mode").(string),
+			AuthenticatingProxy: make(map[string]string),
+		}
+	}
+
 	createOpts := clusters.CreateOpts{
 		Kind:       "Cluster",
 		ApiVersion: "v3",
 		Metadata: clusters.CreateMetaData{Name: d.Get("name").(string),
 			Labels:      resourceClusterLabelsV3(d),
 			Annotations: resourceClusterAnnotationsV3(d)},
-		Spec: clusters.Spec{
-			Type:        d.Get("cluster_type").(string),
-			Flavor:      d.Get("flavor_id").(string),
-			Version:     d.Get("cluster_version").(string),
-			Description: d.Get("description").(string),
-			HostNetwork: clusters.HostNetworkSpec{VpcId: d.Get("vpc_id").(string),
-				SubnetId:      d.Get("subnet_id").(string),
-				HighwaySubnet: d.Get("highway_subnet_id").(string)},
-			ContainerNetwork: clusters.ContainerNetworkSpec{Mode: d.Get("container_network_type").(string),
-				Cidr: d.Get("container_network_cidr").(string)},
-			Authentication: clusters.AuthenticationSpec{Mode: d.Get("authentication_mode").(string),
-				AuthenticatingProxy: make(map[string]string)},
-			BillingMode: d.Get("billing_mode").(int),
-			ExtendParam: resourceClusterExtendParamV3(d),
-		},
+		Spec: spec,
 	}
 
 	create, err := clusters.Create(cceClient, createOpts).Extract()
