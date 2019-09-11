@@ -128,6 +128,10 @@ func resourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -248,6 +252,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("external_endpoint", n.Status.Endpoints[0].External)
 	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)
 	d.Set("authentication_mode", n.Spec.Authentication.Mode)
+	d.Set("security_group_id", n.Spec.HostNetwork.SecurityGroup)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
