@@ -54,6 +54,8 @@ func TestAccCCENodesV3_timeout(t *testing.T) {
 				Config: testAccCCENodeV3_timeout(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_cce_node_v3.node_1", "os", "CentOS 7.6"),
 				),
 			},
 		},
@@ -132,7 +134,6 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -161,7 +162,6 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
@@ -190,10 +190,10 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
-  cluster_version = "v1.9.7-r1"
   vpc_id="%s"
   subnet_id="%s"
   container_network_type="overlay_l2"
+  authentication_mode = "rbac"
 }
 
 resource "flexibleengine_cce_node_v3" "node_1" {
@@ -201,6 +201,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   name = "test-node2"
   flavor_id="s1.medium"
   availability_zone= "%s"
+  os = "CentOS 7.6"
   key_pair="%s"
   root_volume {
     size= 40
