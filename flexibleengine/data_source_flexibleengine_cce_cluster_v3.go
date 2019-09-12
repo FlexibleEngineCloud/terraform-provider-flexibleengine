@@ -83,6 +83,10 @@ func dataSourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -140,6 +144,7 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("internal_endpoint", Cluster.Status.Endpoints[0].Internal)
 	d.Set("external_endpoint", Cluster.Status.Endpoints[0].External)
 	d.Set("external_apig_endpoint", Cluster.Status.Endpoints[0].ExternalOTC)
+	d.Set("security_group_id", Cluster.Spec.HostNetwork.SecurityGroup)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

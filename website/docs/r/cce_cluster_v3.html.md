@@ -96,6 +96,8 @@ All above argument parameters can be exported as attribute parameters along with
 
   * `external_apig_endpoint` - The endpoint of the cluster to be accessed through API Gateway.
 
+  * `security_group_id` - Security group ID of the cluster.
+
 ## Import
 
  Cluster can be imported using the cluster id, e.g.
