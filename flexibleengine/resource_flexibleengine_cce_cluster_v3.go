@@ -110,6 +110,7 @@ func resourceCCEClusterV3() *schema.Resource {
 			"authentication_mode": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ForceNew: true,
 			},
 			"status": {
