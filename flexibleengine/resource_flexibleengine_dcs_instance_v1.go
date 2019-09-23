@@ -93,27 +93,27 @@ func resourceDcsInstanceV1() *schema.Resource {
 			},
 			"save_days": {
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 			"backup_type": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 			"begin_at": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 			"period_type": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 			"backup_at": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
 			},
@@ -199,22 +199,24 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		no_password_access = "false"
 	}
 	createOpts := &instances.CreateOps{
-		Name:                 d.Get("name").(string),
-		Description:          d.Get("description").(string),
-		Engine:               d.Get("engine").(string),
-		EngineVersion:        d.Get("engine_version").(string),
-		Capacity:             d.Get("capacity").(int),
-		NoPasswordAccess:     no_password_access,
-		Password:             d.Get("password").(string),
-		AccessUser:           d.Get("access_user").(string),
-		VPCID:                d.Get("vpc_id").(string),
-		SecurityGroupID:      d.Get("security_group_id").(string),
-		SubnetID:             d.Get("subnet_id").(string),
-		AvailableZones:       getAllAvailableZones(d),
-		ProductID:            d.Get("product_id").(string),
-		InstanceBackupPolicy: getInstanceBackupPolicy(d),
-		MaintainBegin:        d.Get("maintain_begin").(string),
-		MaintainEnd:          d.Get("maintain_end").(string),
+		Name:             d.Get("name").(string),
+		Description:      d.Get("description").(string),
+		Engine:           d.Get("engine").(string),
+		EngineVersion:    d.Get("engine_version").(string),
+		Capacity:         d.Get("capacity").(int),
+		NoPasswordAccess: no_password_access,
+		Password:         d.Get("password").(string),
+		AccessUser:       d.Get("access_user").(string),
+		VPCID:            d.Get("vpc_id").(string),
+		SecurityGroupID:  d.Get("security_group_id").(string),
+		SubnetID:         d.Get("subnet_id").(string),
+		AvailableZones:   getAllAvailableZones(d),
+		ProductID:        d.Get("product_id").(string),
+		MaintainBegin:    d.Get("maintain_begin").(string),
+		MaintainEnd:      d.Get("maintain_end").(string),
+	}
+	if hasFilledOpt(d, "save_days") {
+		createOpts.InstanceBackupPolicy = getInstanceBackupPolicy(d)
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)

@@ -113,21 +113,21 @@ The following arguments are supported:
 	blank, parameter maintain_begin is also blank. In this case, the system automatically allocates
 	the default end time 06:00.
 
-* `save_days` - (Required) Retention time. Unit: day. Range: 1–7.
+* `save_days` - (Optional) Retention time. Unit: day. Range: 1–7.
     Changing this creates a new instance.
 
-* `backup_type` - (Required) Backup type. Options:
+* `backup_type` - (Optional) Backup type. Options:
     auto: automatic backup.
     manual: manual backup.
     Changing this creates a new instance.
 
-* `begin_at` - (Required) Time at which backup starts. "00:00-01:00" indicates that backup
+* `begin_at` - (Optional) Time at which backup starts. "00:00-01:00" indicates that backup
     starts at 00:00:00. Changing this creates a new instance.
 
-* `period_type` - (Required) Interval at which backup is performed. Currently, only weekly
+* `period_type` - (Optional) Interval at which backup is performed. Currently, only weekly
     backup is supported. Changing this creates a new instance.
 
-* `backup_at` - (Required) Day in a week on which backup starts. Range: 1–7. Where: 1
+* `backup_at` - (Optional) Day in a week on which backup starts. Range: 1–7. Where: 1
     indicates Monday; 7 indicates Sunday. Changing this creates a new instance.
 
 ## Attributes Reference

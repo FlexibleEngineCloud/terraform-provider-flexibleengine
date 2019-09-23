@@ -99,7 +99,7 @@ func testAccDcsV1Instance_basic(instanceName string) string {
 		}
 		resource "flexibleengine_dcs_instance_v1" "instance_1" {
 			name  = "%s"
-          engine_version = "3.0.7"
+          engine_version = "3.0"
           password = "Huawei_test"
           engine = "Redis"
           capacity = 2
