@@ -332,9 +332,10 @@ func v3AKSKAuth(client *golangsdk.ProviderClient, endpoint string, options golan
 	if options.DomainID == "" && options.Domain != "" {
 		id, err := getDomainID(options.Domain, v3Client)
 		if err != nil {
-			return err
+			options.DomainID = ""
+		} else {
+			options.DomainID = id
 		}
-		options.DomainID = id
 	}
 
 	client.ProjectID = options.ProjectId
@@ -689,6 +690,11 @@ func NewComputeV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (
 	return sc, err
 }
 
+func NewComputeV11(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "ecsv1.1")
+	return sc, err
+}
+
 func NewRdsTagV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "network")
 	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "rds", 1)
@@ -734,6 +740,7 @@ func NewElasticLoadBalancer(client *golangsdk.ProviderClient, eo golangsdk.Endpo
 		return sc, err
 	}
 	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "elb", 1)
+	sc.Endpoint = strings.Replace(sc.Endpoint, "myhwclouds", "myhuaweicloud", 1)
 	sc.ResourceBase = sc.Endpoint + "v1.0/"
 	return sc, err
 }
@@ -788,6 +795,7 @@ func NewAntiDDoSV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) 
 func NewCCEV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "network")
 	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "cce", 1)
+	sc.Endpoint = strings.Replace(sc.Endpoint, "myhwclouds", "myhuaweicloud", 1)
 	sc.ResourceBase = sc.Endpoint + "api/v3/projects/" + client.ProjectID + "/"
 	return sc, err
 }
@@ -990,4 +998,16 @@ func NewSDKClient(c *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, servic
 	}
 
 	return initClientOpts(c, eo, serviceType)
+}
+
+// NewCESV1 creates a ServiceClient that may be used with the v1 CES service.
+func NewCESV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "cesv1")
+	return sc, err
+}
+
+// NewDDSV3 creates a ServiceClient that may be used to access the DDS service.
+func NewDDSV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "ddsv3")
+	return sc, err
 }
