@@ -226,6 +226,7 @@ github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones
 github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances
 github.com/huaweicloud/golangsdk/openstack/dcs/v1/maintainwindows
 github.com/huaweicloud/golangsdk/openstack/dcs/v1/products
+github.com/huaweicloud/golangsdk/openstack/dds/v3/flavors
 github.com/huaweicloud/golangsdk/openstack/dds/v3/instances
 github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets
 github.com/huaweicloud/golangsdk/openstack/dns/v2/zones
