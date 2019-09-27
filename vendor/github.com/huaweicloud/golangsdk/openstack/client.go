@@ -991,3 +991,15 @@ func NewSDKClient(c *golangsdk.ProviderClient, eo golangsdk.EndpointOpts, servic
 
 	return initClientOpts(c, eo, serviceType)
 }
+
+// NewCESV1 creates a ServiceClient that may be used with the v1 CES service.
+func NewCESV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "cesv1")
+	return sc, err
+}
+
+// NewDDSV3 creates a ServiceClient that may be used to access the DDS service.
+func NewDDSV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "ddsv3")
+	return sc, err
+}
