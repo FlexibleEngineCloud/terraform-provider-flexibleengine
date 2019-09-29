@@ -168,7 +168,6 @@ func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("max_retries", monitor.MaxRetries)
 	d.Set("url_path", monitor.URLPath)
 	d.Set("http_method", monitor.HTTPMethod)
-	d.Set("expected_codes", monitor.ExpectedCodes)
 	d.Set("admin_state_up", monitor.AdminStateUp)
 	d.Set("name", monitor.Name)
 	d.Set("port", monitor.MonitorPort)
