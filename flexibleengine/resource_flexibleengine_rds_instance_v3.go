@@ -66,9 +66,10 @@ func resourceRdsInstanceV3() *schema.Resource {
 							ForceNew: true,
 						},
 						"version": {
-							Type:     schema.TypeString,
-							Required: true,
-							ForceNew: true,
+							Type:             schema.TypeString,
+							Required:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: suppressRdsVersionDiffs,
 						},
 						"port": {
 							Type:     schema.TypeInt,

@@ -48,7 +48,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   db {
     password = "Huangwei!120521"
     type = "PostgreSQL"
-    version = "9.5"
+    version = "9.5.5"
     port = "8635"
   }
   name = "terraform_test_rds_instance%s"

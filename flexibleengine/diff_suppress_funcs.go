@@ -124,3 +124,10 @@ func suppressRdsNameDiffs(k, old, new string, d *schema.ResourceData) bool {
 	}
 	return false
 }
+
+func suppressRdsVersionDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if old != "" && strings.HasPrefix(new, old) {
+		return true
+	}
+	return false
+}
