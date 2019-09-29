@@ -1,4 +1,24 @@
-## 1.7.1 (Unreleased)
+## 1.8.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_dds_flavors_v3` [GH-246]
+* **New Data Source:** `flexibleengine_cce_node_ids_v3` [GH-248]
+* **New Resource:** `flexibleengine_dds_instance_v3` [GH-245]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cce_cluster_v3`: Add authentication mode support [GH-234]
+* `resource/flexibleengine_cce_node_v3`: Add os parameter support [GH-238]
+* `resource/flexibleengine_cce_cluster_v3`: Add security_group_id attribute [GH-239]
+
+BUG FIXES:
+
+* `resource/flexibleengine_cce_cluster_v3`: Fix cluster default version issue [GH-235]
+* `resource/flexibleengine_dcs_instance_v1`: Fix DCS parameters issue for single node [GH-241]
+* `resource/flexibleengine_lb_monitor_v2`: Fix lb monitor expected_codes issue [GH-249]
+* `resource/flexibleengine_rds_instance_v3`: Fix RDS instance db version issue [GH-250]
+
 ## 1.7.0 (August 29, 2019)
 
 FEATURES:
