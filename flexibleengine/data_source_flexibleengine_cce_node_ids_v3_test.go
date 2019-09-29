@@ -9,40 +9,39 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccCCENodesV3DataSource_basic(t *testing.T) {
+func TestAccCceNodeIdsV3DataSource_basic(t *testing.T) {
 	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccCCEKeyPairPreCheck(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCENodeV3DataSource_basic(cceName),
+				Config: testAccCceNodeIdsV3DataSource_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCCENodeV3DataSourceID("data.flexibleengine_cce_node_v3.nodes"),
-					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_v3.nodes", "name", cceName),
-					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_v3.nodes", "flavor_id", "s1.medium"),
+					testAccCceNodeIdsV3DataSourceID("data.flexibleengine_cce_node_ids_v3.node_ids"),
+					resource.TestCheckResourceAttr("data.flexibleengine_cce_node_ids_v3.node_ids", "ids.#", "1"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckCCENodeV3DataSourceID(n string) resource.TestCheckFunc {
+func testAccCceNodeIdsV3DataSourceID(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Can't find nodes data source: %s ", n)
+			return fmt.Errorf("Can't find cce node data source: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("Node data source ID not set ")
+			return fmt.Errorf("Cce node data source ID not set")
 		}
 
 		return nil
 	}
 }
 
-func testAccCCENodeV3DataSource_basic(cceName string) string {
+func testAccCceNodeIdsV3DataSource_basic(cceName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
@@ -68,9 +67,9 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
     volumetype= "SATA"
   }
 }
-data "flexibleengine_cce_node_v3" "nodes" {
+
+data "flexibleengine_cce_node_ids_v3" "node_ids" {
 	cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-	node_id = "${flexibleengine_cce_node_v3.node_1.id}"
 }
 `, cceName, OS_VPC_ID, OS_NETWORK_ID, cceName, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }

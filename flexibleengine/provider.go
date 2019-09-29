@@ -188,6 +188,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_dcs_maintainwindow_v1":     dataSourceDcsMaintainWindowV1(),
 			"flexibleengine_dcs_product_v1":            dataSourceDcsProductV1(),
 			"flexibleengine_cce_node_v3":               dataSourceCceNodesV3(),
+			"flexibleengine_cce_node_ids_v3":           dataSourceCceNodeIdsV3(),
 			"flexibleengine_cce_cluster_v3":            dataSourceCCEClusterV3(),
 			"flexibleengine_dns_zone_v2":               dataSourceDNSZoneV2(),
 			"flexibleengine_dds_flavor_v3":             dataSourceDDSFlavorV3(),
