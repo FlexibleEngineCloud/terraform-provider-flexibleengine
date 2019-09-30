@@ -1,23 +1,23 @@
-## 1.8.0 (Unreleased)
+## 1.8.0 (September 30, 2019)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_dds_flavors_v3` [GH-246]
-* **New Data Source:** `flexibleengine_cce_node_ids_v3` [GH-248]
-* **New Resource:** `flexibleengine_dds_instance_v3` [GH-245]
+* **New Data Source:** `flexibleengine_dds_flavors_v3` ([#246](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/246))
+* **New Data Source:** `flexibleengine_cce_node_ids_v3` ([#248](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/248))
+* **New Resource:** `flexibleengine_dds_instance_v3` ([#245](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/245))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_cce_cluster_v3`: Add authentication mode support [GH-234]
-* `resource/flexibleengine_cce_node_v3`: Add os parameter support [GH-238]
-* `resource/flexibleengine_cce_cluster_v3`: Add security_group_id attribute [GH-239]
+* `resource/flexibleengine_cce_cluster_v3`: Add authentication mode support ([#234](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/234))
+* `resource/flexibleengine_cce_node_v3`: Add os parameter support ([#238](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/238))
+* `resource/flexibleengine_cce_cluster_v3`: Add security_group_id attribute ([#239](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/239))
 
 BUG FIXES:
 
-* `resource/flexibleengine_cce_cluster_v3`: Fix cluster default version issue [GH-235]
-* `resource/flexibleengine_dcs_instance_v1`: Fix DCS parameters issue for single node [GH-241]
-* `resource/flexibleengine_lb_monitor_v2`: Fix lb monitor expected_codes issue [GH-249]
-* `resource/flexibleengine_rds_instance_v3`: Fix RDS instance db version issue [GH-250]
+* `resource/flexibleengine_cce_cluster_v3`: Fix cluster default version issue ([#235](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/235))
+* `resource/flexibleengine_dcs_instance_v1`: Fix DCS parameters issue for single node ([#241](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/241))
+* `resource/flexibleengine_lb_monitor_v2`: Fix lb monitor expected_codes issue ([#249](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/249))
+* `resource/flexibleengine_rds_instance_v3`: Fix RDS instance db version issue ([#250](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/250))
 
 ## 1.7.0 (August 29, 2019)
 
