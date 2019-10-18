@@ -3,7 +3,7 @@ package flexibleengine
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccVBSBackupV2_importBasic(t *testing.T) {
