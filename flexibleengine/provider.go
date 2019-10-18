@@ -11,7 +11,7 @@ var osMutexKV = mutexkv.NewMutexKV()
 
 // Provider returns a schema.Provider for FlexibleEngine.
 func Provider() terraform.ResourceProvider {
-	return &schema.Provider{
+	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"access_key": {
 				Type:        schema.TypeString,
@@ -276,9 +276,19 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_cce_cluster_v3":                     resourceCCEClusterV3(),
 			"flexibleengine_dds_instance_v3":                    resourceDdsInstanceV3(),
 		},
-
-		ConfigureFunc: configureProvider,
 	}
+
+	provider.ConfigureFunc = func(d *schema.ResourceData) (interface{}, error) {
+		terraformVersion := provider.TerraformVersion
+		if terraformVersion == "" {
+			// Terraform 0.12 introduced this field to the protocol
+			// We can therefore assume that if it's missing it's 0.10 or 0.11
+			terraformVersion = "0.11+compatible"
+		}
+		return configureProvider(d, terraformVersion)
+	}
+
+	return provider
 }
 
 var descriptions map[string]string
@@ -328,7 +338,7 @@ func init() {
 	}
 }
 
-func configureProvider(d *schema.ResourceData) (interface{}, error) {
+func configureProvider(d *schema.ResourceData, terraformVersion string) (interface{}, error) {
 	config := Config{
 		AccessKey:        d.Get("access_key").(string),
 		SecretKey:        d.Get("secret_key").(string),
@@ -348,6 +358,7 @@ func configureProvider(d *schema.ResourceData) (interface{}, error) {
 		TenantName:       d.Get("tenant_name").(string),
 		Username:         d.Get("user_name").(string),
 		UserID:           d.Get("user_id").(string),
+		terraformVersion: terraformVersion,
 	}
 
 	if err := config.LoadAndValidate(); err != nil {
