@@ -207,9 +207,9 @@ The `db` block supports:
 * `version` -
   (Required)
   Specifies the database version. MySQL databases support MySQL 5.6
-  and 5.7. PostgreSQL databases support
-  PostgreSQL 9.5 and 9.6. Microsoft SQL Server
-  databases support 2014 SE, 2016 SE, and 2016 EE.
+  and 5.7, example values: "5.6", "5.7". PostgreSQL databases support
+  PostgreSQL 9.5, 9.6, 10 and 11, example values: "9.5", "9.6", "10", "11". Microsoft SQL Server
+  databases support 2014 SE and 2014 EE, example values: "2014_SE", "2014_EE".
   Changing this parameter will create a new resource.
 
 The `volume` block supports:
