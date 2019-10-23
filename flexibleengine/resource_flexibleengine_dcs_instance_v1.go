@@ -66,9 +66,17 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Required: true,
 			},
 			"subnet_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"network_id"},
+				Deprecated:    "use network_id instead",
+			},
+			"network_id": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"subnet_id"},
 			},
 			"available_zones": {
 				Type:     schema.TypeList,
@@ -198,6 +206,11 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 	if d.Get("access_user").(string) != "" || d.Get("password").(string) != "" {
 		no_password_access = "false"
 	}
+	subnet_id, subnet_ok := d.GetOk("subnet_id")
+	network_id, network_ok := d.GetOk("network_id")
+	if !subnet_ok && !network_ok {
+		return fmt.Errorf("one of subnet_id or network_id must be configured")
+	}
 	createOpts := &instances.CreateOps{
 		Name:             d.Get("name").(string),
 		Description:      d.Get("description").(string),
@@ -209,11 +222,15 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		AccessUser:       d.Get("access_user").(string),
 		VPCID:            d.Get("vpc_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
-		SubnetID:         d.Get("subnet_id").(string),
 		AvailableZones:   getAllAvailableZones(d),
 		ProductID:        d.Get("product_id").(string),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
+	}
+	if subnet_ok {
+		createOpts.SubnetID = subnet_id.(string)
+	} else {
+		createOpts.SubnetID = network_id.(string)
 	}
 	if hasFilledOpt(d, "save_days") {
 		createOpts.InstanceBackupPolicy = getInstanceBackupPolicy(d)
@@ -279,7 +296,6 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("product_id", v.ProductID)
 	d.Set("security_group_id", v.SecurityGroupID)
 	d.Set("security_group_name", v.SecurityGroupName)
-	d.Set("subnet_id", v.SubnetID)
 	d.Set("subnet_name", v.SubnetName)
 	d.Set("user_id", v.UserID)
 	d.Set("user_name", v.UserName)
@@ -287,6 +303,12 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_begin", v.MaintainBegin)
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
+
+	if _, ok := d.GetOk("subnet_id"); ok {
+		d.Set("subnet_id", v.SubnetID)
+	} else {
+		d.Set("network_id", v.SubnetID)
+	}
 
 	return nil
 }
