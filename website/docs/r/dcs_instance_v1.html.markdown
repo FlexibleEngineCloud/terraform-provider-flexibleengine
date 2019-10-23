@@ -33,7 +33,7 @@ Manages a DCS instance in the flexibleengine DCS Service.
           capacity = 2
           vpc_id = "1477393a-29c9-4de5-843f-18ef51257c7e"
           security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-          subnet_id = "27d99e17-42f2-4751-818f-5c8c6c03ff15"
+          network_id = "27d99e17-42f2-4751-818f-5c8c6c03ff15"
           available_zones = ["${data.flexibleengine_dcs_az_v1.az_1.id}"]
           product_id = "${data.flexibleengine_dcs_product_v1.product_1.id}"
           save_days = 1
@@ -83,9 +83,9 @@ The following arguments are supported:
 * `security_group_id` - (Required) Tenant's security group ID. For details on how to
     create security groups, see the Virtual Private Cloud API Reference.
 
-* `subnet_id` - (Required) Subnet ID. For details on how to create subnets, see the
-    Virtual Private Cloud API Reference.
-    Changing this creates a new instance.
+* `subnet_id` - (Deprecated, Optional, conflict with `network_id`) Network ID. Changing this creates a new instance.
+
+* `network_id` - (Optional, conflict with `subnet_id`) Network ID. Changing this creates a new instance.
 
 * `available_zones` - (Required) IDs of the AZs where cache nodes reside. For details
     on how to query AZs, see Querying AZ Information.

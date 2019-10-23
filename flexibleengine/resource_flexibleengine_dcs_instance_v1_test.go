@@ -105,7 +105,7 @@ func testAccDcsV1Instance_basic(instanceName string) string {
           capacity = 2
           vpc_id = "%s"
           security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-          subnet_id = "%s"
+          network_id = "%s"
           available_zones = ["${data.flexibleengine_dcs_az_v1.az_1.id}"]
           product_id = "${data.flexibleengine_dcs_product_v1.product_1.id}"
           save_days = 1
