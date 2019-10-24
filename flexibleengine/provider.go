@@ -217,6 +217,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_lb_pool_v2":                         resourcePoolV2(),
 			"flexibleengine_lb_member_v2":                       resourceMemberV2(),
 			"flexibleengine_lb_monitor_v2":                      resourceMonitorV2(),
+			"flexibleengine_lb_whitelist_v2":                    resourceWhitelistV2(),
 			"flexibleengine_lb_l7policy_v2":                     resourceL7PolicyV2(),
 			"flexibleengine_lb_l7rule_v2":                       resourceL7RuleV2(),
 			"flexibleengine_mrs_cluster_v1":                     resourceMRSClusterV1(),
