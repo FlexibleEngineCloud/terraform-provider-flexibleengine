@@ -142,7 +142,7 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Computed: true,
 			},
 			"port": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"resource_spec_code": {
@@ -303,6 +303,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_begin", v.MaintainBegin)
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
+	d.Set("ip", v.IP)
 
 	if _, ok := d.GetOk("subnet_id"); ok {
 		d.Set("subnet_id", v.SubnetID)
