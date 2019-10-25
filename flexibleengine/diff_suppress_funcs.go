@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/url"
+	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -130,4 +132,16 @@ func suppressRdsVersionDiffs(k, old, new string, d *schema.ResourceData) bool {
 		return true
 	}
 	return false
+}
+
+func suppressLBWhitelistDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if len(old) != len(new) {
+		return false
+	}
+	old_array := strings.Split(old, ",")
+	new_array := strings.Split(new, ",")
+	sort.Strings(old_array)
+	sort.Strings(new_array)
+
+	return reflect.DeepEqual(old_array, new_array)
 }
