@@ -82,6 +82,8 @@ The following arguments are supported:
 * `authentication_mode` - (Optional) Authentication mode of the cluster, possible values are x509 and rbac. Defaults to x509.
     Changing this parameter will create a new cluster resource.
 
+* `eip` - (Optional) EIP address of the cluster. Changing this parameter will create a new cluster resource.
+
 ## Attributes Reference
 
 All above argument parameters can be exported as attribute parameters along with attribute reference.

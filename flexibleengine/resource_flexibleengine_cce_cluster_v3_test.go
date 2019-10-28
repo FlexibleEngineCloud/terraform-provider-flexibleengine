@@ -154,12 +154,16 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
 
 func testAccCCEClusterV3_timeout(cceName string) string {
 	return fmt.Sprintf(`
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
+}
+
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name = "%s"
   cluster_type="VirtualMachine"
   flavor_id="cce.s1.small"
   vpc_id="%s"
   subnet_id="%s"
+  eip="${flexibleengine_networking_floatingip_v2.fip_1.address}"
   authentication_mode = "rbac"
   container_network_type="overlay_l2"
     timeouts {
