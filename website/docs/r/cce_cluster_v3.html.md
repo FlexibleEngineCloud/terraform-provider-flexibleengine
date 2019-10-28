@@ -98,6 +98,18 @@ All above argument parameters can be exported as attribute parameters along with
 
   * `security_group_id` - Security group ID of the cluster.
 
+  * `certificate_clusters/name` - The cluster name.
+
+  * `certificate_clusters/server` - The server IP address.
+
+  * `certificate_clusters/certificate_authority_data` - The certificate data.
+
+  * `certificate_users/name` - The user name.
+
+  * `certificate_users/client_certificate_data` - The client certificate data.
+
+  * `certificate_users/client_key_data` - The client key data.
+
 ## Import
 
  Cluster can be imported using the cluster id, e.g.
@@ -105,4 +117,3 @@ All above argument parameters can be exported as attribute parameters along with
  ```
  $ terraform import flexibleengine_cce_cluster_v3.cluster_1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d  
 ```
-
