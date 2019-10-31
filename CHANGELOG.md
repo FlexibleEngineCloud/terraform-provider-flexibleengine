@@ -1,19 +1,19 @@
-## 1.9.0 (Unreleased)
+## 1.9.0 (October 31, 2019)
 
 FEATURES:
 
-* **New Resource:** `flexibleengine_lb_whitelist_v2` [GH-266]
+* **New Resource:** `flexibleengine_lb_whitelist_v2` ([#266](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/266))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_compute_instance_v2`: Log fault message when building compute instance failed [GH-261]
-* `resource/flexibleengine_dcs_instance_v1`: Rename subnet_id parameter to network_id [GH-265]
-* `resource/flexibleengine_cce_cluster_v3`: Add certificates information to cce cluster [GH-268]
-* `resource/flexibleengine_cce_cluster_v3`: Add eip support to cce cluster [GH-269]
+* `resource/flexibleengine_compute_instance_v2`: Log fault message when building compute instance failed ([#261](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/261))
+* `resource/flexibleengine_dcs_instance_v1`: Rename subnet_id parameter to network_id ([#265](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/265))
+* `resource/flexibleengine_cce_cluster_v3`: Add certificates information to cce cluster ([#268](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/268))
+* `resource/flexibleengine_cce_cluster_v3`: Add eip support to cce cluster ([#269](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/269))
 
 BUG FIXES:
 
-* `resource/flexibleengine_dcs_instance_v1`: Fix ip/port attribute issue [GH-267]
+* `resource/flexibleengine_dcs_instance_v1`: Fix ip/port attribute issue ([#267](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/267))
 
 ## 1.8.0 (September 30, 2019)
 
