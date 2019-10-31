@@ -1,4 +1,20 @@
-## 1.8.1 (Unreleased)
+## 1.9.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `flexibleengine_lb_whitelist_v2` [GH-266]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_compute_instance_v2`: Log fault message when building compute instance failed [GH-261]
+* `resource/flexibleengine_dcs_instance_v1`: Rename subnet_id parameter to network_id [GH-265]
+* `resource/flexibleengine_cce_cluster_v3`: Add certificates information to cce cluster [GH-268]
+* `resource/flexibleengine_cce_cluster_v3`: Add eip support to cce cluster [GH-269]
+
+BUG FIXES:
+
+* `resource/flexibleengine_dcs_instance_v1`: Fix ip/port attribute issue [GH-267]
+
 ## 1.8.0 (September 30, 2019)
 
 FEATURES:
