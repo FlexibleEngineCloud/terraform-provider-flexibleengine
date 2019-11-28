@@ -60,6 +60,32 @@ provider "flexibleengine" {
 }
 ```
 
+### Token
+
+```hcl
+provider "flexibleengine" {
+  token       = "${var.token}"
+  domain_name = "${var.domain_name}"
+  tenant_name = "${var.tenant_name}"
+  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+}
+```
+Note: if token, aksk and password are set simultaneously, then it will authenticate in the order of Token, AKSK and Password.
+
+### Federated
+
+```hcl
+provider "flexibleengine" {
+  token          = "${var.token}"
+  security_token = "${var.security_token}"
+  access_key     = "${var.access_key}"
+  secret_key     = "${var.secret_key}"
+  domain_name    = "${var.domain_name}"
+  tenant_name    = "${var.tenant_name}"
+  auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+}
+```
+
 ## Configuration Reference
 
 The following arguments are supported:
@@ -101,6 +127,8 @@ The following arguments are supported:
   service. By specifying a token, you do not have to specify a username/password
   combination, since the token was already created by a username/password out of
   band of Terraform. If omitted, the `OS_AUTH_TOKEN` environment variable is used.
+
+* `security_token` - (Optional) Security token to use for OBS federated authentication.
 
 * `domain_id` - (Optional) The ID of the Domain to scope to (Identity v3). If
   If omitted, the following environment variables are checked (in this order):
