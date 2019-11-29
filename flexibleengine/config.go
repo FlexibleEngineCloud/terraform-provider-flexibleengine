@@ -40,6 +40,7 @@ type Config struct {
 	TenantID         string
 	TenantName       string
 	Token            string
+	SecurityToken    string
 	Username         string
 	UserID           string
 	terraformVersion string
