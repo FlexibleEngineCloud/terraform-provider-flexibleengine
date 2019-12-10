@@ -198,6 +198,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_cce_cluster_v3":            dataSourceCCEClusterV3(),
 			"flexibleengine_dns_zone_v2":               dataSourceDNSZoneV2(),
 			"flexibleengine_dds_flavor_v3":             dataSourceDDSFlavorV3(),
+			"flexibleengine_lb_certificate_v2":         dataSourceCertificateV2(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
