@@ -285,3 +285,9 @@ func (r GetCertResult) Extract() (*Certificate, error) {
 	err := r.ExtractInto(&s)
 	return &s, err
 }
+
+// UpdateIpResult represents the result of an update operation. Call its Extract
+// method to interpret it as a Cluster.
+type UpdateIpResult struct {
+	golangsdk.ErrResult
+}
