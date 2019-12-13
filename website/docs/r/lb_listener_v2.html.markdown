@@ -61,7 +61,7 @@ nEqm7HWkNxHhf8A6En/IjleuddS1sf9e/x+TJN1Xhnt9W6pe7Fk1
 -----END RSA PRIVATE KEY-----
 EOT
 
-certificate = <<EOT
+  certificate = <<EOT
 -----BEGIN CERTIFICATE-----
 MIIDpTCCAo2gAwIBAgIJAKdmmOBYnFvoMA0GCSqGSIb3DQEBCwUAMGkxCzAJBgNV
 BAYTAnh4MQswCQYDVQQIDAJ4eDELMAkGA1UEBwwCeHgxCzAJBgNVBAoMAnh4MQsw
@@ -137,6 +137,37 @@ The following arguments are supported:
     [here](https://wiki.openstack.org/wiki/Network/LBaaS/docs/how-to-create-tls-loadbalancer)
     for more information.
 
+* `tls_ciphers_policy` - (Optional) Specifies the security policy used by the listener.
+    This parameter is valid only when the load balancer protocol is set to TERMINATED_HTTPS.
+    The value can be tls-1-0, tls-1-1, tls-1-2, or tls-1-2-strict, and the default value is tls-1-0.
+    For details of cipher suites for each security policy, see the table below.
+
+<table>
+  <tr>
+    <th>Security Policy</th>
+    <th>TLS Version</th>
+    <th>Cipher Suite</th>
+  </tr >
+  <tr >
+    <td>tls-1-0</td>
+    <td>TLSv1.2 TLSv1.1 TLSv1</td>
+    <td rowspan="3">ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:AES128-SHA256:AES256-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:AES128-SHA:AES256-SHA</td>
+  </tr>
+  <tr>
+    <td>tls-1-1</td>
+    <td>TLSv1.2 TLSv1.1</td>
+  </tr>
+  <tr>
+    <td>tls-1-2</td>
+    <td>TLSv1.2</td>
+  </tr>
+  <tr>
+    <td >tls-1-2-strict</td>
+    <td >TLSv1.2</td>
+    <td >ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:AES128-SHA256:AES256-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384</td>
+  </tr>
+</table>
+
 * `admin_state_up` - (Optional) The administrative state of the Listener.
     A valid value is true (UP) or false (DOWN).
 
@@ -154,4 +185,5 @@ The following attributes are exported:
 * `connection_limit` - See Argument Reference above.
 * `default_tls_container_ref` - See Argument Reference above.
 * `sni_container_refs` - See Argument Reference above.
+* `tls_ciphers_policy` - See Argument Reference above.
 * `admin_state_up` - See Argument Reference above.
