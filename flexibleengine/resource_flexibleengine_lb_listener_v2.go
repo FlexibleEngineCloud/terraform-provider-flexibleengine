@@ -93,14 +93,17 @@ func resourceListenerV2() *schema.Resource {
 			"default_tls_container_ref": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 			},
 
 			"sni_container_refs": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				ForceNew: true,
+			},
+
+			"tls_ciphers_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 
 			"admin_state_up": {
@@ -137,6 +140,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 		Description:            d.Get("description").(string),
 		DefaultTlsContainerRef: d.Get("default_tls_container_ref").(string),
 		SniContainerRefs:       sniContainerRefs,
+		TlsCiphersPolicy:       d.Get("tls_ciphers_policy").(string),
 		AdminStateUp:           &adminStateUp,
 	}
 
@@ -205,6 +209,7 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("sni_container_refs", listener.SniContainerRefs); err != nil {
 		return fmt.Errorf("[DEBUG] Error saving sni_container_refs to state for FlexibleEngine listener (%s): %s", d.Id(), err)
 	}
+	d.Set("tls_ciphers_policy", listener.TlsCiphersPolicy)
 	d.Set("default_tls_container_ref", listener.DefaultTlsContainerRef)
 	d.Set("region", GetRegion(d, config))
 
@@ -240,6 +245,9 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 			}
 		}
 		updateOpts.SniContainerRefs = sniContainerRefs
+	}
+	if d.HasChange("tls_ciphers_policy") {
+		updateOpts.TlsCiphersPolicy = d.Get("tls_ciphers_policy").(string)
 	}
 	if d.HasChange("admin_state_up") {
 		asu := d.Get("admin_state_up").(bool)
