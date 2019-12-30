@@ -1,4 +1,14 @@
-## 1.9.1 (Unreleased)
+## 1.10.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_lb_certificate_v2` [GH-281]
+
+ENHANCEMENTS:
+
+* Add security_token to OBS federated authentication [GH-278]
+* `resource/flexibleengine_lb_listener_v2`: Add tls_ciphers_policy support [GH-282]
+
 ## 1.9.0 (October 31, 2019)
 
 FEATURES:
