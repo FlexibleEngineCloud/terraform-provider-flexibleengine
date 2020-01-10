@@ -45,6 +45,7 @@ func resourceCCENodeV3() *schema.Resource {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
+				Computed: true,
 			},
 			"annotations": {
 				Type:     schema.TypeMap,
@@ -381,8 +382,6 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("name", s.Metadata.Name)
-	d.Set("labels", s.Metadata.Labels)
-	d.Set("annotations", s.Metadata.Annotations)
 	d.Set("flavor_id", s.Spec.Flavor)
 	d.Set("availability_zone", s.Spec.Az)
 	d.Set("os", s.Spec.Os)
@@ -394,6 +393,7 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("max_pods", s.Spec.ExtendParam.MaxPods)
 	d.Set("ecs_performance_type", s.Spec.ExtendParam.EcsPerformanceType)
 	d.Set("key_pair", s.Spec.Login.SshKey)
+
 	var volumes []map[string]interface{}
 	for _, pairObject := range s.Spec.DataVolumes {
 		volume := make(map[string]interface{})
