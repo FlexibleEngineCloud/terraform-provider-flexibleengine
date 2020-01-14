@@ -29,6 +29,7 @@ var (
 	OS_KEYPAIR_NAME           = os.Getenv("OS_KEYPAIR_NAME")
 	OS_BMS_FLAVOR_NAME        = os.Getenv("OS_BMS_FLAVOR_NAME")
 	OS_MRS_ENVIRONMENT        = os.Getenv("OS_MRS_ENVIRONMENT")
+	OS_SDRS_ENVIRONMENT       = os.Getenv("OS_SDRS_ENVIRONMENT")
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -98,6 +99,14 @@ func testAccPreCheckMrs(t *testing.T) {
 
 	if OS_MRS_ENVIRONMENT == "" {
 		t.Skip("This environment does not support MRS tests")
+	}
+}
+
+func testAccPreCheckSdrs(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_SDRS_ENVIRONMENT == "" {
+		t.Skip("This environment does not support SDRS tests")
 	}
 }
 
