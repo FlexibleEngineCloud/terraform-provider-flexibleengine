@@ -199,6 +199,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_dns_zone_v2":               dataSourceDNSZoneV2(),
 			"flexibleengine_dds_flavor_v3":             dataSourceDDSFlavorV3(),
 			"flexibleengine_lb_certificate_v2":         dataSourceCertificateV2(),
+			"flexibleengine_sdrs_domain_v1":            dataSourceSdrsDomainV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -283,6 +284,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_cce_node_v3":                        resourceCCENodeV3(),
 			"flexibleengine_cce_cluster_v3":                     resourceCCEClusterV3(),
 			"flexibleengine_dds_instance_v3":                    resourceDdsInstanceV3(),
+			"flexibleengine_sdrs_protectiongroup_v1":            resourceSdrsProtectiongroupV1(),
 		},
 	}
 

@@ -272,6 +272,8 @@ github.com/huaweicloud/golangsdk/openstack/rts/v1/softwareconfig
 github.com/huaweicloud/golangsdk/openstack/rts/v1/stackresources
 github.com/huaweicloud/golangsdk/openstack/rts/v1/stacks
 github.com/huaweicloud/golangsdk/openstack/rts/v1/stacktemplates
+github.com/huaweicloud/golangsdk/openstack/sdrs/v1/domains
+github.com/huaweicloud/golangsdk/openstack/sdrs/v1/protectiongroups
 github.com/huaweicloud/golangsdk/openstack/sfs/v2/shares
 github.com/huaweicloud/golangsdk/openstack/smn/v2/subscriptions
 github.com/huaweicloud/golangsdk/openstack/smn/v2/topics
