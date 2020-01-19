@@ -3,11 +3,14 @@
 FEATURES:
 
 * **New Data Source:** `flexibleengine_lb_certificate_v2` [GH-281]
+* **New Data Source:** `flexibleengine_sdrs_domain_v1` [GH-287]
+* **New Resource:** `flexibleengine_sdrs_protectiongroup_v1` [GH-287]
 
 ENHANCEMENTS:
 
 * Add security_token to OBS federated authentication [GH-278]
 * `resource/flexibleengine_lb_listener_v2`: Add tls_ciphers_policy support [GH-282]
+* `resource/flexibleengine_cce_node_v3`: Add Computed to annotations and labels attributes [GH-286]
 
 ## 1.9.0 (October 31, 2019)
 
