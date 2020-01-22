@@ -54,6 +54,10 @@ The following arguments are supported:
 
 * `primary_ip_address` - (Optional) Specifies the IP address of the primary NIC on the target server. Changing this creates a new instance.
 
+* `delete_target_server` - (Optional) Specifies whether to delete the target server. The default value is false.. Changing this creates a new instance.
+
+* `delete_target_eip` - (Optional) Specifies whether to delete the EIP of the target server. The default value is false. Changing this creates a new instance.
+
 
 ## Attributes Reference
 

@@ -58,6 +58,16 @@ func resourceSdrsProtectedInstanceV1() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"delete_target_server": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+			},
+			"delete_target_eip": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+			},
 			"target_server": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -91,7 +101,6 @@ func resourceSdrsProtectedInstanceV1Create(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("Error creating FlexibleEngine SDRS Protectedinstance: %s", err)
 	}
 
-	log.Printf("[DEBUG] XXXXXXXXXXXXXXXXXXXXXX")
 	if err := protectedinstances.WaitForJobSuccess(sdrsClient, int(d.Timeout(schema.TimeoutCreate)/time.Second), n.JobID); err != nil {
 		return err
 	}
@@ -163,8 +172,8 @@ func resourceSdrsProtectedInstanceV1Delete(d *schema.ResourceData, meta interfac
 	}
 
 	deleteOpts := protectedinstances.DeleteOpts{
-		DeleteTargetServer: false,
-		DeleteTargetEip:    false,
+		DeleteTargetServer: d.Get("delete_target_server").(bool),
+		DeleteTargetEip:    d.Get("delete_target_eip").(bool),
 	}
 	log.Printf("[DEBUG] CreateOpts: %#v", deleteOpts)
 
