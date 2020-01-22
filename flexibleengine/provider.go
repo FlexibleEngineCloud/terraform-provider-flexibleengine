@@ -286,6 +286,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_dds_instance_v3":                    resourceDdsInstanceV3(),
 			"flexibleengine_sdrs_protectiongroup_v1":            resourceSdrsProtectiongroupV1(),
 			"flexibleengine_sdrs_replication_pair_v1":           resourceSdrsReplicationPairV1(),
+			"flexibleengine_sdrs_protectedinstance_v1":          resourceSdrsProtectedInstanceV1(),
 		},
 	}
 
