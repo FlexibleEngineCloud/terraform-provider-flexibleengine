@@ -120,6 +120,8 @@ resource "flexibleengine_sdrs_protectedinstance_v1" "instance_1" {
 	server_id = flexibleengine_compute_instance_v2.instance_1.id
 	name = "instance_1"
 	description = "test description"
+    delete_target_server = true
+    delete_target_eip = true
 }`, OS_VPC_ID, OS_NETWORK_ID)
 
 var testAccSdrsProtectedInstanceV1_update = fmt.Sprintf(`
@@ -151,4 +153,6 @@ resource "flexibleengine_sdrs_protectedinstance_v1" "instance_1" {
 	server_id = flexibleengine_compute_instance_v2.instance_1.id
 	name = "instance_updated"
 	description = "test description"
+    delete_target_server = true
+    delete_target_eip = true
 }`, OS_VPC_ID, OS_NETWORK_ID)
