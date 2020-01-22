@@ -1,19 +1,19 @@
-## 1.10.0 (Unreleased)
+## 1.10.0 (January 22, 2020)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_lb_certificate_v2` [GH-281]
-* **New Data Source:** `flexibleengine_sdrs_domain_v1` [GH-287]
-* **New Resource:** `flexibleengine_sdrs_protectiongroup_v1` [GH-287]
-* **New Resource:** `flexibleengine_sdrs_replication_pair_v1` [GH-289]
-* **New Resource:** `flexibleengine_sdrs_protectedinstance_v1` [GH-290]
-* **New Resource:** `flexibleengine_sdrs_drill_v1` [GH-292]
+* **New Data Source:** `flexibleengine_lb_certificate_v2` ([#281](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/281))
+* **New Data Source:** `flexibleengine_sdrs_domain_v1` ([#287](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/287))
+* **New Resource:** `flexibleengine_sdrs_protectiongroup_v1` ([#287](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/287))
+* **New Resource:** `flexibleengine_sdrs_replication_pair_v1` ([#289](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/289))
+* **New Resource:** `flexibleengine_sdrs_protectedinstance_v1` ([#290](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/290))
+* **New Resource:** `flexibleengine_sdrs_drill_v1` ([#292](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/292))
 
 ENHANCEMENTS:
 
-* Add security_token to OBS federated authentication [GH-278]
-* `resource/flexibleengine_lb_listener_v2`: Add tls_ciphers_policy support [GH-282]
-* `resource/flexibleengine_cce_node_v3`: Add Computed to annotations and labels attributes [GH-286]
+* Add security_token to OBS federated authentication ([#278](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/278))
+* `resource/flexibleengine_lb_listener_v2`: Add tls_ciphers_policy support ([#282](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/282))
+* `resource/flexibleengine_cce_node_v3`: Add Computed to annotations and labels attributes ([#286](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/286))
 
 ## 1.9.0 (October 31, 2019)
 
