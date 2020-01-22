@@ -35,15 +35,15 @@ The following arguments are supported:
 * `description` - (Optional) The description of the nat gateway.
 
 * `spec` - (Required) The specification of the nat gateway, valid values are "1",
-    "2", "3", "4".
+    "2", "3", "4" (for Small, Medium, Large, Extra-Large)
 
-* `tenant_id` - (Optional) The target tenant ID in which to allocate the nat
-    gateway. Changing this creates a new nat gateway.
+* `tenant_id` - (Optional) The target tenant/project ID in which to allocate the nat
+    gateway. Changing this creates a new nat gateway .
 
-* `router_id` - (Required) ID of the router this nat gateway belongs to. Changing
+* `router_id` - (Required) ID of the router/VPC this nat gateway belongs to. Changing
     this creates a new nat gateway.
 
-* `internal_network_id` - (Required) ID of the network this nat gateway connects to.
+* `internal_network_id` - (Required) ID of the subnet (!) this nat gateway connects to.
     Changing this creates a new nat gateway.
 
 ## Attributes Reference
