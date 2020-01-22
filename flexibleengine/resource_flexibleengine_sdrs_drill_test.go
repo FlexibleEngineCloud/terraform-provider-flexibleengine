@@ -132,6 +132,8 @@ resource "flexibleengine_sdrs_protectedinstance_v1" "instance_1" {
   description = "test description"
   group_id    = flexibleengine_sdrs_protectiongroup_v1.group_1.id
   server_id   = flexibleengine_compute_instance_v2.server_1.id
+  delete_target_server = true
+  delete_target_eip = true
 }
 resource "flexibleengine_sdrs_drill_v1" "drill_1" {
   name = "drill_1"
@@ -185,6 +187,8 @@ resource "flexibleengine_sdrs_protectedinstance_v1" "instance_1" {
   description = "test description"
   group_id    = flexibleengine_sdrs_protectiongroup_v1.group_1.id
   server_id   = flexibleengine_compute_instance_v2.server_1.id
+  delete_target_server = true
+  delete_target_eip = true
 }
 
 resource "flexibleengine_sdrs_drill_v1" "drill_1" {
