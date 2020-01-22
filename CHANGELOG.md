@@ -5,6 +5,9 @@ FEATURES:
 * **New Data Source:** `flexibleengine_lb_certificate_v2` [GH-281]
 * **New Data Source:** `flexibleengine_sdrs_domain_v1` [GH-287]
 * **New Resource:** `flexibleengine_sdrs_protectiongroup_v1` [GH-287]
+* **New Resource:** `flexibleengine_sdrs_replication_pair_v1` [GH-289]
+* **New Resource:** `flexibleengine_sdrs_protectedinstance_v1` [GH-290]
+* **New Resource:** `flexibleengine_sdrs_drill_v1` [GH-292]
 
 ENHANCEMENTS:
 
