@@ -68,6 +68,7 @@ provider "flexibleengine" {
   domain_name = "${var.domain_name}"
   tenant_name = "${var.tenant_name}"
   auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+  region      = "eu-west-0"
 }
 ```
 Note: if token, aksk and password are set simultaneously, then it will authenticate in the order of Token, AKSK and Password.
