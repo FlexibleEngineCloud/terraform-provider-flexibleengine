@@ -1,4 +1,14 @@
-## 1.10.1 (Unreleased)
+## 1.11.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `flexibleengine_sdrs_replication_attach_v1` [GH-300]
+
+BUG FIXES:
+
+* `resource/flexibleengine_nat_gateway_v2`: Fix argument reference for a better user experience [GH-291]
+* Fix provider docs with token issue [GH-298]
+
 ## 1.10.0 (January 22, 2020)
 
 FEATURES:
