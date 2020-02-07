@@ -284,10 +284,11 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_cce_node_v3":                        resourceCCENodeV3(),
 			"flexibleengine_cce_cluster_v3":                     resourceCCEClusterV3(),
 			"flexibleengine_dds_instance_v3":                    resourceDdsInstanceV3(),
-			"flexibleengine_sdrs_protectiongroup_v1":            resourceSdrsProtectiongroupV1(),
-			"flexibleengine_sdrs_replication_pair_v1":           resourceSdrsReplicationPairV1(),
-			"flexibleengine_sdrs_protectedinstance_v1":          resourceSdrsProtectedInstanceV1(),
 			"flexibleengine_sdrs_drill_v1":                      resourceSdrsDrillV1(),
+			"flexibleengine_sdrs_protectiongroup_v1":            resourceSdrsProtectiongroupV1(),
+			"flexibleengine_sdrs_protectedinstance_v1":          resourceSdrsProtectedInstanceV1(),
+			"flexibleengine_sdrs_replication_pair_v1":           resourceSdrsReplicationPairV1(),
+			"flexibleengine_sdrs_replication_attach_v1":         resourceSdrsReplicationAttachV1(),
 		},
 	}
 
