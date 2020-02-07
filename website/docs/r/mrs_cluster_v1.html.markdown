@@ -94,9 +94,7 @@ The following arguments are supported:
     Click Virtual Private Cloud and select Virtual Private Cloud from the left list.
     On the Virtual Private Cloud page, obtain the subnet ID from the list.
 
-* `cluster_version` - (Optional) Version of the clusters Currently, MRS 1.3.0
-    and MRS 1.5.0 are supported. The latest version of MRS is used by default. Currently,
-    the latest version is MRS 1.5.0.
+* `cluster_version` - (Optional) Version of the clusters.You can refer to the online documentation to have the full list of available versions. The latest version of MRS is used by default.
 
 * `cluster_type` - (Optional) Type of clusters 0: analysis cluster 1: streaming
     cluster The default value is 0.
