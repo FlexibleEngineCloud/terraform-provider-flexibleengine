@@ -34,6 +34,14 @@ func TestAccSdrsProtectiongroupV1_basic(t *testing.T) {
 						"flexibleengine_sdrs_protectiongroup_v1.group_1", "name", "group_updated"),
 				),
 			},
+			{
+				Config: testAccSdrsProtectiongroupV1_disable,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSdrsProtectiongroupV1Exists("flexibleengine_sdrs_protectiongroup_v1.group_1", &group),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_sdrs_protectiongroup_v1.group_1", "enable", "false"),
+				),
+			},
 		},
 	})
 }
@@ -104,6 +112,21 @@ resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
 	domain_id = data.flexibleengine_sdrs_domain_v1.domain_1.id
 	source_vpc_id = "%s"
 	dr_type = "migration"
+}
+
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  description = "volume for replication pair"
+  availability_zone = "eu-west-0a"
+  size = 1
+}
+
+resource "flexibleengine_sdrs_replication_pair_v1" "replication_1" {
+  name = "replication_1"
+  description = "test replication pair"
+  group_id = flexibleengine_sdrs_protectiongroup_v1.group_1.id
+  volume_id = flexibleengine_blockstorage_volume_v2.volume_1.id
+  delete_target_volume = true
 }`, OS_VPC_ID)
 
 var testAccSdrsProtectiongroupV1_update = fmt.Sprintf(`
@@ -119,4 +142,51 @@ resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
 	domain_id = data.flexibleengine_sdrs_domain_v1.domain_1.id
 	source_vpc_id = "%s"
 	dr_type = "migration"
+	enable = true
+}
+
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  description = "volume for replication pair"
+  availability_zone = "eu-west-0a"
+  size = 1
+}
+
+resource "flexibleengine_sdrs_replication_pair_v1" "replication_1" {
+  name = "replication_1"
+  description = "test replication pair"
+  group_id = flexibleengine_sdrs_protectiongroup_v1.group_1.id
+  volume_id = flexibleengine_blockstorage_volume_v2.volume_1.id
+  delete_target_volume = true
+}`, OS_VPC_ID)
+
+var testAccSdrsProtectiongroupV1_disable = fmt.Sprintf(`
+data "flexibleengine_sdrs_domain_v1" "domain_1" {
+	name = "SDRS_HypeDomain01"
+}
+
+resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
+	name = "group_updated"
+	description = "test description"
+	source_availability_zone = "eu-west-0a"
+	target_availability_zone = "eu-west-0b"
+	domain_id = data.flexibleengine_sdrs_domain_v1.domain_1.id
+	source_vpc_id = "%s"
+	dr_type = "migration"
+	enable = false
+}
+
+resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  description = "volume for replication pair"
+  availability_zone = "eu-west-0a"
+  size = 1
+}
+
+resource "flexibleengine_sdrs_replication_pair_v1" "replication_1" {
+  name = "replication_1"
+  description = "test replication pair"
+  group_id = flexibleengine_sdrs_protectiongroup_v1.group_1.id
+  volume_id = flexibleengine_blockstorage_volume_v2.volume_1.id
+  delete_target_volume = true
 }`, OS_VPC_ID)

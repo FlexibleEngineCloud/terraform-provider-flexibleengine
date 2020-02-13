@@ -48,6 +48,8 @@ The following arguments are supported:
 * `dr_type` - (Optional) Specifies the deployment model. The default value is migration indicating migration within a VPC.
 	Changing this creates a new group.
 
+* `enable` - (Optional) Enable protection or not. It can only be set to true when there's replication pairs within the protection group.
+
 
 ## Attributes Reference
 
