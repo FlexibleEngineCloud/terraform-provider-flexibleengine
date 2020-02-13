@@ -61,6 +61,11 @@ func resourceSdrsProtectiongroupV1() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"enable": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: false,
+			},
 		},
 	}
 }
@@ -101,6 +106,15 @@ func resourceSdrsProtectiongroupV1Create(d *schema.ResourceData, meta interface{
 
 	if id, ok := entity.(string); ok {
 		d.SetId(id)
+		if hasFilledOpt(d, "enable") && d.Get("enable").(bool) == true {
+			n, err := protectiongroups.Enable(sdrsClient, id).ExtractJobResponse()
+			if err != nil {
+				return fmt.Errorf("Error Enabling FlexibleEngine SDRS Protectiongroup: %s", err)
+			}
+			if err := protectiongroups.WaitForJobSuccess(sdrsClient, int(d.Timeout(schema.TimeoutCreate)/time.Second), n.JobID); err != nil {
+				return err
+			}
+		}
 		return resourceSdrsProtectiongroupV1Read(d, meta)
 	}
 
@@ -142,16 +156,36 @@ func resourceSdrsProtectiongroupV1Update(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS Client: %s", err)
 	}
-	var updateOpts protectiongroups.UpdateOpts
 
 	if d.HasChange("name") {
+		var updateOpts protectiongroups.UpdateOpts
 		updateOpts.Name = d.Get("name").(string)
-	}
-	log.Printf("[DEBUG] updateOpts: %#v", updateOpts)
+		log.Printf("[DEBUG] updateOpts: %#v", updateOpts)
 
-	_, err = protectiongroups.Update(sdrsClient, d.Id(), updateOpts).Extract()
-	if err != nil {
-		return fmt.Errorf("Error updating FlexibleEngine SDRS Protectiongroup: %s", err)
+		_, err = protectiongroups.Update(sdrsClient, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("Error updating FlexibleEngine SDRS Protectiongroup: %s", err)
+		}
+	}
+
+	if d.HasChange("enable") {
+		if d.Get("enable").(bool) == true {
+			n, err := protectiongroups.Enable(sdrsClient, d.Id()).ExtractJobResponse()
+			if err != nil {
+				return fmt.Errorf("Error enabling FlexibleEngine SDRS Protectiongroup: %s", err)
+			}
+			if err := protectiongroups.WaitForJobSuccess(sdrsClient, int(d.Timeout(schema.TimeoutCreate)/time.Second), n.JobID); err != nil {
+				return err
+			}
+		} else {
+			n, err := protectiongroups.Disable(sdrsClient, d.Id()).ExtractJobResponse()
+			if err != nil {
+				return fmt.Errorf("Error disabling FlexibleEngine SDRS Protectiongroup: %s", err)
+			}
+			if err := protectiongroups.WaitForJobSuccess(sdrsClient, int(d.Timeout(schema.TimeoutCreate)/time.Second), n.JobID); err != nil {
+				return err
+			}
+		}
 	}
 	return resourceSdrsProtectiongroupV1Read(d, meta)
 }
