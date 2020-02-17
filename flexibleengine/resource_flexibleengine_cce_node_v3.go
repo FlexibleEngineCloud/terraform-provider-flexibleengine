@@ -194,6 +194,18 @@ func resourceCCENodeV3() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
+			"preinstall": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
+			"postinstall": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
 			"private_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -294,6 +306,8 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 				OrderID:            d.Get("order_id").(string),
 				ProductID:          d.Get("product_id").(string),
 				PublicKey:          d.Get("public_key").(string),
+				PreInstall:         d.Get("preinstall").(string),
+				PostInstall:        d.Get("postinstall").(string),
 			},
 		},
 	}
