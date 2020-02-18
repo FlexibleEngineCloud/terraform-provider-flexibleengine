@@ -1,9 +1,9 @@
-## 1.11.1 (Unreleased)
+## 1.11.1 (February 18, 2020)
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_sdrs_protectiongroup_v1`: Add protection enable/disable support [GH-304]
-* `resource/flexibleengine_cce_node_v3`: Add preinstall/postinstall script support [GH-305]
+* `resource/flexibleengine_sdrs_protectiongroup_v1`: Add protection enable/disable support ([#304](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/304))
+* `resource/flexibleengine_cce_node_v3`: Add preinstall/postinstall script support ([#305](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/305))
 
 ## 1.11.0 (February 07, 2020)
 
