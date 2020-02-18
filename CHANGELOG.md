@@ -1,4 +1,10 @@
-## 1.12.0 (Unreleased)
+## 1.11.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_sdrs_protectiongroup_v1`: Add protection enable/disable support [GH-304]
+* `resource/flexibleengine_cce_node_v3`: Add preinstall/postinstall script support [GH-305]
+
 ## 1.11.0 (February 07, 2020)
 
 FEATURES:
