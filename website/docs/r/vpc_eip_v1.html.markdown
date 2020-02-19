@@ -55,7 +55,7 @@ The `bandwidth` block supports:
 * `name` - (Required) The bandwidth name, which is a string of 1 to 64 characters
     that contain letters, digits, underscores (_), and hyphens (-).
 
-* `size` - (Required) The bandwidth size. The value ranges from 1 to 300 Mbit/s.
+* `size` - (Required) The bandwidth size. The value ranges from 1 to 1000 Mbit/s.
 
 * `share_type` - (Required) Whether the bandwidth is shared or exclusive. Changing
     this creates a new eip.
