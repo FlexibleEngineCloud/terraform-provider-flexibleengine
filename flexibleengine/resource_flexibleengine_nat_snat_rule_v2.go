@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/snatrules"
@@ -36,14 +37,35 @@ func resourceNatSnatRuleV2() *schema.Resource {
 				ForceNew: true,
 			},
 			"network_id": {
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"cidr"},
+				Optional:      true,
+				ForceNew:      true,
+			},
+			"cidr": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
+			},
+			"source_type": {
+				Type:         schema.TypeInt,
+				ValidateFunc: validation.IntBetween(0, 1),
+				Optional:     true,
+				ForceNew:     true,
 			},
 			"floating_ip_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+			},
+
+			"floating_ip_address": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -56,10 +78,19 @@ func resourceNatSnatRuleV2Create(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
 
+	sourceType := d.Get("source_type").(int)
+	if sourceType == 1 {
+		if _, ok := d.GetOk("network_id"); ok {
+			return fmt.Errorf("source_type and network_id is incompatible in the Direct Connect scenario (source_type=1)")
+		}
+	}
+
 	createOpts := &snatrules.CreateOpts{
 		NatGatewayID: d.Get("nat_gateway_id").(string),
-		NetworkID:    d.Get("network_id").(string),
 		FloatingIPID: d.Get("floating_ip_id").(string),
+		NetworkID:    d.Get("network_id").(string),
+		Cidr:         d.Get("cidr").(string),
+		SourceType:   sourceType,
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -101,9 +132,12 @@ func resourceNatSnatRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("nat_gateway_id", snatRule.NatGatewayID)
-	d.Set("network_id", snatRule.NetworkID)
 	d.Set("floating_ip_id", snatRule.FloatingIPID)
-
+	d.Set("floating_ip_address", snatRule.FloatingIPAddress)
+	d.Set("source_type", snatRule.SourceType)
+	d.Set("network_id", snatRule.NetworkID)
+	d.Set("cidr", snatRule.Cidr)
+	d.Set("status", snatRule.Status)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
