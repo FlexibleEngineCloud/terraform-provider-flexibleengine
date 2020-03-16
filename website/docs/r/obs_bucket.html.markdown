@@ -12,17 +12,13 @@ Manages an OBS bucket resource within FlexibleEngine.
 
 ## Example Usage
 
-### Private Bucket with Tags
+### Basic Bucket
 
 ```hcl
 resource "flexibleengine_obs_bucket" "b" {
   bucket = "my-tf-test-bucket"
   acl    = "private"
-
-  tags = {
-    foo = "bar"
-    Env = "Test"
-  }
+  storage_class = "STANDARD"
 }
 ```
 
@@ -158,8 +154,6 @@ The following arguments are supported:
 * `storage_class` - (Optional) Specifies the storage class of the bucket. OBS provides three storage classes: "STANDARD", "WARM" (Infrequent Access) and "COLD" (Archive). Defaults to `STANDARD`.
 
 * `acl` - (Optional) Specifies the ACL policy for a bucket. The predefined common policies are as follows: "private", "public-read", "public-read-write" and "log-delivery-write". Defaults to `private`.
-
-* `tags` - (Optional) A mapping of tags to assign to the bucket. Each tag is represented by one key-value pair.
 
 * `versioning` - (Optional) Whether enable versioning. Once you version-enable a bucket, it can never return to an unversioned state.
   You can, however, suspend versioning on that bucket.

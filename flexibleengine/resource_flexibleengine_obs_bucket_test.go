@@ -48,6 +48,7 @@ func TestAccObsBucket_basic(t *testing.T) {
 	})
 }
 
+/*
 func TestAccObsBucket_tags(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
@@ -70,6 +71,7 @@ func TestAccObsBucket_tags(t *testing.T) {
 		},
 	})
 }
+*/
 
 func TestAccObsBucket_versioning(t *testing.T) {
 	rInt := acctest.RandInt()

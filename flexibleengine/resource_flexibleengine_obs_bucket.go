@@ -226,11 +226,6 @@ func resourceObsBucket() *schema.Resource {
 				},
 			},
 
-			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
-			},
-
 			"force_destroy": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -295,12 +290,6 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("storage_class") && !d.IsNewResource() {
 		if err := resourceObsBucketClassUpdate(obsClient, d); err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("tags") {
-		if err := resourceObsBucketTagsUpdate(obsClient, d); err != nil {
 			return err
 		}
 	}
@@ -395,11 +384,6 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	// Read the tags
-	if err := setObsBucketTags(obsClient, d); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -431,6 +415,7 @@ func resourceObsBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
+/*
 func resourceObsBucketTagsUpdate(obsClient *obs.ObsClient, d *schema.ResourceData) error {
 	bucket := d.Get("bucket").(string)
 	tagmap := d.Get("tags").(map[string]interface{})
@@ -454,6 +439,7 @@ func resourceObsBucketTagsUpdate(obsClient *obs.ObsClient, d *schema.ResourceDat
 	}
 	return nil
 }
+*/
 
 func resourceObsBucketAclUpdate(obsClient *obs.ObsClient, d *schema.ResourceData) error {
 	bucket := d.Get("bucket").(string)
@@ -1040,6 +1026,7 @@ func setObsBucketCorsRules(obsClient *obs.ObsClient, d *schema.ResourceData) err
 	return nil
 }
 
+/*
 func setObsBucketTags(obsClient *obs.ObsClient, d *schema.ResourceData) error {
 	bucket := d.Id()
 	output, err := obsClient.GetBucketTagging(bucket)
@@ -1066,6 +1053,7 @@ func setObsBucketTags(obsClient *obs.ObsClient, d *schema.ResourceData) error {
 	}
 	return nil
 }
+*/
 
 func deleteAllBucketObjects(obsClient *obs.ObsClient, bucket string) error {
 	listOpts := &obs.ListObjectsInput{
