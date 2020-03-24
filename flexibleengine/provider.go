@@ -246,6 +246,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_s3_bucket":                          resourceS3Bucket(),
 			"flexibleengine_s3_bucket_policy":                   resourceS3BucketPolicy(),
 			"flexibleengine_s3_bucket_object":                   resourceS3BucketObject(),
+			"flexibleengine_obs_bucket":                         resourceObsBucket(),
+			"flexibleengine_obs_bucket_object":                  resourceObsBucketObject(),
 			"flexibleengine_elb_loadbalancer":                   resourceELoadBalancer(),
 			"flexibleengine_elb_listener":                       resourceEListener(),
 			"flexibleengine_elb_backend":                        resourceBackend(),
