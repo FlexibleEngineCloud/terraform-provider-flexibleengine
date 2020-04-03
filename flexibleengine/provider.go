@@ -259,6 +259,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_smn_subscription_v2":                resourceSubscription(),
 			"flexibleengine_rds_instance_v1":                    resourceRdsInstance(),
 			"flexibleengine_rds_instance_v3":                    resourceRdsInstanceV3(),
+			"flexibleengine_rds_readonly_instance_v3":           resourceReplicaRdsInstance(),
 			"flexibleengine_rds_parametergroup_v3":              resourceRdsConfigurationV3(),
 			"flexibleengine_networking_vip_v2":                  resourceNetworkingVIPV2(),
 			"flexibleengine_networking_vip_associate_v2":        resourceNetworkingVIPAssociateV2(),
