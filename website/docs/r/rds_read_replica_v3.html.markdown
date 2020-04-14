@@ -1,14 +1,14 @@
 ---
 layout: "flexibleengine"
-page_title: "FlexibleEngine: flexibleengine_rds_readonly_instance_v3"
-sidebar_current: "docs-flexibleengine-resource-rds-readonly-instance-v3"
+page_title: "FlexibleEngine: flexibleengine_rds_read_replica_v3"
+sidebar_current: "docs-flexibleengine-resource-rds-read-replica-v3"
 description: |-
-  readonly instance management
+  read replica management
 ---
 
-# flexibleengine\_rds\_readonly\_instance\_v3
+# flexibleengine\_rds\_read\_replica\_v3
 
-readonly instance management
+read replica management
 
 ## Example Usage
 
@@ -42,7 +42,7 @@ resource "flexibleengine_rds_instance_v3" "instance_1" {
   }
 }
 
-resource "flexibleengine_rds_readonly_instance_v3" "instance_2" {
+resource "flexibleengine_rds_read_replica_v3" "instance_2" {
   name = "replica_instance"
   flavor = "rds.pg.c2.large.rr"
   replica_of_id = flexibleengine_rds_instance_v3.instance_1.id
@@ -132,5 +132,5 @@ The `db` block supports:
 RDS instance can be imported using the `id`, e.g.
 
 ```
-$ terraform import flexibleengine_rds_readonly_instance_v3.instance_1 7117d38e-4c8f-4624-a505-bd96b97d024c
+$ terraform import flexibleengine_rds_read_replica_v3.instance_1 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```

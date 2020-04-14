@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
-	var resourceMap string = "flexibleengine_rds_readonly_instance_v3.replica_instance"
+	var resourceMap string = "flexibleengine_rds_read_replica_v3.replica_instance"
 	var replica instances.RdsInstanceResponse
 
 	resource.Test(t, resource.TestCase{
@@ -25,8 +25,10 @@ func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
 					testAccCheckRdsReplicaInstanceV3Exists(resourceMap, &replica),
 					resource.TestCheckResourceAttr(resourceMap, "status", "ACTIVE"),
 					resource.TestCheckResourceAttr(resourceMap, "type", "Replica"),
-					resource.TestCheckResourceAttr(resourceMap, "volume[0].size", "100"),
-					resource.TestCheckResourceAttr(resourceMap, "db[0].port", "8635"),
+					resource.TestCheckResourceAttr(resourceMap, "volume.0.type", "ULTRAHIGH"),
+					resource.TestCheckResourceAttr(resourceMap, "volume.0.size", "100"),
+					// port of read replica is not same with port of rds instance
+					//resource.TestCheckResourceAttr(resourceMap, "db.0.port", "8635"),
 				),
 			},
 		},
@@ -41,7 +43,7 @@ func testAccCheckRdsReplicaInstanceV3Destroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_rds_readonly_instance_v3" {
+		if rs.Type != "flexibleengine_rds_read_replica_v3" {
 			continue
 		}
 
@@ -51,7 +53,7 @@ func testAccCheckRdsReplicaInstanceV3Destroy(s *terraform.State) error {
 			return err
 		}
 		if instance.Id != "" {
-			return fmt.Errorf("flexibleengine_rds_readonly_instance_v3 (%s) still exists", id)
+			return fmt.Errorf("flexibleengine_rds_read_replica_v3 (%s) still exists", id)
 		}
 	}
 
@@ -120,7 +122,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   }
 }
 
-resource "flexibleengine_rds_readonly_instance_v3" "replica_instance" {
+resource "flexibleengine_rds_read_replica_v3" "replica_instance" {
   name = "replica_instance_%s"
   flavor = "rds.pg.c2.large.rr"
   replica_of_id = flexibleengine_rds_instance_v3.instance.id
