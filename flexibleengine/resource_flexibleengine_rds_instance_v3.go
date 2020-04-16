@@ -339,7 +339,7 @@ func resourceRdsInstanceV3Delete(d *schema.ResourceData, meta interface{}) error
 	_, err = waitToFinish(
 		[]string{"Done"}, []string{"Pending"},
 		d.Timeout(schema.TimeoutCreate),
-		1*time.Second,
+		5*time.Second,
 		func() (interface{}, string, error) {
 			_, err := fetchRdsInstanceV3ByList(d, client)
 			if err != nil {
@@ -690,7 +690,7 @@ func asyncWaitRdsInstanceV3Create(d *schema.ResourceData, config *Config, result
 	return waitToFinish(
 		[]string{"Completed"},
 		[]string{"Running"},
-		timeout, 1*time.Second,
+		timeout, 5*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
 			_, r.Err = client.Get(url, &r.Body, &golangsdk.RequestOpts{
