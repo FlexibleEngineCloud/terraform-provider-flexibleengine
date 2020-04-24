@@ -14,31 +14,37 @@ Manages resource cluster within FlexibleEngine MRS.
 
 ```hcl
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
-  cluster_name = "mrs-cluster-chenying"
-  region = "sa-chile-1"
-  billing_type = 12
-  master_node_num = 2
-  core_node_num = 3
-  master_node_size = "c2.4xlarge.linux.bigdata"
-  core_node_size = "s1.xlarge.linux.bigdata"
-  available_zone_id = "sa-chile-1a"
-  vpc_id = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
-  subnet_id = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
-  cluster_version = "MRS 1.5.0"
+  region = "eu-west-0"
+  available_zone_id = "eu-west-0a"
+  billing_type    = 12
+  cluster_name    = "mrs-cluster-test"
+  cluster_type    = 0
+  cluster_version = "MRS 2.0.1"
+
+  master_node_num  = 2
+  core_node_num    = 3
+  master_node_size = "s3.2xlarge.4.linux.mrs"
+  core_node_size   = "s3.xlarge.4.linux.mrs"
   volume_type = "SATA"
   volume_size = 100
+  vpc_id = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
+  subnet_id = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
+
   safe_mode = 0
-  cluster_type = 0
+  cluster_admin_secret  = "{{password_of_mrs_manager}}"
   node_public_cert_name = "KeyPair-ci"
-  cluster_admin_secret = ""
+
   component_list {
-      component_name = "Hadoop"
+    component_name = "Hadoop"
   }
   component_list {
-      component_name = "Spark"
+    component_name = "Spark"
   }
   component_list {
-      component_name = "Hive"
+    component_name = "Hive"
+  }
+  component_list {
+    component_name = "Tez"
   }
 }
 ```
@@ -56,21 +62,37 @@ The following arguments are supported:
 
 * `master_node_size` - (Required) Best match based on several years of commissioning
     experience. MRS supports specifications of hosts, and host specifications are
-    determined by CPUs, memory, and disks space. Master nodes support s1.4xlarge.linux.mrs,
-    and s1.8xlarge.linux.mrs. Core nodes of a streaming cluster support s1.xlarge.linux.mrs,
-    c2.2xlarge.linux.mrs, s1.2xlarge.linux.mrs, s1.4xlarge.linux.mrs, s1.8xlarge.linux.mrs,
-    and d1.8xlarge.linux.mrs. Core nodes of an analysis cluster support all specifications.
-    s1.xlarge.linux.mrs CPU: 4-core Memory: 16 GB System Disk: 40 GB
-    c2.2xlarge.linux.mrs CPU: 8-core Memory: 16 GB System Disk: 40 GB
-    s1.4xlarge.linux.mrs CPU: 16-core Memory: 64 GB System Disk: 40 GB
-    s1.8xlarge.linux.mrs CPU: 32-core Memory: 128 GB System Disk: 40 GB
-    d1.xlarge.linux.mrs CPU: 6-core Memory: 55 GB System Disk: 40 GB Data Disk: 1.8 TB x 3 HDDs
-    d1.2xlarge.linux.mrs CPU: 12-core Memory: 110 GB System Disk: 40 GB Data Disk: 1.8 TB x 6 HDDs
-    d1.4xlarge.linux.mrs CPU: 24-core Memory: 220 GB System Disk: 40 GB Data Disk: 1.8 TB x 12 HDDs
-    d1.8xlarge.linux.mrs CPU: 48-core Memory: 440 GB System Disk: 40 GB Data Disk: 1.8 TB x 24 HDDs
+    determined by CPUs, memory, and disks space.
+    - Master nodes support s1.4xlarge and s1.8xlarge, c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
+    - Core nodes of a streaming cluster support s1.xlarge, c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
+    - Core nodes of an analysis cluster support all specifications c2.2xlarge, s1.xlarge, s1.4xlarge, s1.8xlarge, d1.xlarge, d1.2xlarge, d1.4xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
 
-* `core_node_num` - (Required) Number of Core nodes Value range: 3 to 100 A
-    maximum of 100 Core nodes are supported by default. If more than 100 Core nodes
+    The following provides specification details.
+
+    node_size | CPU(core) | Memory(GB) | System Disk | Data Disk
+    | --- | --- | --- | --- | --- |
+    c2.2xlarge.linux.mrs | 8  | 16  | 40 | -
+    cc3.xlarge.4.linux.mrs | 4  | 16  | 40 | -
+    cc3.2xlarge.4.linux.mrs | 8  | 32  | 40 | -
+    cc3.4xlarge.4.linux.mrs | 16 | 64  | 40 | -
+    cc3.8xlarge.4.linux.mrs | 32 | 128 | 40 | -
+    s1.xlarge.linux.mrs  | 4  | 16  | 40 | -
+    s1.4xlarge.linux.mrs | 16 | 64  | 40 | -
+    s1.8xlarge.linux.mrs | 32 | 128 | 40 | -
+    s3.xlarge.4.linux.mrs| 4  | 16  | 40 | -
+    s3.2xlarge.4.linux.mrs| 8 | 32  | 40 | -
+    s3.4xlarge.4.linux.mrs| 16 | 64  | 40 | -
+    d1.xlarge.linux.mrs  | 6  | 55  | 40 | 1.8 TB x 3 HDDs
+    d1.2xlarge.linux.mrs | 12 | 110 | 40 | 1.8 TB x 6 HDDs
+    d1.4xlarge.linux.mrs | 24 | 220 | 40 | 1.8 TB x 12 HDDs
+    d1.8xlarge.linux.mrs | 48 | 440 | 40 | 1.8 TB x 24 HDDs
+    d2.xlarge.linux.mrs  | 4  | 32  | 40 | -
+    d2.2xlarge.linux.mrs | 8 | 64 | 40 | -
+    d2.4xlarge.linux.mrs | 16 | 128 | 40 | 1.8TB*8HDDs
+    d2.8xlarge.linux.mrs | 32 | 256 | 40 | 1.8TB*16HDDs
+
+* `core_node_num` - (Required) Number of Core nodes Value range: 3 to 500. A
+    maximum of 500 Core nodes are supported by default. If more than 500 Core nodes
     are required, contact technical support engineers or invoke background APIs
     to modify the database.
 
@@ -94,10 +116,12 @@ The following arguments are supported:
     Click Virtual Private Cloud and select Virtual Private Cloud from the left list.
     On the Virtual Private Cloud page, obtain the subnet ID from the list.
 
-* `cluster_version` - (Optional) Version of the clusters.You can refer to the online documentation to have the full list of available versions. The latest version of MRS is used by default.
+* `cluster_version` - (Optional) Version of the clusters. Currently, MRS 1.3.0, MRS 1.5.0,
+    MRS 1.6.3, MRS 1.8.9, and MRS 2.0.1 are supported. The latest version of MRS is used by default.
+   Currently, the latest version is MRS 2.0.1.
 
-* `cluster_type` - (Optional) Type of clusters 0: analysis cluster 1: streaming
-    cluster The default value is 0.
+* `cluster_type` - (Optional) Type of clusters. 0: analysis cluster; 1: streaming cluster.
+   The default value is 0.
 
 * `volume_type` - (Required) Type of disks SATA and SSD are supported. SATA:
     common I/O SSD: super high-speed I/O
