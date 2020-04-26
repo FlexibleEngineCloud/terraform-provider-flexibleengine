@@ -24,8 +24,8 @@ func resourceMRSClusterV1() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(20 * time.Minute),
-			Delete: schema.DefaultTimeout(5 * time.Minute),
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -452,6 +452,7 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 		ClusterType:        d.Get("cluster_type").(int),
 		VolumeType:         d.Get("volume_type").(string),
 		VolumeSize:         d.Get("volume_size").(int),
+		LoginMode:          1,
 		NodePublicCertName: d.Get("node_public_cert_name").(string),
 		SafeMode:           d.Get("safe_mode").(int),
 		ClusterAdminSecret: d.Get("cluster_admin_secret").(string),
