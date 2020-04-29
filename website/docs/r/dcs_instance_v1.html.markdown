@@ -91,8 +91,45 @@ The following arguments are supported:
     on how to query AZs, see Querying AZ Information.
     Changing this creates a new instance.
 
-* `product_id` - (Required) Product ID used to differentiate DCS instance types.
-    Changing this creates a new instance.
+* `product_id` - (Required) Product ID used to differentiate DCS instance types. For example now there are following values available:
+
+	- dcs.memcached.master_standby-h,
+	- dcs.memcached.master_standby-m,
+	- dcs.memcached.single_node-h,
+	- dcs.memcached.single_node-m,
+	- dcs.master_standby-h,
+	- dcs.cluster-h,
+	- dcs.single_node-h,
+	- redis.cluster.xu1.large.r1.4-h,
+	- redis.cluster.xu1.large.r2.4-h,
+	- redis.cluster.xu1.large.r1.8-h,
+	- redis.cluster.xu1.large.r2.16-h,
+	- redis.cluster.xu1.large.r1.16-h,
+	- redis.cluster.xu1.large.r2.24-h,
+	- redis.cluster.xu1.large.r2.32-h,
+	- redis.cluster.xu1.large.r1.32-h,
+	- redis.cluster.xu1.large.r2.48-h,
+	- redis.cluster.xu1.large.r1.48-h 
+	- redis.cluster.xu1.large.r2.64-h
+	- redis.cluster.xu1.large.r1.64-h
+	- redis.cluster.xu1.large.r2.96-h
+	- redis.cluster.xu1.large.r1.96-h
+	- redis.cluster.xu1.large.r2.128-h
+	- redis.cluster.xu1.large.r1.128-h
+	- redis.cluster.xu1.large.r1.192-h
+	- redis.cluster.xu1.large.r2.192-h
+	- redis.cluster.xu1.large.r2.256-h
+	- redis.cluster.xu1.large.r1.256-h
+	- redis.cluster.xu1.large.r2.384-h
+	- redis.cluster.xu1.large.r1.384-h
+	- redis.cluster.xu1.large.r1.512-h
+	- redis.cluster.xu1.large.r2.512-h
+
+.....
+
+For the whole list and the specification of product id please check the DCS API DOC for querying: https://dcs.eu-west-0.prod-cloud-ocb.orange-business.com/v1.0/products
+
+Changing this creates a new instance.
 
 * `maintain_begin` - (Optional) Indicates the time at which a maintenance time window starts.
     Format: HH:mm:ss.
