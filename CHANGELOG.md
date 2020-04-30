@@ -1,23 +1,23 @@
-## 1.12.0 (Unreleased)
+## 1.12.0 (April 30, 2020)
 
 FEATURES:
 
-* **New Data Source:** `flexibleengine_compute_availability_zones_v2` [GH-311]
-* **New Data Source:** `flexibleengine_blockstorage_availability_zones_v2` [GH-316]
-* **New Resource:** `flexibleengine_obs_bucket` [GH-318]
-* **New Resource:** `flexibleengine_obs_bucket_object` [GH-318]
-* **New Resource:** `flexibleengine_rds_read_replica_v3` [GH-320]
+* **New Data Source:** `flexibleengine_compute_availability_zones_v2` ([#311](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/311))
+* **New Data Source:** `flexibleengine_blockstorage_availability_zones_v2` ([#316](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/316))
+* **New Resource:** `flexibleengine_obs_bucket` ([#318](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/318))
+* **New Resource:** `flexibleengine_obs_bucket_object` ([#318](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/318))
+* **New Resource:** `flexibleengine_rds_read_replica_v3` ([#320](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/320))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_cce_node_v3`: Add preinstall and postinstall support [GH-310]
-* `resource/flexibleengine_nat_snat_rule_v2`: Add preinstall and postinstall script support [GH-310]
+* `resource/flexibleengine_cce_node_v3`: Add preinstall and postinstall support ([#310](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/310))
+* `resource/flexibleengine_nat_snat_rule_v2`: Add preinstall and postinstall script support ([#310](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/310))
 
 BUG FIXES:
 
-* `resource/flexibleengine_vpc_eip_v1`: Update max EIP bandwidth [GH-309]
-* `data source/flexibleengine_networking_network_v2`: Catch API request error [GH-313]
-* `resource/flexibleengine_mrs_cluster_v1`: Fix cluster_type empty issue [GH-325]
+* `resource/flexibleengine_vpc_eip_v1`: Update max EIP bandwidth ([#309](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/309))
+* `data source/flexibleengine_networking_network_v2`: Catch API request error ([#313](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/313))
+* `resource/flexibleengine_mrs_cluster_v1`: Fix cluster_type empty issue ([#325](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/325))
 
 ## 1.11.1 (February 18, 2020)
 
