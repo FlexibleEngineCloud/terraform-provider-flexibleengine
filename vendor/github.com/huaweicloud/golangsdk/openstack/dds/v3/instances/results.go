@@ -83,7 +83,7 @@ type InstanceResponse struct {
 	Created           string         `json:"created"`
 	Updated           string         `json:"updated"`
 	DbUserName        string         `json:"db_user_name"`
-	Ssl               string         `json:"ssl"`
+	Ssl               int            `json:"ssl"`
 	VpcId             string         `json:"vpc_id"`
 	SubnetId          string         `json:"subnet_id"`
 	SecurityGroupId   string         `json:"security_group_id"`
