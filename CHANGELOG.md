@@ -1,8 +1,8 @@
-## 1.12.1 (Unreleased)
+## 1.12.1 (May 14, 2020)
 
 BUG FIXES:
 
-* `resource/flexibleengine_dds_instance_v3`: Fix instance create issue [GH-330]
+* `resource/flexibleengine_dds_instance_v3`: Fix instance create issue ([#330](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/330))
 
 ## 1.12.0 (April 30, 2020)
 
