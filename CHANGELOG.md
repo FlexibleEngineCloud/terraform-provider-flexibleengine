@@ -1,4 +1,9 @@
-## 1.13.0 (Unreleased)
+## 1.12.1 (Unreleased)
+
+BUG FIXES:
+
+* `resource/flexibleengine_dds_instance_v3`: Fix instance create issue [GH-330]
+
 ## 1.12.0 (April 30, 2020)
 
 FEATURES:
