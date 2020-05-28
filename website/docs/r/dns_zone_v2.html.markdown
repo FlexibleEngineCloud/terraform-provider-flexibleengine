@@ -33,9 +33,10 @@ resource "flexibleengine_dns_zone_v2" "my_private_zone" {
   description = "An example zone"
   ttl = 3000
   zone_type = "private"
-  router = [
-    {router_region = "cn-north-1"
-    router_id = "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75"}]
+  router {
+    router_region = "eu-west-0"
+    router_id = "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75"
+  }
 }
 ```
 
@@ -68,9 +69,9 @@ The following arguments are supported:
 
 The `router` block supports:
 
-* `router_id` - (Required) The router UUID.
+* `router_id` - (Required) The VPC UUID.
 
-* `router_region` - (Required) The region of the router.
+* `router_region` - (Required) The region of the VPC.
 
 ## Attributes Reference
 
