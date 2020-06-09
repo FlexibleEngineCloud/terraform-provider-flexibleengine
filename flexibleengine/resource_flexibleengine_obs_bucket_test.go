@@ -41,7 +41,7 @@ func TestAccObsBucket_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						resourceName, "acl", "public-read"),
 					resource.TestCheckResourceAttr(
-						resourceName, "storage_class", "WARM"),
+						resourceName, "storage_class", "GLACIER"),
 				),
 			},
 		},
@@ -310,9 +310,9 @@ func testAccObsBucketDomainName(randInt int) string {
 func testAccObsBucket_basic(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-    storage_class = "STANDARD"
-	acl = "private"
+  bucket = "tf-test-bucket-%d"
+  storage_class = "STANDARD"
+  acl = "private"
 }
 `, randInt)
 }
@@ -320,9 +320,9 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucket_basic_update(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-    storage_class = "WARM"
-	acl = "public-read"
+  bucket = "tf-test-bucket-%d"
+  storage_class = "GLACIER"
+  acl = "public-read"
 }
 `, randInt)
 }
@@ -330,14 +330,14 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketConfigWithTags(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "private"
+  bucket = "tf-test-bucket-%d"
+  acl = "private"
 
-	tags = {
-		name = "tf-test-bucket-%d"
-        foo = "bar"
-        key1 = "value1"
-	}
+  tags = {
+    name = "tf-test-bucket-%d"
+    foo = "bar"
+    key1 = "value1"
+  }
 }
 `, randInt, randInt)
 }
@@ -345,9 +345,9 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketConfigWithVersioning(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "private"
-	versioning = true
+  bucket = "tf-test-bucket-%d"
+  acl = "private"
+  versioning = true
 }
 `, randInt)
 }
@@ -355,9 +355,9 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketConfigWithDisableVersioning(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "private"
-	versioning = false
+  bucket = "tf-test-bucket-%d"
+  acl = "private"
+  versioning = false
 }
 `, randInt)
 }
@@ -365,18 +365,18 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketConfigWithLogging(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "log_bucket" {
-	bucket = "tf-test-log-bucket-%d"
-	acl = "log-delivery-write"
-    force_destroy = "true"
+  bucket = "tf-test-log-bucket-%d"
+  acl = "log-delivery-write"
+  force_destroy = "true"
 }
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "private"
+  bucket = "tf-test-bucket-%d"
+  acl = "private"
 
-	logging {
-		target_bucket = flexibleengine_obs_bucket.log_bucket.id
-		target_prefix = "log/"
-	}
+  logging {
+    target_bucket = flexibleengine_obs_bucket.log_bucket.id
+    target_prefix = "log/"
+  }
 }
 `, randInt, randInt)
 }
@@ -384,55 +384,55 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketConfigWithLifecycle(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "private"
-	versioning = true
+  bucket = "tf-test-bucket-%d"
+  acl = "private"
+  versioning = true
 
-	lifecycle_rule {
-		name = "rule1"
-		prefix = "path1/"
-		enabled = true
+  lifecycle_rule {
+    name = "rule1"
+    prefix = "path1/"
+    enabled = true
 
-		expiration {
-			days = 365
-		}
-	}
-	lifecycle_rule {
-		name = "rule2"
-		prefix = "path2/"
-		enabled = true
+    expiration {
+      days = 365
+    }
+  }
+  lifecycle_rule {
+    name = "rule2"
+    prefix = "path2/"
+    enabled = true
 
-		expiration {
-			days = 365
-		}
+    expiration {
+      days = 365
+    }
 
-		transition {
-			days = 30
-			storage_class = "WARM"
-		}
-		transition {
-			days = 180
-			storage_class = "COLD"
-		}
-	}
-	lifecycle_rule {
-		name = "rule3"
-		prefix = "path3/"
-		enabled = true
+    transition {
+      days = 30
+      storage_class = "STANDARD_IA"
+    }
+    transition {
+      days = 180
+      storage_class = "GLACIER"
+    }
+  }
+  lifecycle_rule {
+    name = "rule3"
+    prefix = "path3/"
+    enabled = true
 
-		noncurrent_version_expiration {
-			days = 365
-		}
+    noncurrent_version_expiration {
+      days = 365
+    }
 
-		noncurrent_version_transition {
-			days = 60
-			storage_class = "WARM"
-		}
-		noncurrent_version_transition {
-			days = 180
-			storage_class = "COLD"
-		}
-	}
+    noncurrent_version_transition {
+      days = 60
+      storage_class = "STANDARD_IA"
+    }
+    noncurrent_version_transition {
+      days = 180
+      storage_class = "GLACIER"
+    }
+  }
 }
 `, randInt)
 }
@@ -440,13 +440,13 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucketWebsiteConfigWithRoutingRules(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "public-read"
+  bucket = "tf-test-bucket-%d"
+  acl = "public-read"
 
-	website {
-		index_document = "index.html"
-		error_document = "error.html"
-		routing_rules = <<EOF
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+    routing_rules = <<EOF
 [{
 	"Condition": {
 		"KeyPrefixEquals": "docs/"
@@ -456,7 +456,7 @@ resource "flexibleengine_obs_bucket" "bucket" {
 	}
 }]
 EOF
-	}
+  }
 }
 `, randInt)
 }
@@ -464,16 +464,16 @@ EOF
 func testAccObsBucketConfigWithCORS(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-	bucket = "tf-test-bucket-%d"
-	acl = "public-read"
+  bucket = "tf-test-bucket-%d"
+  acl = "public-read"
 
-	cors_rule {
-		allowed_headers = ["*"]
-		allowed_methods = ["PUT","POST"]
-		allowed_origins = ["https://www.example.com"]
-		expose_headers  = ["x-amz-server-side-encryption","ETag"]
-		max_age_seconds = 3000
-	}
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT","POST"]
+    allowed_origins = ["https://www.example.com"]
+    expose_headers  = ["x-amz-server-side-encryption","ETag"]
+    max_age_seconds = 3000
+  }
 }
 `, randInt)
 }

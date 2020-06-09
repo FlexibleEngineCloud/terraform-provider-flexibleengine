@@ -47,9 +47,6 @@ func resourceObsBucketObject() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
-				ValidateFunc: validation.StringInSlice([]string{
-					"STANDARD", "WARM", "COLD",
-				}, true),
 			},
 
 			"acl": {
@@ -249,7 +246,7 @@ func resourceObsBucketObjectRead(d *schema.ResourceData, meta interface{}) error
 	if class == "" {
 		d.Set("storage_class", "STANDARD")
 	} else {
-		d.Set("storage_class", normalizeStorageClass(class))
+		d.Set("storage_class", class)
 	}
 	d.Set("size", object.Size)
 	d.Set("etag", strings.Trim(object.ETag, `"`))
