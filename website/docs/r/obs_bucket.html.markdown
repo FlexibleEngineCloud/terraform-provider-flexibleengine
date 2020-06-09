@@ -111,11 +111,11 @@ resource "flexibleengine_obs_bucket" "bucket" {
     }
     transition {
       days = 60
-      storage_class = "WARM"
+      storage_class = "STANDARD_IA"
     }
     transition {
       days = 180
-      storage_class = "COLD"
+      storage_class = "GLACIER"
     }
   }
 
@@ -129,11 +129,11 @@ resource "flexibleengine_obs_bucket" "bucket" {
     }
     noncurrent_version_transition {
       days = 30
-      storage_class = "WARM"
+      storage_class = "STANDARD_IA"
     }
     noncurrent_version_transition {
       days = 60
-      storage_class = "COLD"
+      storage_class = "GLACIER"
     }
   }
 }
@@ -151,9 +151,11 @@ The following arguments are supported:
 	* The name cannot be an IP address.
 	* If the name contains any periods (.), a security certificate verification message may appear when you access the bucket or its objects by entering a domain name.
 
-* `storage_class` - (Optional) Specifies the storage class of the bucket. OBS provides three storage classes: "STANDARD", "WARM" (Infrequent Access) and "COLD" (Archive). Defaults to `STANDARD`.
+* `storage_class` - (Optional) Specifies the storage class of the bucket. OBS provides three storage classes:
+    "STANDARD", "STANDARD_IA" (Infrequent Access) and "GLACIER" (Archive). Defaults to `STANDARD`.
 
-* `acl` - (Optional) Specifies the ACL policy for a bucket. The predefined common policies are as follows: "private", "public-read", "public-read-write" and "log-delivery-write". Defaults to `private`.
+* `acl` - (Optional) Specifies the ACL policy for a bucket. The predefined common policies are as follows:
+    "private", "public-read", "public-read-write" and "log-delivery-write". Defaults to `private`.
 
 * `versioning` - (Optional) Whether enable versioning. Once you version-enable a bucket, it can never return to an unversioned state.
   You can, however, suspend versioning on that bucket.
@@ -163,7 +165,8 @@ The following arguments are supported:
 * `cors_rule` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `lifecycle_rule` - (Optional) A configuration of object lifecycle management (documented below).
 
-* `force_destroy` - (Optional) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. Default to `false`.
+* `force_destroy` - (Optional) A boolean that indicates all objects should be deleted from the bucket so that
+    the bucket can be destroyed without error. Default to `false`.
 
 * `region` - (Optional) If specified, the region this bucket should reside in. Otherwise, the region used by the provider.
 
@@ -219,9 +222,9 @@ The `lifecycle_rule` object supports the following:
   The prefix cannot start or end with a slash (/), cannot have consecutive slashes (/), and cannot contain the following special characters: \:*?"<>|.
 
 * `expiration` - (Optional) Specifies a period when objects that have been last updated are automatically deleted. (documented below).
-* `transition` - (Optional) Specifies a period when objects that have been last updated are automatically transitioned to `WARM` or `COLD` storage class (documented below).
+* `transition` - (Optional) Specifies a period when objects that have been last updated are automatically transitioned to `STANDARD_IA` or `GLACIER` storage class (documented below).
 * `noncurrent_version_expiration` - (Optional) Specifies a period when noncurrent object versions are automatically deleted. (documented below).
-* `noncurrent_version_transition` - (Optional) Specifies a period when noncurrent object versions are automatically transitioned to `WARM` or `COLD` storage class (documented below).
+* `noncurrent_version_transition` - (Optional) Specifies a period when noncurrent object versions are automatically transitioned to `STANDARD_IA` or `GLACIER` storage class (documented below).
 
 At least one of `expiration`, `transition`, `noncurrent_version_expiration`, `noncurrent_version_transition` must be specified.
 
@@ -232,8 +235,9 @@ The `expiration` object supports the following
 
 The `transition` object supports the following
 
-* `days` (Required) Specifies the number of days when objects that have been last updated are automatically transitioned to the specified storage class.
-* `storage_class` - (Required) The class of storage used to store the object. Only `WARM` and `COLD` are supported.
+* `days` (Required) Specifies the number of days when objects that have been last updated are automatically
+    transitioned to the specified storage class.
+* `storage_class` - (Required) The class of storage used to store the object. Only "STANDARD_IA" and "GLACIER" are supported.
 
 The `noncurrent_version_expiration` object supports the following
 
@@ -241,8 +245,9 @@ The `noncurrent_version_expiration` object supports the following
 
 The `noncurrent_version_transition` object supports the following
 
-* `days` (Required) Specifies the number of days when noncurrent object versions are automatically transitioned to the specified storage class.
-* `storage_class` - (Required) The class of storage used to store the object. Only `WARM` and `COLD` are supported.
+* `days` (Required) Specifies the number of days when noncurrent object versions are automatically
+    transitioned to the specified storage class.
+* `storage_class` - (Required) The class of storage used to store the object. Only "STANDARD_IA" and "GLACIER" are supported.
 
 ## Attributes Reference
 

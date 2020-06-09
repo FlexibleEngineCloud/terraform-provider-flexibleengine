@@ -33,9 +33,6 @@ func resourceObsBucket() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "STANDARD",
-				ValidateFunc: validation.StringInSlice([]string{
-					"STANDARD", "WARM", "COLD",
-				}, true),
 			},
 
 			"acl": {
@@ -112,9 +109,6 @@ func resourceObsBucket() *schema.Resource {
 									"storage_class": {
 										Type:     schema.TypeString,
 										Required: true,
-										ValidateFunc: validation.StringInSlice([]string{
-											"WARM", "COLD",
-										}, true),
 									},
 								},
 							},
@@ -143,9 +137,6 @@ func resourceObsBucket() *schema.Resource {
 									"storage_class": {
 										Type:     schema.TypeString,
 										Required: true,
-										ValidateFunc: validation.StringInSlice([]string{
-											"WARM", "COLD",
-										}, true),
 									},
 								},
 							},
@@ -786,7 +777,7 @@ func setObsBucketStorageClass(obsClient *obs.ObsClient, d *schema.ResourceData) 
 	}
 
 	class := string(output.StorageClass)
-	d.Set("storage_class", normalizeStorageClass(class))
+	d.Set("storage_class", class)
 
 	return nil
 }
@@ -881,7 +872,7 @@ func setObsBucketLifecycleConfiguration(obsClient *obs.ObsClient, d *schema.Reso
 			for _, v := range lifecycleRule.Transitions {
 				t := make(map[string]interface{})
 				t["days"] = v.Days
-				t["storage_class"] = normalizeStorageClass(string(v.StorageClass))
+				t["storage_class"] = string(v.StorageClass)
 				transitions = append(transitions, t)
 			}
 			rule["transition"] = transitions
@@ -900,7 +891,7 @@ func setObsBucketLifecycleConfiguration(obsClient *obs.ObsClient, d *schema.Reso
 			for _, v := range lifecycleRule.NoncurrentVersionTransitions {
 				t := make(map[string]interface{})
 				t["days"] = v.NoncurrentDays
-				t["storage_class"] = normalizeStorageClass(string(v.StorageClass))
+				t["storage_class"] = string(v.StorageClass)
 				transitions = append(transitions, t)
 			}
 			rule["noncurrent_version_transition"] = transitions
@@ -1092,18 +1083,6 @@ func getObsError(action string, bucket string, err error) error {
 	} else {
 		return err
 	}
-}
-
-// normalize format of storage class
-func normalizeStorageClass(class string) string {
-	var ret string = class
-
-	if class == "STANDARD_IA" {
-		ret = "WARM"
-	} else if class == "GLACIER" {
-		ret = "COLD"
-	}
-	return ret
 }
 
 func normalizeWebsiteRoutingRules(w []obs.RoutingRule) (string, error) {
