@@ -48,13 +48,11 @@ func resourceCCENodeV3() *schema.Resource {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
-				Computed: true,
 			},
 			"annotations": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
-				Computed: true,
 			},
 			"flavor_id": {
 				Type:     schema.TypeString,
