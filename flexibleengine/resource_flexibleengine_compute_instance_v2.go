@@ -349,6 +349,11 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"tags": {
+				Type:         schema.TypeMap,
+				Optional:     true,
+				ValidateFunc: validateECSTagValue,
+			},
 		},
 	}
 }
@@ -487,6 +492,20 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 		}
 	}
 
+	if hasFilledOpt(d, "tags") {
+		ecsClient, err := chooseECSV1Client(d, config)
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
+		}
+
+		tagmap := d.Get("tags").(map[string]interface{})
+		log.Printf("[DEBUG] Setting tags(key/value): %v", tagmap)
+		err = setTagsForInstance(ecsClient, server.ID, tagmap)
+		if err != nil {
+			log.Printf("[WARN] Error setting tags(key/value) of instance:%s, err=%s", server.ID, err)
+		}
+	}
+
 	return resourceComputeInstanceV2Read(d, meta)
 }
 
@@ -588,6 +607,12 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading auto recovery of instance:%s, err=%s", d.Id(), err)
 	}
 	d.Set("auto_recovery", ar)
+
+	tags, err := resourceECSTagsV1Read(d, meta, d.Id())
+	if err != nil && !isResourceNotFound(err) {
+		return fmt.Errorf("Error reading tags of instance:%s, err=%s", d.Id(), err)
+	}
+	d.Set("tags", tags)
 
 	return nil
 }
@@ -758,6 +783,33 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		err = setAutoRecoveryForInstance(d, meta, d.Id(), ar)
 		if err != nil {
 			return fmt.Errorf("Error updating auto recovery of instance:%s, err:%s", d.Id(), err)
+		}
+	}
+
+	if d.HasChange("tags") {
+		oRaw, nRaw := d.GetChange("tags")
+		oMap := oRaw.(map[string]interface{})
+		nMap := nRaw.(map[string]interface{})
+
+		ecsClient, err := chooseECSV1Client(d, config)
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
+		}
+
+		// remove old tags
+		if len(oMap) > 0 {
+			err := deleteTagsForInstance(ecsClient, d.Id(), oMap)
+			if err != nil {
+				return err
+			}
+		}
+
+		// set new tags
+		if len(nMap) > 0 {
+			err := setTagsForInstance(ecsClient, d.Id(), nMap)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
