@@ -22,12 +22,13 @@ resource "flexibleengine_compute_instance_v2" "basic" {
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
-  metadata = {
-    this = "that"
-  }
-
   network {
     name = "my_network"
+  }
+
+  tags = {
+    foo  = "bar"
+    this = "that"
   }
 }
 ```
@@ -332,6 +333,7 @@ The following arguments are supported:
 
 * `auto_recovery` - (Optional) Configures or deletes automatic recovery of an instance
 
+* `tags` - (Optional) Tags key/value pairs to associate with the instance.
 
 The `network` block supports:
 
@@ -423,6 +425,7 @@ The following attributes are exported:
 * `all_metadata` - Contains all instance metadata, even metadata not set
     by Terraform.
 * `auto_recovery` - See Argument Reference above.
+* `tags` - See Argument Reference above.
 
 ## Notes
 

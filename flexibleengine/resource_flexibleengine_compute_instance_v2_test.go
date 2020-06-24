@@ -31,6 +31,8 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_compute_instance_v2.instance_1", "availability_zone", OS_AVAILABILITY_ZONE),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_compute_instance_v2.instance_1", "tags.key1", "value1"),
 				),
 			},
 		},
@@ -473,6 +475,10 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
   network {
     uuid = "%s"
+  }
+  tags = {
+    key1 = "value1"
+    key2 = "value2"
   }
 }
 `, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
