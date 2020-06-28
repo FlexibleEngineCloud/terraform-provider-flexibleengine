@@ -128,9 +128,10 @@ func resourceMlsInstanceV1() *schema.Resource {
 							Computed: true,
 						},
 						"user_password": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Optional:  true,
+							Computed:  true,
 						},
 					},
 				},

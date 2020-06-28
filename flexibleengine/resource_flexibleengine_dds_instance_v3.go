@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"log"
 
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/dds/v3/instances"
-	"time"
 )
 
 func resourceDdsInstanceV3() *schema.Resource {
@@ -95,9 +96,10 @@ func resourceDdsInstanceV3() *schema.Resource {
 				ForceNew: true,
 			},
 			"disk_encryption_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:      schema.TypeString,
+				Sensitive: true,
+				Optional:  true,
+				ForceNew:  true,
 			},
 			"mode": {
 				Type:     schema.TypeString,
