@@ -123,6 +123,9 @@ The following arguments are supported:
 * `backup_strategy` - (Optional) Specifies the advanced backup policy. The structure is
 	described below. Changing this creates a new instance.
 
+* `ssl` - (Optional) Specifies whether to enable or disable SSL. Defaults to true.
+  Changing this creates a new instance.
+
 The `datastore` block supports:
 
 * `type` - (Required) Specifies the DB engine. Only DDS-Community is supported now.
@@ -194,6 +197,7 @@ The following attributes are exported:
 * `security_group_id` - See Argument Reference above.
 * `password` - See Argument Reference above.
 * `disk_encryption_id` - See Argument Reference above.
+* `ssl` - See Argument Reference above.
 * `mode` - See Argument Reference above.
 * `flavor` - See Argument Reference above.
 * `backup_strategy` - See Argument Reference above.

@@ -24,6 +24,8 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 					testAccCheckDDSV3InstanceExists("flexibleengine_dds_instance_v3.instance", &instance),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_dds_instance_v3.instance", "name", "dds-instance"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_dds_instance_v3.instance", "ssl", "true"),
 				),
 			},
 		},
