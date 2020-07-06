@@ -46,8 +46,9 @@ type Config struct {
 	UserID           string
 	terraformVersion string
 
-	HwClient *golangsdk.ProviderClient
-	s3sess   *session.Session
+	DomainClient *golangsdk.ProviderClient
+	HwClient     *golangsdk.ProviderClient
+	s3sess       *session.Session
 }
 
 func (c *Config) LoadAndValidate() error {
@@ -69,51 +70,32 @@ func (c *Config) LoadAndValidate() error {
 		return fmt.Errorf("Invalid endpoint type provided")
 	}
 
-	return newhwClient(c)
-
-}
-
-func newhwClient(c *Config) error {
-
-	var ao golangsdk.AuthOptionsProvider
-
-	if c.AccessKey != "" && c.SecretKey != "" {
-		ao = golangsdk.AKSKAuthOptions{
-			IdentityEndpoint: c.IdentityEndpoint,
-			ProjectId:        c.TenantID,
-			ProjectName:      c.TenantName,
-			Region:           c.Region,
-			//			Domain:           c.DomainName,
-			AccessKey: c.AccessKey,
-			SecretKey: c.SecretKey,
-		}
-	} else {
-		ao = golangsdk.AuthOptions{
-			DomainID:         c.DomainID,
-			DomainName:       c.DomainName,
-			IdentityEndpoint: c.IdentityEndpoint,
-			Password:         c.Password,
-			TenantID:         c.TenantID,
-			TenantName:       c.TenantName,
-			TokenID:          c.Token,
-			Username:         c.Username,
-			UserID:           c.UserID,
-		}
+	err := fmt.Errorf("Must config token or aksk or username password to be authorized")
+	if c.Token != "" {
+		err = buildClientByToken(c)
+	} else if c.AccessKey != "" && c.SecretKey != "" {
+		err = buildClientByAKSK(c)
+	} else if c.Password != "" && (c.Username != "" || c.UserID != "") {
+		err = buildClientByPassword(c)
 	}
 
-	client, err := huaweisdk.NewClient(ao.GetIdentityEndpoint())
 	if err != nil {
 		return err
 	}
 
-	// Set UserAgent
-	client.UserAgent.Prepend(httpclient.TerraformUserAgent(c.terraformVersion))
+	var osDebug bool
+	if os.Getenv("OS_DEBUG") != "" {
+		osDebug = true
+	}
+	return c.newS3Session(osDebug)
+}
 
+func generateTLSConfig(c *Config) (*tls.Config, error) {
 	config := &tls.Config{}
 	if c.CACertFile != "" {
 		caCert, _, err := pathorcontents.Read(c.CACertFile)
 		if err != nil {
-			return fmt.Errorf("Error reading CA Cert: %s", err)
+			return nil, fmt.Errorf("Error reading CA Cert: %s", err)
 		}
 
 		caCertPool := x509.NewCertPool()
@@ -128,29 +110,45 @@ func newhwClient(c *Config) error {
 	if c.ClientCertFile != "" && c.ClientKeyFile != "" {
 		clientCert, _, err := pathorcontents.Read(c.ClientCertFile)
 		if err != nil {
-			return fmt.Errorf("Error reading Client Cert: %s", err)
+			return nil, fmt.Errorf("Error reading Client Cert: %s", err)
 		}
 		clientKey, _, err := pathorcontents.Read(c.ClientKeyFile)
 		if err != nil {
-			return fmt.Errorf("Error reading Client Key: %s", err)
+			return nil, fmt.Errorf("Error reading Client Key: %s", err)
 		}
 
 		cert, err := tls.X509KeyPair([]byte(clientCert), []byte(clientKey))
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		config.Certificates = []tls.Certificate{cert}
 		config.BuildNameToCertificate()
 	}
 
+	return config, nil
+}
+
+func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.ProviderClient, error) {
+	client, err := huaweisdk.NewClient(ao.GetIdentityEndpoint())
+	if err != nil {
+		return nil, err
+	}
+
+	// Set UserAgent
+	client.UserAgent.Prepend(httpclient.TerraformUserAgent(c.terraformVersion))
+
+	config, err := generateTLSConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	transport := &http.Transport{Proxy: http.ProxyFromEnvironment, TLSClientConfig: config}
+
 	// if OS_DEBUG is set, log the requests and responses
 	var osDebug bool
 	if os.Getenv("OS_DEBUG") != "" {
 		osDebug = true
 	}
-
-	transport := &http.Transport{Proxy: http.ProxyFromEnvironment, TLSClientConfig: config}
 	client.HTTPClient = http.Client{
 		Transport: &LogRoundTripper{
 			Rt:      transport,
@@ -167,16 +165,110 @@ func newhwClient(c *Config) error {
 		},
 	}
 
-	// If using Swift Authentication, there's no need to validate authentication normally.
-	if !c.Swauth {
-		err = huaweisdk.Authenticate(client, ao)
-		if err != nil {
-			return err
-		}
+	// Validate authentication normally.
+	err = huaweisdk.Authenticate(client, ao)
+	if err != nil {
+		return nil, err
 	}
 
+	return client, nil
+}
+
+func buildClientByToken(c *Config) error {
+	var pao, dao golangsdk.AuthOptions
+
+	pao = golangsdk.AuthOptions{
+		DomainID:   c.DomainID,
+		DomainName: c.DomainName,
+		TenantID:   c.TenantID,
+		TenantName: c.TenantName,
+	}
+
+	dao = golangsdk.AuthOptions{
+		DomainID:   c.DomainID,
+		DomainName: c.DomainName,
+	}
+
+	for _, ao := range []*golangsdk.AuthOptions{&pao, &dao} {
+		ao.IdentityEndpoint = c.IdentityEndpoint
+		ao.TokenID = c.Token
+
+	}
+	return genClients(c, pao, dao)
+}
+
+func buildClientByAKSK(c *Config) error {
+	var pao, dao golangsdk.AKSKAuthOptions
+
+	pao = golangsdk.AKSKAuthOptions{
+		ProjectName: c.TenantName,
+		ProjectId:   c.TenantID,
+	}
+
+	dao = golangsdk.AKSKAuthOptions{
+		DomainID: c.DomainID,
+		Domain:   c.DomainName,
+	}
+
+	for _, ao := range []*golangsdk.AKSKAuthOptions{&pao, &dao} {
+		ao.IdentityEndpoint = c.IdentityEndpoint
+		ao.AccessKey = c.AccessKey
+		ao.SecretKey = c.SecretKey
+	}
+	return genClients(c, pao, dao)
+}
+
+func buildClientByPassword(c *Config) error {
+	var pao, dao golangsdk.AuthOptions
+
+	pao = golangsdk.AuthOptions{
+		DomainID:   c.DomainID,
+		DomainName: c.DomainName,
+		TenantID:   c.TenantID,
+		TenantName: c.TenantName,
+	}
+
+	dao = golangsdk.AuthOptions{
+		DomainID:   c.DomainID,
+		DomainName: c.DomainName,
+	}
+
+	for _, ao := range []*golangsdk.AuthOptions{&pao, &dao} {
+		ao.IdentityEndpoint = c.IdentityEndpoint
+		ao.Password = c.Password
+		ao.Username = c.Username
+		ao.UserID = c.UserID
+	}
+	return genClients(c, pao, dao)
+}
+
+func genClients(c *Config, pao, dao golangsdk.AuthOptionsProvider) error {
+	client, err := genClient(c, pao)
+	if err != nil {
+		return err
+	}
 	c.HwClient = client
 
+	client, err = genClient(c, dao)
+	if err == nil {
+		c.DomainClient = client
+	}
+	return err
+}
+
+type awsLogger struct{}
+
+func (l awsLogger) Log(args ...interface{}) {
+	tokens := make([]string, 0, len(args))
+	for _, arg := range args {
+		if token, ok := arg.(string); ok {
+			tokens = append(tokens, token)
+		}
+	}
+	log.Printf("[DEBUG] [aws-sdk-go] %s", strings.Join(tokens, " "))
+}
+
+func (c *Config) newS3Session(osDebug bool) error {
 	if c.AccessKey != "" && c.SecretKey != "" {
 		// Setup S3 client/config information for Swift S3 buckets
 		log.Println("[INFO] Building Swift S3 auth structure")
@@ -223,18 +315,6 @@ func newhwClient(c *Config) error {
 	}
 
 	return nil
-}
-
-type awsLogger struct{}
-
-func (l awsLogger) Log(args ...interface{}) {
-	tokens := make([]string, 0, len(args))
-	for _, arg := range args {
-		if token, ok := arg.(string); ok {
-			tokens = append(tokens, token)
-		}
-	}
-	log.Printf("[DEBUG] [aws-sdk-go] %s", strings.Join(tokens, " "))
 }
 
 func (c *Config) determineRegion(region string) string {
