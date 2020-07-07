@@ -202,6 +202,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_dds_flavor_v3":                      dataSourceDDSFlavorV3(),
 			"flexibleengine_lb_certificate_v2":                  dataSourceCertificateV2(),
 			"flexibleengine_sdrs_domain_v1":                     dataSourceSdrsDomainV1(),
+			"flexibleengine_identity_role_v3":                   dataSourceIdentityRoleV3(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
