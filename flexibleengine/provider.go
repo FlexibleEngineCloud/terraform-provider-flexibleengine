@@ -243,6 +243,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_router_route_v2":         resourceNetworkingRouterRouteV2(),
 			"flexibleengine_networking_secgroup_v2":             resourceNetworkingSecGroupV2(),
 			"flexibleengine_networking_secgroup_rule_v2":        resourceNetworkingSecGroupRuleV2(),
+			"flexibleengine_identity_user_v3":                   resourceIdentityUserV3(),
 			"flexibleengine_s3_bucket":                          resourceS3Bucket(),
 			"flexibleengine_s3_bucket_policy":                   resourceS3BucketPolicy(),
 			"flexibleengine_s3_bucket_object":                   resourceS3BucketObject(),
