@@ -247,6 +247,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_secgroup_rule_v2":        resourceNetworkingSecGroupRuleV2(),
 			"flexibleengine_identity_group_v3":                  resourceIdentityGroupV3(),
 			"flexibleengine_identity_group_membership_v3":       resourceIdentityGroupMembershipV3(),
+			"flexibleengine_identity_role_assignment_v3":        resourceIdentityRoleAssignmentV3(),
 			"flexibleengine_identity_user_v3":                   resourceIdentityUserV3(),
 			"flexibleengine_s3_bucket":                          resourceS3Bucket(),
 			"flexibleengine_s3_bucket_policy":                   resourceS3BucketPolicy(),
