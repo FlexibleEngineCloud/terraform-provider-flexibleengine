@@ -36,22 +36,22 @@ func resourceIdentityRoleV3() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+
 			"description": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
 
-			"display_layer": {
+			"scope": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
 
-			"display_name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-
-			"statement": {
+			"policy": {
 				Type:     schema.TypeList,
 				Required: true,
 				Elem: &schema.Resource{
@@ -80,11 +80,6 @@ func resourceIdentityRoleV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 		},
 	}
 }
@@ -92,9 +87,9 @@ func resourceIdentityRoleV3() *schema.Resource {
 func resourceIdentityRoleV3UserInputParams(d *schema.ResourceData) map[string]interface{} {
 	return map[string]interface{}{
 		"description":   d.Get("description"),
-		"display_layer": d.Get("display_layer"),
-		"display_name":  d.Get("display_name"),
-		"statement":     d.Get("statement"),
+		"display_layer": d.Get("scope"),
+		"display_name":  d.Get("name"),
+		"statement":     d.Get("policy"),
 	}
 }
 
@@ -537,8 +532,8 @@ func setIdentityRoleV3Properties(d *schema.ResourceData, response map[string]int
 	if err != nil {
 		return fmt.Errorf("Error reading Role:statement, err: %s", err)
 	}
-	if err = d.Set("statement", statementProp); err != nil {
-		return fmt.Errorf("Error setting Role:statement, err: %s", err)
+	if err = d.Set("policy", statementProp); err != nil {
+		return fmt.Errorf("Error setting Role:policy, err: %s", err)
 	}
 
 	catalogProp, err := navigateValue(response, []string{"read", "catalog"}, nil)
@@ -562,16 +557,16 @@ func setIdentityRoleV3Properties(d *schema.ResourceData, response map[string]int
 	if err != nil {
 		return fmt.Errorf("Error reading Role:display_layer, err: %s", err)
 	}
-	if err = d.Set("display_layer", displayLayerProp); err != nil {
-		return fmt.Errorf("Error setting Role:display_layer, err: %s", err)
+	if err = d.Set("scope", displayLayerProp); err != nil {
+		return fmt.Errorf("Error setting Role:scope, err: %s", err)
 	}
 
 	displayNameProp, err := navigateValue(response, []string{"read", "display_name"}, nil)
 	if err != nil {
 		return fmt.Errorf("Error reading Role:display_name, err: %s", err)
 	}
-	if err = d.Set("display_name", displayNameProp); err != nil {
-		return fmt.Errorf("Error setting Role:display_name, err: %s", err)
+	if err = d.Set("name", displayNameProp); err != nil {
+		return fmt.Errorf("Error setting Role:name, err: %s", err)
 	}
 
 	domainIDProp, err := navigateValue(response, []string{"read", "domain_id"}, nil)
@@ -580,14 +575,6 @@ func setIdentityRoleV3Properties(d *schema.ResourceData, response map[string]int
 	}
 	if err = d.Set("domain_id", domainIDProp); err != nil {
 		return fmt.Errorf("Error setting Role:domain_id, err: %s", err)
-	}
-
-	nameProp, err := navigateValue(response, []string{"read", "name"}, nil)
-	if err != nil {
-		return fmt.Errorf("Error reading Role:name, err: %s", err)
-	}
-	if err = d.Set("name", nameProp); err != nil {
-		return fmt.Errorf("Error setting Role:name, err: %s", err)
 	}
 
 	return nil

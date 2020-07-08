@@ -26,15 +26,18 @@ import (
 )
 
 func TestAccIdentityRoleV3_basic(t *testing.T) {
+	roleName := fmt.Sprintf("custom_role-%s", acctest.RandString(10))
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckIdentityRoleV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIdentityRoleV3_basic(acctest.RandString(10)),
+				Config: testAccIdentityRoleV3_basic(roleName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIdentityRoleV3Exists(),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_identity_role_v3.role", "name", roleName),
 				),
 			},
 		},
@@ -44,10 +47,10 @@ func TestAccIdentityRoleV3_basic(t *testing.T) {
 func testAccIdentityRoleV3_basic(val string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_identity_role_v3" "role" {
-  description = "role"
-  display_name = "custom_role%s"
-  display_layer = "domain"
-  statement {
+  description = "a custom role"
+  name = "%s"
+  scope = "domain"
+  policy {
     effect = "Allow"
     action = ["ecs:*:list*"]
   }

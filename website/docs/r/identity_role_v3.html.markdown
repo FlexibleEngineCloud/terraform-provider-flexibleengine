@@ -3,12 +3,12 @@ layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_identity_role_v3"
 sidebar_current: "docs-flexibleengine-resource-identity-role-v3"
 description: |-
-  custom role management
+  custom role management in FlexibleEngine
 ---
 
 # flexibleengine\_identity\_role\_v3
 
-custom role management
+custom role management in FlexibleEngine
 
 ## Example Usage
 
@@ -16,10 +16,11 @@ custom role management
 
 ```hcl
 resource "flexibleengine_identity_role_v3" "role" {
-  description = "role"
-  display_name = "custom_role"
-  display_layer = "domain"
-  statement {
+  name        = "custom_role"
+  description = "a custom role"
+  scope       = "domain"
+
+  policy {
     effect = "Allow"
     action = ["ecs:*:list*"]
   }
@@ -30,28 +31,28 @@ resource "flexibleengine_identity_role_v3" "role" {
 
 The following arguments are supported:
 
+* `name` -
+  (Required)
+  Specify the name of a role. The value cannot exceed 64 characters.
+
 * `description` -
   (Required)
-  Description of a role. The value cannot exceed 256 characters.
+  Specify the description of a role. The value cannot exceed 256 characters.
 
-* `display_layer` -
+* `scope` -
   (Required)
-  Display layer of a role.
+  Specify the scope layer of a role. The value supports:
   - domain - A role is displayed at the domain layer.
   - project - A role is displayed at the project layer.
 
-* `display_name` -
+* `policy` -
   (Required)
-  Displayed name of a role. The value cannot exceed 64 characters.
+  The policy field contains the `effect` and `action` elements.
+  Effect indicates whether the policy allows or denies access.
+  Action indicates authorization items. The number of policy
+  cannot exceed 8. Structure is documented below.
 
-* `statement` -
-  (Required)
-  Statement: The Statement field contains the Effect and Action
-  elements. Effect indicates whether the policy allows or denies
-  access. Action indicates authorization items. The number of
-  statements cannot exceed 8. Structure is documented below.
-
-The `statement` block supports:
+The `policy` block supports:
 
 * `action` -
   (Required)
@@ -81,9 +82,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `domain_id` -
   ID of the domain to which a role belongs
-
-* `name` -
-  Name of a role
 
 ## Import
 
