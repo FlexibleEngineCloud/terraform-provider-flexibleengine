@@ -30,6 +30,7 @@ var (
 	OS_BMS_FLAVOR_NAME        = os.Getenv("OS_BMS_FLAVOR_NAME")
 	OS_MRS_ENVIRONMENT        = os.Getenv("OS_MRS_ENVIRONMENT")
 	OS_SDRS_ENVIRONMENT       = os.Getenv("OS_SDRS_ENVIRONMENT")
+	OS_TENANT_NAME            = getTenantName()
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
@@ -40,6 +41,14 @@ func init() {
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"flexibleengine": testAccProvider,
 	}
+}
+
+func getTenantName() string {
+	tn := os.Getenv("OS_TENANT_NAME")
+	if tn == "" {
+		tn = os.Getenv("OS_PROJECT_NAME")
+	}
+	return tn
 }
 
 func testAccPreCheckRequiredEnvVars(t *testing.T) {
@@ -296,5 +305,12 @@ func testAccCCEKeyPairPreCheck(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 	if OS_KEYPAIR_NAME == "" {
 		t.Skip("OS_KEYPAIR_NAME must be set for acceptance tests")
+	}
+}
+
+func testAccIdentityV3AgencyPreCheck(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+	if OS_TENANT_NAME == "" {
+		t.Skip("OS_TENANT_NAME must be set for acceptance tests")
 	}
 }

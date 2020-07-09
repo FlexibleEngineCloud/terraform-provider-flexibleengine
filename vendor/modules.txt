@@ -235,6 +235,7 @@ github.com/huaweicloud/golangsdk/openstack/ecs/v1/auto_recovery
 github.com/huaweicloud/golangsdk/openstack/ecs/v1/tags
 github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants
 github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens
+github.com/huaweicloud/golangsdk/openstack/identity/v3/agency
 github.com/huaweicloud/golangsdk/openstack/identity/v3/domains
 github.com/huaweicloud/golangsdk/openstack/identity/v3/endpoints
 github.com/huaweicloud/golangsdk/openstack/identity/v3/groups
