@@ -239,6 +239,7 @@ github.com/huaweicloud/golangsdk/openstack/identity/v3/domains
 github.com/huaweicloud/golangsdk/openstack/identity/v3/endpoints
 github.com/huaweicloud/golangsdk/openstack/identity/v3/groups
 github.com/huaweicloud/golangsdk/openstack/identity/v3/projects
+github.com/huaweicloud/golangsdk/openstack/identity/v3/roles
 github.com/huaweicloud/golangsdk/openstack/identity/v3/services
 github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens
 github.com/huaweicloud/golangsdk/openstack/identity/v3/users
