@@ -15,34 +15,39 @@ Manages a DCS instance in the flexibleengine DCS Service.
 ### Automatically detect the correct network
 
 ```hcl
-       resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-         name = "secgroup_1"
-         description = "secgroup_1"
-       }
-       data "flexibleengine_dcs_az_v1" "az_1" {
-         port = "8002"
-		}
-       data "flexibleengine_dcs_product_v1" "product_1" {
-          spec_code = "dcs.master_standby"
-		}
-		resource "flexibleengine_dcs_instance_v1" "instance_1" {
-		  name  = "test_dcs_instance"
-          engine_version = "3.0.7"
-          password = "Huawei_test"
-          engine = "Redis"
-          capacity = 2
-          vpc_id = "1477393a-29c9-4de5-843f-18ef51257c7e"
-          security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-          network_id = "27d99e17-42f2-4751-818f-5c8c6c03ff15"
-          available_zones = ["${data.flexibleengine_dcs_az_v1.az_1.id}"]
-          product_id = "${data.flexibleengine_dcs_product_v1.product_1.id}"
-          save_days = 1
-          backup_type = "manual"
-          begin_at = "00:00-01:00"
-          period_type = "weekly"
-          backup_at = [1]
-          depends_on = ["data.flexibleengine_dcs_product_v1.product_1", "flexibleengine_networking_secgroup_v2.secgroup_1"]
-		}
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "secgroup_1"
+  description = "secgroup_1"
+}
+resource "flexibleengine_vpc_v1" "vpc_3" {
+  name = "terraform_provider_vpc3"
+  cidr= "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name = "flexibleengine_subnet"
+  cidr = "192.168.0.0/16"
+  gateway_ip = "192.168.0.1"
+  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+}
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name  = "%s"
+  engine_version = "3.0"
+  password = var.password
+  engine = "Redis"
+  capacity = 2
+  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+  available_zones = ["eu-west-0a"]
+  instance_type = "dcs.master_standby"
+  save_days = 1
+  backup_type = "manual"
+  begin_at = "00:00-01:00"
+  period_type = "weekly"
+  backup_at = [1]
+}
 ```
 
 ## Argument Reference
@@ -87,11 +92,11 @@ The following arguments are supported:
 
 * `network_id` - (Optional, conflict with `subnet_id`) Network ID. Changing this creates a new instance.
 
-* `available_zones` - (Required) IDs of the AZs where cache nodes reside. For details
+* `available_zones` - (Required) IDs or Names of the AZs where cache nodes reside. For details
     on how to query AZs, see Querying AZ Information.
     Changing this creates a new instance.
 
-* `product_id` - (Required) Product ID used to differentiate DCS instance types. For example now there are following values available:
+* `product_id` - (Optional) Product ID used to differentiate DCS instance types. For example now there are following values available:
 
 	- dcs.memcached.master_standby-h,
 	- dcs.memcached.master_standby-m,
@@ -130,6 +135,12 @@ The following arguments are supported:
 For the whole list and the specification of product id please check the DCS API DOC for querying: https://dcs.eu-west-0.prod-cloud-ocb.orange-business.com/v1.0/products
 
 Changing this creates a new instance.
+
+* `instance_type` - (Optional) DCS instance specification code. For example now there are following values available:
+
+	- dcs.single_node
+	- dcs.master_standby
+	- dcs.cluster
 
 * `maintain_begin` - (Optional) Indicates the time at which a maintenance time window starts.
     Format: HH:mm:ss.

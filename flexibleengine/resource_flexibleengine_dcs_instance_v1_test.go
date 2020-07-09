@@ -86,34 +86,38 @@ func testAccCheckDcsV1InstanceExists(n string, instance instances.Instance) reso
 
 func testAccDcsV1Instance_basic(instanceName string) string {
 	return fmt.Sprintf(`
-       resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-         name = "secgroup_1"
-         description = "secgroup_1"
-       }
-       data "flexibleengine_dcs_az_v1" "az_1" {
-         port = "8002"
-         code = "%s"
-		}
-       data "flexibleengine_dcs_product_v1" "product_1" {
-          spec_code = "dcs.master_standby"
-		}
-		resource "flexibleengine_dcs_instance_v1" "instance_1" {
-			name  = "%s"
-          engine_version = "3.0"
-          password = "Huawei_test"
-          engine = "Redis"
-          capacity = 2
-          vpc_id = "%s"
-          security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-          network_id = "%s"
-          available_zones = ["${data.flexibleengine_dcs_az_v1.az_1.id}"]
-          product_id = "${data.flexibleengine_dcs_product_v1.product_1.id}"
-          save_days = 1
-          backup_type = "manual"
-          begin_at = "00:00-01:00"
-          period_type = "weekly"
-          backup_at = [1]
-          depends_on      = ["data.flexibleengine_dcs_product_v1.product_1", "flexibleengine_networking_secgroup_v2.secgroup_1"]
-		}
-	`, OS_AVAILABILITY_ZONE, instanceName, OS_VPC_ID, OS_NETWORK_ID)
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "secgroup_1"
+  description = "secgroup_1"
+}
+  resource "flexibleengine_vpc_v1" "vpc_3" {
+  name = "terraform_provider_vpc3"
+  cidr= "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name = "flexibleengine_subnet"
+  cidr = "192.168.0.0/16"
+  gateway_ip = "192.168.0.1"
+  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+}
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name  = "%s"
+  engine_version = "3.0"
+  password = "Huawei_test"
+  engine = "Redis"
+  capacity = 2
+  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+  available_zones = ["eu-west-0a"]
+  instance_type = "dcs.master_standby"
+  save_days = 1
+  backup_type = "manual"
+  begin_at = "00:00-01:00"
+  period_type = "weekly"
+  backup_at = [1]
+}
+	`, instanceName)
 }
