@@ -37,16 +37,28 @@ func resourceCssClusterV1() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"engine_type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+			},
 			"engine_version": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+			"node_number": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1,
 			},
 
 			"node_config": {
@@ -115,19 +127,6 @@ func resourceCssClusterV1() *schema.Resource {
 				},
 			},
 
-			"engine_type": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"expect_node_num": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  1,
-			},
-
 			"created": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -167,7 +166,7 @@ func resourceCssClusterV1UserInputParams(d *schema.ResourceData) map[string]inte
 		"terraform_resource_data": d,
 		"engine_type":             d.Get("engine_type"),
 		"engine_version":          d.Get("engine_version"),
-		"expect_node_num":         d.Get("expect_node_num"),
+		"node_number":             d.Get("node_number"),
 		"name":                    d.Get("name"),
 		"node_config":             d.Get("node_config"),
 	}
@@ -329,7 +328,7 @@ func buildCssClusterV1CreateParameters(opts map[string]interface{}, arrayIndex m
 		params["instance"] = v
 	}
 
-	v, err = navigateValue(opts, []string{"expect_node_num"}, arrayIndex)
+	v, err = navigateValue(opts, []string{"node_number"}, arrayIndex)
 	if err != nil {
 		return nil, err
 	}
@@ -823,6 +822,11 @@ func setCssClusterV1Properties(d *schema.ResourceData, response map[string]inter
 	}
 	if err = d.Set("nodes", v); err != nil {
 		return fmt.Errorf("Error setting Cluster:nodes, err: %s", err)
+	}
+
+	nodeNum := len(v.([]interface{}))
+	if err = d.Set("node_number", nodeNum); err != nil {
+		return fmt.Errorf("Error setting Cluster:nodes number, err: %s", err)
 	}
 
 	return nil

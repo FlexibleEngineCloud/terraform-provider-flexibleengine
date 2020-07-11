@@ -34,6 +34,10 @@ func TestAccCssClusterV1_basic(t *testing.T) {
 				Config: testAccCssClusterV1_basic(acctest.RandString(10)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCssClusterV1Exists(),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_css_cluster_v1.cluster", "node_number", "1"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_css_cluster_v1.cluster", "engine_type", "elasticsearch"),
 				),
 			},
 		},
@@ -48,9 +52,10 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup" {
 }
 
 resource "flexibleengine_css_cluster_v1" "cluster" {
-  expect_node_num = 1
   name = "terraform_test_cluster%s"
   engine_version = "7.1.1"
+  node_number    = 1
+
   node_config {
     flavor = "ess.spec-4u16g"
     network_info {
