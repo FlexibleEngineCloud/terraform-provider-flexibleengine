@@ -293,8 +293,7 @@ func resourceCssClusterV1Delete(d *schema.ResourceData, meta interface{}) error 
 		d.Timeout(schema.TimeoutCreate),
 		1*time.Second,
 		func() (interface{}, string, error) {
-			_, err := client.Get(url, nil, &golangsdk.RequestOpts{
-				MoreHeaders: map[string]string{"Content-Type": "application/json"}})
+			_, err := client.Get(url, nil, nil)
 			if err != nil {
 				if _, ok := err.(golangsdk.ErrDefault404); ok {
 					return true, "Done", nil
@@ -536,8 +535,7 @@ func asyncWaitCssClusterV1Create(d *schema.ResourceData, config *Config, result 
 		timeout, 1*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
-			_, r.Err = client.Get(url, &r.Body, &golangsdk.RequestOpts{
-				MoreHeaders: map[string]string{"Content-Type": "application/json"}})
+			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
 				return nil, "", nil
 			}
@@ -604,8 +602,7 @@ func asyncWaitCssClusterV1ExtendCluster(d *schema.ResourceData, config *Config, 
 		[]string{"Done"}, []string{"Pending"}, timeout, 1*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
-			_, r.Err = client.Get(url, &r.Body, &golangsdk.RequestOpts{
-				MoreHeaders: map[string]string{"Content-Type": "application/json"}})
+			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
 				return nil, "", nil
 			}
@@ -626,8 +623,7 @@ func sendCssClusterV1ReadRequest(d *schema.ResourceData, client *golangsdk.Servi
 	url = client.ServiceURL(url)
 
 	r := golangsdk.Result{}
-	_, r.Err = client.Get(url, &r.Body, &golangsdk.RequestOpts{
-		MoreHeaders: map[string]string{"Content-Type": "application/json"}})
+	_, r.Err = client.Get(url, &r.Body, nil)
 	if r.Err != nil {
 		return nil, fmt.Errorf("Error running api(read) for resource(CssClusterV1), err=%s", r.Err)
 	}
