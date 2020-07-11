@@ -245,6 +245,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_networking_router_route_v2":         resourceNetworkingRouterRouteV2(),
 			"flexibleengine_networking_secgroup_v2":             resourceNetworkingSecGroupV2(),
 			"flexibleengine_networking_secgroup_rule_v2":        resourceNetworkingSecGroupRuleV2(),
+			"flexibleengine_identity_agency_v3":                 resourceIdentityAgencyV3(),
 			"flexibleengine_identity_group_v3":                  resourceIdentityGroupV3(),
 			"flexibleengine_identity_group_membership_v3":       resourceIdentityGroupMembershipV3(),
 			"flexibleengine_identity_role_v3":                   resourceIdentityRoleV3(),
