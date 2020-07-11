@@ -183,7 +183,7 @@ github.com/hashicorp/terraform-plugin-sdk/plugin
 github.com/hashicorp/terraform-plugin-sdk/terraform
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20200706081112-ca97f4502e33
+# github.com/huaweicloud/golangsdk v0.0.0-20200713113137-43ff70c69327
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -203,6 +203,7 @@ github.com/huaweicloud/golangsdk/openstack/bms/v2/tags
 github.com/huaweicloud/golangsdk/openstack/cce/v3/clusters
 github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes
 github.com/huaweicloud/golangsdk/openstack/cloudeyeservice/alarmrule
+github.com/huaweicloud/golangsdk/openstack/common/tags
 github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/attachinterfaces
 github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones
 github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/bootfromvolume

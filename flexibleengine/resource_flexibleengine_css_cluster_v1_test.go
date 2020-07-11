@@ -38,6 +38,8 @@ func TestAccCssClusterV1_basic(t *testing.T) {
 						"flexibleengine_css_cluster_v1.cluster", "node_number", "1"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_css_cluster_v1.cluster", "engine_type", "elasticsearch"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_css_cluster_v1.cluster", "tags.foo", "bar"),
 				),
 			},
 		},
@@ -68,6 +70,10 @@ resource "flexibleengine_css_cluster_v1" "cluster" {
       size = 40
     }
     availability_zone = "%s"
+  }
+  tags = {
+    foo = "bar"
+    key = "value"
   }
 }
 	`, val, val, OS_NETWORK_ID, OS_VPC_ID, OS_AVAILABILITY_ZONE)

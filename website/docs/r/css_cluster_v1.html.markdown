@@ -39,6 +39,10 @@ resource "flexibleengine_css_cluster_v1" "cluster" {
       size        = 40
     }
   }
+
+  tags = {
+    foo = "bar"
+  }
 }
 ```
 
@@ -68,6 +72,12 @@ The following arguments are supported:
 * `node_config` -
   (Required)
   Node configuration. Structure is documented below. Changing this parameter will create a new resource.
+
+* `backup_strategy` - (Optional) Specifies the advanced backup policy. Structure is documented below.
+  Changing this parameter will create a new resource.
+
+* `tags` - (Optional) The key/value pairs to associate with the cluster.
+  Changing this parameter will create a new resource.
 
 The `node_config` block supports:
 
@@ -120,6 +130,19 @@ The `volume` block supports:
   The SAS disk is used. ULTRAHIGH: Ultra-high I/O. The
   solid-state drive (SSD) is used.  Changing this parameter will create a new resource.
 
+
+The `backup_strategy` block supports:
+
+* `start_time` - (Required) Specifies the time when a snapshot is automatically
+  created everyday. Example value: "04:00 GMT+08:00".
+
+* `keep_days` - (Optional) Specifies the number of days to retain the generated
+   snapshots. Snapshots are reserved for seven days by default.
+
+* `prefix` - (Optional) Specifies the prefix of the snapshot that is automatically
+  created. The default value is "snapshot".
+
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -136,14 +159,11 @@ In addition to the arguments listed above, the following computed attributes are
 
 The `nodes` block contains:
 
-* `id` -
-  Instance ID.
+* `id` - Instance ID.
 
-* `name` -
-  Instance name.
+* `name` - Instance name.
 
-* `type` -
-  Supported type: ess (indicating the Elasticsearch node).
+* `type` - Supported type: ess (indicating the Elasticsearch node).
 
 ## Timeouts
 

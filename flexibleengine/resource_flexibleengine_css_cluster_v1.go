@@ -127,6 +127,40 @@ func resourceCssClusterV1() *schema.Resource {
 				},
 			},
 
+			"backup_strategy": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"start_time": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+						},
+						"keep_days": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							ForceNew: true,
+							Default:  7,
+						},
+						"prefix": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default:  "snapshot",
+						},
+					},
+				},
+			},
+
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+			},
+
 			"created": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -164,11 +198,13 @@ func resourceCssClusterV1() *schema.Resource {
 func resourceCssClusterV1UserInputParams(d *schema.ResourceData) map[string]interface{} {
 	return map[string]interface{}{
 		"terraform_resource_data": d,
+		"name":                    d.Get("name"),
 		"engine_type":             d.Get("engine_type"),
 		"engine_version":          d.Get("engine_version"),
 		"node_number":             d.Get("node_number"),
-		"name":                    d.Get("name"),
 		"node_config":             d.Get("node_config"),
+		"backup_strategy":         d.Get("backup_strategy"),
+		"tags":                    d.Get("tags"),
 	}
 }
 
@@ -185,6 +221,7 @@ func resourceCssClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 		"node_config.network_info": 0,
 		"node_config.volume":       0,
 		"node_config":              0,
+		"backup_strategy":          0,
 	}
 
 	params, err := buildCssClusterV1CreateParameters(opts, arrayIndex)
@@ -348,6 +385,23 @@ func buildCssClusterV1CreateParameters(opts map[string]interface{}, arrayIndex m
 		params["name"] = v
 	}
 
+	v, err = expandCssClusterV1BackupStrategy(opts, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		params["backupStrategy"] = v
+	}
+
+	// build tags parameter
+	tagOpts := opts["tags"].(map[string]interface{})
+	if len(tagOpts) > 0 {
+		tags := expandResourceTags(tagOpts)
+		params["tags"] = tags
+	}
+
 	if len(params) == 0 {
 		return params, nil
 	}
@@ -488,6 +542,42 @@ func expandCssClusterV1CreateInstanceVolume(d interface{}, arrayIndex map[string
 		return nil, err
 	} else if !e {
 		req["volume_type"] = v
+	}
+
+	return req, nil
+}
+
+func expandCssClusterV1BackupStrategy(d interface{}, arrayIndex map[string]int) (interface{}, error) {
+	req := make(map[string]interface{})
+
+	v, err := navigateValue(d, []string{"backup_strategy", "start_time"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["period"] = v
+	}
+
+	v, err = navigateValue(d, []string{"backup_strategy", "keep_days"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["keepday"] = v
+	}
+
+	v, err = navigateValue(d, []string{"backup_strategy", "prefix"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["prefix"] = v
 	}
 
 	return req, nil
