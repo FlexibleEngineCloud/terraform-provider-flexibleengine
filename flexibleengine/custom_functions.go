@@ -37,7 +37,20 @@ func expandCssClusterV1ExtendClusterNodeNum(d interface{}, arrayIndex map[string
 	oldv, newv := rd.GetChange("node_number")
 	v := newv.(int) - oldv.(int)
 	if v < 0 {
-		return 0, fmt.Errorf("it only supports extending nodes")
+		return 0, fmt.Errorf("node_number only supports to be extended")
+	}
+	return v, nil
+}
+
+func expandCssClusterV1ExtendClusterVolumeSize(d interface{}, arrayIndex map[string]int) (interface{}, error) {
+	t, _ := navigateValue(d, []string{"terraform_resource_data"}, nil)
+	rd := t.(*schema.ResourceData)
+
+	//volume size location: reference to the Schema of css_cluster_v1
+	oldv, newv := rd.GetChange("node_config.0.volume.0.size")
+	v := newv.(int) - oldv.(int)
+	if v < 0 {
+		return 0, fmt.Errorf("volume size only supports to be extended")
 	}
 	return v, nil
 }

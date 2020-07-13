@@ -108,7 +108,6 @@ func resourceCssClusterV1() *schema.Resource {
 									"size": {
 										Type:     schema.TypeInt,
 										Required: true,
-										ForceNew: true,
 									},
 									"volume_type": {
 										Type:     schema.TypeString,
@@ -645,24 +644,25 @@ func buildCssClusterV1ExtendClusterParameters(opts map[string]interface{}, array
 	if err != nil {
 		return nil, err
 	}
-	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+	params["nodesize"] = v
+
+	v, err = expandCssClusterV1ExtendClusterVolumeSize(opts, arrayIndex)
+	if err != nil {
 		return nil, err
-	} else if !e {
-		params["modifySize"] = v
+	}
+	params["disksize"] = v
+
+	params["type"] = "ess"
+	updateOpts := map[string]interface{}{
+		"grow": []map[string]interface{}{params},
 	}
 
-	if len(params) == 0 {
-		return params, nil
-	}
-
-	params = map[string]interface{}{"grow": params}
-
-	return params, nil
+	return updateOpts, nil
 }
 
 func sendCssClusterV1ExtendClusterRequest(d *schema.ResourceData, params interface{},
 	client *golangsdk.ServiceClient) (interface{}, error) {
-	url, err := replaceVars(d, "clusters/{id}/extend", nil)
+	url, err := replaceVars(d, "clusters/{id}/role_extend", nil)
 	if err != nil {
 		return nil, err
 	}
