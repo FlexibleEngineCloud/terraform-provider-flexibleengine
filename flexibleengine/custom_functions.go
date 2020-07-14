@@ -2,12 +2,27 @@ package flexibleengine
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func checkCssClusterV1ExtendClusterFinished(data interface{}) bool {
+	//actions --- the behaviors on a cluster
+	v, err := navigateValue(data, []string{"actions"}, nil)
+	e, err := isEmptyValue(reflect.ValueOf(v))
+	if err == nil && !e {
+		return false
+	}
+
+	//actionProgress --- indicates the progress in percentage
+	v, err = navigateValue(data, []string{"actionProgress"}, nil)
+	e, err = isEmptyValue(reflect.ValueOf(v))
+	if err == nil && !e {
+		return false
+	}
+
 	instances, err := navigateValue(data, []string{"instances"}, nil)
 	if err != nil {
 		return false

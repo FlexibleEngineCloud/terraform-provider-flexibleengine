@@ -33,7 +33,7 @@ func resourceCssClusterV1() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
-			Update: schema.DefaultTimeout(30 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -326,7 +326,7 @@ func resourceCssClusterV1Delete(d *schema.ResourceData, meta interface{}) error 
 	_, err = waitToFinish(
 		[]string{"Done"}, []string{"Pending"},
 		d.Timeout(schema.TimeoutCreate),
-		1*time.Second,
+		5*time.Second,
 		func() (interface{}, string, error) {
 			_, err := client.Get(url, nil, nil)
 			if err != nil {
@@ -620,17 +620,20 @@ func asyncWaitCssClusterV1Create(d *schema.ResourceData, config *Config, result 
 	return waitToFinish(
 		[]string{"200"},
 		[]string{"100"},
-		timeout, 1*time.Second,
+		timeout, 10*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
 			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
-				return nil, "", nil
+				return nil, "failed", r.Err
+			}
+			if err := parseResponseToCssError(r.Body); err != nil {
+				return r.Body, "failed", err
 			}
 
 			status, err := navigateValue(r.Body, []string{"status"}, nil)
 			if err != nil {
-				return nil, "", nil
+				return r.Body, "failed", err
 			}
 			return r.Body, status.(string), nil
 		},
@@ -688,12 +691,15 @@ func asyncWaitCssClusterV1ExtendCluster(d *schema.ResourceData, config *Config, 
 	url = client.ServiceURL(url)
 
 	return waitToFinish(
-		[]string{"Done"}, []string{"Pending"}, timeout, 1*time.Second,
+		[]string{"Done"}, []string{"Pending"}, timeout, 10*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
 			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
-				return nil, "", nil
+				return nil, "failed", r.Err
+			}
+			if err := parseResponseToCssError(r.Body); err != nil {
+				return r.Body, "failed", err
 			}
 
 			if checkCssClusterV1ExtendClusterFinished(r.Body) {
@@ -995,4 +1001,23 @@ func flattenCssClusterV1Nodes(d interface{}, arrayIndex map[string]int, currentV
 		return result, nil
 	}
 	return currentValue, nil
+}
+
+func parseResponseToCssError(data interface{}) error {
+	errorCode, err := navigateValue(data, []string{"failed_reasons", "errorCode"}, nil)
+	if err != nil {
+		return nil
+	}
+	// ignore empty errpr_code
+	e, err := isEmptyValue(reflect.ValueOf(errorCode))
+	if err == nil && e {
+		return nil
+	}
+
+	errorMsg, err := navigateValue(data, []string{"failed_reasons", "errorMsg"}, nil)
+	if err != nil {
+		return nil
+	}
+
+	return fmt.Errorf("error_code: %s, error_msg: %s", errorCode, errorMsg)
 }
