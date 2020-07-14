@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
+	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/products"
 )
 
 func resourceDcsInstanceV1() *schema.Resource {
@@ -85,10 +86,18 @@ func resourceDcsInstanceV1() *schema.Resource {
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"instance_type": {
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"product_id"},
+				ForceNew:      true,
+				Optional:      true,
+			},
 			"product_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"instance_type"},
+				ForceNew:      true,
+				Optional:      true,
+				Computed:      true,
 			},
 			"maintain_begin": {
 				Type:     schema.TypeString,
@@ -196,6 +205,27 @@ func getInstanceBackupPolicy(d *schema.ResourceData) *instances.InstanceBackupPo
 	return instanceBackupPolicy
 }
 
+func getDcsProductId(client *golangsdk.ServiceClient, instanceType string) (string, error) {
+	v, err := products.Get(client).Extract()
+	if err != nil {
+		return "", err
+	}
+	log.Printf("[DEBUG] Dcs get products : %+v", v)
+	var FilteredPd []products.Product
+	for _, pd := range v.Products {
+		if instanceType != "" && pd.SpecCode != instanceType {
+			continue
+		}
+		FilteredPd = append(FilteredPd, pd)
+	}
+
+	if len(FilteredPd) < 1 {
+		return "", fmt.Errorf("Your query returned no results. Please change your filters and try again.")
+	}
+
+	return FilteredPd[0].ProductID, nil
+}
+
 func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
@@ -207,11 +237,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 	if d.Get("access_user").(string) != "" || d.Get("password").(string) != "" {
 		no_password_access = "false"
 	}
-	subnet_id, subnet_ok := d.GetOk("subnet_id")
-	network_id, network_ok := d.GetOk("network_id")
-	if !subnet_ok && !network_ok {
-		return fmt.Errorf("one of subnet_id or network_id must be configured")
-	}
+
 	createOpts := &instances.CreateOps{
 		Name:             d.Get("name").(string),
 		Description:      d.Get("description").(string),
@@ -224,15 +250,36 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		VPCID:            d.Get("vpc_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
 		AvailableZones:   getAllAvailableZones(d),
-		ProductID:        d.Get("product_id").(string),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
+	}
+
+	subnet_id, subnet_ok := d.GetOk("subnet_id")
+	network_id, network_ok := d.GetOk("network_id")
+	if !subnet_ok && !network_ok {
+		return fmt.Errorf("one of subnet_id or network_id must be configured")
 	}
 	if subnet_ok {
 		createOpts.SubnetID = subnet_id.(string)
 	} else {
 		createOpts.SubnetID = network_id.(string)
 	}
+
+	product_id, product_ok := d.GetOk("product_id")
+	instance_type, type_ok := d.GetOk("instance_type")
+	if !product_ok && !type_ok {
+		return fmt.Errorf("one of product_id or instance_type must be configured")
+	}
+	if product_ok {
+		createOpts.ProductID = product_id.(string)
+	} else {
+		// Get Product ID
+		createOpts.ProductID, err = getDcsProductId(dcsV1Client, instance_type.(string))
+		if err != nil {
+			return fmt.Errorf("Error get product id for dcs instance client: %s", err)
+		}
+	}
+
 	if hasFilledOpt(d, "save_days") {
 		createOpts.InstanceBackupPolicy = getInstanceBackupPolicy(d)
 	}
