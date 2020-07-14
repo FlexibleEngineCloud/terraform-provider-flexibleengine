@@ -33,7 +33,7 @@ func resourceCssClusterV1() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
-			Update: schema.DefaultTimeout(30 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -108,7 +108,6 @@ func resourceCssClusterV1() *schema.Resource {
 									"size": {
 										Type:     schema.TypeInt,
 										Required: true,
-										ForceNew: true,
 									},
 									"volume_type": {
 										Type:     schema.TypeString,
@@ -125,6 +124,40 @@ func resourceCssClusterV1() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"backup_strategy": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"start_time": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+						},
+						"keep_days": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							ForceNew: true,
+							Default:  7,
+						},
+						"prefix": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Default:  "snapshot",
+						},
+					},
+				},
+			},
+
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
 			},
 
 			"created": {
@@ -164,11 +197,13 @@ func resourceCssClusterV1() *schema.Resource {
 func resourceCssClusterV1UserInputParams(d *schema.ResourceData) map[string]interface{} {
 	return map[string]interface{}{
 		"terraform_resource_data": d,
+		"name":                    d.Get("name"),
 		"engine_type":             d.Get("engine_type"),
 		"engine_version":          d.Get("engine_version"),
 		"node_number":             d.Get("node_number"),
-		"name":                    d.Get("name"),
 		"node_config":             d.Get("node_config"),
+		"backup_strategy":         d.Get("backup_strategy"),
+		"tags":                    d.Get("tags"),
 	}
 }
 
@@ -185,6 +220,7 @@ func resourceCssClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 		"node_config.network_info": 0,
 		"node_config.volume":       0,
 		"node_config":              0,
+		"backup_strategy":          0,
 	}
 
 	params, err := buildCssClusterV1CreateParameters(opts, arrayIndex)
@@ -290,7 +326,7 @@ func resourceCssClusterV1Delete(d *schema.ResourceData, meta interface{}) error 
 	_, err = waitToFinish(
 		[]string{"Done"}, []string{"Pending"},
 		d.Timeout(schema.TimeoutCreate),
-		1*time.Second,
+		5*time.Second,
 		func() (interface{}, string, error) {
 			_, err := client.Get(url, nil, nil)
 			if err != nil {
@@ -346,6 +382,23 @@ func buildCssClusterV1CreateParameters(opts map[string]interface{}, arrayIndex m
 		return nil, err
 	} else if !e {
 		params["name"] = v
+	}
+
+	v, err = expandCssClusterV1BackupStrategy(opts, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		params["backupStrategy"] = v
+	}
+
+	// build tags parameter
+	tagOpts := opts["tags"].(map[string]interface{})
+	if len(tagOpts) > 0 {
+		tags := expandResourceTags(tagOpts)
+		params["tags"] = tags
 	}
 
 	if len(params) == 0 {
@@ -493,6 +546,42 @@ func expandCssClusterV1CreateInstanceVolume(d interface{}, arrayIndex map[string
 	return req, nil
 }
 
+func expandCssClusterV1BackupStrategy(d interface{}, arrayIndex map[string]int) (interface{}, error) {
+	req := make(map[string]interface{})
+
+	v, err := navigateValue(d, []string{"backup_strategy", "start_time"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["period"] = v
+	}
+
+	v, err = navigateValue(d, []string{"backup_strategy", "keep_days"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["keepday"] = v
+	}
+
+	v, err = navigateValue(d, []string{"backup_strategy", "prefix"}, arrayIndex)
+	if err != nil {
+		return nil, err
+	}
+	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+		return nil, err
+	} else if !e {
+		req["prefix"] = v
+	}
+
+	return req, nil
+}
+
 func sendCssClusterV1CreateRequest(d *schema.ResourceData, params interface{},
 	client *golangsdk.ServiceClient) (interface{}, error) {
 	url := client.ServiceURL("clusters")
@@ -531,17 +620,20 @@ func asyncWaitCssClusterV1Create(d *schema.ResourceData, config *Config, result 
 	return waitToFinish(
 		[]string{"200"},
 		[]string{"100"},
-		timeout, 1*time.Second,
+		timeout, 10*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
 			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
-				return nil, "", nil
+				return nil, "failed", r.Err
+			}
+			if err := parseResponseToCssError(r.Body); err != nil {
+				return r.Body, "failed", err
 			}
 
 			status, err := navigateValue(r.Body, []string{"status"}, nil)
 			if err != nil {
-				return nil, "", nil
+				return r.Body, "failed", err
 			}
 			return r.Body, status.(string), nil
 		},
@@ -555,24 +647,25 @@ func buildCssClusterV1ExtendClusterParameters(opts map[string]interface{}, array
 	if err != nil {
 		return nil, err
 	}
-	if e, err := isEmptyValue(reflect.ValueOf(v)); err != nil {
+	params["nodesize"] = v
+
+	v, err = expandCssClusterV1ExtendClusterVolumeSize(opts, arrayIndex)
+	if err != nil {
 		return nil, err
-	} else if !e {
-		params["modifySize"] = v
+	}
+	params["disksize"] = v
+
+	params["type"] = "ess"
+	updateOpts := map[string]interface{}{
+		"grow": []map[string]interface{}{params},
 	}
 
-	if len(params) == 0 {
-		return params, nil
-	}
-
-	params = map[string]interface{}{"grow": params}
-
-	return params, nil
+	return updateOpts, nil
 }
 
 func sendCssClusterV1ExtendClusterRequest(d *schema.ResourceData, params interface{},
 	client *golangsdk.ServiceClient) (interface{}, error) {
-	url, err := replaceVars(d, "clusters/{id}/extend", nil)
+	url, err := replaceVars(d, "clusters/{id}/role_extend", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -598,12 +691,15 @@ func asyncWaitCssClusterV1ExtendCluster(d *schema.ResourceData, config *Config, 
 	url = client.ServiceURL(url)
 
 	return waitToFinish(
-		[]string{"Done"}, []string{"Pending"}, timeout, 1*time.Second,
+		[]string{"Done"}, []string{"Pending"}, timeout, 10*time.Second,
 		func() (interface{}, string, error) {
 			r := golangsdk.Result{}
 			_, r.Err = client.Get(url, &r.Body, nil)
 			if r.Err != nil {
-				return nil, "", nil
+				return nil, "failed", r.Err
+			}
+			if err := parseResponseToCssError(r.Body); err != nil {
+				return r.Body, "failed", err
 			}
 
 			if checkCssClusterV1ExtendClusterFinished(r.Body) {
@@ -905,4 +1001,23 @@ func flattenCssClusterV1Nodes(d interface{}, arrayIndex map[string]int, currentV
 		return result, nil
 	}
 	return currentValue, nil
+}
+
+func parseResponseToCssError(data interface{}) error {
+	errorCode, err := navigateValue(data, []string{"failed_reasons", "errorCode"}, nil)
+	if err != nil {
+		return nil
+	}
+	// ignore empty errpr_code
+	e, err := isEmptyValue(reflect.ValueOf(errorCode))
+	if err == nil && e {
+		return nil
+	}
+
+	errorMsg, err := navigateValue(data, []string{"failed_reasons", "errorMsg"}, nil)
+	if err != nil {
+		return nil
+	}
+
+	return fmt.Errorf("error_code: %s, error_msg: %s", errorCode, errorMsg)
 }
