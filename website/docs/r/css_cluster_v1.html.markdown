@@ -87,11 +87,11 @@ The `node_config` block supports:
 
 * `flavor` -
   (Required)
-  Instance flavor name. Value range of flavor ess.spec-1u8g: 40 GB
-  to 640 GB Value range of flavor ess.spec-2u16g: 40 GB to 1280 GB
-  Value range of flavor ess.spec-4u32g: 40 GB to 2560 GB Value
-  range of flavor ess.spec-8u64g: 80 GB to 5120 GB Value range of
-  flavor ess.spec-16u128g: 160 GB to 10240 GB.
+  Instance flavor name. For example: value range of flavor ess.spec-2u8g:
+  40 GB to 800 GB, value range of flavor ess.spec-4u16g: 40 GB to 1600 GB,
+  value range of flavor ess.spec-8u32g: 80 GB to 3200 GB, value range of
+  flavor ess.spec-16u64g: 100 GB to 6400 GB, value range of
+  flavor ess.spec-32u128g: 100 GB to 10240 GB.
   Changing this parameter will create a new resource.
 
 * `network_info` -
@@ -106,29 +106,30 @@ The `network_info` block supports:
 
 * `vpc_id` -
   (Required)
-  VPC ID, which is used for configuring cluster network.  Changing this parameter will create a new resource.
+  VPC ID, which is used for configuring cluster network. Changing this parameter will create a new resource.
 
 * `subnet_id` -
   (Required)
-  Subnet ID. All instances in a cluster must have the same
-  subnets and security groups.  Changing this parameter will create a new resource.
+  Subnet ID. All instances in a cluster must have the same subnet which should be configured with a *DNS address*.
+  Changing this parameter will create a new resource.
 
 * `security_group_id` -
   (Required)
-  Security group ID. All instances in a cluster must have the
-  same subnets and security groups.  Changing this parameter will create a new resource.
+  Security group ID. All instances in a cluster must have the same security group.
+  Changing this parameter will create a new resource.
 
 The `volume` block supports:
 
 * `size` -
   (Required)
-  Volume size, which must be a multiple of 4 and 10.  Changing this parameter will create a new resource.
+  Specifies volume size in GB, which must be a multiple of 4 and 10.
+  Changing this parameter will create a new resource.
 
 * `volume_type` -
   (Required)
-  COMMON: Common I/O. The SATA disk is used. HIGH: High I/O.
-  The SAS disk is used. ULTRAHIGH: Ultra-high I/O. The
-  solid-state drive (SSD) is used.  Changing this parameter will create a new resource.
+  Specifies the volume type. Supported value: "COMMON": The SATA disk is used; "HIGH": The SAS disk
+  is used; "ULTRAHIGH": The solid-state drive (SSD) is used.
+  Changing this parameter will create a new resource.
 
 
 The `backup_strategy` block supports:
