@@ -1,4 +1,32 @@
 ## 1.13.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_identity_project_v3` [GH-358]
+* **New Data Source:** `flexibleengine_identity_role_v3` [GH-358]
+* **New Resource:** `flexibleengine_css_cluster_v1` [GH-345]
+* **New Resource:** `flexibleengine_identity_group_v3` [GH-356]
+* **New Resource:** `flexibleengine_identity_group_membership_v3` [GH-356]
+* **New Resource:** `flexibleengine_identity_user_v3` [GH-356]
+* **New Resource:** `flexibleengine_identity_role_v3` [GH-358]
+* **New Resource:** `flexibleengine_identity_role_assignment_v3` [GH-358]
+* **New Resource:** `flexibleengine_identity_agency_v3` [GH-359]
+* **New Resource:** `flexibleengine_mrs_hybrid_cluster_v1` [GH-363]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_compute_instance_v2`: Add tags support [GH-344]
+* Add sensitive flag to password parameters [GH-346]
+* `resource/flexibleengine_dds_instance_v3`: Add port and nodes attributes [GH-348]
+* `resource/flexibleengine_cce_cluster_v3`: Update supported version in docs [GH-350]
+* `resource/flexibleengine_dcs_instance_v1`: Add instance_type parameter support [GH-360]
+
+BUG FIXES:
+
+* `resource/flexibleengine_obs_bucket`: Fix storage_class validation issue [GH-338]
+* `resource/flexibleengine_cce_node_v3`: Fix annotations and lables issue [GH-341]
+* `resource/flexibleengine_rds_instance_v3`: Fix docs issue for db.user_name [GH-343]
+
 ## 1.12.1 (May 14, 2020)
 
 BUG FIXES:
