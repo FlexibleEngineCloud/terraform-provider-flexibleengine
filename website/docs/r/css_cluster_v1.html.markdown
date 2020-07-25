@@ -74,7 +74,6 @@ The following arguments are supported:
   Node configuration. Structure is documented below. Changing this parameter will create a new resource.
 
 * `backup_strategy` - (Optional) Specifies the advanced backup policy. Structure is documented below.
-  Changing this parameter will create a new resource.
 
 * `tags` - (Optional) The key/value pairs to associate with the cluster.
   Changing this parameter will create a new resource.
@@ -122,8 +121,7 @@ The `volume` block supports:
 
 * `size` -
   (Required)
-  Specifies volume size in GB, which must be a multiple of 4 and 10.
-  Changing this parameter will create a new resource.
+  Specifies volume size in GB, which must be a multiple of 10.
 
 * `volume_type` -
   (Required)
@@ -135,7 +133,10 @@ The `volume` block supports:
 The `backup_strategy` block supports:
 
 * `start_time` - (Required) Specifies the time when a snapshot is automatically
-  created everyday. Example value: "04:00 GMT+08:00".
+  created everyday. Snapshots can only be created on the hour. The time format is
+  the time followed by the time zone, specifically, **HH:mm z**. In the format, HH:mm
+  refers to the hour time and z refers to the time zone. For example, "00:00 GMT+01:00"
+  and "01:00 GMT+03:00".
 
 * `keep_days` - (Optional) Specifies the number of days to retain the generated
    snapshots. Snapshots are reserved for seven days by default.
@@ -143,6 +144,7 @@ The `backup_strategy` block supports:
 * `prefix` - (Optional) Specifies the prefix of the snapshot that is automatically
   created. The default value is "snapshot".
 
+-> **NOTE:** `backup_strategy` requires the authority of *OBS Bucket* and *IAM Agency*.
 
 ## Attributes Reference
 
