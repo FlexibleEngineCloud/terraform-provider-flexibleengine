@@ -295,6 +295,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vbs_backup_v2":                      resourceVBSBackupV2(),
 			"flexibleengine_antiddos_v1":                        resourceAntiDdosV1(),
 			"flexibleengine_css_cluster_v1":                     resourceCssClusterV1(),
+			"flexibleengine_css_snapshot_v1":                    resourceCssSnapshotV1(),
 			"flexibleengine_cts_tracker_v1":                     resourceCTSTrackerV1(),
 			"flexibleengine_cce_node_v3":                        resourceCCENodeV3(),
 			"flexibleengine_cce_cluster_v3":                     resourceCCEClusterV3(),
