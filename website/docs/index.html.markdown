@@ -71,7 +71,7 @@ provider "flexibleengine" {
   region      = "eu-west-0"
 }
 ```
-Note: if token, aksk and password are set simultaneously, then it will authenticate in the order of Token, AKSK and Password.
+Note: if token, aksk and password are set simultaneously, then it will authenticate in the order of Token, Password and AKSK.
 
 ### Federated
 
