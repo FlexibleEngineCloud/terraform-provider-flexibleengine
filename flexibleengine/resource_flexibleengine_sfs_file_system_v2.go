@@ -47,10 +47,6 @@ func resourceSFSFileSystemV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -74,7 +70,8 @@ func resourceSFSFileSystemV2() *schema.Resource {
 			},
 			"access_level": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Default:  "rw",
 			},
 			"access_type": {
 				Type:     schema.TypeString,
@@ -83,13 +80,17 @@ func resourceSFSFileSystemV2() *schema.Resource {
 			},
 			"access_to": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"share_access_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"access_rule_status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -104,6 +105,34 @@ func resourceSFSFileSystemV2() *schema.Resource {
 			"export_location": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"access_rules": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"access_rule_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"access_type": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"access_to": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"access_level": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"status": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -147,19 +176,22 @@ func resourceSFSFileSystemV2Create(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error waiting for Share File (%s) to become ready: %s ", d.Id(), StateErr)
 	}
 
-	grantAccessOpts := shares.GrantAccessOpts{
-		AccessLevel: d.Get("access_level").(string),
-		AccessType:  d.Get("access_type").(string),
-		AccessTo:    d.Get("access_to").(string),
+	// specified the "access_to" field, apply first access rule to share file
+	if _, ok := d.GetOk("access_to"); ok {
+		grantAccessOpts := shares.GrantAccessOpts{
+			AccessLevel: d.Get("access_level").(string),
+			AccessType:  d.Get("access_type").(string),
+			AccessTo:    d.Get("access_to").(string),
+		}
+
+		grant, accessErr := shares.GrantAccess(sfsClient, d.Id(), grantAccessOpts).ExtractAccess()
+		if accessErr != nil {
+			return fmt.Errorf("Error applying access rule to share file : %s", accessErr)
+		}
+
+		log.Printf("[DEBUG] Applied access rule (%s) to share file %s", grant.ID, d.Id())
+		d.Set("share_access_id", grant.ID)
 	}
-
-	grant, accessErr := shares.GrantAccess(sfsClient, d.Id(), grantAccessOpts).ExtractAccess()
-
-	if accessErr != nil {
-		return fmt.Errorf("Error applying access rules to share file : %s", accessErr)
-	}
-
-	log.Printf("[DEBUG] Applied access rule (%s) to share file %s", grant.ID, d.Id())
 
 	return resourceSFSFileSystemV2Read(d, meta)
 
@@ -185,7 +217,6 @@ func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error
 
 	d.Set("name", n.Name)
 	d.Set("share_proto", n.ShareProto)
-	d.Set("status", n.Status)
 	d.Set("size", n.Size)
 	d.Set("description", n.Description)
 	d.Set("share_type", n.ShareType)
@@ -195,7 +226,6 @@ func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error
 	d.Set("region", GetRegion(d, config))
 	d.Set("export_location", n.ExportLocation)
 	d.Set("host", n.Host)
-	d.Set("links", n.Links)
 
 	// NOTE: This tries to remove system metadata.
 	md := make(map[string]string)
@@ -215,25 +245,52 @@ OUTER:
 	}
 	d.Set("metadata", md)
 
+	// list access rules
 	rules, err := shares.ListAccessRights(sfsClient, d.Id()).ExtractAccessRights()
-
 	if err != nil {
 		if _, ok := err.(golangsdk.ErrDefault404); ok {
 			d.SetId("")
 			return nil
 		}
-
 		return fmt.Errorf("Error retrieving Flexibleengine Shares: %s", err)
 	}
 
-	if len(rules) > 0 {
-		rule := rules[0]
-		d.Set("share_access_id", rule.ID)
-		d.Set("access_rule_status", rule.State)
-		d.Set("access_to", rule.AccessTo)
-		d.Set("access_type", rule.AccessType)
-		d.Set("access_level", rule.AccessLevel)
+	var ruleExist bool
+	accessID := d.Get("share_access_id").(string)
+	allAccessRules := make([]map[string]interface{}, 0, len(rules))
+	for _, rule := range rules {
+		acessRule := map[string]interface{}{
+			"access_rule_id": rule.ID,
+			"access_level":   rule.AccessLevel,
+			"access_type":    rule.AccessType,
+			"access_to":      rule.AccessTo,
+			"status":         rule.State,
+		}
+		allAccessRules = append(allAccessRules, acessRule)
+
+		// find share_access_id
+		if accessID != "" && rule.ID == accessID {
+			d.Set("access_rule_status", rule.State)
+			d.Set("access_to", rule.AccessTo)
+			d.Set("access_type", rule.AccessType)
+			d.Set("access_level", rule.AccessLevel)
+			ruleExist = true
+		}
 	}
+
+	if accessID != "" && !ruleExist {
+		log.Printf("[WARN] access rule (%s) of share file %s was not exist!", accessID, d.Id())
+		d.Set("share_access_id", "")
+	}
+	d.Set("access_rules", allAccessRules)
+
+	if len(rules) != 0 {
+		d.Set("status", n.Status)
+	} else {
+		// The file system is not bind with any VPC.
+		d.Set("status", "unavailable")
+	}
+
 	return nil
 }
 
@@ -255,23 +312,29 @@ func resourceSFSFileSystemV2Update(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 	if d.HasChange("access_to") || d.HasChange("access_level") || d.HasChange("access_type") {
-		deleteAccessOpts := shares.DeleteAccessOpts{AccessID: d.Get("share_access_id").(string)}
-		deny := shares.DeleteAccess(sfsClient, d.Id(), deleteAccessOpts)
-		if deny.Err != nil {
-			return fmt.Errorf("Error changing access rules for share file : %s", deny.Err)
+		ruleID := d.Get("share_access_id").(string)
+		if ruleID != "" {
+			deleteAccessOpts := shares.DeleteAccessOpts{AccessID: ruleID}
+			deny := shares.DeleteAccess(sfsClient, d.Id(), deleteAccessOpts)
+			if deny.Err != nil {
+				return fmt.Errorf("Error changing access rules for share file : %s", deny.Err)
+			}
+			d.Set("share_access_id", "")
 		}
 
-		grantAccessOpts := shares.GrantAccessOpts{
-			AccessLevel: d.Get("access_level").(string),
-			AccessType:  d.Get("access_type").(string),
-			AccessTo:    d.Get("access_to").(string),
-		}
+		if _, ok := d.GetOk("access_to"); ok {
+			grantAccessOpts := shares.GrantAccessOpts{
+				AccessLevel: d.Get("access_level").(string),
+				AccessType:  d.Get("access_type").(string),
+				AccessTo:    d.Get("access_to").(string),
+			}
 
-		log.Printf("[DEBUG] Grant Access Rules: %#v", grantAccessOpts)
-		_, accessErr := shares.GrantAccess(sfsClient, d.Id(), grantAccessOpts).ExtractAccess()
-
-		if accessErr != nil {
-			return fmt.Errorf("Error changing access rules for share file : %s", accessErr)
+			log.Printf("[DEBUG] Grant Access Rules: %#v", grantAccessOpts)
+			grant, accessErr := shares.GrantAccess(sfsClient, d.Id(), grantAccessOpts).ExtractAccess()
+			if accessErr != nil {
+				return fmt.Errorf("Error changing access rules for share file : %s", accessErr)
+			}
+			d.Set("share_access_id", grant.ID)
 		}
 	}
 
