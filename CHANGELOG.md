@@ -1,4 +1,20 @@
 ## 1.14.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `flexibleengine_css_snapshot_v1` [GH-368]
+* **New Resource:** `flexibleengine_sfs_access_rule_v2` [GH-377]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_css_cluster_v1`: Make backup_strategy updatable [GH-367]
+* `resource/flexibleengine_sfs_file_system_v2`: Make access_to parameter optional [GH-375]
+* `resource/flexibleengine_cce_node_v3`: Add ability to import cce nodes` [GH-354]
+
+BUG FIXES:
+
+* `resource/flexibleengine_compute_instance_v2`: Fix multi nics issue [GH-373]
+
 ## 1.13.0 (July 16, 2020)
 
 FEATURES:
