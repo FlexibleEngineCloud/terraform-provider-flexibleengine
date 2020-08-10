@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -21,6 +22,17 @@ func resourceCCENodeV3() *schema.Resource {
 		Read:   resourceCCENodeV3Read,
 		Update: resourceCCENodeV3Update,
 		Delete: resourceCCENodeV3Delete,
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+				arr := strings.Split(d.Id(), "/")
+				cluster_id := arr[0]
+				node_id := arr[1]
+				d.Set("cluster_id", cluster_id)
+				d.SetId(node_id)
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -398,6 +410,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 	d.Set("bandwidth_charge_mode", s.Spec.PublicIP.Eip.Bandwidth.ChargeMode)
 	d.Set("bandwidth_size", s.Spec.PublicIP.Eip.Bandwidth.Size)
 	d.Set("sharetype", s.Spec.PublicIP.Eip.Bandwidth.ShareType)
+
 	return resourceCCENodeV3Read(d, meta)
 }
 

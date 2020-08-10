@@ -8,17 +8,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccCCEClusterV3_importBasic(t *testing.T) {
-	resourceName := "flexibleengine_cce_cluster_v3.cluster_1"
+func TestAccCCENodeV3_importBasic(t *testing.T) {
+	resourceName := "flexibleengine_cce_node_v3.node_1"
 	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCCEClusterV3Destroy,
+		CheckDestroy: testAccCheckCCENodeV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCEClusterV3_basic(cceName),
+				Config: testAccCCENodeV3_basic(cceName),
 			},
 
 			{
