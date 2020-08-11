@@ -12,6 +12,7 @@ Manages a V2 port resource within FlexibleEngine.
 
 ## Example Usage
 
+### Basic Usage
 ```hcl
 resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "network_1"
@@ -20,9 +21,28 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_port_v2" "port_1" {
   name           = "port_1"
-  network_id     = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id     = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 }
+```
+
+### Port With allowed_address_pairs
+```hcl
+resource "flexibleengine_networking_network_v2" "network_1" {
+  name           = "network_1"
+  admin_state_up = "true"
+}
+
+resource "flexibleengine_networking_port_v2" "port_1" {
+  name           = "port_1"
+  network_id     = flexibleengine_networking_network_v2.net.id
+  admin_state_up = "true"
+
+  allowed_address_pairs {
+    ip_address = "192.168.0.0/24"
+  }
+}
+
 ```
 
 ## Argument Reference
@@ -63,24 +83,26 @@ The following arguments are supported:
 * `fixed_ip` - (Optional) An array of desired IPs for this port. The structure is
     described below.
 
-* `allowed_address_pairs` - (Optional) An IP/MAC Address pair of additional IP
-    addresses that can be active on this port. The structure is described
-    below.
+* `allowed_address_pairs` - (Optional) An array of IP/MAC Address pairs of additional IP
+    addresses that can be active on this port. The structure is described below.
 
 * `value_specs` - (Optional) Map of additional options.
 
 The `fixed_ip` block supports:
 
-* `subnet_id` - (Required) Subnet in which to allocate IP address for
-this port.
+* `subnet_id` - (Required) Subnet in which to allocate IP address for this port.
 
 * `ip_address` - (Optional) IP address desired in the subnet for this port. If
-you don't specify `ip_address`, an available IP address from the specified
-subnet will be allocated to this port.
+    you don't specify `ip_address`, an available IP address from the specified
+    subnet will be allocated to this port.
 
 The `allowed_address_pairs` block supports:
 
-* `ip_address` - (Required) The additional IP address.
+* `ip_address` - (Required) The additional IP address. The value can be an IP Address or a CIDR,
+    and can not be *0.0.0.0*. A server connected to the port can send a packet with source address
+    which matches one of the specified allowed address pairs.
+    It is recommended to configure an independent security group for the port if a large CIDR
+    block (subnet mask less than 24) is configured.
 
 * `mac_address` - (Optional) The additional MAC address.
 
