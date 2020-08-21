@@ -14,33 +14,27 @@ Manages a V2 topic resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_ces_alarmrule" "alarm_rule" {
-  "alarm_name" = "alarm_rule"
-  "metric" {
-    "namespace" = "SYS.ECS"
-    "metric_name" = "network_outgoing_bytes_rate_inband"
-    "dimensions" {
-        "name" = "instance_id"
-        "value" = "${flexibleengine_compute_instance_v2.webserver.id}"
+  alarm_name = "alarm_rule"
+  metric {
+    namespace = "SYS.ECS"
+    metric_name = "network_outgoing_bytes_rate_inband"
+    dimensions {
+        name  = "instance_id"
+        value = var.instance_id
     }
   }
-  "condition"  {
-    "period" = 300
-    "filter" = "average"
-    "comparison_operator" = ">"
-    "value" = 6
-    "unit" = "B/s"
-    "count" = 1
+  condition  {
+    period = 300
+    filter = "average"
+    comparison_operator = ">"
+    value = 6
+    unit = "B/s"
+    count = 1
   }
-  "alarm_actions" {
-    "type" = "notification"
-    "notification_list" = [
-      "${flexibleengine_smn_topic_v2.topic.id}"
-    ]
-  }
-  "alarm_actions" {
-    "type" = "notification"
-    "notification_list" = [
-      "${flexibleengine_smn_topic_v2.topic_2.id}"
+  alarm_actions {
+    type = "notification"
+    notification_list = [
+      var.topic_id
     ]
   }
 }
@@ -130,9 +124,9 @@ The `condition` block supports:
 the `alarm_actions` block supports:
 
 * `type` - (Optional) specifies the type of action triggered by an alarm. the
-    value can be notification or autoscaling.
-    notification: indicates that a notification will be sent to the user.
-    autoscaling: indicates that a scaling action will be triggered.
+    value can be *notification* or *autoscaling*.
+    - notification: indicates that a notification will be sent to the user.
+    - autoscaling: indicates that a scaling action will be triggered.
 
 * `notification_list` - (Required) specifies the topic urn list of the target
     notification objects. the maximum length is 5. the topic urn list can be
