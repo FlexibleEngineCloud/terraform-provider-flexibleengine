@@ -10,46 +10,79 @@ description: |-
 
 Provides an VBS Backup Policy resource.
 
-# Example Usage
+## Example Usage
 
- ```hcl
-resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_002"
+### Basic Backup Policy
+
+```hcl
+resource "flexibleengine_vbs_backup_policy_v2" "vbs_policy1" {
+  name   = "policy_001"
+  status = "ON"
   start_time  = "12:00"
-  status  = "ON"
   retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1
+  rentention_num      = 7
+  frequency           = 1
 }
  ```
 
-# Argument Reference
+### Backup Policy with EVS Disks
+
+```hcl
+variable "volume_id" {}
+
+resource "flexibleengine_vbs_backup_policy_v2" "vbs_policy2" {
+  name   = "policy_002"
+  status = "ON"
+  start_time  = "12:00"
+  retain_first_backup = "N"
+  rentention_num = 5
+  frequency = 3
+  resources = [var.volume_id]
+}
+```
+
+## Argument Reference
 
 The following arguments are supported:
 
-* `name` (Required) - Specifies the policy name. The value is a string of 1 to 64 characters that can contain letters, digits, underscores (_), and hyphens (-). It cannot start with default.
+* `name` - (Required) Specifies the policy name. The value is a string of 1 to 64 characters that
+    can contain letters, digits, underscores (_), and hyphens (-). It cannot start with **default**.
 
-* `start_time` (Required) - Specifies the start time of the backup job.The value is in the HH:mm format.                                                         
+* `start_time` - (Required) Specifies the start time(UTC) of the backup job. The value is in the
+    HH:mm format. You need to set the execution time on a full hour. You can set multiple execution
+    times, and use commas (,) to separate one time from another.
 
-* `status` (Required) - Specifies the backup policy status. The value can ON or OFF.
+* `status` - (Optional) Specifies the backup policy status. Possible values are ON or OFF. Defaults to ON.
 
-* `retain_first_backup` (Required) - Specifies whether to retain the first backup in the current month. Possible values are Y or N. 
+* `retain_first_backup` - (Required) Specifies whether to retain the first backup in the current month.
+    Possible values are Y or N.
 
-* `rentention_num` (Required) - Specifies number of retained backups. Minimum value is 2.
+* `rentention_num` - (Optional) Specifies number of retained backups. Minimum value is 2.
+    Either this field or `rentention_day` must be specified.
 
-* `frequency` (Required) - Specifies the backup interval. The value is in the range of 1 to 14 days.
+* `rentention_day` - (Optional) Specifies days of retained backups. Minimum value is 2.
+    Either this field or `rentention_num` must be specified.
+
+* `frequency` - (Optional) Specifies the backup interval. The value is in the range of 1 to 14 days.
+    Either this field or `week_frequency` must be specified.
+
+* `week_frequency` - (Optional) Specifies on which days of each week backup jobs are executed.
+    The value can be one or more of the following: SUN, MON, TUE, WED, THU, FRI, SAT.
+    Either this field or `frequency` must be specified.
+
+* `resources` - (Optional) Specifies one or more volumes associated with the backup policy.
+    Any previously associated backup policy will no longer apply.
 
 
-# Attributes Reference
+## Attributes Reference
 
-All of the argument attributes are also exported as
-result attributes:
+All of the argument attributes are also exported as result attributes:
 
 * `id` - Specifies a backup policy ID.
  
 * `policy_resource_count` - Specifies the number of volumes associated with the backup policy.
 
-# Import
+## Import
 
 Backup Policy can be imported using the `id`, e.g.
 

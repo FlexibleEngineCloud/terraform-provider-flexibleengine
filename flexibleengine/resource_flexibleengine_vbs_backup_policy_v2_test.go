@@ -2,11 +2,10 @@ package flexibleengine
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
-	"testing"
 
 	"github.com/huaweicloud/golangsdk/openstack/vbs/v2/policies"
 )
@@ -34,7 +33,7 @@ func TestAccVBSBackupPolicyV2_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccVBSBackupPolicyV2Exists("flexibleengine_vbs_backup_policy_v2.vbs", &policy),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_vbs_backup_policy_v2.vbs", "name", "policy_002"),
+						"flexibleengine_vbs_backup_policy_v2.vbs", "name", "policy_001_update"),
 					resource.TestCheckResourceAttr(
 						"flexibleengine_vbs_backup_policy_v2.vbs", "status", "ON"),
 				),
@@ -43,7 +42,7 @@ func TestAccVBSBackupPolicyV2_basic(t *testing.T) {
 	})
 }
 
-func TestAccVBSBackupPolicyV2_timeout(t *testing.T) {
+func TestAccVBSBackupPolicyV2_rentention_day(t *testing.T) {
 	var policy policies.Policy
 
 	resource.Test(t, resource.TestCase{
@@ -52,9 +51,15 @@ func TestAccVBSBackupPolicyV2_timeout(t *testing.T) {
 		CheckDestroy: testAccVBSBackupPolicyV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVBSBackupPolicyV2_timeout,
+				Config: testAccVBSBackupPolicyV2_rentention_day,
 				Check: resource.ComposeTestCheckFunc(
 					testAccVBSBackupPolicyV2Exists("flexibleengine_vbs_backup_policy_v2.vbs", &policy),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_vbs_backup_policy_v2.vbs", "name", "policy_002"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_vbs_backup_policy_v2.vbs", "status", "ON"),
+					resource.TestCheckResourceAttr(
+						"flexibleengine_vbs_backup_policy_v2.vbs", "rentention_day", "30"),
 				),
 			},
 		},
@@ -65,7 +70,7 @@ func testAccVBSBackupPolicyV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating sfs client: %s", err)
+		return fmt.Errorf("Error creating flexibleengine vbs client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -96,7 +101,7 @@ func testAccVBSBackupPolicyV2Exists(n string, policy *policies.Policy) resource.
 		config := testAccProvider.Meta().(*Config)
 		vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating vbs client: %s", err)
+			return fmt.Errorf("Error creating flexibleengine vbs client: %s", err)
 		}
 
 		policyList, err := policies.List(vbsClient, policies.ListOpts{ID: rs.Primary.ID})
@@ -121,32 +126,26 @@ resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
   status  = "ON"
   retain_first_backup = "N"
   rentention_num = 2
-  frequency = 1     
+  frequency = 1
 }
 `)
 
 var testAccVBSBackupPolicyV2_update = fmt.Sprintf(`
 resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_002"
-  start_time  = "12:00"
-  status  = "ON"
-  retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1      
-}
-`)
-
-var testAccVBSBackupPolicyV2_timeout = fmt.Sprintf(`
-resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_002"
+  name = "policy_001_update"
   start_time  = "12:00"
   status  = "ON"
   retain_first_backup = "N"
   rentention_num = 2
   frequency = 1
-      
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
+}
+`)
+
+var testAccVBSBackupPolicyV2_rentention_day = fmt.Sprintf(`
+resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
+  name = "policy_002"
+  start_time  = "00:00,12:00"
+  retain_first_backup = "N"
+  rentention_day = 30
+  week_frequency = ["MON","WED","SAT"]
 }`)
