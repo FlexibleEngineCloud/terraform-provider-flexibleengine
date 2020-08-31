@@ -1,13 +1,13 @@
-## 1.15.0 (Unreleased)
+## 1.15.0 (August 31, 2020)
 
 FEATURES:
 
-* **New Resource:** `flexibleengine_sfs_turbo` [GH-384]
+* **New Resource:** `flexibleengine_sfs_turbo` ([#384](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/384))
 
 ENHANCEMENTS:
 
-* `resource/flexibleengine_ces_alarmrule`: Improve docs and examples [GH-382]
-* `resource/flexibleengine_vbs_backup_policy`: Add resources parameter support [GH-385]
+* `resource/flexibleengine_ces_alarmrule`: Improve docs and examples ([#382](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/382))
+* `resource/flexibleengine_vbs_backup_policy`: Add resources parameter support ([#385](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/385))
 
 ## 1.14.0 (August 10, 2020)
 
