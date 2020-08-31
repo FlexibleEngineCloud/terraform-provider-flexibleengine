@@ -1,4 +1,14 @@
 ## 1.15.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `flexibleengine_sfs_turbo` [GH-384]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_ces_alarmrule`: Improve docs and examples [GH-382]
+* `resource/flexibleengine_vbs_backup_policy`: Add resources parameter support [GH-385]
+
 ## 1.14.0 (August 10, 2020)
 
 FEATURES:
