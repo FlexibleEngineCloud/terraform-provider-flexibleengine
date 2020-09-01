@@ -236,6 +236,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_mrs_cluster_v1":                     resourceMRSClusterV1(),
 			"flexibleengine_mrs_job_v1":                         resourceMRSJobV1(),
 			"flexibleengine_mls_instance_v1":                    resourceMlsInstanceV1(),
+			"flexibleengine_network_acl":                        resourceNetworkACL(),
+			"flexibleengine_network_acl_rule":                   resourceNetworkACLRule(),
 			"flexibleengine_networking_network_v2":              resourceNetworkingNetworkV2(),
 			"flexibleengine_networking_subnet_v2":               resourceNetworkingSubnetV2(),
 			"flexibleengine_networking_floatingip_v2":           resourceNetworkingFloatingIPV2(),
