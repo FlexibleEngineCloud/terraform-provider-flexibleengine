@@ -1,4 +1,10 @@
 ## 1.16.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `flexibleengine_network_acl` ([#388](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/388))
+* **New Resource:** `flexibleengine_network_acl_rule` ([#388](https://github.com/terraform-providers/terraform-provider-flexibleengine/issues/388))
+
 ## 1.15.0 (August 31, 2020)
 
 FEATURES:
