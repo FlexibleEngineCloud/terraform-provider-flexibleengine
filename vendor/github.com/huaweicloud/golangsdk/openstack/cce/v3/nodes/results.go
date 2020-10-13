@@ -2,6 +2,7 @@ package nodes
 
 import (
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 )
 
 //Describes the Node Structure of cluster
@@ -40,7 +41,7 @@ type Metadata struct {
 	Annotations map[string]string `json:"annotations,omitempty"`
 }
 
-// Describes Nodes specification
+// Spec describes Nodes specification
 type Spec struct {
 	// Node specifications
 	Flavor string `json:"flavor" required:"true"`
@@ -48,6 +49,8 @@ type Spec struct {
 	Az string `json:"az" required:"true"`
 	// The OS of the node
 	Os string `json:"os,omitempty"`
+	// ID of the dedicated host to which nodes will be scheduled
+	DedicatedHostID string `json:"dedicatedHostId,omitempty"`
 	// Node login parameters
 	Login LoginSpec `json:"login" required:"true"`
 	// System disk parameter of the node
@@ -60,8 +63,38 @@ type Spec struct {
 	BillingMode int `json:"billingMode,omitempty"`
 	// Number of nodes when creating in batch
 	Count int `json:"count" required:"true"`
+	// The node nic spec
+	NodeNicSpec NodeNicSpec `json:"nodeNicSpec,omitempty"`
 	// Extended parameter
 	ExtendParam ExtendParam `json:"extendParam,omitempty"`
+	// UUID of an ECS group
+	EcsGroupID string `json:"ecsGroupId,omitempty"`
+	// Tag of a VM, key value pair format
+	UserTags []tags.ResourceTag `json:"userTags,omitempty"`
+	// Tag of a Kubernetes node, key value pair format
+	K8sTags map[string]string `json:"k8sTags,omitempty"`
+	// taints to created nodes to configure anti-affinity
+	Taints []TaintSpec `json:"taints,omitempty"`
+}
+
+// Gives the Nic spec of the node
+type NodeNicSpec struct {
+	// The primary Nic of the Node
+	PrimaryNic PrimaryNic `json:"primaryNic,omitempty"`
+}
+
+// Gives the Primary Nic of the node
+type PrimaryNic struct {
+	// The Subnet ID of the primary Nic
+	SubnetId string `json:"subnetId,omitempty"`
+}
+
+// TaintSpec to created nodes to configure anti-affinity
+type TaintSpec struct {
+	Key   string `json:"key" required:"true"`
+	Value string `json:"value" required:"true"`
+	// Available options are NoSchedule, PreferNoSchedule, and NoExecute
+	Effect string `json:"effect" required:"true"`
 }
 
 // Gives the current status of the node

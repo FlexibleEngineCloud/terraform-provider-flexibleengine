@@ -1,12 +1,14 @@
 module github.com/terraform-providers/terraform-provider-flexibleengine
 
+go 1.14
+
 require (
 	github.com/aws/aws-sdk-go v1.22.0
 	github.com/hashicorp/errwrap v1.0.0
 	github.com/hashicorp/go-cleanhttp v0.5.1
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/hashicorp/terraform-plugin-sdk v1.0.0
-	github.com/huaweicloud/golangsdk v0.0.0-20200901024739-8d01f23cf75e
+	github.com/huaweicloud/golangsdk v0.0.0-20201013050319-683f75dc8263
 	github.com/jen20/awspolicyequivalence v0.0.0-20170831201602-3d48364a137a
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/mitchellh/go-homedir v1.1.0
