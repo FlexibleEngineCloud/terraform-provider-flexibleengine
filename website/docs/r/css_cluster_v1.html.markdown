@@ -76,7 +76,6 @@ The following arguments are supported:
 * `backup_strategy` - (Optional) Specifies the advanced backup policy. Structure is documented below.
 
 * `tags` - (Optional) The key/value pairs to associate with the cluster.
-  Changing this parameter will create a new resource.
 
 The `node_config` block supports:
 
