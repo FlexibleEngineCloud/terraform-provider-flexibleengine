@@ -90,12 +90,12 @@ The following arguments are supported:
 
 The `node_config` block supports:
 
-* `availability_zone` -
-  (Optional)
-  Availability zone (AZ).  Changing this parameter will create a new resource.
+* `availability_zone` - (Optional)
+  Availability zone(s). You can set multiple vailability zones, and use commas (,) to separate one from another.
+  Cluster instances will be evenly distributed to each AZ. The `node_number` should be greater than or equal to
+  the number of available zones. Changing this parameter will create a new resource.
 
-* `flavor` -
-  (Required)
+* `flavor` - (Required)
   Instance flavor name. For example: value range of flavor ess.spec-2u8g:
   40 GB to 800 GB, value range of flavor ess.spec-4u16g: 40 GB to 1600 GB,
   value range of flavor ess.spec-8u32g: 80 GB to 3200 GB, value range of
@@ -103,42 +103,35 @@ The `node_config` block supports:
   flavor ess.spec-32u128g: 100 GB to 10240 GB.
   Changing this parameter will create a new resource.
 
-* `network_info` -
-  (Required)
+* `network_info` - (Required)
   Network information. Structure is documented below. Changing this parameter will create a new resource.
 
-* `volume` -
-  (Required)
+* `volume` - (Required)
   Information about the volume. Structure is documented below. Changing this parameter will create a new resource.
 
 The `network_info` block supports:
 
-* `vpc_id` -
-  (Required)
+* `vpc_id` - (Required)
   VPC ID, which is used for configuring cluster network. Changing this parameter will create a new resource.
 
-* `subnet_id` -
-  (Required)
-  Subnet ID. All instances in a cluster must have the same subnet which should be configured with a *DNS address*.
+* `subnet_id` -(Required)
+  Subnet ID. All instances in a cluster must have the same subnet which should be configured with a **DNS address**.
   Changing this parameter will create a new resource.
 
-* `security_group_id` -
-  (Required)
+* `security_group_id` - (Required)
   Security group ID. All instances in a cluster must have the same security group.
   Changing this parameter will create a new resource.
 
 The `volume` block supports:
 
-* `size` -
-  (Required)
+* `size` - (Required)
   Specifies volume size in GB, which must be a multiple of 10.
 
-* `volume_type` -
-  (Required)
-  Specifies the volume type. Supported value: "COMMON": The SATA disk is used; "HIGH": The SAS disk
-  is used; "ULTRAHIGH": The solid-state drive (SSD) is used.
-  Changing this parameter will create a new resource.
-
+* `volume_type` - (Required)
+  Specifies the volume type. Changing this parameter will create a new resource. Supported value:
+  - "COMMON": The SATA disk is used;
+  - "HIGH": The SAS disk is used;
+  - "ULTRAHIGH": The solid-state drive (SSD) is used.
 
 The `backup_strategy` block supports:
 
@@ -164,8 +157,7 @@ In addition to the arguments listed above, the following computed attributes are
   Indicates the IP address and port number.
 
 * `created` -
-  Time when a cluster is created. The format is ISO8601:
-  CCYY-MM-DDThh:mm:ss.
+  Time when a cluster is created. The format is ISO8601: CCYY-MM-DDThh:mm:ss.
 
 * `nodes` -
   List of node objects. Structure is documented below.
@@ -182,5 +174,5 @@ The `nodes` block contains:
 
 This resource provides the following timeouts configuration options:
 
-- `create` - Default is 30 minute.
-- `update` - Default is 30 minute.
+- `create` - Default is 60 minute.
+- `update` - Default is 60 minute.
