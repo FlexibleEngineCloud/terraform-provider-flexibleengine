@@ -69,6 +69,17 @@ The following arguments are supported:
   (Optional)
   Number of cluster instances. The value range is 1 to 32. Defaults to 1.
 
+* `security_mode` - (Optional) Whether to enable communication encryption and security authentication.
+  Available values include *true* and *false*. security_mode is disabled by default.
+  Changing this parameter will create a new resource.
+
+* `password` - (Optional) Password of the cluster administrator admin in security mode.
+  This parameter is mandatory only when security_mode is set to true. Changing this parameter will create a new resource.
+  The administrator password must meet the following requirements:
+  - The password can contain 8 to 32 characters.
+  - The password must contain at least 3 of the following character types: uppercase letters, lowercase letters,
+    digits, and special characters (~!@#$%^&*()-_=+\\|[{}];:,<.>/?).
+
 * `node_config` -
   (Required)
   Node configuration. Structure is documented below. Changing this parameter will create a new resource.
