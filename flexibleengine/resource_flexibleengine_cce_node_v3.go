@@ -14,6 +14,7 @@ import (
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/clusters"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 )
 
 func resourceCCENodeV3() *schema.Resource {
@@ -56,10 +57,18 @@ func resourceCCENodeV3() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"labels": {
+			"labels": { //(k8s_tags)
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
+			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+			},
+			"server_id": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"annotations": {
 				Type:     schema.TypeMap,
@@ -245,13 +254,6 @@ func resourceCCENodeV3() *schema.Resource {
 	}
 }
 
-func resourceCCENodeLabelsV2(d *schema.ResourceData) map[string]string {
-	m := make(map[string]string)
-	for key, val := range d.Get("labels").(map[string]interface{}) {
-		m[key] = val.(string)
-	}
-	return m
-}
 func resourceCCENodeAnnotationsV2(d *schema.ResourceData) map[string]string {
 	m := make(map[string]string)
 	for key, val := range d.Get("annotations").(map[string]interface{}) {
@@ -290,6 +292,20 @@ func resourceCCEEipIDs(d *schema.ResourceData) []string {
 	}
 	return id
 }
+
+func resourceCCENodeK8sTags(d *schema.ResourceData) map[string]string {
+	m := make(map[string]string)
+	for key, val := range d.Get("labels").(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
+}
+
+func resourceCCENodeUserTags(d *schema.ResourceData) []tags.ResourceTag {
+	tagRaw := d.Get("tags").(map[string]interface{})
+	return expandResourceTags(tagRaw)
+}
+
 func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	nodeClient, err := config.cceV3Client(GetRegion(d, config))
@@ -310,7 +326,6 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		ApiVersion: "v3",
 		Metadata: nodes.CreateMetaData{
 			Name:        d.Get("name").(string),
-			Labels:      resourceCCENodeLabelsV2(d),
 			Annotations: resourceCCENodeAnnotationsV2(d),
 		},
 		Spec: nodes.Spec{
@@ -320,6 +335,8 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 			Login:       nodes.LoginSpec{SshKey: d.Get("key_pair").(string)},
 			RootVolume:  resourceCCERootVolume(d),
 			DataVolumes: resourceCCEDataVolume(d),
+			UserTags:    resourceCCENodeUserTags(d),
+			K8sTags:     resourceCCENodeK8sTags(d),
 			PublicIP: nodes.PublicIPSpec{
 				Ids:   resourceCCEEipIDs(d),
 				Count: d.Get("eip_count").(int),
@@ -475,6 +492,27 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("private_ip", s.Status.PrivateIP)
 	d.Set("public_ip", s.Status.PublicIP)
 
+	serverId := s.Status.ServerID
+	d.Set("server_id", serverId)
+
+	// fetch tags from ECS instance
+	computeClient, err := config.loadECSV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
+	}
+
+	resourceTags, err := tags.Get(computeClient, "servers", serverId).Extract()
+	if err != nil {
+		return fmt.Errorf("Error fetching Flexibleengine instance tags: %s", err)
+	}
+
+	tagmap := tagsToMap(resourceTags.Tags)
+	//ignore "CCE-Dynamic-Provisioning-Node"
+	delete(tagmap, "CCE-Dynamic-Provisioning-Node")
+	if err := d.Set("tags", tagmap); err != nil {
+		return fmt.Errorf("Error saving tags of cce node: %s", err)
+	}
+
 	return nil
 }
 
@@ -489,14 +527,27 @@ func resourceCCENodeV3Update(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("name") {
 		updateOpts.Metadata.Name = d.Get("name").(string)
+
+		clusterid := d.Get("cluster_id").(string)
+		_, err = nodes.Update(nodeClient, clusterid, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("Error updating flexibleengine Node: %s", err)
+		}
 	}
 
-	clusterid := d.Get("cluster_id").(string)
-	_, err = nodes.Update(nodeClient, clusterid, d.Id(), updateOpts).Extract()
-	if err != nil {
-		return fmt.Errorf("Error updating flexibleengine Node: %s", err)
-	}
+	// update tags
+	if d.HasChange("tags") {
+		computeClient, err := config.loadECSV1Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
+		}
 
+		serverId := d.Get("server_id").(string)
+		tagErr := UpdateResourceTags(computeClient, d, "servers", serverId)
+		if tagErr != nil {
+			return fmt.Errorf("Error updateing tags of cce node %s: %s", d.Id(), tagErr)
+		}
+	}
 	return resourceCCENodeV3Read(d, meta)
 }
 

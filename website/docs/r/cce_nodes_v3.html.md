@@ -45,7 +45,9 @@ The following arguments are supported:
 
 * `name` - (Optional) Node Name.
 
-* `labels` - (Optional) Node tag, key/value pair format. Changing this parameter will create a new resource.
+* `labels` - (Optional) Tags of a Kubernetes node, key/value pair format. Changing this parameter will create a new resource.
+
+* `tags` - (Optional) VM tag, key/value pair format.
 
 * `annotations` - (Optional) Node annotation, key/value pair format. Changing this parameter will create a new resource.
     
