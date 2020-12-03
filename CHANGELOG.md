@@ -1,3 +1,10 @@
+## 1.16.2 (December 03, 2020)
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cce_cluster_v3`: Bump Create/Delete timeout ([#410](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/410))
+* `resource/flexibleengine_cce_node_v3`: Bump Create/Delete timeout ([#410](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/410))
+
 ## 1.16.1 (October 19, 2020)
 
 ENHANCEMENTS:
