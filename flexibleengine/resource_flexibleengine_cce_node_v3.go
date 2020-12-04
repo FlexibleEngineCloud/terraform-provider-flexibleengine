@@ -136,6 +136,26 @@ func resourceCCENodeV3() *schema.Resource {
 						},
 					}},
 			},
+			"taints": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"value": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"effect": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					}},
+			},
 			"eip_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -274,6 +294,21 @@ func resourceCCEDataVolume(d *schema.ResourceData) []nodes.VolumeSpec {
 	}
 	return volumes
 }
+
+func resourceCCETaint(d *schema.ResourceData) []nodes.TaintSpec {
+	taintRaw := d.Get("taints").([]interface{})
+	taints := make([]nodes.TaintSpec, len(taintRaw))
+	for i, raw := range taintRaw {
+		rawMap := raw.(map[string]interface{})
+		taints[i] = nodes.TaintSpec{
+			Key:    rawMap["key"].(string),
+			Value:  rawMap["value"].(string),
+			Effect: rawMap["effect"].(string),
+		}
+	}
+	return taints
+}
+
 func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
 	var nics nodes.VolumeSpec
 	nicsRaw := d.Get("root_volume").([]interface{})
@@ -337,6 +372,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 			DataVolumes: resourceCCEDataVolume(d),
 			UserTags:    resourceCCENodeUserTags(d),
 			K8sTags:     resourceCCENodeK8sTags(d),
+			Taints:      resourceCCETaint(d),
 			PublicIP: nodes.PublicIPSpec{
 				Ids:   resourceCCEEipIDs(d),
 				Count: d.Get("eip_count").(int),
