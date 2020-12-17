@@ -165,6 +165,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_blockstorage_availability_zones_v3": dataSourceBlockStorageAvailabilityZonesV3(),
 			"flexibleengine_blockstorage_volume_v2":             dataSourceBlockStorageVolumeV2(),
 			"flexibleengine_compute_availability_zones_v2":      dataSourceComputeAvailabilityZonesV2(),
+			"flexibleengine_compute_instance_v2":                dataSourceComputeInstance(),
 			"flexibleengine_images_image_v2":                    dataSourceImagesImageV2(),
 			"flexibleengine_networking_network_v2":              dataSourceNetworkingNetworkV2(),
 			"flexibleengine_networking_secgroup_v2":             dataSourceNetworkingSecGroupV2(),
