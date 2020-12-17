@@ -379,6 +379,15 @@ func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, 
 	})
 }
 
+// client for ecs v1
+func (c *Config) computeV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewComputeV1(c.HwClient, golangsdk.EndpointOpts{
+		Region:       region,
+		Availability: c.getHwEndpointType(),
+	})
+}
+
+// client for nova v2
 func (c *Config) computeV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewComputeV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -619,13 +628,6 @@ func (c *Config) cceV3Client(region string) (*golangsdk.ServiceClient, error) {
 
 func (c *Config) kmsKeyV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewKMSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) loadECSV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewComputeV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       region,
 		Availability: c.getHwEndpointType(),
 	})
