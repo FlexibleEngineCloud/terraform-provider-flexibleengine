@@ -14,7 +14,7 @@ import (
 
 func resourceECSAutoRecoveryV1Read(d *schema.ResourceData, meta interface{}, instanceID string) (bool, error) {
 	config := meta.(*Config)
-	client, err := chooseECSV1Client(d, config)
+	client, err := config.computeV1Client(GetRegion(d, config))
 	if err != nil {
 		return false, fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -31,7 +31,7 @@ func resourceECSAutoRecoveryV1Read(d *schema.ResourceData, meta interface{}, ins
 
 func setAutoRecoveryForInstance(d *schema.ResourceData, meta interface{}, instanceID string, ar bool) error {
 	config := meta.(*Config)
-	client, err := chooseECSV1Client(d, config)
+	client, err := config.computeV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -60,7 +60,7 @@ func resourceECSTagsV1Read(d *schema.ResourceData, meta interface{}, instanceID 
 	tagmap := make(map[string]string)
 
 	config := meta.(*Config)
-	client, err := chooseECSV1Client(d, config)
+	client, err := config.computeV1Client(GetRegion(d, config))
 	if err != nil {
 		return tagmap, fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 	}

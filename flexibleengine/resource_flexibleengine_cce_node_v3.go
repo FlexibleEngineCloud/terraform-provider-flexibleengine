@@ -532,7 +532,7 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("server_id", serverId)
 
 	// fetch tags from ECS instance
-	computeClient, err := config.loadECSV1Client(GetRegion(d, config))
+	computeClient, err := config.computeV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
 	}
@@ -573,7 +573,7 @@ func resourceCCENodeV3Update(d *schema.ResourceData, meta interface{}) error {
 
 	// update tags
 	if d.HasChange("tags") {
-		computeClient, err := config.loadECSV1Client(GetRegion(d, config))
+		computeClient, err := config.computeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
 		}

@@ -493,7 +493,7 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if hasFilledOpt(d, "tags") {
-		ecsClient, err := chooseECSV1Client(d, config)
+		ecsClient, err := config.computeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 		}
@@ -791,7 +791,7 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		oMap := oRaw.(map[string]interface{})
 		nMap := nRaw.(map[string]interface{})
 
-		ecsClient, err := chooseECSV1Client(d, config)
+		ecsClient, err := config.computeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 		}
