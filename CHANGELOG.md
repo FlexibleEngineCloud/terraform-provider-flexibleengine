@@ -1,3 +1,15 @@
+## 1.17.0 (December 18, 2020)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_compute_instance_v2` ([#424](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/424))
+* **New Resource:** `flexibleengine_cce_node_pool_v3` ([#414](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/414))
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cce_node_v3`: Add taints parameter support ([#412](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/412))
+* `resource/flexibleengine_compute_instance_v2`: Add import support ([#425](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/425))
+
 ## 1.16.2 (December 03, 2020)
 
 ENHANCEMENTS:
