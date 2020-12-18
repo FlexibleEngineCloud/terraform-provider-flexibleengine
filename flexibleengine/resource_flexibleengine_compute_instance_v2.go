@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -13,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/bootfromvolume"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/schedulerhints"
@@ -22,6 +22,8 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
+	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
 )
 
 func resourceComputeInstanceV2() *schema.Resource {
@@ -30,6 +32,10 @@ func resourceComputeInstanceV2() *schema.Resource {
 		Read:   resourceComputeInstanceV2Read,
 		Update: resourceComputeInstanceV2Update,
 		Delete: resourceComputeInstanceV2Delete,
+
+		Importer: &schema.ResourceImporter{
+			State: resourceComputeInstanceV2ImportState,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
@@ -76,12 +82,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Computed:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_FLAVOR_NAME", nil),
 			},
-			"floating_ip": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: false,
-				Removed:  "Use the flexibleengine_compute_floatingip_associate_v2 resource instead",
-			},
 			"user_data": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -115,7 +115,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
-				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"uuid": {
@@ -148,12 +147,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 							ForceNew: true,
 							Computed: true,
 						},
-						"floating_ip": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-							Removed:  "Use the flexibleengine_compute_floatingip_associate_v2 resource instead",
-						},
 						"mac": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -162,6 +155,12 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  false,
+						},
+						"floating_ip": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Removed:  "Use the flexibleengine_compute_floatingip_associate_v2 resource instead",
 						},
 					},
 				},
@@ -181,6 +180,11 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Optional: true,
 				ForceNew: false,
 			},
+			"key_pair": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 			"access_ip_v4": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -192,11 +196,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				ForceNew: false,
-			},
-			"key_pair": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
 			},
 			"block_device": {
 				Type:     schema.TypeList,
@@ -248,29 +247,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-						},
-					},
-				},
-			},
-			"volume": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Removed:  "Use block_device or flexibleengine_compute_volume_attach_v2 instead",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"volume_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"device": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
 						},
 					},
 				},
@@ -340,10 +316,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
-			"all_metadata": {
-				Type:     schema.TypeMap,
-				Computed: true,
-			},
 			"auto_recovery": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -353,6 +325,71 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Type:         schema.TypeMap,
 				Optional:     true,
 				ValidateFunc: validateECSTagValue,
+			},
+			"all_metadata": {
+				Type:     schema.TypeMap,
+				Computed: true,
+			},
+			"floating_ip": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"system_disk_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"volume_attached": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"uuid": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"boot_index": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"size": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"pci_address": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+
+			// Removed
+			"volume": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Removed:  "Use block_device or flexibleengine_compute_volume_attach_v2 instead",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+						"volume_id": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"device": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -512,18 +549,38 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	ecsClient, err := config.computeV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
 
-	server, err := servers.Get(computeClient, d.Id()).Extract()
+	server, err := cloudservers.Get(ecsClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "server")
 	}
 
-	log.Printf("[DEBUG] Retrieved Server %s: %+v", d.Id(), server)
-
+	log.Printf("[DEBUG] Retrieved compute instance %s: %+v", d.Id(), server)
+	// Set some attributes
+	d.Set("region", GetRegion(d, config))
+	d.Set("availability_zone", server.AvailabilityZone)
 	d.Set("name", server.Name)
+	d.Set("status", server.Status)
+
+	flavorInfo := server.Flavor
+	d.Set("flavor_id", flavorInfo.ID)
+	d.Set("flavor_name", flavorInfo.Name)
+
+	// Set the instance's image information appropriately
+	if err := setImageInformation(d, computeClient, server.Image.ID); err != nil {
+		return err
+	}
+
+	if server.KeyName != "" {
+		d.Set("key_pair", server.KeyName)
+	}
+	if eip := computePublicIP(server); eip != "" {
+		d.Set("public_ip", eip)
+	}
 
 	// Get the instance network and address information
 	networks, err := flattenInstanceNetworks(d, meta)
@@ -565,42 +622,57 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		})
 	}
 
-	d.Set("all_metadata", server.Metadata)
-
-	flavorId, ok := server.Flavor["id"].(string)
-	if !ok {
-		return fmt.Errorf("Error setting FlexibleEngine server's flavor: %v", server.Flavor)
+	secGrpNames := []string{}
+	for _, sg := range server.SecurityGroups {
+		secGrpNames = append(secGrpNames, sg.Name)
 	}
-	d.Set("flavor_id", flavorId)
+	d.Set("security_groups", secGrpNames)
 
-	flavor, err := flavors.Get(computeClient, flavorId).Extract()
-	if err != nil {
-		return err
-	}
-	d.Set("flavor_name", flavor.Name)
+	// Set volume attached
+	if len(server.VolumeAttached) > 0 {
+		instanceVolumes := make([]map[string]interface{}, len(server.VolumeAttached))
+		for i, b := range server.VolumeAttached {
+			va, err := block_devices.Get(ecsClient, d.Id(), b.ID).Extract()
+			if err != nil {
+				return err
+			}
+			log.Printf("[DEBUG] Retrieved block device %s: %#v", b.ID, va)
+			instanceVolumes[i] = map[string]interface{}{
+				"uuid":        b.ID,
+				"boot_index":  va.BootIndex,
+				"size":        va.Size,
+				"pci_address": va.PciAddress,
+			}
 
-	// Set the instance's image information appropriately
-	if err := setImageInformation(computeClient, server, d); err != nil {
-		return err
-	}
-
-	// Build a custom struct for the availability zone extension
-	var serverWithAZ struct {
-		servers.Server
-		availabilityzones.ServerAvailabilityZoneExt
-	}
-
-	// Do another Get so the above work is not disturbed.
-	err = servers.Get(computeClient, d.Id()).ExtractInto(&serverWithAZ)
-	if err != nil {
-		return CheckDeleted(d, err, "server")
+			if va.BootIndex == 0 {
+				d.Set("system_disk_id", b.ID)
+			}
+		}
+		d.Set("volume_attached", instanceVolumes)
 	}
 
-	// Set the availability zone
-	d.Set("availability_zone", serverWithAZ.AvailabilityZone)
+	// set os:scheduler_hints
+	osHints := server.OsSchedulerHints
+	if len(osHints.Group) > 0 {
+		schedulerHints := make([]map[string]interface{}, len(osHints.Group))
+		for i, v := range osHints.Group {
+			schedulerHints[i] = map[string]interface{}{
+				"group": v,
+			}
+		}
+		d.Set("scheduler_hints", schedulerHints)
+	}
 
-	// Set the region
-	d.Set("region", GetRegion(d, config))
+	// set all_metadata
+	if b, err := json.Marshal(server.Metadata); err == nil {
+		meta := make(map[string]interface{})
+		if err := json.Unmarshal(b, &meta); err == nil {
+			log.Printf("[DEBUG] Retrieved compute instance Metadata: %s", meta)
+			d.Set("all_metadata", meta)
+		} else {
+			log.Printf("[WARN] failed to unmarshal Metadata: %s", err)
+		}
+	}
 
 	ar, err := resourceECSAutoRecoveryV1Read(d, meta, d.Id())
 	if err != nil && !isResourceNotFound(err) {
@@ -873,6 +945,28 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
+func resourceComputeInstanceV2ImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	config := meta.(*Config)
+	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	if err != nil {
+		return nil, fmt.Errorf("Error creating HuaweiCloud compute client: %s", err)
+	}
+
+	server, err := cloudservers.Get(ecsClient, d.Id()).Extract()
+	if err != nil {
+		return nil, CheckDeleted(d, err, "compute instance")
+	}
+
+	allNetworks, _ := flattenComputeNetworks(d, meta, server)
+	log.Printf("[DEBUG] flatten Instance Networks: %#v", allNetworks)
+
+	if err := d.Set("network", allNetworks); err != nil {
+		log.Printf("[WARN] Error setting network of ecs instance %s: %s", d.Id(), err)
+	}
+
+	return []*schema.ResourceData{d}, nil
+}
+
 // ServerV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
 // an FlexibleEngine instance.
 func ServerV2StateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
@@ -1032,7 +1126,7 @@ func getImageIDFromConfig(computeClient *golangsdk.ServiceClient, d *schema.Reso
 	return "", fmt.Errorf("Neither a boot device, image ID, or image name were able to be determined.")
 }
 
-func setImageInformation(computeClient *golangsdk.ServiceClient, server *servers.Server, d *schema.ResourceData) error {
+func setImageInformation(d *schema.ResourceData, computeClient *golangsdk.ServiceClient, imageID string) error {
 	// If block_device was used, an Image does not need to be specified, unless an image/local
 	// combination was used. This emulates normal boot behavior. Otherwise, ignore the image altogether.
 	if vL, ok := d.GetOk("block_device"); ok {
@@ -1049,10 +1143,9 @@ func setImageInformation(computeClient *golangsdk.ServiceClient, server *servers
 		}
 	}
 
-	imageId := server.Image["id"].(string)
-	if imageId != "" {
-		d.Set("image_id", imageId)
-		if image, err := images.Get(computeClient, imageId).Extract(); err != nil {
+	if imageID != "" {
+		d.Set("image_id", imageID)
+		if image, err := images.Get(computeClient, imageID).Extract(); err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				// If the image name can't be found, set the value to "Image not found".
 				// The most likely scenario is that the image no longer exists in the Image Service
@@ -1067,6 +1160,22 @@ func setImageInformation(computeClient *golangsdk.ServiceClient, server *servers
 	}
 
 	return nil
+}
+
+// computePublicIP get the first floating address
+func computePublicIP(server *cloudservers.CloudServer) string {
+	var publicIP string
+
+	for _, addresses := range server.Addresses {
+		for _, addr := range addresses {
+			if addr.Type == "floating" {
+				publicIP = addr.Addr
+				break
+			}
+		}
+	}
+
+	return publicIP
 }
 
 func getFlavorID(client *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
