@@ -284,8 +284,8 @@ The following arguments are supported:
 * `flavor_name` - (Optional; Required if `flavor_id` is empty) The name of the
     desired flavor for the server. Changing this resizes the existing server.
 
-* `user_data` - (Optional) The user data to provide when launching the instance.
-    Changing this creates a new server.
+* `availability_zone` - (Optional) The availability zone in which to create
+    the server. Changing this creates a new server.
 
 * `security_groups` - (Optional) An array of one or more security group names
     to associate with the server. Changing this results in adding/removing
@@ -293,12 +293,12 @@ The following arguments are supported:
     instance to networks using Ports, place the security groups on the Port
     and not the instance.
 
-* `availability_zone` - (Optional) The availability zone in which to create
-    the server. Changing this creates a new server.
-
 * `network` - (Optional) An array of one or more networks to attach to the
     instance. The network object structure is documented below. Changing this
     creates a new server.
+
+* `user_data` - (Optional) The user data to provide when launching the instance.
+    Changing this creates a new server.
 
 * `metadata` - (Optional) Metadata key/value pairs to make available from
     within the instance. Changing this updates the existing server metadata.
@@ -426,6 +426,31 @@ The following attributes are exported:
     by Terraform.
 * `auto_recovery` - See Argument Reference above.
 * `tags` - See Argument Reference above.
+* `floating_ip` - The EIP address that is associted to the instance.
+* `system_disk_id` - The system disk voume ID.
+* `volume_attached` - An array of one or more disks to attach to the instance.
+    The volume_attached object structure is documented below.
+* `status` - The status of the instance.
+
+The `volume_attached` block supports:
+
+* `uuid` - The volume id on that attachment.
+* `boot_index` - The volume boot index on that attachment.
+* `size` - The volume size on that attachment.
+* `pci_address` - The volume pci address on that attachment.
+
+## Import
+
+Instances can be imported by their `id`. For example,
+```
+terraform import flexibleengine_compute_instance_v2.my_instance b11b407c-e604-4e8d-8bc4-92398320b847
+```
+Note that the imported state may not be identical to your resource definition, which
+could be because of a different network interface attachment order, missing ephemeral
+disk configuration, or some other reason. It is generally recommended running
+`terraform plan` after importing an instance. You can then decide if changes should
+be applied to the instance, or the resource definition should be updated to align
+with the instance.
 
 ## Notes
 

@@ -16,6 +16,7 @@ import (
 
 func TestAccComputeV2Instance_basic(t *testing.T) {
 	var instance servers.Server
+	resourceName := "flexibleengine_compute_instance_v2.instance_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -25,14 +26,10 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 			{
 				Config: testAccComputeV2Instance_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
+					testAccCheckComputeV2InstanceExists(resourceName, &instance),
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_compute_instance_v2.instance_1", "all_metadata.foo", "bar"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_compute_instance_v2.instance_1", "availability_zone", OS_AVAILABILITY_ZONE),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_compute_instance_v2.instance_1", "tags.key1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "availability_zone", OS_AVAILABILITY_ZONE),
+					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
 				),
 			},
 		},

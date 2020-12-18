@@ -45,6 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 * `key_pair` - The key pair that is used to authenticate the instance.
 * `floating_ip` - The EIP address that is associted to the instance.
 * `system_disk_id` - The system disk voume ID.
+* `user_data` -  The user data (information after encoding) configured during instance creation.
 * `security_groups` - An array of one or more security group names
     to associate with the instance.
 * `network` - An array of one or more networks to attach to the instance.
@@ -64,7 +65,7 @@ The `network` block supports:
 * `fixed_ip_v4` - The fixed IPv4 address of the instance on this network.
 * `fixed_ip_v6` - The Fixed IPv6 address of the instance on that network.
 
-The `volume_attached` block supports:
+The `block_device` block supports:
 
 * `uuid` - The volume id on that attachment.
 * `boot_index` - The volume boot index on that attachment.
