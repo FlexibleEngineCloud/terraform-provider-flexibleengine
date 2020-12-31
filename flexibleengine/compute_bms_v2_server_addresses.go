@@ -55,9 +55,6 @@ type ServerNetwork struct {
 // user specified a network ID, there's no way to correlate it to the instance
 // unless we know both the name and ID.
 //
-// Not only that, but we have to account for two Flexibleengine network services
-// running: nova-network (legacy) and Neutron (current).
-//
 // In addition, if a port was specified, not all of the port information
 // will be displayed, such as multiple fixed and floating IPs. This resource
 // isn't currently configured for that type of flexibility. It's better to
