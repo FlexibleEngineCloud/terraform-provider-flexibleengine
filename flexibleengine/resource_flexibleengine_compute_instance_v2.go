@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -20,7 +19,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/secgroups"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
 	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
@@ -404,16 +402,12 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 
 	var createOpts servers.CreateOptsBuilder
 
-	// Determines the Image ID using the following rules:
-	// If a bootable block_device was specified, ignore the image altogether.
-	// If an image_id was specified, use it.
-	// If an image_name was specified, look up the image ID, report if error.
-	imageId, err := getImageIDFromConfig(computeClient, d)
+	imageId, err := getInstanceImageID(computeClient, d)
 	if err != nil {
 		return err
 	}
 
-	flavorId, err := getFlavorID(computeClient, d)
+	flavorId, err := getComputeFlavorID(computeClient, d)
 	if err != nil {
 		return err
 	}
@@ -440,10 +434,10 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 		Name:             d.Get("name").(string),
 		ImageRef:         imageId,
 		FlavorRef:        flavorId,
-		SecurityGroups:   resourceInstanceSecGroupsV2(d),
+		SecurityGroups:   resourceComputeSecGroupsV2(d),
 		AvailabilityZone: d.Get("availability_zone").(string),
 		Networks:         networks,
-		Metadata:         resourceInstanceMetadataV2(d),
+		Metadata:         resourceComputeMetadataV2(d),
 		ConfigDrive:      &configDrive,
 		AdminPass:        d.Get("admin_pass").(string),
 		UserData:         []byte(d.Get("user_data").(string)),
@@ -507,7 +501,7 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"BUILD"},
 		Target:     []string{"ACTIVE"},
-		Refresh:    ServerV2StateRefreshFunc(computeClient, server.ID),
+		Refresh:    computeV2StateRefreshFunc(computeClient, server.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -571,7 +565,7 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 	d.Set("flavor_name", flavorInfo.Name)
 
 	// Set the instance's image information appropriately
-	if err := setImageInformation(d, computeClient, server.Image.ID); err != nil {
+	if err := setInstanceImageInfo(d, computeClient, server.Image.ID); err != nil {
 		return err
 	}
 
@@ -816,7 +810,7 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		stateConf := &resource.StateChangeConf{
 			Pending:    []string{"RESIZE"},
 			Target:     []string{"VERIFY_RESIZE"},
-			Refresh:    ServerV2StateRefreshFunc(computeClient, d.Id()),
+			Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 			Timeout:    d.Timeout(schema.TimeoutUpdate),
 			Delay:      10 * time.Second,
 			MinTimeout: 3 * time.Second,
@@ -837,7 +831,7 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		stateConf = &resource.StateChangeConf{
 			Pending:    []string{"VERIFY_RESIZE"},
 			Target:     []string{"ACTIVE"},
-			Refresh:    ServerV2StateRefreshFunc(computeClient, d.Id()),
+			Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 			Timeout:    d.Timeout(schema.TimeoutUpdate),
 			Delay:      10 * time.Second,
 			MinTimeout: 3 * time.Second,
@@ -903,7 +897,7 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 			stopStateConf := &resource.StateChangeConf{
 				Pending:    []string{"ACTIVE"},
 				Target:     []string{"SHUTOFF"},
-				Refresh:    ServerV2StateRefreshFunc(computeClient, d.Id()),
+				Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 				Timeout:    d.Timeout(schema.TimeoutDelete),
 				Delay:      10 * time.Second,
 				MinTimeout: 3 * time.Second,
@@ -928,7 +922,7 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"ACTIVE", "SHUTOFF"},
 		Target:     []string{"DELETED", "SOFT_DELETED"},
-		Refresh:    ServerV2StateRefreshFunc(computeClient, d.Id()),
+		Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -965,44 +959,6 @@ func resourceComputeInstanceV2ImportState(d *schema.ResourceData, meta interface
 	}
 
 	return []*schema.ResourceData{d}, nil
-}
-
-// ServerV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
-// an FlexibleEngine instance.
-func ServerV2StateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		s, err := servers.Get(client, instanceID).Extract()
-		if err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				return s, "DELETED", nil
-			}
-			return nil, "", err
-		}
-
-		// get fault message when status is ERROR
-		if s.Status == "ERROR" {
-			fault := fmt.Errorf("[error code: %d, message: %s]", s.Fault.Code, s.Fault.Message)
-			return s, "ERROR", fault
-		}
-		return s, s.Status, nil
-	}
-}
-
-func resourceInstanceSecGroupsV2(d *schema.ResourceData) []string {
-	rawSecGroups := d.Get("security_groups").(*schema.Set).List()
-	secgroups := make([]string, len(rawSecGroups))
-	for i, raw := range rawSecGroups {
-		secgroups[i] = raw.(string)
-	}
-	return secgroups
-}
-
-func resourceInstanceMetadataV2(d *schema.ResourceData) map[string]string {
-	m := make(map[string]string)
-	for key, val := range d.Get("metadata").(map[string]interface{}) {
-		m[key] = val.(string)
-	}
-	return m
 }
 
 func resourceInstanceBlockDevicesV2(d *schema.ResourceData, bds []interface{}) ([]bootfromvolume.BlockDevice, error) {
@@ -1082,86 +1038,6 @@ func resourceInstanceSchedulerHintsV2(d *schema.ResourceData, schedulerHintsRaw 
 	return schedulerHints
 }
 
-func getImageIDFromConfig(computeClient *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
-	// If block_device was used, an Image does not need to be specified, unless an image/local
-	// combination was used. This emulates normal boot behavior. Otherwise, ignore the image altogether.
-	if vL, ok := d.GetOk("block_device"); ok {
-		needImage := false
-		for _, v := range vL.([]interface{}) {
-			vM := v.(map[string]interface{})
-			if vM["source_type"] == "image" && vM["destination_type"] == "local" {
-				needImage = true
-			}
-		}
-		if !needImage {
-			return "", nil
-		}
-	}
-
-	if imageId := d.Get("image_id").(string); imageId != "" {
-		return imageId, nil
-	} else {
-		// try the OS_IMAGE_ID environment variable
-		if v := os.Getenv("OS_IMAGE_ID"); v != "" {
-			return v, nil
-		}
-	}
-
-	imageName := d.Get("image_name").(string)
-	if imageName == "" {
-		// try the OS_IMAGE_NAME environment variable
-		if v := os.Getenv("OS_IMAGE_NAME"); v != "" {
-			imageName = v
-		}
-	}
-
-	if imageName != "" {
-		imageId, err := images.IDFromName(computeClient, imageName)
-		if err != nil {
-			return "", err
-		}
-		return imageId, nil
-	}
-
-	return "", fmt.Errorf("Neither a boot device, image ID, or image name were able to be determined.")
-}
-
-func setImageInformation(d *schema.ResourceData, computeClient *golangsdk.ServiceClient, imageID string) error {
-	// If block_device was used, an Image does not need to be specified, unless an image/local
-	// combination was used. This emulates normal boot behavior. Otherwise, ignore the image altogether.
-	if vL, ok := d.GetOk("block_device"); ok {
-		needImage := false
-		for _, v := range vL.([]interface{}) {
-			vM := v.(map[string]interface{})
-			if vM["source_type"] == "image" && vM["destination_type"] == "local" {
-				needImage = true
-			}
-		}
-		if !needImage {
-			d.Set("image_id", "Attempt to boot from volume - no image supplied")
-			return nil
-		}
-	}
-
-	if imageID != "" {
-		d.Set("image_id", imageID)
-		if image, err := images.Get(computeClient, imageID).Extract(); err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				// If the image name can't be found, set the value to "Image not found".
-				// The most likely scenario is that the image no longer exists in the Image Service
-				// but the instance still has a record from when it existed.
-				d.Set("image_name", "Image not found")
-				return nil
-			}
-			return err
-		} else {
-			d.Set("image_name", image.Name)
-		}
-	}
-
-	return nil
-}
-
 // computePublicIP get the first floating address
 func computePublicIP(server *cloudservers.CloudServer) string {
 	var publicIP string
@@ -1176,17 +1052,6 @@ func computePublicIP(server *cloudservers.CloudServer) string {
 	}
 
 	return publicIP
-}
-
-func getFlavorID(client *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
-	flavorId := d.Get("flavor_id").(string)
-
-	if flavorId != "" {
-		return flavorId, nil
-	}
-
-	flavorName := d.Get("flavor_name").(string)
-	return flavors.IDFromName(client, flavorName)
 }
 
 func resourceComputeSchedulerHintsHash(v interface{}) int {
@@ -1210,32 +1075,6 @@ func resourceComputeSchedulerHintsHash(v interface{}) int {
 	buf.WriteString(fmt.Sprintf("%s-", m["query"].([]interface{})))
 
 	return hashcode.String(buf.String())
-}
-
-func checkBlockDeviceConfig(d *schema.ResourceData) error {
-	if vL, ok := d.GetOk("block_device"); ok {
-		for _, v := range vL.([]interface{}) {
-			vM := v.(map[string]interface{})
-
-			if vM["source_type"] != "blank" && vM["uuid"] == "" {
-				return fmt.Errorf("You must specify a uuid for %s block device types", vM["source_type"])
-			}
-
-			if vM["source_type"] == "image" && vM["destination_type"] == "volume" {
-				if vM["volume_size"] == 0 {
-					return fmt.Errorf("You must specify a volume_size when creating a volume from an image")
-				}
-			}
-
-			if vM["source_type"] == "blank" && vM["destination_type"] == "local" {
-				if vM["volume_size"] == 0 {
-					return fmt.Errorf("You must specify a volume_size when creating a blank block device")
-				}
-			}
-		}
-	}
-
-	return nil
 }
 
 func resourceComputeInstancePersonalityHash(v interface{}) int {
