@@ -39,7 +39,6 @@ func resourceNetworkingPortV2() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: false,
 			},
 			"network_id": {
 				Type:     schema.TypeString,
@@ -49,7 +48,6 @@ func resourceNetworkingPortV2() *schema.Resource {
 			"admin_state_up": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				ForceNew: false,
 				Computed: true,
 			},
 			"mac_address": {
@@ -73,7 +71,6 @@ func resourceNetworkingPortV2() *schema.Resource {
 			"security_group_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				ForceNew: false,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set:      schema.HashString,
@@ -85,9 +82,9 @@ func resourceNetworkingPortV2() *schema.Resource {
 				Computed: true,
 			},
 			"fixed_ip": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
-				ForceNew: false,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"subnet_id": {
@@ -97,6 +94,7 @@ func resourceNetworkingPortV2() *schema.Resource {
 						"ip_address": {
 							Type:     schema.TypeString,
 							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -104,7 +102,6 @@ func resourceNetworkingPortV2() *schema.Resource {
 			"allowed_address_pairs": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				ForceNew: false,
 				Computed: true,
 				Set:      allowedAddressPairsHash,
 				Elem: &schema.Resource{
@@ -215,27 +212,34 @@ func resourceNetworkingPortV2Read(d *schema.ResourceData, meta interface{}) erro
 	d.Set("device_owner", p.DeviceOwner)
 	d.Set("security_group_ids", p.SecurityGroups)
 	d.Set("device_id", p.DeviceID)
+	d.Set("region", GetRegion(d, config))
 
 	// Create a slice of all returned Fixed IPs.
 	// This will be in the order returned by the API,
 	// which is usually alpha-numeric.
-	var ips []string
-	for _, ipObject := range p.FixedIPs {
-		ips = append(ips, ipObject.IPAddress)
+	fixedIPs := make([]map[string]interface{}, len(p.FixedIPs))
+	allIPs := make([]string, len(p.FixedIPs))
+	for i, ipObject := range p.FixedIPs {
+		fixedip := map[string]interface{}{
+			"ip_address": ipObject.IPAddress,
+			"subnet_id":  ipObject.SubnetID,
+		}
+		fixedIPs[i] = fixedip
+		allIPs[i] = ipObject.IPAddress
 	}
-	d.Set("all_fixed_ips", ips)
+	d.Set("fixed_ip", fixedIPs)
+	d.Set("all_fixed_ips", allIPs)
 
 	// Convert AllowedAddressPairs to list of map
-	var pairs []map[string]interface{}
-	for _, pairObject := range p.AllowedAddressPairs {
-		pair := make(map[string]interface{})
-		pair["ip_address"] = pairObject.IPAddress
-		pair["mac_address"] = pairObject.MACAddress
-		pairs = append(pairs, pair)
+	pairs := make([]map[string]interface{}, len(p.AllowedAddressPairs))
+	for i, pairObject := range p.AllowedAddressPairs {
+		pair := map[string]interface{}{
+			"ip_address":  pairObject.IPAddress,
+			"mac_address": pairObject.MACAddress,
+		}
+		pairs[i] = pair
 	}
 	d.Set("allowed_address_pairs", pairs)
-
-	d.Set("region", GetRegion(d, config))
 
 	return nil
 }
@@ -328,7 +332,7 @@ func resourcePortSecurityGroupsV2(d *schema.ResourceData) []string {
 }
 
 func resourcePortFixedIpsV2(d *schema.ResourceData) interface{} {
-	rawIP := d.Get("fixed_ip").([]interface{})
+	rawIP := d.Get("fixed_ip").(*schema.Set).List()
 
 	if len(rawIP) == 0 {
 		return nil
