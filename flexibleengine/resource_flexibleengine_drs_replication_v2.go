@@ -135,7 +135,7 @@ func resourceShutdownInstance(d *schema.ResourceData, meta interface{}) error {
 					stopStateConf := &resource.StateChangeConf{
 						Pending:    []string{"ACTIVE"},
 						Target:     []string{"SHUTOFF"},
-						Refresh:    ServerV2StateRefreshFunc(computeClient, attachment.ServerID),
+						Refresh:    computeV2StateRefreshFunc(computeClient, attachment.ServerID),
 						Timeout:    3 * time.Minute,
 						Delay:      10 * time.Second,
 						MinTimeout: 3 * time.Second,

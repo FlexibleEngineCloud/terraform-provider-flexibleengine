@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -18,7 +17,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/secgroups"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 )
 
@@ -264,17 +262,16 @@ func resourceComputeBMSInstanceV2() *schema.Resource {
 	}
 }
 
-func bmsTagsCreate(client *golangsdk.ServiceClient, server_id string) error {
-
+func bmsTagsCreate(client *golangsdk.ServiceClient, serverID string) error {
 	createOpts := tags.CreateOpts{
 		Tag: []string{"__type_baremetal"},
 	}
 
-	_, err := tags.Create(client, server_id, createOpts).Extract()
-
+	_, err := tags.Create(client, serverID, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine Tags: %s", err)
 	}
+
 	return nil
 }
 
@@ -287,15 +284,12 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 
 	var createOpts servers.CreateOptsBuilder
 
-	// Determines the Image ID using the following rules:
-	// If an image_id was specified, use it.
-	// If an image_name was specified, look up the image ID, report if error.
-	imageId, err := getImageId(computeClient, d)
+	imageId, err := getBMSImageID(computeClient, d)
 	if err != nil {
 		return err
 	}
 
-	flavorId, err := getFlavorId(computeClient, d)
+	flavorId, err := getComputeFlavorID(computeClient, d)
 	if err != nil {
 		return err
 	}
@@ -314,10 +308,10 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 		Name:             d.Get("name").(string),
 		ImageRef:         imageId,
 		FlavorRef:        flavorId,
-		SecurityGroups:   resourceBmsInstanceSecGroupsV2(d),
+		SecurityGroups:   resourceComputeSecGroupsV2(d),
 		AvailabilityZone: d.Get("availability_zone").(string),
 		Networks:         networks,
-		Metadata:         resourceBmsInstanceMetadataV2(d),
+		Metadata:         resourceComputeMetadataV2(d),
 		AdminPass:        d.Get("admin_pass").(string),
 		UserData:         []byte(d.Get("user_data").(string)),
 	}
@@ -376,7 +370,7 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"BUILD"},
 		Target:     []string{"ACTIVE"},
-		Refresh:    BmsServerV2StateRefreshFunc(computeClient, server.ID),
+		Refresh:    computeV2StateRefreshFunc(computeClient, server.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -409,7 +403,7 @@ func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("name", server.Name)
 
 	// Get the instance network and address information
-	networks, err := flattenInstanceNetworks(d, meta)
+	networks, err := flattenServerNetwork(d, meta)
 	if err != nil {
 		return err
 	}
@@ -458,7 +452,7 @@ func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("flavor_name", flavor.Name)
 
 	// Set the instance's image information appropriately
-	if err := setImageInformations(computeClient, server, d); err != nil {
+	if err := setBMSImageInfo(computeClient, server, d); err != nil {
 		return err
 	}
 
@@ -600,7 +594,7 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 		stateConf := &resource.StateChangeConf{
 			Pending:    []string{"RESIZE"},
 			Target:     []string{"VERIFY_RESIZE"},
-			Refresh:    BmsServerV2StateRefreshFunc(computeClient, d.Id()),
+			Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 			Timeout:    d.Timeout(schema.TimeoutUpdate),
 			Delay:      10 * time.Second,
 			MinTimeout: 3 * time.Second,
@@ -621,7 +615,7 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 		stateConf = &resource.StateChangeConf{
 			Pending:    []string{"VERIFY_RESIZE"},
 			Target:     []string{"ACTIVE"},
-			Refresh:    BmsServerV2StateRefreshFunc(computeClient, d.Id()),
+			Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 			Timeout:    d.Timeout(schema.TimeoutUpdate),
 			Delay:      10 * time.Second,
 			MinTimeout: 3 * time.Second,
@@ -651,7 +645,7 @@ func resourceComputeBMSInstanceV2Delete(d *schema.ResourceData, meta interface{}
 			stopStateConf := &resource.StateChangeConf{
 				Pending:    []string{"ACTIVE"},
 				Target:     []string{"SHUTOFF"},
-				Refresh:    BmsServerV2StateRefreshFunc(computeClient, d.Id()),
+				Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 				Timeout:    3 * time.Minute,
 				Delay:      10 * time.Second,
 				MinTimeout: 3 * time.Second,
@@ -676,7 +670,7 @@ func resourceComputeBMSInstanceV2Delete(d *schema.ResourceData, meta interface{}
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"ACTIVE", "SHUTOFF"},
 		Target:     []string{"DELETED", "SOFT_DELETED"},
-		Refresh:    BmsServerV2StateRefreshFunc(computeClient, d.Id()),
+		Refresh:    computeV2StateRefreshFunc(computeClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -691,99 +685,4 @@ func resourceComputeBMSInstanceV2Delete(d *schema.ResourceData, meta interface{}
 
 	d.SetId("")
 	return nil
-}
-
-// ServerV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
-// an FlexibleEngine instance.
-func BmsServerV2StateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		s, err := servers.Get(client, instanceID).Extract()
-		if err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				return s, "DELETED", nil
-			}
-			return nil, "", err
-		}
-
-		return s, s.Status, nil
-	}
-}
-
-func resourceBmsInstanceSecGroupsV2(d *schema.ResourceData) []string {
-	rawSecGroups := d.Get("security_groups").(*schema.Set).List()
-	secgroups := make([]string, len(rawSecGroups))
-	for i, raw := range rawSecGroups {
-		secgroups[i] = raw.(string)
-	}
-	return secgroups
-}
-
-func resourceBmsInstanceMetadataV2(d *schema.ResourceData) map[string]string {
-	m := make(map[string]string)
-	for key, val := range d.Get("metadata").(map[string]interface{}) {
-		m[key] = val.(string)
-	}
-	return m
-}
-
-func getImageId(computeClient *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
-
-	if imageId := d.Get("image_id").(string); imageId != "" {
-		return imageId, nil
-	} else {
-		// try the OS_IMAGE_ID environment variable
-		if v := os.Getenv("OS_IMAGE_ID"); v != "" {
-			return v, nil
-		}
-	}
-
-	imageName := d.Get("image_name").(string)
-	if imageName == "" {
-		// try the OS_IMAGE_NAME environment variable
-		if v := os.Getenv("OS_IMAGE_NAME"); v != "" {
-			imageName = v
-		}
-	}
-
-	if imageName != "" {
-		imageId, err := images.IDFromName(computeClient, imageName)
-		if err != nil {
-			return "", err
-		}
-		return imageId, nil
-	}
-
-	return "", fmt.Errorf("Neither a image ID, or image name were able to be determined.")
-}
-
-func setImageInformations(computeClient *golangsdk.ServiceClient, server *bms.Server, d *schema.ResourceData) error {
-	imageId := server.Image.ID
-	if imageId != "" {
-		d.Set("image_id", imageId)
-		if image, err := images.Get(computeClient, imageId).Extract(); err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				// If the image name can't be found, set the value to "Image not found".
-				// The most likely scenario is that the image no longer exists in the Image Service
-				// but the instance still has a record from when it existed.
-				d.Set("image_name", "Image not found")
-				return nil
-			}
-			return err
-		} else {
-			d.Set("image_name", image.Name)
-		}
-	}
-
-	return nil
-}
-
-func getFlavorId(client *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
-	flavorId := d.Get("flavor_id").(string)
-
-	if flavorId != "" {
-		return flavorId, nil
-	}
-
-	flavorName := d.Get("flavor_name").(string)
-	return flavors.IDFromName(client, flavorName)
 }
