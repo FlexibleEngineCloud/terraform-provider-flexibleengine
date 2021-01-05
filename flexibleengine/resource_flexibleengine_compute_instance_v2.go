@@ -418,15 +418,11 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
-	// Build a list of networks with the information given upon creation.
-	// Error out if an invalid network configuration was used.
-	allInstanceNetworks, err := getAllInstanceNetworks(d, meta)
+	// Build a []servers.Network to pass into the create options.
+	networks, err := expandInstanceNetworks(d, meta)
 	if err != nil {
 		return err
 	}
-
-	// Build a []servers.Network to pass into the create options.
-	networks := expandInstanceNetworks(allInstanceNetworks)
 
 	configDrive := d.Get("config_drive").(bool)
 
@@ -573,11 +569,11 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		d.Set("key_pair", server.KeyName)
 	}
 	if eip := computePublicIP(server); eip != "" {
-		d.Set("public_ip", eip)
+		d.Set("floating_ip", eip)
 	}
 
 	// Get the instance network and address information
-	networks, err := flattenInstanceNetworks(d, meta)
+	networks, err := flattenInstanceNetworks(d, meta, server)
 	if err != nil {
 		return err
 	}

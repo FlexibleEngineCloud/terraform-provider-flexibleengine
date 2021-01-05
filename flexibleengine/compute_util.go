@@ -2,6 +2,7 @@ package flexibleengine
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -11,6 +12,8 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/networks"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 func resourceComputeSecGroupsV2(d *schema.ResourceData) []string {
@@ -221,4 +224,69 @@ func computeV2StateRefreshFunc(client *golangsdk.ServiceClient, instanceID strin
 		}
 		return s, s.Status, nil
 	}
+}
+
+// getInstanceNetworkInfo will query for network information in order to make
+// an accurate determination of a network's name and a network's ID.
+func getInstanceNetworkInfo(
+	d *schema.ResourceData, meta interface{}, queryType, queryTerm string) (map[string]string, error) {
+
+	config := meta.(*Config)
+	networkClient, err := config.networkingV2Client(GetRegion(d, config))
+	if err != nil {
+		return nil, fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+	}
+
+	// If a port was specified, convert it to the network ID
+	// and then query the network as if a network ID was originally used.
+	if queryType == "port" {
+		portID := queryTerm
+		port, err := ports.Get(networkClient, portID).Extract()
+		if err != nil {
+			return nil, fmt.Errorf("Could not find any matching port for %s", portID)
+		}
+
+		queryType = "id"
+		queryTerm = port.NetworkID
+	}
+
+	listOpts := networks.ListOpts{
+		Status: "ACTIVE",
+	}
+
+	switch queryType {
+	case "name":
+		listOpts.Name = queryTerm
+	default:
+		listOpts.ID = queryTerm
+	}
+
+	allPages, err := networks.List(networkClient, listOpts).AllPages()
+	if err != nil {
+		return nil, fmt.Errorf("Unable to retrieve networks from the Network API: %s", err)
+	}
+
+	allNetworks, err := networks.ExtractNetworks(allPages)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to retrieve networks from the Network API: %s", err)
+	}
+
+	var network networks.Network
+	switch len(allNetworks) {
+	case 0:
+		return nil, fmt.Errorf("Could not find any matching network for %s %s", queryType, queryTerm)
+	case 1:
+		network = allNetworks[0]
+	default:
+		// may happened when querying by "name"
+		return nil, fmt.Errorf("More than one network found for %s %s", queryType, queryTerm)
+	}
+
+	networkInfo := map[string]string{
+		"uuid": network.ID,
+		"name": network.Name,
+	}
+
+	log.Printf("[DEBUG] getInstanceNetworkInfo: %#v", networkInfo)
+	return networkInfo, nil
 }
