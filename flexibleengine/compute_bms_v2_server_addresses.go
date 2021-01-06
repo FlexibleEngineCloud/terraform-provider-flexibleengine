@@ -116,8 +116,8 @@ func getAllServerNetwork(d *schema.ResourceData, meta interface{}) ([]ServerNetw
 		}
 
 		v := ServerNetwork{
-			UUID:          networkInfo["uuid"].(string),
-			Name:          networkInfo["name"].(string),
+			UUID:          networkInfo["uuid"],
+			Name:          networkInfo["name"],
 			Port:          portID,
 			FixedIP:       network["fixed_ip_v4"].(string),
 			AccessNetwork: network["access_network"].(bool),
