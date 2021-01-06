@@ -661,6 +661,16 @@ func (c *Config) sdrsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
+func (c *Config) vpcepV1Client(region string) (*golangsdk.ServiceClient, error) {
+	sc, err := c.sdkClient(region, "network")
+	if err == nil {
+		sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "vpcep", 1)
+		sc.ResourceBase = fmt.Sprintf("%sv1/%s/", sc.Endpoint, c.HwClient.ProjectID)
+	}
+
+	return sc, err
+}
+
 func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewSDKClient(
 		c.HwClient,
