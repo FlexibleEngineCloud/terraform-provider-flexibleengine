@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -77,6 +78,11 @@ func resourceSFSTurbo() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"crypt_key_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 
 			"status": {
 				Type:     schema.TypeString,
@@ -116,6 +122,12 @@ func resourceSFSTurboCreate(d *schema.ResourceData, meta interface{}) error {
 		AvailabilityZone: d.Get("availability_zone").(string),
 	}
 
+	metaOpts := shares.Metadata{}
+	if v, ok := d.GetOk("crypt_key_id"); ok {
+		metaOpts.CryptKeyID = v.(string)
+	}
+	createOpts.Metadata = metaOpts
+
 	log.Printf("[DEBUG] create sfs turbo with option: %+v", createOpts)
 	create, err := shares.Create(sfsClient, createOpts).Extract()
 	if err != nil {
@@ -152,7 +164,6 @@ func resourceSFSTurboRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("name", n.Name)
-	d.Set("size", n.Size)
 	d.Set("share_proto", n.ShareProto)
 	d.Set("share_type", n.ShareType)
 	d.Set("vpc_id", n.VpcID)
@@ -163,6 +174,14 @@ func resourceSFSTurboRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("availability_zone", n.AvailabilityZone)
 	d.Set("available_capacity", n.AvailCapacity)
 	d.Set("export_location", n.ExportLocation)
+	d.Set("crypt_key_id", n.CryptKeyID)
+
+	// n.Size is a string of float64, should convert it to int
+	if fsize, err := strconv.ParseFloat(n.Size, 64); err == nil {
+		if err = d.Set("size", int(fsize)); err != nil {
+			return fmt.Errorf("Error reading size of SFS Turbo: %s", err)
+		}
+	}
 
 	var status string
 	if n.SubStatus != "" {

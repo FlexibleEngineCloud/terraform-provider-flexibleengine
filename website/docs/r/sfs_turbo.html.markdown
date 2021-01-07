@@ -12,7 +12,7 @@ Provides an Shared File System (SFS) Turbo resource.
 
 ## Example Usage
 
- ```hcl
+```hcl
 variable "vpc_id" {}
 variable "subnet_id" {}
 variable "secgroup_id" {}
@@ -27,7 +27,7 @@ resource "flexibleengine_sfs_turbo" "sfs-turbo-1" {
   security_group_id = var.secgroup_id
   availability_zone = var.test_az
 }
- ```
+```
 
 ## Argument Reference
 The following arguments are supported:
@@ -44,13 +44,16 @@ The following arguments are supported:
   Changing this will create a new resource.
 
 * `availability_zone` - (Required) Specifies the availability zone where the file system is located.
-  Changing this parameter will create a new resource.
+  Changing this will create a new resource.
 
-* `vpc_id` - (Required) Specifies the VPC ID. Changing this parameter will create a new resource.
+* `vpc_id` - (Required) Specifies the VPC ID. Changing this will create a new resource.
 
-* `subnet_id` - (Required) Specifies the network ID of the subnet. Changing this parameter will create a new resource.
+* `subnet_id` - (Required) Specifies the network ID of the subnet. Changing this will create a new resource.
 
 * `security_group_id` - (Required) Specifies the security group ID. Changing this will create a new resource.
+
+* `crypt_key_id` - (Optional) Specifies the ID of a KMS key to encrypt the file system.
+  Changing this will create a new resource.
 
 -> **NOTE:**
   SFS Turbo will create two private IP addresses and one virtual IP address under the subnet you specified.
@@ -78,6 +81,5 @@ In addition to all arguments above, the following attributes are exported:
 SFS Turbo can be imported using the `id`, e.g.
 
 ```
-> $ terraform import flexibleengine_sfs_turbo 1e3d5306-24c9-4316-9185-70e9787d71ab
+$ terraform import flexibleengine_sfs_turbo 1e3d5306-24c9-4316-9185-70e9787d71ab
 ```
-   
