@@ -13,15 +13,15 @@ import (
 )
 
 func randomZoneName() string {
-	// TODO: why does back-end convert name to lowercase?
 	return fmt.Sprintf("acpttest-zone-%s.com.", acctest.RandString(5))
 }
 
 func TestAccDNSV2RecordSet_basic(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
+	resourceName := "flexibleengine_dns_recordset_v2.recordset_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
@@ -29,19 +29,28 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 			{
 				Config: testAccDNSV2RecordSet_basic(zoneName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dns_recordset_v2.recordset_1", "description", "a record set"),
+					testAccCheckDNSV2RecordSetExists(resourceName, &recordset),
+					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
+					resource.TestCheckResourceAttr(resourceName, "description", "a record set"),
+					resource.TestCheckResourceAttr(resourceName, "type", "A"),
+					resource.TestCheckResourceAttr(resourceName, "ttl", "3000"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.0"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccDNSV2RecordSet_update(zoneName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "name", zoneName),
-					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "ttl", "6000"),
-					resource.TestCheckResourceAttr("flexibleengine_dns_recordset_v2.recordset_1", "type", "A"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dns_recordset_v2.recordset_1", "description", "an updated record set"),
+					resource.TestCheckResourceAttr(resourceName, "description", "an updated record set"),
+					resource.TestCheckResourceAttr(resourceName, "ttl", "6000"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
+					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.1"),
 				),
 			},
 		},
@@ -51,8 +60,9 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
+	resourceName := "flexibleengine_dns_recordset_v2.recordset_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
@@ -60,28 +70,35 @@ func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 			{
 				Config: testAccDNSV2RecordSet_readTTL(zoneName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
-					resource.TestMatchResourceAttr(
-						"flexibleengine_dns_recordset_v2.recordset_1", "ttl", regexp.MustCompile("^[0-9]+$")),
+					testAccCheckDNSV2RecordSetExists(resourceName, &recordset),
+					resource.TestMatchResourceAttr(resourceName, "ttl", regexp.MustCompile("^[0-9]+$")),
 				),
 			},
 		},
 	})
 }
 
-func TestAccDNSV2RecordSet_timeout(t *testing.T) {
+func TestAccDNSV2RecordSet_private(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
+	resourceName := "flexibleengine_dns_recordset_v2.recordset_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDNSV2RecordSet_timeout(zoneName),
+				Config: testAccDNSV2RecordSet_private(zoneName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSV2RecordSetExists("flexibleengine_dns_recordset_v2.recordset_1", &recordset),
+					testAccCheckDNSV2RecordSetExists(resourceName, &recordset),
+					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
+					resource.TestCheckResourceAttr(resourceName, "description", "a private record set"),
+					resource.TestCheckResourceAttr(resourceName, "type", "A"),
+					resource.TestCheckResourceAttr(resourceName, "ttl", "3000"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.3"),
 				),
 			},
 		},
@@ -153,87 +170,102 @@ func testAccCheckDNSV2RecordSetExists(n string, recordset *recordsets.RecordSet)
 
 func testAccDNSV2RecordSet_basic(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dns_zone_v2" "zone_1" {
-			name = "%s"
-			email = "email2@example.com"
-			description = "a zone"
-			ttl = 6000
-			#type = "PRIMARY"
-		}
+resource "flexibleengine_dns_zone_v2" "zone_1" {
+  name        = "%s"
+  email       = "email2@example.com"
+  description = "a zone"
+  ttl         = 6000
+}
 
-		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
-			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
-			name = "%s"
-			type = "A"
-			description = "a record set"
-			ttl = 3000
-			records = ["10.1.0.0"]
-		}
-	`, zoneName, zoneName)
+resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+  zone_id     = flexibleengine_dns_zone_v2.zone_1.id
+  name        = "%s"
+  type        = "A"
+  description = "a record set"
+  ttl         = 3000
+  records     = ["10.1.0.0"]
+
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}
+`, zoneName, zoneName)
 }
 
 func testAccDNSV2RecordSet_update(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dns_zone_v2" "zone_1" {
-			name = "%s"
-			email = "email2@example.com"
-			description = "an updated zone"
-			ttl = 6000
-			#type = "PRIMARY"
-		}
+resource "flexibleengine_dns_zone_v2" "zone_1" {
+  name        = "%s"
+  email       = "email2@example.com"
+  description = "an updated zone"
+  ttl         = 6000
+}
 
-		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
-			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
-			name = "%s"
-			type = "A"
-			description = "an updated record set"
-			ttl = 6000
-			records = ["10.1.0.1"]
-		}
-	`, zoneName, zoneName)
+resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+  zone_id     = flexibleengine_dns_zone_v2.zone_1.id
+  name        = "%s"
+  type        = "A"
+  description = "an updated record set"
+  ttl         = 6000
+  records     = ["10.1.0.1"]
+
+  tags = {
+    foo = "bar"
+    key = "value_updated"
+  }
+}
+`, zoneName, zoneName)
 }
 
 func testAccDNSV2RecordSet_readTTL(zoneName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dns_zone_v2" "zone_1" {
-			name = "%s"
-			email = "email2@example.com"
-			description = "an updated zone"
-			ttl = 6000
-			#type = "PRIMARY"
-		}
-
-		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
-			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
-			name = "%s"
-			type = "A"
-			records = ["10.1.0.2"]
-		}
-	`, zoneName, zoneName)
+resource "flexibleengine_dns_zone_v2" "zone_1" {
+  name        = "%s"
+  email       = "email2@example.com"
+  description = "a zone"
+  ttl         = 6000
 }
 
-func testAccDNSV2RecordSet_timeout(zoneName string) string {
+resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+  zone_id = flexibleengine_dns_zone_v2.zone_1.id
+  name    = "%s"
+  type    = "A"
+  records = ["10.1.0.2"]
+}
+`, zoneName, zoneName)
+}
+
+func testAccDNSV2RecordSet_private(rName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dns_zone_v2" "zone_1" {
-			name = "%s"
-			email = "email2@example.com"
-			description = "an updated zone"
-			ttl = 6000
-			#type = "PRIMARY"
-		}
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "%s"
+  cidr = "192.168.0.0/16"
+}
 
-		resource "flexibleengine_dns_recordset_v2" "recordset_1" {
-			zone_id = "${flexibleengine_dns_zone_v2.zone_1.id}"
-			name = "%s"
-			type = "A"
-			ttl = 3000
-			records = ["10.1.0.3", "10.1.0.2"]
+resource "flexibleengine_dns_zone_v2" "zone_1" {
+  name        = "%s"
+  email       = "email@example.com"
+  description = "a private zone"
+  zone_type   = "private"
 
-			timeouts {
-				create = "5m"
-				update = "5m"
-				delete = "5m"
-			}
-		}
-	`, zoneName, zoneName)
+  router {
+    router_id = flexibleengine_vpc_v1.vpc_1.id
+  }
+}
+
+resource "flexibleengine_dns_recordset_v2" "recordset_1" {
+  zone_id     = flexibleengine_dns_zone_v2.zone_1.id
+  name        = "%s"
+  type        = "A"
+  description = "a private record set"
+  ttl         = 3000
+  records     = ["10.1.0.3"]
+
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}
+`, rName, rName, rName)
 }

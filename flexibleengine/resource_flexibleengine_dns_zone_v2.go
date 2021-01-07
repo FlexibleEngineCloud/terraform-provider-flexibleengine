@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceDNSZoneV2() *schema.Resource {
@@ -51,20 +52,20 @@ func resourceDNSZoneV2() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      "public",
-				ValidateFunc: resourceZoneValidateType,
+				ValidateFunc: validation.StringInSlice([]string{"public", "private"}, false),
 			},
 			"ttl": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ForceNew:     false,
 				Default:      300,
-				ValidateFunc: resourceValidateTTL,
+				ValidateFunc: validation.IntBetween(1, 2147483647),
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     false,
-				ValidateFunc: resourceValidateDescription,
+				ValidateFunc: validation.StringLenBetween(0, 255),
 			},
 			"router": {
 				Type:     schema.TypeSet,
@@ -455,20 +456,6 @@ func waitForDNSZone(dnsClient *golangsdk.ServiceClient, zoneId string) resource.
 		log.Printf("[DEBUG] FlexibleEngine DNS Zone (%s) current status: %s", zone.ID, zone.Status)
 		return zone, parseStatus(zone.Status), nil
 	}
-}
-
-var zoneTypes = [2]string{"public", "private"}
-
-func resourceZoneValidateType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	for i := range zoneTypes {
-		if value == zoneTypes[i] {
-			return
-		}
-	}
-	errors = append(errors, fmt.Errorf("%q must be one of %v", k, zoneTypes))
-
-	return
 }
 
 func getDNSRouters(d *schema.ResourceData) []zones.RouterOpts {
