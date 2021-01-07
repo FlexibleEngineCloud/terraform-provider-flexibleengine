@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/dns/v2/zones"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -65,11 +66,6 @@ func resourceDNSZoneV2() *schema.Resource {
 				ForceNew:     false,
 				ValidateFunc: resourceValidateDescription,
 			},
-			"masters": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
 			"router": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -82,7 +78,7 @@ func resourceDNSZoneV2() *schema.Resource {
 						},
 						"router_region": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 					},
 				},
@@ -93,6 +89,12 @@ func resourceDNSZoneV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"masters": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -122,18 +124,18 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	zone_type := d.Get("zone_type").(string)
+	zoneType := d.Get("zone_type").(string)
 	router := d.Get("router").(*schema.Set).List()
 
 	// router is required when creating private zone
-	if zone_type == "private" {
+	if zoneType == "private" {
 		if len(router) < 1 {
 			return fmt.Errorf("The argument (router) is required when creating FlexibleEngine DNS private zone")
 		}
 	}
 	vs := MapResourceProp(d, "value_specs")
-	// Add zone_type to the list.  We do this to keep GopherCloud FlexibleEngine standard.
-	vs["zone_type"] = zone_type
+	// Add zone_type to the list
+	vs["zone_type"] = zoneType
 	vs["router"] = resourceDNSRouter(d)
 	createOpts := ZoneCreateOpts{
 		zones.CreateOpts{
@@ -151,6 +153,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine DNS zone: %s", err)
 	}
 
+	d.SetId(n.ID)
 	log.Printf("[DEBUG] Waiting for DNS Zone (%s) to become available", n.ID)
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{"ACTIVE"},
@@ -169,7 +172,7 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// router length >1 when creating private zone
-	if zone_type == "private" {
+	if zoneType == "private" {
 		// AssociateZone for the other routers
 		routerList := getDNSRouters(d)
 		if len(routerList) > 1 {
@@ -205,7 +208,19 @@ func resourceDNSZoneV2Create(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	d.SetId(n.ID)
+	// set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		resourceType, err := getDNSZoneTagType(zoneType)
+		if err != nil {
+			return fmt.Errorf("Error getting resource type of DNS zone %s: %s", n.ID, err)
+		}
+
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(dnsClient, resourceType, n.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of DNS zone %s: %s", n.ID, tagErr)
+		}
+	}
 
 	log.Printf("[DEBUG] Created FlexibleEngine DNS Zone %s: %#v", n.ID, n)
 	return resourceDNSZoneV2Read(d, meta)
@@ -235,6 +250,17 @@ func resourceDNSZoneV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("region", GetRegion(d, config))
 	d.Set("zone_type", n.ZoneType)
 
+	// save tags
+	if resourceType, err := getDNSZoneTagType(n.ZoneType); err == nil {
+		resourceTags, err := tags.Get(dnsClient, resourceType, d.Id()).Extract()
+		if err == nil {
+			tagmap := tagsToMap(resourceTags.Tags)
+			d.Set("tags", tagmap)
+		} else {
+			log.Printf("[WARN] Error fetching FlexibleEngine DNS zone tags: %s", err)
+		}
+	}
+
 	return nil
 }
 
@@ -245,11 +271,11 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	zone_type := d.Get("zone_type").(string)
+	zoneType := d.Get("zone_type").(string)
 	router := d.Get("router").(*schema.Set).List()
 
 	// router is required when updating private zone
-	if zone_type == "private" {
+	if zoneType == "private" {
 		if len(router) < 1 {
 			return fmt.Errorf("The argument (router) is required when updating FlexibleEngine DNS private zone")
 		}
@@ -287,7 +313,7 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("router") {
 		// when updating private zone
-		if zone_type == "private" {
+		if zoneType == "private" {
 			associateList, disassociateList, err := resourceGetDNSRouters(dnsClient, d)
 			if err != nil {
 				return fmt.Errorf("Error getting FlexibleEngine DNS Zone Router: %s", err)
@@ -347,6 +373,17 @@ func resourceDNSZoneV2Update(d *schema.ResourceData, meta interface{}) error {
 				}
 			}
 		}
+	}
+
+	// update tags
+	resourceType, err := getDNSZoneTagType(zoneType)
+	if err != nil {
+		return fmt.Errorf("Error getting resource type of DNS zone %s: %s", d.Id(), err)
+	}
+
+	tagErr := UpdateResourceTags(dnsClient, d, resourceType, d.Id())
+	if tagErr != nil {
+		return fmt.Errorf("Error updating tags of DNS zone %s: %s", d.Id(), tagErr)
 	}
 
 	return resourceDNSZoneV2Read(d, meta)

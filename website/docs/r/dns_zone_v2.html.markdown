@@ -16,11 +16,10 @@ Manages a DNS zone in the FlexibleEngine DNS Service.
 
 ```hcl
 resource "flexibleengine_dns_zone_v2" "my_public_zone" {
-  name = "example.com."
-  email = "jdoe@example.com"
-  description = "An example zone"
-  ttl = 3000
-  zone_type = "public"
+  name        = "example.com."
+  email       = "jdoe@example.com"
+  description = "my public zone"
+  ttl         = 3000
 }
 ```
 
@@ -28,14 +27,15 @@ resource "flexibleengine_dns_zone_v2" "my_public_zone" {
 
 ```hcl
 resource "flexibleengine_dns_zone_v2" "my_private_zone" {
-  name = "1.example.com."
-  email = "jdoe@example.com"
-  description = "An example zone"
-  ttl = 3000
-  zone_type = "private"
+  name        = "1.example.com."
+  email       = "jdoe@example.com"
+  description = "my private zone"
+  ttl         = 3000
+  zone_type   = "private"
+
   router {
+    router_id     = "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75"
     router_region = "eu-west-0"
-    router_id = "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75"
   }
 }
 ```
@@ -44,9 +44,8 @@ resource "flexibleengine_dns_zone_v2" "my_private_zone" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Compute client.
-    Keypairs are associated with accounts, but a Compute client is needed to
-    create one. If omitted, the `region` argument of the provider is used.
+* `region` - (Optional) The region in which to create the DNS zone.
+    If omitted, the `region` argument of the provider is used.
     Changing this creates a new DNS zone. Changing this creates a new DNS zone.
 
 * `name` - (Required) The name of the zone. Note the `.` at the end of the name.
@@ -64,6 +63,8 @@ The following arguments are supported:
 
 * `description` - (Optional) A description of the zone.
 
+* `tags` - (Optional, Map) The key/value pairs to associate with the zone.
+
 * `value_specs` - (Optional) Map of additional options. Changing this creates a
   new DNS zone.
 
@@ -71,7 +72,7 @@ The `router` block supports:
 
 * `router_id` - (Required) The VPC UUID.
 
-* `router_region` - (Required) The region of the VPC.
+* `router_region` - (Optional) The region of the VPC. Defaults to the `region`.
 
 ## Attributes Reference
 
