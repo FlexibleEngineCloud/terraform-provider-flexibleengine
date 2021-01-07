@@ -312,6 +312,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_sdrs_protectedinstance_v1":          resourceSdrsProtectedInstanceV1(),
 			"flexibleengine_sdrs_replication_pair_v1":           resourceSdrsReplicationPairV1(),
 			"flexibleengine_sdrs_replication_attach_v1":         resourceSdrsReplicationAttachV1(),
+			"flexibleengine_vpcep_service":                      resourceVPCEndpointService(),
 		},
 	}
 
