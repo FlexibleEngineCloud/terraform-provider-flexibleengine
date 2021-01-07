@@ -143,7 +143,7 @@ func testAccCheckVPCEPServiceExists(n string, service *services.Service) resourc
 	}
 }
 
-func testAccVPCEPServicePrecondition(rName string) string {
+func testAccVPCEndpointPrecondition(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "%s"
@@ -180,7 +180,7 @@ resource "flexibleengine_vpcep_service" "test" {
     owner = "tf-acc"
   }
 }
-`, testAccVPCEPServicePrecondition(rName), rName, OS_VPC_ID)
+`, testAccVPCEndpointPrecondition(rName), rName, OS_VPC_ID)
 }
 
 func testAccVPCEPServiceUpdate(rName string) string {
@@ -202,7 +202,7 @@ resource "flexibleengine_vpcep_service" "test" {
     owner = "tf-acc-update"
   }
 }
-`, testAccVPCEPServicePrecondition(rName), rName, OS_VPC_ID)
+`, testAccVPCEndpointPrecondition(rName), rName, OS_VPC_ID)
 }
 
 func testAccVPCEPServicePermission(rName string) string {
@@ -222,7 +222,7 @@ resource "flexibleengine_vpcep_service" "test" {
     terminal_port = 80
   }
 }
-`, testAccVPCEPServicePrecondition(rName), rName, OS_VPC_ID)
+`, testAccVPCEndpointPrecondition(rName), rName, OS_VPC_ID)
 }
 
 func testAccVPCEPServicePermissionUpdate(rName string) string {
@@ -242,5 +242,5 @@ resource "flexibleengine_vpcep_service" "test" {
     terminal_port = 80
   }
 }
-`, testAccVPCEPServicePrecondition(rName), rName, OS_VPC_ID)
+`, testAccVPCEndpointPrecondition(rName), rName, OS_VPC_ID)
 }
