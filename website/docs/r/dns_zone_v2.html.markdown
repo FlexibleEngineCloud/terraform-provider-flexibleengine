@@ -1,4 +1,5 @@
 ---
+subcategory: "Domain Name Service (DNS)"
 layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_dns_zone_v2"
 sidebar_current: "docs-flexibleengine-resource-dns-zone-v2"
@@ -46,7 +47,7 @@ The following arguments are supported:
 
 * `region` - (Optional) The region in which to create the DNS zone.
     If omitted, the `region` argument of the provider is used.
-    Changing this creates a new DNS zone. Changing this creates a new DNS zone.
+    Changing this creates a new DNS zone.
 
 * `name` - (Required) The name of the zone. Note the `.` at the end of the name.
   Changing this creates a new DNS zone.

@@ -1,4 +1,5 @@
 ---
+subcategory: "Domain Name Service (DNS)"
 layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_dns_recordset_v2"
 sidebar_current: "docs-flexibleengine-resource-dns-recordset-v2"
