@@ -16,20 +16,20 @@ Manages a DNS record set in the FlexibleEngine DNS Service.
 
 ```hcl
 resource "flexibleengine_dns_zone_v2" "example_zone" {
-  name = "example.com."
-  email = "email2@example.com"
+  name        = "example.com."
+  email       = "email2@example.com"
   description = "a zone"
-  ttl = 6000
-  zone_type = "public"
+  ttl         = 6000
+  zone_type   = "public"
 }
 
 resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
-  zone_id = "${flexibleengine_dns_zone_v2.example_zone.id}"
-  name = "rs.example.com."
+  zone_id     = flexibleengine_dns_zone_v2.example_zone.id
+  name        = "rs.example.com."
   description = "An example record set"
-  ttl = 3000
-  type = "A"
-  records = ["10.0.0.1"]
+  ttl         = 3000
+  type        = "A"
+  records     = ["10.0.0.1"]
 }
 ```
 
@@ -37,7 +37,7 @@ resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 DNS client.
+* `region` - (Optional) The region in which to create the DNS record set.
     If omitted, the `region` argument of the provider is used.
     Changing this creates a new DNS record set.
 
@@ -47,15 +47,17 @@ The following arguments are supported:
 * `name` - (Required) The name of the record set. Note the `.` at the end of the name.
   Changing this creates a new DNS record set.
 
-* `type` - (Optional) The type of record set. The options include `A`, `AAAA`, `MX`,
-  `CNAME`, `TXT`, `NS`, `SRV`, and `PTR`. Changing this creates a new DNS record set.
+* `type` - (Required) The type of record set. The options include `A`, `AAAA`, `MX`,
+  `CNAME`, `TXT`, `NS`, `SRV`, `CAA`, and `PTR`. Changing this creates a new DNS record set.
+
+* `records` - (Required) An array of DNS records.
 
 * `ttl` - (Optional) The time to live (TTL) of the record set (in seconds). The value
   range is 300–2147483647. The default value is 300.
 
 * `description` - (Optional) A description of the record set.
 
-* `records` - (Required) An array of DNS records.
+* `tags` - (Optional) The key/value pairs to associate with the record set.
 
 * `value_specs` - (Optional) Map of additional options. Changing this creates a
   new record set.

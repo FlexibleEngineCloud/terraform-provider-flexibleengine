@@ -6,11 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
+	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
+	"github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets"
+	"github.com/huaweicloud/golangsdk/openstack/dns/v2/zones"
 )
 
 func resourceDNSRecordSetV2() *schema.Resource {
@@ -49,34 +52,35 @@ func resourceDNSRecordSetV2() *schema.Resource {
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     false,
-				ValidateFunc: resourceValidateDescription,
+				ValidateFunc: validation.StringLenBetween(0, 255),
 			},
 			"records": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: false,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				MinItems: 1,
 			},
 			"ttl": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ForceNew:     false,
 				Default:      300,
-				ValidateFunc: resourceValidateTTL,
+				ValidateFunc: validation.IntBetween(1, 2147483647),
 			},
 			"type": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: resourceRecordsetValidateType,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"A", "AAAA", "MX", "CNAME", "TXT", "NS", "SRV", "PTR", "CAA",
+				}, false),
 			},
 			"value_specs": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -88,7 +92,13 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	recordsraw := d.Get("records").(*schema.Set).List()
+	zoneID := d.Get("zone_id").(string)
+	zoneType, err := getZoneTypebyID(dnsClient, zoneID)
+	if err != nil {
+		return fmt.Errorf("Error retrieving DNS zone %s: %s", zoneID, err)
+	}
+
+	recordsraw := d.Get("records").([]interface{})
 	records := make([]string, len(recordsraw))
 	for i, recordraw := range recordsraw {
 		records[i] = recordraw.(string)
@@ -105,13 +115,15 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 		MapValueSpecs(d),
 	}
 
-	zoneID := d.Get("zone_id").(string)
-
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	n, err := recordsets.Create(dnsClient, zoneID, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DNS record set: %s", err)
 	}
+
+	log.Printf("[DEBUG] Created FlexibleEngine DNS record set %s: %#v", n.ID, n)
+	id := fmt.Sprintf("%s/%s", zoneID, n.ID)
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Waiting for DNS record set (%s) to become available", n.ID)
 	stateConf := &resource.StateChangeConf{
@@ -131,10 +143,20 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 			n.ID, err)
 	}
 
-	id := fmt.Sprintf("%s/%s", zoneID, n.ID)
-	d.SetId(id)
+	// set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		resourceType, err := getDNSRecordSetTagType(zoneType)
+		if err != nil {
+			return fmt.Errorf("Error getting resource type of DNS record set %s: %s", n.ID, err)
+		}
 
-	log.Printf("[DEBUG] Created FlexibleEngine DNS record set %s: %#v", n.ID, n)
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(dnsClient, resourceType, n.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of DNS record set %s: %s", n.ID, tagErr)
+		}
+	}
+
 	return resourceDNSRecordSetV2Read(d, meta)
 }
 
@@ -150,6 +172,11 @@ func resourceDNSRecordSetV2Read(d *schema.ResourceData, meta interface{}) error 
 	if err != nil {
 		return err
 	}
+	// get zone type: public or priavte
+	zoneType, err := getZoneTypebyID(dnsClient, zoneID)
+	if err != nil {
+		return fmt.Errorf("Error retrieving DNS zone %s: %s", zoneID, err)
+	}
 
 	time.Sleep(2 * time.Second)
 	n, err := recordsets.Get(dnsClient, zoneID, recordsetID).Extract()
@@ -164,10 +191,21 @@ func resourceDNSRecordSetV2Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("ttl", n.TTL)
 	d.Set("type", n.Type)
 	if err := d.Set("records", n.Records); err != nil {
-		return fmt.Errorf("[DEBUG] Error saving records to state for FlexibleEngine DNS record set (%s): %s", d.Id(), err)
+		return fmt.Errorf("Error saving records to state for FlexibleEngine DNS record set (%s): %s", d.Id(), err)
 	}
 	d.Set("region", GetRegion(d, config))
 	d.Set("zone_id", zoneID)
+
+	// save tags
+	if resourceType, err := getDNSRecordSetTagType(zoneType); err == nil {
+		resourceTags, err := tags.Get(dnsClient, resourceType, recordsetID).Extract()
+		if err == nil {
+			tagmap := tagsToMap(resourceTags.Tags)
+			d.Set("tags", tagmap)
+		} else {
+			log.Printf("[WARN] Error fetching FlexibleEngine DNS record set tags: %s", err)
+		}
+	}
 
 	return nil
 }
@@ -185,7 +223,7 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	if d.HasChange("records") {
-		recordsraw := d.Get("records").(*schema.Set).List()
+		recordsraw := d.Get("records").([]interface{})
 		records := make([]string, len(recordsraw))
 		for i, recordraw := range recordsraw {
 			records[i] = recordraw.(string)
@@ -201,6 +239,11 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 	zoneID, recordsetID, err := parseDNSV2RecordSetId(d.Id())
 	if err != nil {
 		return err
+	}
+	// get zone type: public or priavte
+	zoneType, err := getZoneTypebyID(dnsClient, zoneID)
+	if err != nil {
+		return fmt.Errorf("Error retrieving DNS zone %s: %s", zoneID, err)
 	}
 
 	log.Printf("[DEBUG] Updating  record set %s with options: %#v", recordsetID, updateOpts)
@@ -225,6 +268,17 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf(
 			"Error waiting for record set (%s) to become ACTIVE for updation: %s",
 			recordsetID, err)
+	}
+
+	// update tags
+	resourceType, err := getDNSRecordSetTagType(zoneType)
+	if err != nil {
+		return fmt.Errorf("Error getting resource type of DNS record set %s: %s", d.Id(), err)
+	}
+
+	tagErr := UpdateResourceTags(dnsClient, d, resourceType, recordsetID)
+	if tagErr != nil {
+		return fmt.Errorf("Error updating tags of DNS record set %s: %s", d.Id(), tagErr)
 	}
 
 	return resourceDNSRecordSetV2Read(d, meta)
@@ -303,34 +357,11 @@ func parseDNSV2RecordSetId(id string) (string, string, error) {
 	return zoneID, recordsetID, nil
 }
 
-func resourceValidateDescription(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if len(value) > 255 {
-		errors = append(errors, fmt.Errorf("%q must less than 255 characters", k))
+func getZoneTypebyID(dnsClient *golangsdk.ServiceClient, zoneID string) (string, error) {
+	n, err := zones.Get(dnsClient, zoneID).Extract()
+	if err != nil {
+		return "", err
 	}
 
-	return
-}
-
-var recordSetTypes = [8]string{"A", "AAAA", "MX", "CNAME", "TXT", "NS", "SRV", "PTR"}
-
-func resourceRecordsetValidateType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	for i := range recordSetTypes {
-		if value == recordSetTypes[i] {
-			return
-		}
-	}
-	errors = append(errors, fmt.Errorf("%q must be one of %v", k, recordSetTypes))
-
-	return
-}
-
-func resourceValidateTTL(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(int)
-	if 300 <= value && value <= 2147483647 {
-		return
-	}
-	errors = append(errors, fmt.Errorf("%q must be [300, 2147483647]", k))
-	return
+	return n.ZoneType, nil
 }
