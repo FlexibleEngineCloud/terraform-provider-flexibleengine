@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -71,12 +70,10 @@ func resourceSFSFileSystemV2() *schema.Resource {
 			"access_level": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default:  "rw",
 			},
 			"access_type": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default:  "cert",
 			},
 			"access_to": {
 				Type:     schema.TypeString,
@@ -179,9 +176,19 @@ func resourceSFSFileSystemV2Create(d *schema.ResourceData, meta interface{}) err
 	// specified the "access_to" field, apply first access rule to share file
 	if _, ok := d.GetOk("access_to"); ok {
 		grantAccessOpts := shares.GrantAccessOpts{
-			AccessLevel: d.Get("access_level").(string),
-			AccessType:  d.Get("access_type").(string),
-			AccessTo:    d.Get("access_to").(string),
+			AccessTo: d.Get("access_to").(string),
+		}
+
+		if v, ok := d.GetOk("access_level"); ok {
+			grantAccessOpts.AccessLevel = v.(string)
+		} else {
+			grantAccessOpts.AccessLevel = "rw"
+		}
+
+		if v, ok := d.GetOk("access_type"); ok {
+			grantAccessOpts.AccessType = v.(string)
+		} else {
+			grantAccessOpts.AccessType = "cert"
 		}
 
 		grant, accessErr := shares.GrantAccess(sfsClient, d.Id(), grantAccessOpts).ExtractAccess()
@@ -227,21 +234,17 @@ func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error
 	d.Set("export_location", n.ExportLocation)
 	d.Set("host", n.Host)
 
-	// NOTE: This tries to remove system metadata.
+	// NOTE: only support the following metadata key
+	var metaKeys = [3]string{"#sfs_crypt_key_id", "#sfs_crypt_domain_id", "#sfs_crypt_alias"}
 	md := make(map[string]string)
-	var sys_keys = [2]string{"enterprise_project_id", "share_used"}
 
-OUTER:
 	for key, val := range n.Metadata {
-		if strings.HasPrefix(key, "#sfs") {
-			continue
-		}
-		for i := range sys_keys {
-			if key == sys_keys[i] {
-				continue OUTER
+		for i := range metaKeys {
+			if key == metaKeys[i] {
+				md[key] = val
+				break
 			}
 		}
-		md[key] = val
 	}
 	d.Set("metadata", md)
 
@@ -352,6 +355,19 @@ func resourceSFSFileSystemV2Update(d *schema.ResourceData, meta interface{}) err
 			if shrink.Err != nil {
 				return fmt.Errorf("Error Shrinking Flexibleengine Share File size: %s", shrink.Err)
 			}
+		}
+
+		stateConf := &resource.StateChangeConf{
+			Pending:    []string{"shrinking", "extending"},
+			Target:     []string{"available"},
+			Refresh:    waitForSFSFileActive(sfsClient, d.Id()),
+			Timeout:    d.Timeout(schema.TimeoutCreate),
+			Delay:      5 * time.Second,
+			MinTimeout: 3 * time.Second,
+		}
+		_, StateErr := stateConf.WaitForState()
+		if StateErr != nil {
+			return fmt.Errorf("Error waiting for Share File (%s) to become ready: %s ", d.Id(), StateErr)
 		}
 	}
 

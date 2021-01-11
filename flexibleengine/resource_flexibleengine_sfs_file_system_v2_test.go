@@ -11,6 +11,7 @@ import (
 
 func TestAccSFSFileSystemV2_basic(t *testing.T) {
 	var share shares.Share
+	resourceName := "flexibleengine_sfs_file_system_v2.sfs_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,33 +21,23 @@ func TestAccSFSFileSystemV2_basic(t *testing.T) {
 			{
 				Config: testAccSFSFileSystemV2_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSFSFileSystemV2Exists("flexibleengine_sfs_file_system_v2.sfs_1", &share),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "name", "sfs-test1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "share_proto", "NFS"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "status", "available"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "size", "10"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "access_level", "rw"),
+					testAccCheckSFSFileSystemV2Exists(resourceName, &share),
+					resource.TestCheckResourceAttr(resourceName, "name", "sfs-test1"),
+					resource.TestCheckResourceAttr(resourceName, "share_proto", "NFS"),
+					resource.TestCheckResourceAttr(resourceName, "status", "available"),
+					resource.TestCheckResourceAttr(resourceName, "size", "10"),
+					resource.TestCheckResourceAttr(resourceName, "access_level", "rw"),
 				),
 			},
 			{
 				Config: testAccSFSFileSystemV2_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSFSFileSystemV2Exists("flexibleengine_sfs_file_system_v2.sfs_1", &share),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "name", "sfs-test2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "share_proto", "NFS"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "status", "available"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "size", "10"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "access_level", "rw"),
+					testAccCheckSFSFileSystemV2Exists(resourceName, &share),
+					resource.TestCheckResourceAttr(resourceName, "name", "sfs-test2"),
+					resource.TestCheckResourceAttr(resourceName, "share_proto", "NFS"),
+					resource.TestCheckResourceAttr(resourceName, "status", "available"),
+					resource.TestCheckResourceAttr(resourceName, "size", "20"),
+					resource.TestCheckResourceAttr(resourceName, "access_level", "rw"),
 				),
 			},
 		},
@@ -55,6 +46,7 @@ func TestAccSFSFileSystemV2_basic(t *testing.T) {
 
 func TestAccSFSFileSystemV2_without_rule(t *testing.T) {
 	var share shares.Share
+	resourceName := "flexibleengine_sfs_file_system_v2.sfs_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -64,34 +56,17 @@ func TestAccSFSFileSystemV2_without_rule(t *testing.T) {
 			{
 				Config: testAccSFSFileSystemV2_without_rule,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSFSFileSystemV2Exists("flexibleengine_sfs_file_system_v2.sfs_1", &share),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "name", "sfs-test-no-rules"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "share_proto", "NFS"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "status", "unavailable"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_sfs_file_system_v2.sfs_1", "size", "10"),
+					testAccCheckSFSFileSystemV2Exists(resourceName, &share),
+					resource.TestCheckResourceAttr(resourceName, "name", "sfs-test-no-rules"),
+					resource.TestCheckResourceAttr(resourceName, "share_proto", "NFS"),
+					resource.TestCheckResourceAttr(resourceName, "status", "unavailable"),
+					resource.TestCheckResourceAttr(resourceName, "size", "10"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccSFSFileSystemV2_timeout(t *testing.T) {
-	var share shares.Share
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSFSFileSystemV2Destroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccSFSFileSystemV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSFSFileSystemV2Exists("flexibleengine_sfs_file_system_v2.sfs_1", &share),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -166,7 +141,7 @@ resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
 var testAccSFSFileSystemV2_update = fmt.Sprintf(`
 resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
   share_proto  = "NFS"
-  size         = 10
+  size         = 20
   name         = "sfs-test2"
   description  = "sfs_c2c_test-file"
   access_to    = "%s"
@@ -184,20 +159,3 @@ resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
   description = "sfs_c2c_test-file"
 }
 `
-
-var testAccSFSFileSystemV2_timeout = fmt.Sprintf(`
-resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
-  share_proto  = "NFS"
-  size         = 10
-  name         = "sfs-test1"
-  description  = "sfs_c2c_test-file"
-  access_to    = "%s"
-  access_type  = "cert"
-  access_level = "rw"
-  availability_zone = "%s"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}`, OS_VPC_ID, OS_AVAILABILITY_ZONE)
