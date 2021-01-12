@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
@@ -13,31 +14,9 @@ import (
 func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 	var vpc vpcs.Vpc
 
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineVpcV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccVpcV1_basic,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists("flexibleengine_vpc_v1.vpc_1", &vpc),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "name", "terraform_provider_test"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "cidr", "192.168.0.0/16"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "status", "OK"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "shared", "false"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccFlexibleEngineVpcV1_update(t *testing.T) {
-	var vpc vpcs.Vpc
+	resourceName := "flexibleengine_vpc_v1.vpc_1"
+	rName := fmt.Sprintf("vpc-acc-test-%s", acctest.RandString(5))
+	rNameUpdate := rName + "-updated"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -45,38 +24,29 @@ func TestAccFlexibleEngineVpcV1_update(t *testing.T) {
 		CheckDestroy: testAccCheckFlexibleEngineVpcV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcV1_basic,
+				Config: testAccVpcV1_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists("flexibleengine_vpc_v1.vpc_1", &vpc),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "name", "terraform_provider_test"),
+					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "192.168.0.0/16"),
+					resource.TestCheckResourceAttr(resourceName, "status", "OK"),
+					resource.TestCheckResourceAttr(resourceName, "shared", "false"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 				),
 			},
 			{
-				Config: testAccVpcV1_update,
+				Config: testAccVpcV1_update(rNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists("flexibleengine_vpc_v1.vpc_1", &vpc),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_v1.vpc_1", "name", "terraform_provider_test1"),
+					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					resource.TestCheckResourceAttr(resourceName, "name", rNameUpdate),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccFlexibleEngineVpcV1_timeout(t *testing.T) {
-	var vpc vpcs.Vpc
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineVpcV1Destroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists("flexibleengine_vpc_v1.vpc_1", &vpc),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -135,27 +105,30 @@ func testAccCheckFlexibleEngineVpcV1Exists(n string, vpc *vpcs.Vpc) resource.Tes
 	}
 }
 
-const testAccVpcV1_basic = `
+func testAccVpcV1_basic(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_vpc_v1" "vpc_1" {
-	name = "terraform_provider_test"
-	cidr="192.168.0.0/16"
-}
-`
+  name = "%s"
+  cidr="192.168.0.0/16"
 
-const testAccVpcV1_update = `
-resource "flexibleengine_vpc_v1" "vpc_1" {
-    name = "terraform_provider_test1"
-	cidr="192.168.0.0/16"
-}
-`
-const testAccVpcV1_timeout = `
-resource "flexibleengine_vpc_v1" "vpc_1" {
-	name = "terraform_provider_test"
-	cidr="192.168.0.0/16"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
+  tags = {
+    foo = "bar"
+    key = "value"
   }
 }
-`
+`, rName)
+}
+
+func testAccVpcV1_update(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "%s"
+  cidr="192.168.0.0/16"
+
+  tags = {
+    foo = "bar"
+    key = "value_updated"
+  }
+}
+`, rName)
+}
