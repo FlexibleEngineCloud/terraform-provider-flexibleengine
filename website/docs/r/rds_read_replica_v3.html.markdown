@@ -3,34 +3,34 @@ layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_rds_read_replica_v3"
 sidebar_current: "docs-flexibleengine-resource-rds-read-replica-v3"
 description: |-
-  read replica management
+  RDS read replica management
 ---
 
 # flexibleengine\_rds\_read\_replica\_v3
 
-read replica management
+RDS read replica management
 
 ## Example Usage
 
 ```hcl
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "test_security_group"
+  name        = "test_security_group"
   description = "security group acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance_1" {
-  name = "test_rds_instance"
-  flavor = "rds.pg.c2.large"
-  availability_zone = ["{{ availability_zone }}"]
-  vpc_id = "{{ vpc_id }}"
-  subnet_id = "{{ subnet_id }}"
+  name              = "terraform_test_rds_instance"
+  flavor            = "rds.pg.s1.medium"
+  availability_zone = [var.primary_az]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
 
   db {
-    password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5"
-    port = "8635"
+    password = var.db_password
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
   }
   volume {
     type = "ULTRAHIGH"
@@ -38,15 +38,15 @@ resource "flexibleengine_rds_instance_v3" "instance_1" {
   }
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = 1
+    keep_days  = 1
   }
 }
 
 resource "flexibleengine_rds_read_replica_v3" "instance_2" {
-  name = "replica_instance"
-  flavor = "rds.pg.c2.large.rr"
-  replica_of_id = flexibleengine_rds_instance_v3.instance_1.id
-  availability_zone = "{{ availability_zone }}"
+  name              = "replica_instance"
+  flavor            = "rds.pg.c2.large.rr"
+  replica_of_id     = flexibleengine_rds_instance_v3.instance_1.id
+  availability_zone = var.primary_az
 
   volume {
     type = "ULTRAHIGH"
@@ -76,6 +76,9 @@ The following arguments are supported:
 
 * `availability_zone` - (Required) Specifies the AZ name.
     Changing this parameter will create a new resource.
+
+* `tags` - (Optional) A mapping of tags to assign to the RDS read replica instance.
+    Each tag is represented by one key-value pair.
 
 * `region` - (Optional) The region in which to create the instance. If omitted,
     the `region` argument of the provider is used. Currently, read replicas can

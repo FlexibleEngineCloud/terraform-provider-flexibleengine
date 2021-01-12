@@ -2,6 +2,7 @@ package instances
 
 import (
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/pagination"
 )
 
@@ -126,32 +127,33 @@ type ListRdsResponse struct {
 }
 
 type RdsInstanceResponse struct {
-	Id                  string            `json:"id"`
-	Name                string            `json:"name"`
-	Status              string            `json:"status"`
-	PrivateIps          []string          `json:"private_ips"`
-	PublicIps           []string          `json:"public_ips"`
-	Port                int               `json:"port"`
-	Type                string            `json:"type"`
-	Ha                  Ha                `json:"ha"`
-	Region              string            `json:"region"`
-	DataStore           Datastore         `json:"datastore"`
-	Created             string            `json:"created"`
-	Updated             string            `json:"updated"`
-	DbUserName          string            `json:"db_user_name"`
-	VpcId               string            `json:"vpc_id"`
-	SubnetId            string            `json:"subnet_id"`
-	SecurityGroupId     string            `json:"security_group_id"`
-	FlavorRef           string            `json:"flavor_ref"`
-	Volume              Volume            `json:"volume"`
-	SwitchStrategy      string            `json:"switch_strategy"`
-	BackupStrategy      BackupStrategy    `json:"backup_strategy"`
-	MaintenanceWindow   string            `json:"maintenance_window"`
-	Nodes               []Nodes           `json:"nodes"`
-	RelatedInstance     []RelatedInstance `json:"related_instance"`
-	DiskEncryptionId    string            `json:"disk_encryption_id"`
-	EnterpriseProjectId string            `json:"enterprise_project_id"`
-	TimeZone            string            `json:"time_zone"`
+	Id                  string             `json:"id"`
+	Name                string             `json:"name"`
+	Status              string             `json:"status"`
+	PrivateIps          []string           `json:"private_ips"`
+	PublicIps           []string           `json:"public_ips"`
+	Port                int                `json:"port"`
+	Type                string             `json:"type"`
+	Ha                  Ha                 `json:"ha"`
+	Region              string             `json:"region"`
+	DataStore           Datastore          `json:"datastore"`
+	Created             string             `json:"created"`
+	Updated             string             `json:"updated"`
+	DbUserName          string             `json:"db_user_name"`
+	VpcId               string             `json:"vpc_id"`
+	SubnetId            string             `json:"subnet_id"`
+	SecurityGroupId     string             `json:"security_group_id"`
+	FlavorRef           string             `json:"flavor_ref"`
+	Volume              Volume             `json:"volume"`
+	SwitchStrategy      string             `json:"switch_strategy"`
+	BackupStrategy      BackupStrategy     `json:"backup_strategy"`
+	MaintenanceWindow   string             `json:"maintenance_window"`
+	Nodes               []Nodes            `json:"nodes"`
+	RelatedInstance     []RelatedInstance  `json:"related_instance"`
+	DiskEncryptionId    string             `json:"disk_encryption_id"`
+	EnterpriseProjectId string             `json:"enterprise_project_id"`
+	TimeZone            string             `json:"time_zone"`
+	Tags                []tags.ResourceTag `json:"tags"`
 }
 
 type Nodes struct {

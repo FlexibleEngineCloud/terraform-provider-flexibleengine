@@ -26,46 +26,35 @@ import (
 )
 
 func TestAccRdsInstanceV3_basic(t *testing.T) {
+	name := acctest.RandString(10)
+	resourceName := "flexibleengine_rds_instance_v3.instance"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRdsInstanceV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRdsInstanceV3_basic(acctest.RandString(10)),
+				Config: testAccRdsInstanceV3_basic(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRdsInstanceV3Exists(),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("rds_acc_instance-%s", name)),
+					resource.TestCheckResourceAttr(resourceName, "backup_strategy.0.keep_days", "1"),
+					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"db",
+				},
 			},
 		},
 	})
-}
-
-func testAccRdsInstanceV3_basic(val string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_rds_instance_v3" "instance" {
-  availability_zone = ["%s"]
-  db {
-    password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5.5"
-    port = "8635"
-  }
-  name = "terraform_test_rds_instance%s"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
-  subnet_id = "%s"
-  vpc_id = "%s"
-  volume {
-    type = "COMMON"
-    size = 100
-  }
-  flavor = "rds.pg.s1.medium"
-  backup_strategy {
-    start_time = "08:00-09:00"
-    keep_days = 1
-  }
-}
-	`, OS_AVAILABILITY_ZONE, val, OS_NETWORK_ID, OS_VPC_ID)
 }
 
 func testAccCheckRdsInstanceV3Destroy(s *terraform.State) error {
@@ -81,14 +70,13 @@ func testAccCheckRdsInstanceV3Destroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err = fetchRdsInstanceV3ByListOnTest(rs, client)
+		v, err := fetchRdsInstanceV3ByListOnTest(rs, client)
 		if err != nil {
-			if strings.Index(err.Error(), "Error finding the resource by list api") != -1 {
-				return nil
-			}
 			return err
 		}
-		return fmt.Errorf("flexibleengine_rds_instance_v3 still exists")
+		if v != nil {
+			return fmt.Errorf("flexibleengine rds instance still exists")
+		}
 	}
 
 	return nil
@@ -108,12 +96,12 @@ func testAccCheckRdsInstanceV3Exists() resource.TestCheckFunc {
 			return fmt.Errorf("Error checking flexibleengine_rds_instance_v3.instance exist, err=not found this resource")
 		}
 
-		_, err = fetchRdsInstanceV3ByListOnTest(rs, client)
+		v, err := fetchRdsInstanceV3ByListOnTest(rs, client)
 		if err != nil {
-			if strings.Index(err.Error(), "Error finding the resource by list api") != -1 {
-				return fmt.Errorf("flexibleengine_rds_instance_v3 is not exist")
-			}
 			return fmt.Errorf("Error checking flexibleengine_rds_instance_v3.instance exist, err=%s", err)
+		}
+		if v == nil {
+			return fmt.Errorf("flexibleengine rds instance is not exist")
 		}
 		return nil
 	}
@@ -129,4 +117,42 @@ func fetchRdsInstanceV3ByListOnTest(rs *terraform.ResourceState,
 	link := client.ServiceURL("instances") + queryLink
 
 	return findRdsInstanceV3ByList(client, link, identity)
+}
+
+func testAccRdsInstanceV3_basic(val string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+  name        = "sg-acc-%s"
+  description = "security group for rds instance"
+}
+
+resource "flexibleengine_rds_instance_v3" "instance" {
+  name              = "rds_acc_instance-%s"
+  flavor            = "rds.pg.s1.medium"
+  availability_zone = ["%s"]
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id            = "%s"
+  subnet_id         = "%s"
+
+  db {
+    password = "Huangwei!120521"
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
+  }
+  volume {
+    type = "COMMON"
+    size = 100
+  }
+  backup_strategy {
+    start_time = "08:00-09:00"
+    keep_days  = 1
+  }
+
+  tags = {
+    key = "value"
+    foo = "bar"
+  }
+}
+	`, val, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)
 }
