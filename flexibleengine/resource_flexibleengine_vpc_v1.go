@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -46,6 +47,7 @@ func resourceVirtualPrivateCloudV1() *schema.Resource {
 				ForceNew:     false,
 				ValidateFunc: validateCIDR,
 			},
+			"tags": tagsSchema(),
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -61,7 +63,6 @@ func resourceVirtualPrivateCloudV1() *schema.Resource {
 func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
-
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
@@ -72,7 +73,6 @@ func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{
 	}
 
 	n, err := vpcs.Create(vpcClient, createOpts).Extract()
-
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC: %s", err)
 	}
@@ -94,6 +94,19 @@ func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{
 		return fmt.Errorf(
 			"Error waiting for Vpc (%s) to become ACTIVE: %s",
 			n.ID, stateErr)
+	}
+
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		}
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(vpcV2Client, "vpcs", n.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of VPC %s: %s", n.ID, tagErr)
+		}
 	}
 
 	return resourceVirtualPrivateCloudV1Read(d, meta)
@@ -124,6 +137,19 @@ func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{})
 	d.Set("shared", n.EnableSharedSnat)
 	d.Set("region", GetRegion(d, config))
 
+	// save tags
+	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+	}
+	resourceTags, err := tags.Get(vpcV2Client, "vpcs", d.Id()).Extract()
+	if err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching VPC %s tags failed: %s", d.Id(), err)
+	}
+
 	return nil
 }
 
@@ -146,6 +172,19 @@ func resourceVirtualPrivateCloudV1Update(d *schema.ResourceData, meta interface{
 	_, err = vpcs.Update(vpcClient, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine Vpc: %s", err)
+	}
+
+	//update tags
+	if d.HasChange("tags") {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		}
+
+		tagErr := UpdateResourceTags(vpcV2Client, d, "vpcs", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of VPC %s: %s", d.Id(), tagErr)
+		}
 	}
 
 	return resourceVirtualPrivateCloudV1Read(d, meta)

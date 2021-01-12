@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/subnets"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -105,6 +106,7 @@ func resourceVpcSubnetV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -153,6 +155,19 @@ func resourceVpcSubnetV1Create(d *schema.ResourceData, meta interface{}) error {
 			n.ID, stateErr)
 	}
 
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
+		}
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(vpcV2Client, "subnets", n.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of VPC Subnet %s: %s", n.ID, tagErr)
+		}
+	}
+
 	return resourceVpcSubnetV1Read(d, config)
 
 }
@@ -185,6 +200,19 @@ func resourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("vpc_id", n.VPC_ID)
 	d.Set("subnet_id", n.SubnetId)
 	d.Set("region", GetRegion(d, config))
+
+	// save VpcSubnet tags
+	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
+	}
+	resourceTags, err := tags.Get(vpcV2Client, "subnets", d.Id()).Extract()
+	if err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching VPC Subnet %s tags failed: %s", d.Id(), err)
+	}
 
 	return nil
 }
@@ -224,6 +252,18 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error updating FlexibleEngine VPC Subnet: %s", err)
 	}
 
+	//update tags
+	if d.HasChange("tags") {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
+		}
+
+		tagErr := UpdateResourceTags(vpcV2Client, d, "subnets", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of VPC subnet %s: %s", d.Id(), tagErr)
+		}
+	}
 	return resourceVpcSubnetV1Read(d, meta)
 }
 
