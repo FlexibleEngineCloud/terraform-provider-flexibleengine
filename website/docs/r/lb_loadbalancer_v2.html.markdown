@@ -15,6 +15,10 @@ Manages a V2 loadbalancer resource within FlexibleEngine.
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
   vip_subnet_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
+
+  tags = {
+    key = "value"
+  }
 }
 ```
 
@@ -22,30 +26,31 @@ resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an LB member. If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    LB member.
+* `region` - (Optional) The region in which to create the loadbalancer resource.
+    If omitted, the `region` argument of the provider is used.
+    Changing this creates a new loadbalancer.
 
 * `vip_subnet_id` - (Required) The network on which to allocate the
-    Loadbalancer's address. A tenant can only create Loadbalancers on networks
+    loadbalancer's address. A tenant can only create Loadbalancers on networks
     authorized by policy (e.g. networks that belong to them or networks that
     are shared).  Changing this creates a new loadbalancer.
 
-* `name` - (Optional) Human-readable name for the Loadbalancer. Does not have
+* `name` - (Optional) Human-readable name for the loadbalancer. Does not have
     to be unique.
 
-* `description` - (Optional) Human-readable description for the Loadbalancer.
+* `description` - (Optional) Human-readable description for the loadbalancer.
 
 * `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the Loadbalancer.  Only administrative users can specify a tenant UUID
+    the loadbalancer.  Only administrative users can specify a tenant UUID
     other than their own.  Changing this creates a new loadbalancer.
 
 * `vip_address` - (Optional) The ip address of the load balancer.
     Changing this creates a new loadbalancer.
 
-* `admin_state_up` - (Optional) The administrative state of the Loadbalancer.
+* `admin_state_up` - (Optional) The administrative state of the loadbalancer.
     A valid value is true (UP) or false (DOWN).
+
+* `tags` - (Optional) The key/value pairs to associate with the loadbalancer.
 
 * `flavor` - (Optional) The UUID of a flavor. Currently, this is not supported.
     Changing this creates a new loadbalancer.
@@ -68,6 +73,7 @@ The following attributes are exported:
 * `tenant_id` - See Argument Reference above.
 * `vip_address` - See Argument Reference above.
 * `admin_state_up` - See Argument Reference above.
+* `tags` - See Argument Reference above.
 * `flavor` - See Argument Reference above.
 * `loadbalancer_provider` - See Argument Reference above.
 * `security_group_ids` - See Argument Reference above.

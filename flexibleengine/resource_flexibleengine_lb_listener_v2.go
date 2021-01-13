@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/listeners"
 )
 
@@ -108,6 +109,7 @@ func resourceListenerV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -176,6 +178,20 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(listener.ID)
 
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		elbClient, err := config.elbV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+		}
+
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(elbClient, "listeners", listener.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of elb listener %s: %s", listener.ID, tagErr)
+		}
+	}
+
 	return resourceListenerV2Read(d, meta)
 }
 
@@ -208,6 +224,18 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tls_ciphers_policy", listener.TlsCiphersPolicy)
 	d.Set("default_tls_container_ref", listener.DefaultTlsContainerRef)
 	d.Set("region", GetRegion(d, config))
+
+	// fetch tags
+	elbClient, err := config.elbV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+	}
+	if resourceTags, err := tags.Get(elbClient, "listeners", d.Id()).Extract(); err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching tags of elb listener failed: %s", err)
+	}
 
 	return nil
 }
@@ -275,6 +303,19 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
+	}
+
+	// update tags
+	if d.HasChange("tags") {
+		elbClient, err := config.elbV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+		}
+
+		tagErr := UpdateResourceTags(elbClient, d, "listeners", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of elb listener:%s, err:%s", d.Id(), tagErr)
+		}
 	}
 
 	return resourceListenerV2Read(d, meta)

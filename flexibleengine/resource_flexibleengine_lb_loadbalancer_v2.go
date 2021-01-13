@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
@@ -81,6 +82,7 @@ func resourceLoadBalancerV2() *schema.Resource {
 				ForceNew: true,
 			},
 
+			"tags": tagsSchema(),
 			"loadbalancer_provider": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -145,6 +147,20 @@ func resourceLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) erro
 	// If all has been successful, set the ID on the resource
 	d.SetId(lb.ID)
 
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		elbClient, err := config.elbV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+		}
+
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(elbClient, "loadbalancers", lb.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of load balancer %s: %s", lb.ID, tagErr)
+		}
+	}
+
 	return resourceLoadBalancerV2Read(d, meta)
 }
 
@@ -183,6 +199,19 @@ func resourceLoadBalancerV2Read(d *schema.ResourceData, meta interface{}) error 
 		if err := d.Set("security_group_ids", port.SecurityGroups); err != nil {
 			return fmt.Errorf("[DEBUG] Error saving security_group_ids to state for FlexibleEngine loadbalancer (%s): %s", d.Id(), err)
 		}
+	}
+
+	// fetch tags
+	elbClient, err := config.elbV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+	}
+
+	if resourceTags, err := tags.Get(elbClient, "loadbalancers", d.Id()).Extract(); err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching tags of elb loadbalancer failed: %s", err)
 	}
 
 	return nil
@@ -234,6 +263,19 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 		vipPortID := d.Get("vip_port_id").(string)
 		if err := resourceLoadBalancerV2SecurityGroups(networkingClient, vipPortID, d); err != nil {
 			return err
+		}
+	}
+
+	// update tags
+	if d.HasChange("tags") {
+		elbClient, err := config.elbV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
+		}
+
+		tagErr := UpdateResourceTags(elbClient, d, "loadbalancers", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of load balancer:%s, err:%s", d.Id(), tagErr)
 		}
 	}
 
