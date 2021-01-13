@@ -665,7 +665,17 @@ func (c *Config) vpcepV1Client(region string) (*golangsdk.ServiceClient, error) 
 	sc, err := c.sdkClient(region, "network")
 	if err == nil {
 		sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "vpcep", 1)
-		sc.ResourceBase = fmt.Sprintf("%sv1/%s/", sc.Endpoint, c.HwClient.ProjectID)
+		sc.ResourceBase = sc.Endpoint + fmt.Sprintf("v1/%s/", c.HwClient.ProjectID)
+	}
+
+	return sc, err
+}
+
+func (c *Config) elbV2Client(region string) (*golangsdk.ServiceClient, error) {
+	sc, err := c.sdkClient(region, "network")
+	if err == nil {
+		sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "elb", 1)
+		sc.ResourceBase = sc.Endpoint + fmt.Sprintf("v2.0/%s/", c.HwClient.ProjectID)
 	}
 
 	return sc, err
