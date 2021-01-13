@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"log"
 
+	"regexp"
+	"strings"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/groups"
 	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/instances"
-	"regexp"
-	"strings"
-	"time"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 )
 
 func resourceASGroup() *schema.Resource {
@@ -180,11 +182,19 @@ func resourceASGroup() *schema.Resource {
 			},
 			"instances": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				ForceNew:    false,
 				Description: "The instances id list in the as group.",
 			},
+			"current_instance_number": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -451,18 +461,30 @@ func resourceASGroupCreate(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(asgId)
 
-	//enable asg
-	enableResult := groups.Enable(asClient, asgId)
-	if enableResult.Err != nil {
-		return fmt.Errorf("Error enabling ASGroup %q: %s", asgId, enableResult.Err)
-	}
-	log.Printf("[DEBUG] Enable ASGroup %q success!", asgId)
-	// check all instances are inservice
-	if initNum > 0 {
-		timeout := d.Timeout(schema.TimeoutCreate)
-		err = checkASGroupInstancesInService(asClient, asgId, initNum, timeout)
+	// set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		tagList := expandResourceTags(tagRaw)
+		err := tags.Create(asClient, "scaling_group_tag", asgId, tagList).ExtractErr()
 		if err != nil {
-			return fmt.Errorf("Error waiting for instances in the ASGroup %q to become inservice!!: %s", asgId, err)
+			return fmt.Errorf("Error setting tags of AS group %s: %s", asgId, err)
+		}
+	}
+
+	if _, ok := d.GetOk("scaling_configuration_id"); ok {
+		//enable asg
+		enableResult := groups.Enable(asClient, asgId)
+		if enableResult.Err != nil {
+			return fmt.Errorf("Error enabling ASGroup %q: %s", asgId, enableResult.Err)
+		}
+		log.Printf("[DEBUG] Enable ASGroup %q success!", asgId)
+		// check all instances are inservice
+		if initNum > 0 {
+			timeout := d.Timeout(schema.TimeoutCreate)
+			err = checkASGroupInstancesInService(asClient, asgId, initNum, timeout)
+			if err != nil {
+				return fmt.Errorf("Error waiting for instances in the ASGroup %q to become inservice!!: %s", asgId, err)
+			}
 		}
 	}
 
@@ -489,6 +511,8 @@ func resourceASGroupRead(d *schema.ResourceData, meta interface{}) error {
 
 	// set properties based on the read info
 	d.Set("scaling_group_name", asg.Name)
+	d.Set("status", asg.Status)
+	d.Set("current_instance_number", asg.ActualInstanceNumber)
 	d.Set("desire_instance_number", asg.DesireInstanceNumber)
 	d.Set("min_instance_number", asg.MinInstanceNumber)
 	d.Set("max_instance_number", asg.MaxInstanceNumber)
@@ -520,8 +544,15 @@ func resourceASGroupRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	allIDs := getInstancesIDs(allIns)
 	d.Set("instances", allIDs)
-
 	d.Set("region", GetRegion(d, config))
+
+	resourceTags, err := tags.Get(asClient, "scaling_group_tag", d.Id()).Extract()
+	if err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching AS group %s tags failed: %s", d.Id(), err)
+	}
 
 	return nil
 }
@@ -575,6 +606,14 @@ func resourceASGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error updating ASGroup %q: %s", asgID, err)
 	}
+
+	if d.HasChange("tags") {
+		tagErr := UpdateResourceTags(asClient, d, "scaling_group_tag", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of AS group:%s, err:%s", d.Id(), tagErr)
+		}
+	}
+
 	d.Partial(false)
 	return resourceASGroupRead(d, meta)
 }

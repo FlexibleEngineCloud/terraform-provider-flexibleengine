@@ -11,6 +11,7 @@ import (
 
 func TestAccLBV2Listener_basic(t *testing.T) {
 	var listener listeners.Listener
+	resourceName := "flexibleengine_lb_listener_v2.listener_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,14 +21,18 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 			{
 				Config: TestAccLBV2ListenerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2ListenerExists("flexibleengine_lb_listener_v2.listener_1", &listener),
+					testAccCheckLBV2ListenerExists(resourceName, &listener),
+					resource.TestCheckResourceAttr(resourceName, "name", "listener_1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 			{
 				Config: TestAccLBV2ListenerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_lb_listener_v2.listener_1", "name", "listener_1_updated"),
+					resource.TestCheckResourceAttr(resourceName, "name", "listener_1_updated"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
 			},
 		},
@@ -96,7 +101,7 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 		}
 
 		if found.ID != rs.Primary.ID {
-			return fmt.Errorf("Member not found")
+			return fmt.Errorf("ELB listener not found")
 		}
 
 		*listener = *found
@@ -105,57 +110,54 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 	}
 }
 
-const TestAccLBV2ListenerConfig_basic = `
+var TestAccLBV2ListenerConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
+  tags = {
+    key   = "value"
+    owner = "terraform"
   }
 }
-`
+`, OS_SUBNET_ID)
 
-const TestAccLBV2ListenerConfig_update = `
+var TestAccLBV2ListenerConfig_update = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1_updated"
-  protocol = "HTTP"
-  protocol_port = 8080
-  #connection_limit = 100
-  admin_state_up = "true"
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1_updated"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  admin_state_up  = "true"
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
+  tags = {
+    foo   = "bar"
+    owner = "terraform_update"
   }
 }
-`
+`, OS_SUBNET_ID)
 
-const TestAccLBV2ListenerConfig_cert = `
+var TestAccLBV2ListenerConfig_cert = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_cert"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_cert"
+  vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "cert"
-  domain = "www.elb.com"
+  name        = "cert"
+  domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -213,10 +215,10 @@ EOT
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_cert"
-  protocol = "TERMINATED_HTTPS"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
-  default_tls_container_ref = "${flexibleengine_lb_certificate_v2.certificate_1.id}"
+  name                      = "listener_cert"
+  protocol                  = "TERMINATED_HTTPS"
+  protocol_port             = 8080
+  loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
 }
-`
+`, OS_SUBNET_ID)

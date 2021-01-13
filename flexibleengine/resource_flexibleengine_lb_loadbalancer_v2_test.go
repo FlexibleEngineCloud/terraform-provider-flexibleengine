@@ -2,6 +2,7 @@ package flexibleengine
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -10,11 +11,11 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/security/groups"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
-	"regexp"
 )
 
 func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
+	resourceName := "flexibleengine_lb_loadbalancer_v2.loadbalancer_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,17 +25,20 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 			{
 				Config: testAccLBV2LoadBalancerConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2LoadBalancerExists("flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
+					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
+					resource.TestCheckResourceAttr(resourceName, "name", "loadbalancer_1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
+					resource.TestMatchResourceAttr(resourceName, "vip_port_id",
+						regexp.MustCompile("^[a-f0-9-]+")),
 				),
 			},
 			{
 				Config: testAccLBV2LoadBalancerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "name", "loadbalancer_1_updated"),
-					resource.TestMatchResourceAttr(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "vip_port_id",
-						regexp.MustCompile("^[a-f0-9-]+")),
+					resource.TestCheckResourceAttr(resourceName, "name", "loadbalancer_1_updated"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
 			},
 		},
@@ -175,91 +179,92 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 	}
 }
 
-const testAccLBV2LoadBalancerConfig_basic = `
+var testAccLBV2LoadBalancerConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
+  tags = {
+    key   = "value"
+    owner = "terraform"
   }
 }
-`
+`, OS_SUBNET_ID)
 
-const testAccLBV2LoadBalancerConfig_update = `
+var testAccLBV2LoadBalancerConfig_update = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1_updated"
+  name           = "loadbalancer_1_updated"
   admin_state_up = "true"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  vip_subnet_id  = "%s"
 
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
+  tags = {
+    key1  = "value1"
+    owner = "terraform_update"
   }
 }
-`
+`, OS_SUBNET_ID)
 
-const testAccLBV2LoadBalancer_secGroup = `
+var testAccLBV2LoadBalancer_secGroup = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup_1"
   description = "secgroup_1"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
+  name        = "secgroup_2"
   description = "secgroup_2"
 }
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-    ]
-}
-`
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 
-const testAccLBV2LoadBalancer_secGroup_update1 = `
+  security_group_ids = [
+    flexibleengine_networking_secgroup_v2.secgroup_1.id
+  ]
+}
+`, OS_SUBNET_ID)
+
+var testAccLBV2LoadBalancer_secGroup_update1 = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup_1"
   description = "secgroup_1"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
+  name        = "secgroup_2"
   description = "secgroup_2"
 }
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_1.id}",
-      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-    ]
-}
-`
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 
-const testAccLBV2LoadBalancer_secGroup_update2 = `
+  security_group_ids = [
+    flexibleengine_networking_secgroup_v2.secgroup_1.id,
+    flexibleengine_networking_secgroup_v2.secgroup_2.id
+  ]
+}
+`, OS_SUBNET_ID)
+
+var testAccLBV2LoadBalancer_secGroup_update2 = fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup_1"
   description = "secgroup_1"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
+  name        = "secgroup_2"
   description = "secgroup_2"
 }
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-    name = "loadbalancer_1"
-    vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-    security_group_ids = [
-      "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-    ]
-    depends_on = ["flexibleengine_networking_secgroup_v2.secgroup_1"]
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
+
+  security_group_ids = [
+    flexibleengine_networking_secgroup_v2.secgroup_2.id
+  ]
+  depends_on = ["flexibleengine_networking_secgroup_v2.secgroup_1"]
 }
-`
+`, OS_SUBNET_ID)

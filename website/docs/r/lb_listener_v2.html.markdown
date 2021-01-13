@@ -17,6 +17,10 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
+
+  tags = {
+    key = "value"
+  }
 }
 ```
 
@@ -24,13 +28,13 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_cert"
+  name          = "loadbalancer_cert"
   vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
 }
 
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "cert"
-  domain = "www.elb.com"
+  name        = "cert"
+  domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -88,11 +92,11 @@ EOT
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_cert"
-  protocol = "TERMINATED_HTTPS"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
-  default_tls_container_ref = "${flexibleengine_lb_certificate_v2.certificate_1.id}"
+  name                      = "listener_cert"
+  protocol                  = "TERMINATED_HTTPS"
+  protocol_port             = 8080
+  loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
 }
 ```
 
@@ -100,31 +104,30 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an . If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    Listener.
+* `region` - (Optional) The region in which to create the listener resource.
+    If omitted, the `region` argument of the provider is used.
+    Changing this creates a new listener.
 
 * `protocol` - (Required) The protocol - can either be TCP, UDP, HTTP or TERMINATED_HTTPS.
-    Changing this creates a new Listener.
+    Changing this creates a new listener.
 
 * `protocol_port` - (Required) The port on which to listen for client traffic.
-    Changing this creates a new Listener.
+    Changing this creates a new listener.
 
 * `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the Listener.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new Listener.
+    the listener.  Only administrative users can specify a tenant UUID
+    other than their own. Changing this creates a new listener.
 
 * `loadbalancer_id` - (Required) The load balancer on which to provision this
-    Listener. Changing this creates a new Listener.
+    listener. Changing this creates a new listener.
 
-* `name` - (Optional) Human-readable name for the Listener. Does not have
+* `name` - (Optional) Human-readable name for the listener. Does not have
     to be unique.
 
 * `default_pool_id` - (Optional) The ID of the default pool with which the
-    Listener is associated. Changing this creates a new Listener.
+    listener is associated. Changing this creates a new listener.
 
-* `description` - (Optional) Human-readable description for the Listener.
+* `description` - (Optional) Human-readable description for the listener.
 
 * `default_tls_container_ref` - (Optional) A reference to a Barbican Secrets
     container which stores TLS information. This is required if the protocol
@@ -168,14 +171,16 @@ The following arguments are supported:
   </tr>
 </table>
 
-* `admin_state_up` - (Optional) The administrative state of the Listener.
+* `admin_state_up` - (Optional) The administrative state of the listener.
     A valid value is true (UP) or false (DOWN).
+
+* `tags` - (Optional) The key/value pairs to associate with the listener.
 
 ## Attributes Reference
 
 The following attributes are exported:
 
-* `id` - The unique ID for the Listener.
+* `id` - The unique ID for the listener.
 * `protocol` - See Argument Reference above.
 * `protocol_port` - See Argument Reference above.
 * `tenant_id` - See Argument Reference above.
@@ -187,3 +192,4 @@ The following attributes are exported:
 * `sni_container_refs` - See Argument Reference above.
 * `tls_ciphers_policy` - See Argument Reference above.
 * `admin_state_up` - See Argument Reference above.
+* `tags` - See Argument Reference above.
