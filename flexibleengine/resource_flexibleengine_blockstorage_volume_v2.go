@@ -12,6 +12,7 @@ import (
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/blockstorage/extensions/volumeactions"
 	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/volumeattach"
 )
 
@@ -45,12 +46,10 @@ func resourceBlockStorageVolumeV2() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: false,
 			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: false,
 			},
 			"availability_zone": {
 				Type:     schema.TypeString,
@@ -61,9 +60,9 @@ func resourceBlockStorageVolumeV2() *schema.Resource {
 			"metadata": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				ForceNew: false,
 				Computed: true,
 			},
+			"tags": tagsSchema(),
 			"snapshot_id": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -191,6 +190,15 @@ func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}
 	// Store the ID now
 	d.SetId(v.ID)
 
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(blockStorageClient, "os-vendor-volumes", v.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of volume %s: %s", v.ID, tagErr)
+		}
+	}
+
 	return resourceBlockStorageVolumeV2Read(d, meta)
 }
 
@@ -237,6 +245,14 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 	}
 	d.Set("attachment", attachments)
 	d.Set("multiattach", v.Multiattach)
+
+	// fetch tags
+	if resourceTags, err := tags.Get(blockStorageClient, "os-vendor-volumes", d.Id()).Extract(); err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching tags of volume failed: %s", err)
+	}
 
 	return nil
 }
@@ -286,6 +302,14 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 	_, err = volumes.Update(blockStorageClient, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine volume: %s", err)
+	}
+
+	// update tags
+	if d.HasChange("tags") {
+		tagErr := UpdateResourceTags(blockStorageClient, d, "os-vendor-volumes", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of volume:%s, err:%s", d.Id(), tagErr)
+		}
 	}
 
 	return resourceBlockStorageVolumeV2Read(d, meta)

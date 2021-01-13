@@ -13,6 +13,7 @@ import (
 
 func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 	var volume volumes.Volume
+	resourceName := "flexibleengine_blockstorage_volume_v2.volume_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,26 +23,32 @@ func TestAccBlockStorageV2Volume_basic(t *testing.T) {
 			{
 				Config: testAccBlockStorageV2Volume_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
-					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_blockstorage_volume_v2.volume_1", "multiattach", "true"),
+					testAccCheckBlockStorageV2VolumeExists(resourceName, &volume),
+					resource.TestCheckResourceAttr(resourceName, "name", "volume_1"),
+					resource.TestCheckResourceAttr(resourceName, "size", "10"),
+					resource.TestCheckResourceAttr(resourceName, "description", "first test volume"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
 			},
 			{
 				Config: testAccBlockStorageV2Volume_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
-					testAccCheckBlockStorageV2VolumeMetadata(&volume, "foo", "bar"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_blockstorage_volume_v2.volume_1", "name", "volume_1-updated"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_blockstorage_volume_v2.volume_1", "size", "2"),
+					testAccCheckBlockStorageV2VolumeExists(resourceName, &volume),
+					resource.TestCheckResourceAttr(resourceName, "name", "volume_1-updated"),
+					resource.TestCheckResourceAttr(resourceName, "size", "20"),
+					resource.TestCheckResourceAttr(resourceName, "description", "first test volume updated"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"cascade",
+				},
 			},
 		},
 	})
@@ -182,49 +189,29 @@ func testAccCheckBlockStorageV2VolumeDoesNotExist(t *testing.T, n string, volume
 	}
 }
 
-func testAccCheckBlockStorageV2VolumeMetadata(
-	volume *volumes.Volume, k string, v string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		if volume.Metadata == nil {
-			return fmt.Errorf("No metadata")
-		}
-
-		for key, value := range volume.Metadata {
-			if k != key {
-				continue
-			}
-
-			if v == value {
-				return nil
-			}
-
-			return fmt.Errorf("Bad value for %s: %s", k, value)
-		}
-
-		return fmt.Errorf("Metadata not found: %s", k)
-	}
-}
-
 const testAccBlockStorageV2Volume_basic = `
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
+  name        = "volume_1"
   description = "first test volume"
-  metadata = {
+  size        = 10
+
+  tags = {
+    key = "value"
     foo = "bar"
   }
-  size = 1
-  multiattach = true
 }
 `
 
 const testAccBlockStorageV2Volume_update = `
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1-updated"
-  description = "first test volume"
-  metadata = {
-    foo = "bar"
+  name        = "volume_1-updated"
+  description = "first test volume updated"
+  size        = 20
+
+  tags = {
+    owner = "terraform"
+    foo   = "bar"
   }
-  size = 2
 }
 `
 
