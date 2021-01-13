@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
-	var resourceMap string = "flexibleengine_rds_read_replica_v3.replica_instance"
+	var resourceName string = "flexibleengine_rds_read_replica_v3.replica_instance"
 	var replica instances.RdsInstanceResponse
 
 	resource.Test(t, resource.TestCase{
@@ -22,14 +22,21 @@ func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
 			{
 				Config: testAccRdsReplicaInstanceV3_basic(acctest.RandString(10)),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRdsReplicaInstanceV3Exists(resourceMap, &replica),
-					resource.TestCheckResourceAttr(resourceMap, "status", "ACTIVE"),
-					resource.TestCheckResourceAttr(resourceMap, "type", "Replica"),
-					resource.TestCheckResourceAttr(resourceMap, "volume.0.type", "ULTRAHIGH"),
-					resource.TestCheckResourceAttr(resourceMap, "volume.0.size", "100"),
+					testAccCheckRdsReplicaInstanceV3Exists(resourceName, &replica),
+					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
+					resource.TestCheckResourceAttr(resourceName, "type", "Replica"),
+					resource.TestCheckResourceAttr(resourceName, "volume.0.type", "ULTRAHIGH"),
+					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
 					// port of read replica is not same with port of rds instance
-					//resource.TestCheckResourceAttr(resourceMap, "db.0.port", "8635"),
+					//resource.TestCheckResourceAttr(resourceName, "db.0.port", "8635"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.func", "readonly"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -94,23 +101,23 @@ func testAccCheckRdsReplicaInstanceV3Exists(n string, instance *instances.RdsIns
 func testAccRdsReplicaInstanceV3_basic(val string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "acctest_sg"
+  name        = "sg-acc-%s"
   description = "security group for acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance" {
-  name = "rds_instance_%s"
-  flavor = "rds.pg.c2.large"
+  name              = "rds_instance_%s"
+  flavor            = "rds.pg.c2.large"
   availability_zone = ["%s"]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id = "%s"
-  subnet_id = "%s"
+  vpc_id            = "%s"
+  subnet_id         = "%s"
 
   db {
     password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5.5"
-    port = "8635"
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
   }
   volume {
     type = "ULTRAHIGH"
@@ -118,20 +125,28 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   }
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = 1
+    keep_days  = 1
+  }
+  tags = {
+    key  = "value"
+    func = "readwrite"
   }
 }
 
 resource "flexibleengine_rds_read_replica_v3" "replica_instance" {
-  name = "replica_instance_%s"
-  flavor = "rds.pg.c2.large.rr"
-  replica_of_id = flexibleengine_rds_instance_v3.instance.id
+  name              = "replica_instance_%s"
+  flavor            = "rds.pg.c2.large.rr"
+  replica_of_id     = flexibleengine_rds_instance_v3.instance.id
   availability_zone = "%s"
 
   volume {
     type = "ULTRAHIGH"
   }
+  tags = {
+    key  = "value"
+    func = "readonly"
+  }
 }
 
-	`, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID, val, OS_AVAILABILITY_ZONE)
+	`, val, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID, val, OS_AVAILABILITY_ZONE)
 }

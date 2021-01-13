@@ -3,12 +3,12 @@ layout: "flexibleengine"
 page_title: "FlexibleEngine: flexibleengine_rds_instance_v3"
 sidebar_current: "docs-flexibleengine-resource-rds-instance-v3"
 description: |-
-  instance management
+  RDS instance management
 ---
 
 # flexibleengine\_rds\_instance\_v3
 
-instance management
+RDS instance management
 
 ## Example Usage
 
@@ -16,30 +16,31 @@ instance management
 
 ```hcl
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "terraform_test_security_group"
+  name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance" {
-  availability_zone = ["{{ availability_zone }}"]
+  name              = "terraform_test_rds_instance"
+  flavor            = "rds.pg.s1.medium"
+  availability_zone = [var.primary_az]
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
+
   db {
-    password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5"
-    port = "8635"
+    password = var.db_password
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
   }
-  name = "terraform_test_rds_instance"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
-  subnet_id = "{{ subnet_id }}"
-  vpc_id = "{{ vpc_id }}"
   volume {
     type = "COMMON"
     size = 100
   }
-  flavor = "rds.pg.s1.medium"
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = 1
+    keep_days  = 1
   }
 }
 ```
@@ -48,31 +49,32 @@ resource "flexibleengine_rds_instance_v3" "instance" {
 
 ```hcl
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "terraform_test_security_group"
+  name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance" {
-  availability_zone = ["{{ availability_zone_1 }}", "{{ availability_zone_2 }}"]
+  name                = "terraform_test_rds_instance"
+  flavor              = "rds.pg.s1.medium.ha"
+  ha_replication_mode = "async"
+  availability_zone   = [var.primary_az, var.standby_az]
+  security_group_id   = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id              = var.vpc_id
+  subnet_id           = var.subnet_id
+
   db {
-    password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5"
-    port = "8635"
+    password = var.db_password
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
   }
-  name = "terraform_test_rds_instance"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
-  subnet_id = "{{ subnet_id }}"
-  vpc_id = "{{ vpc_id }}" 
   volume {
     type = "COMMON"
     size = 100
   }
-  flavor = "rds.pg.s1.medium.ha"
-  ha_replication_mode = "async"
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = 1
+    keep_days  = 1
   }
 }
 ```
@@ -87,31 +89,32 @@ resource "flexibleengine_kms_key_v1" "key" {
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name = "terraform_test_security_group"
+  name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance" {
-  availability_zone = ["{{ availability_zone }}"]
+  name              = "terraform_test_rds_instance"
+  flavor            = "rds.pg.s1.medium"
+  availability_zone = [var.primary_az]
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
+
   db {
-    password = "Huangwei!120521"
-    type = "PostgreSQL"
-    version = "9.5"
-    port = "8635"
+    password = var.db_password
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
   }
-  name = "terraform_test_rds_instance"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
-  subnet_id = "{{ subnet_id }}"
-  vpc_id = "{{ vpc_id }}"
   volume {
-    disk_encryption_id = "${flexibleengine_kms_key_v1.key.id}"
-    type = "COMMON"
-    size = 100
+    disk_encryption_id = flexibleengine_kms_key_v1.key.id
+    type               = "COMMON"
+    size               = 100
   }
-  flavor = "rds.pg.s1.medium"
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = 1
+    keep_days  = 1
   }
 }
 ```
@@ -145,6 +148,10 @@ The following arguments are supported:
   Specifies the security group which the RDS DB instance belongs to.
   Changing this parameter will create a new resource.
 
+* `vpc_id` -
+  (Required)
+  Specifies the VPC ID. Changing this parameter will create a new resource.
+
 * `subnet_id` -
   (Required)
   Specifies the subnet id. Changing this parameter will create a new resource.
@@ -152,10 +159,6 @@ The following arguments are supported:
 * `volume` -
   (Required)
   Specifies the volume information. Structure is documented below. Changing this parameter will create a new resource.
-
-* `vpc_id` -
-  (Required)
-  Specifies the VPC ID. Changing this parameter will create a new resource.
 
 * `backup_strategy` -
   (Optional)
@@ -174,6 +177,9 @@ The following arguments are supported:
   (Optional)
   Specifies the parameter group ID. Changing this parameter will create a new resource.
 
+* `tags` - (Optional) A mapping of tags to assign to the RDS instance.
+  Each tag is represented by one key-value pair.
+
 The `db` block supports:
 
 * `password` -
@@ -184,18 +190,6 @@ The `db` block supports:
   characters: ~!@#%^*-_=+? You are advised to enter a strong
   password to improve security, preventing security risks such as
   brute force cracking.  Changing this parameter will create a new resource.
-
-* `port` -
-  (Optional)
-  Specifies the database port information. The MySQL database port
-  ranges from 1024 to 65535 (excluding 12017 and 33071, which are
-  occupied by the RDS system and cannot be used). The PostgreSQL
-  database port ranges from 2100 to 9500. The Microsoft SQL Server
-  database port can be 1433 or ranges from 2100 to 9500, excluding
-  5355 and 5985. If this parameter is not set, the default value is
-  as follows: For MySQL, the default value is 3306. For PostgreSQL,
-  the default value is 5432. For Microsoft SQL Server, the default
-  value is 1433.  Changing this parameter will create a new resource.
 
 * `type` -
   (Required)
@@ -208,6 +202,18 @@ The `db` block supports:
   PostgreSQL 9.5, 9.6, 10 and 11, example values: "9.5", "9.6", "10", "11". Microsoft SQL Server
   databases support 2014 SE and 2014 EE, example values: "2014_SE", "2014_EE".
   Changing this parameter will create a new resource.
+
+* `port` -
+  (Optional)
+  Specifies the database port information. The MySQL database port
+  ranges from 1024 to 65535 (excluding 12017 and 33071, which are
+  occupied by the RDS system and cannot be used). The PostgreSQL
+  database port ranges from 2100 to 9500. The Microsoft SQL Server
+  database port can be 1433 or ranges from 2100 to 9500, excluding
+  5355 and 5985. If this parameter is not set, the default value is
+  as follows: For MySQL, the default value is 3306. For PostgreSQL,
+  the default value is 5432. For Microsoft SQL Server, the default
+  value is 1433.  Changing this parameter will create a new resource.
 
 The `volume` block supports:
 
@@ -249,18 +255,18 @@ The `backup_strategy` block supports:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `created` -
-  Indicates the creation time.
+* `id` - Specifies a resource ID in UUID format.
 
-* `nodes` -
-  Indicates the instance nodes information. Structure is documented below.
+* `status` - Indicates the DB instance status.
 
-* `private_ips` -
-  Indicates the private IP address list. It is a blank string until an
-  ECS is created.
+* `created` - Indicates the creation time.
 
-* `public_ips` -
-  Indicates the public IP address list.
+* `nodes` - Indicates the instance nodes information. Structure is documented below.
+
+* `private_ips` - Indicates the private IP address list.
+  It is a blank string until an ECS is created.
+
+* `public_ips` - Indicates the public IP address list.
 
 * `db` - See Argument Reference above. The `db` block also contains:
 
@@ -268,20 +274,16 @@ In addition to the arguments listed above, the following computed attributes are
 
 The `nodes` block contains:
 
-* `availability_zone` -
-  Indicates the AZ.
+* `availability_zone` - Indicates the AZ.
 
-* `id` -
-  Indicates the node ID.
+* `id` - Indicates the node ID.
 
-* `name` -
-  Indicates the node name.
+* `name` - Indicates the node name.
 
-* `role` -
-  Indicates the node type. The value can be master or slave, indicating the primary node or standby node respectively.
+* `role` - Indicates the node type. The value can be master or slave,
+  indicating the primary node or standby node respectively.
 
-* `status` -
-  Indicates the node status.
+* `status` - Indicates the node status.
 
 ## Timeouts
 

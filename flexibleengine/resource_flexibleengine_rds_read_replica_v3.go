@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v3/instances"
 )
 
@@ -15,6 +16,7 @@ func resourceReplicaRdsInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceReplicaInstanceCreate,
 		Read:   resourceReplicaInstanceRead,
+		Update: resourceReplicaInstanceUpdate,
 		Delete: resourceReplicaInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -148,6 +150,8 @@ func resourceReplicaRdsInstance() *schema.Resource {
 					},
 				},
 			},
+
+			"tags": tagsSchema(),
 		},
 	}
 }
@@ -274,6 +278,16 @@ func resourceReplicaInstanceCreate(d *schema.ResourceData, meta interface{}) err
 			instance.Id, err)
 	}
 
+	// set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		tagList := expandResourceTags(tagRaw)
+		err := tags.Create(client, "instances", instance.Id, tagList).ExtractErr()
+		if err != nil {
+			return fmt.Errorf("Error setting tags of Rds read replica instance %s: %s", instance.Id, err)
+		}
+	}
+
 	return resourceReplicaInstanceRead(d, meta)
 }
 
@@ -309,6 +323,19 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 	d.Set("type", instance.Type)
 	d.Set("status", instance.Status)
 
+	if primaryInstanceID, err := readPrimaryInstanceID(instance); err == nil {
+		d.Set("replica_of_id", primaryInstanceID)
+	} else {
+		log.Printf("[WARN] %s", err)
+	}
+
+	// set tags
+	tagsMap := make(map[string]interface{})
+	for _, tag := range instance.Tags {
+		tagsMap[tag.Key] = tag.Value
+	}
+	d.Set("tags", tagsMap)
+
 	// save volume
 	volumeList := make([]map[string]interface{}, 0, 1)
 	volume := map[string]interface{}{
@@ -337,6 +364,24 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	return nil
+}
+
+func resourceReplicaInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.rdsV3Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
+	}
+
+	// update tags
+	if d.HasChange("tags") {
+		tagErr := UpdateResourceTags(client, d, "instances", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of RDS read replica instance: %s, err: %s", d.Id(), tagErr)
+		}
+	}
+
+	return resourceReplicaInstanceRead(d, meta)
 }
 
 func resourceReplicaInstanceDelete(d *schema.ResourceData, meta interface{}) error {
@@ -371,4 +416,14 @@ func resourceReplicaInstanceDelete(d *schema.ResourceData, meta interface{}) err
 
 	log.Printf("[DEBUG] Successfully deleted rds instance %s", id)
 	return nil
+}
+
+func readPrimaryInstanceID(resp *instances.RdsInstanceResponse) (string, error) {
+	relatedInst := resp.RelatedInstance
+	for _, relate := range relatedInst {
+		if relate.Type == "replica_of" {
+			return relate.Id, nil
+		}
+	}
+	return "", fmt.Errorf("Error getting primary instance id for replica %s", resp.Id)
 }
