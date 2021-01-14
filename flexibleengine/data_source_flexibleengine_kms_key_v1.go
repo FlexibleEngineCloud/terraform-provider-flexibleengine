@@ -171,12 +171,11 @@ func dataSourceKmsKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("key_alias", key.KeyAlias)
 	d.Set("realm", key.Realm)
 	d.Set("key_description", key.KeyDescription)
-	d.Set("creation_date", key.CreationDate)
-	d.Set("scheduled_deletion_date", key.ScheduledDeletionDate)
 	d.Set("key_state", key.KeyState)
 	d.Set("default_key_flag", key.DefaultKeyFlag)
-	d.Set("expiration_time", key.ExpirationTime)
 	d.Set("origin", key.Origin)
+	d.Set("creation_date", key.CreationDate)
+	d.Set("scheduled_deletion_date", key.ScheduledDeletionDate)
 
 	return nil
 }

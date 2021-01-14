@@ -19,14 +19,14 @@ func dataSourceKmsDataKeyV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"encryption_context": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
 			"datakey_length": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
+			},
+			"encryption_context": {
+				Type:     schema.TypeString,
+				Optional: true,
 				ForceNew: true,
 			},
 			"plain_text": {

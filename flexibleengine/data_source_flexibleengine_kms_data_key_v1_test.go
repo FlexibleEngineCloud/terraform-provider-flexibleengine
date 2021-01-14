@@ -39,8 +39,9 @@ resource "flexibleengine_kms_key_v1" "key1" {
 
 var testAccKmsDataKeyV1DataSource_basic = fmt.Sprintf(`
 %s
+
 data "flexibleengine_kms_data_key_v1" "kms_datakey1" {
-  key_id           =   "${flexibleengine_kms_key_v1.key1.id}"
-  datakey_length   =   "512"
+  key_id         = flexibleengine_kms_key_v1.key1.id
+  datakey_length = "512"
 }
 `, testAccKmsDataKeyV1DataSource_key)
