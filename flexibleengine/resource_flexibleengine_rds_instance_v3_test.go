@@ -39,6 +39,7 @@ func TestAccRdsInstanceV3_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRdsInstanceV3Exists(),
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("rds_acc_instance-%s", name)),
+					resource.TestCheckResourceAttr(resourceName, "time_zone", "UTC+01:00"),
 					resource.TestCheckResourceAttr(resourceName, "backup_strategy.0.keep_days", "1"),
 					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
@@ -133,6 +134,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   vpc_id            = "%s"
   subnet_id         = "%s"
+  time_zone         = "UTC+01:00"
 
   db {
     password = "Huangwei!120521"

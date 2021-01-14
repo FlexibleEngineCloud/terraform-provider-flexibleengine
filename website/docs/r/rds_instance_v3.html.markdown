@@ -177,6 +177,9 @@ The following arguments are supported:
   (Optional)
   Specifies the parameter group ID. Changing this parameter will create a new resource.
 
+* `time_zone` - (Optional) Specifies the UTC time zone. The value ranges from
+  UTC-12:00 to UTC+12:00 at the full hour, and defaults to *UTC*.
+
 * `tags` - (Optional) A mapping of tags to assign to the RDS instance.
   Each tag is represented by one key-value pair.
 
