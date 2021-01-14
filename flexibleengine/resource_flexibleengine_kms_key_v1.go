@@ -37,6 +37,16 @@ func resourceKmsKeyV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"pending_days": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "7",
+			},
+			"is_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
 			"realm": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -51,31 +61,13 @@ func resourceKmsKeyV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"scheduled_deletion_date": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"is_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
-			},
 			"default_key_flag": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"expiration_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"origin": {
 				Type:     schema.TypeString,
 				Computed: true,
-			},
-			"pending_days": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "7",
 			},
 		},
 	}
@@ -123,7 +115,7 @@ func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 	if !d.Get("is_enabled").(bool) {
 		key, err := keys.DisableKey(kmsKeyV1Client, v.KeyID).ExtractKeyInfo()
 		if err != nil {
-			return fmt.Errorf("Error disabling key: %s.", err)
+			return fmt.Errorf("Error disabling key: %s", err)
 		}
 
 		if key.KeyState != DisabledState {
@@ -163,11 +155,14 @@ func resourceKmsKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("realm", v.Realm)
 	d.Set("key_description", v.KeyDescription)
 	d.Set("creation_date", v.CreationDate)
-	d.Set("scheduled_deletion_date", v.ScheduledDeletionDate)
 	d.Set("is_enabled", v.KeyState == EnabledState)
 	d.Set("default_key_flag", v.DefaultKeyFlag)
-	d.Set("expiration_time", v.ExpirationTime)
 	d.Set("origin", v.Origin)
+
+	// for import, set pending_days default to 7
+	if _, ok := d.GetOk("pending_days"); !ok {
+		d.Set("pending_days", "7")
+	}
 
 	return nil
 }
@@ -186,7 +181,7 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 		}
 		_, err = keys.UpdateAlias(kmsKeyV1Client, updateAliasOpts).ExtractKeyInfo()
 		if err != nil {
-			return fmt.Errorf("Error updating FlexibleEngine key: %s", err)
+			return fmt.Errorf("Error updating FlexibleEngine key alias: %s", err)
 		}
 	}
 
@@ -197,20 +192,20 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 		}
 		_, err = keys.UpdateDes(kmsKeyV1Client, updateDesOpts).ExtractKeyInfo()
 		if err != nil {
-			return fmt.Errorf("Error updating FlexibleEngine key: %s", err)
+			return fmt.Errorf("Error updating FlexibleEngine key description: %s", err)
 		}
 	}
 
 	if d.HasChange("is_enabled") {
 		v, err := keys.Get(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
 		if err != nil {
-			return fmt.Errorf("DescribeKey got an error: %s.", err)
+			return fmt.Errorf("Error fetching FlexibleEngine key: %s", err)
 		}
 
 		if d.Get("is_enabled").(bool) && v.KeyState == DisabledState {
 			key, err := keys.EnableKey(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
 			if err != nil {
-				return fmt.Errorf("Error enabling key: %s.", err)
+				return fmt.Errorf("Error enabling key: %s", err)
 			}
 			if key.KeyState != EnabledState {
 				return fmt.Errorf("Error enabling key, the key state is: %s", key.KeyState)
@@ -220,7 +215,7 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 		if !d.Get("is_enabled").(bool) && v.KeyState == EnabledState {
 			key, err := keys.DisableKey(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
 			if err != nil {
-				return fmt.Errorf("Error disabling key: %s.", err)
+				return fmt.Errorf("Error disabling key: %s", err)
 			}
 			if key.KeyState != DisabledState {
 				return fmt.Errorf("Error disabling key, the key state is: %s", key.KeyState)
