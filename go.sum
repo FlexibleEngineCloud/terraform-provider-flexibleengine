@@ -121,14 +121,8 @@ github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKe
 github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d h1:kJCB4vdITiW1eC1vq2e6IsrXKrZit1bv/TDYFGMp4BQ=
 github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
-github.com/huaweicloud/golangsdk v0.0.0-20201222074916-da363b3d1be2 h1:Fx4aqNr2zuzMFK9WsuGjGUDgF3aF+djVf5wuzr3v25s=
-github.com/huaweicloud/golangsdk v0.0.0-20201222074916-da363b3d1be2/go.mod h1:WQBcHRNX9shz3928lWEvstQJtAtYI7ks6XlgtRT9Tcw=
-github.com/huaweicloud/golangsdk v0.0.0-20210105091610-2bcf49579b5d h1:MfYVRow1DKVV+UOalnqdkHmK/9JeS8o3PodH1VEbncQ=
-github.com/huaweicloud/golangsdk v0.0.0-20210105091610-2bcf49579b5d/go.mod h1:WQBcHRNX9shz3928lWEvstQJtAtYI7ks6XlgtRT9Tcw=
-github.com/huaweicloud/golangsdk v0.0.0-20210107071541-9c863834030e h1:Tu2c737YvXBuKejxgXMOlngYaa5uTM+c4cIRt6Er1hI=
-github.com/huaweicloud/golangsdk v0.0.0-20210107071541-9c863834030e/go.mod h1:WQBcHRNX9shz3928lWEvstQJtAtYI7ks6XlgtRT9Tcw=
-github.com/huaweicloud/golangsdk v0.0.0-20210112080918-53b7963e5a05 h1:dJ53GZpNz8qZMHoTC6RT5zfJYK3tCRoF3fBcwT9K+5M=
-github.com/huaweicloud/golangsdk v0.0.0-20210112080918-53b7963e5a05/go.mod h1:WQBcHRNX9shz3928lWEvstQJtAtYI7ks6XlgtRT9Tcw=
+github.com/huaweicloud/golangsdk v0.0.0-20210114023537-fe395bc023d0 h1:xwFz9Kv4jJynCL5ovksg/rlPHXYwjFY5MBL4W/7yyzg=
+github.com/huaweicloud/golangsdk v0.0.0-20210114023537-fe395bc023d0/go.mod h1:WQBcHRNX9shz3928lWEvstQJtAtYI7ks6XlgtRT9Tcw=
 github.com/jen20/awspolicyequivalence v0.0.0-20170831201602-3d48364a137a h1:FyS/ubzBR5xJlnJGRTwe7GUHpJOR4ukYK3y+LFNffuA=
 github.com/jen20/awspolicyequivalence v0.0.0-20170831201602-3d48364a137a/go.mod h1:uoIMjNxUfXi48Ci40IXkPRbghZ1vbti6v9LCbNqRgHY=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
