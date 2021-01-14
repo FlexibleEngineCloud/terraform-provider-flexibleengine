@@ -14,6 +14,7 @@ func TestAccKmsKeyV1_basic(t *testing.T) {
 	var key keys.Key
 	var keyAlias = fmt.Sprintf("kms_%s", acctest.RandString(5))
 	var keyAliasUpdate = fmt.Sprintf("kms_updated_%s", acctest.RandString(5))
+	resourceName := "flexibleengine_kms_key_v1.key_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,20 +24,25 @@ func TestAccKmsKeyV1_basic(t *testing.T) {
 			{
 				Config: testAccKmsV1Key_basic(keyAlias),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsV1KeyExists("flexibleengine_kms_key_v1.key_2", &key),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_kms_key_v1.key_2", "key_alias", keyAlias),
+					testAccCheckKmsV1KeyExists(resourceName, &key),
+					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAlias),
 				),
 			},
 			{
 				Config: testAccKmsV1Key_update(keyAliasUpdate),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsV1KeyExists("flexibleengine_kms_key_v1.key_2", &key),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_kms_key_v1.key_2", "key_alias", keyAliasUpdate),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_kms_key_v1.key_2", "key_description", "key update description"),
+					testAccCheckKmsV1KeyExists(resourceName, &key),
+					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAliasUpdate),
+					resource.TestCheckResourceAttr(resourceName, "key_description", "key update description"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"pending_days",
+				},
 			},
 		},
 	})
@@ -96,6 +102,7 @@ func testAccCheckKmsV1KeyExists(n string, key *keys.Key) resource.TestCheckFunc 
 func TestAccKmsKey_isEnabled(t *testing.T) {
 	var key1, key2, key3 keys.Key
 	rName := acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "flexibleengine_kms_key_v1.bar"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -105,24 +112,24 @@ func TestAccKmsKey_isEnabled(t *testing.T) {
 			{
 				Config: testAccKmsKey_enabled(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsV1KeyExists("flexibleengine_kms_key_v1.bar", &key1),
-					resource.TestCheckResourceAttr("flexibleengine_kms_key_v1.bar", "is_enabled", "true"),
+					testAccCheckKmsV1KeyExists(resourceName, &key1),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
 					testAccCheckKmsKeyIsEnabled(&key1, true),
 				),
 			},
 			{
 				Config: testAccKmsKey_disabled(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsV1KeyExists("flexibleengine_kms_key_v1.bar", &key2),
-					resource.TestCheckResourceAttr("flexibleengine_kms_key_v1.bar", "is_enabled", "false"),
+					testAccCheckKmsV1KeyExists(resourceName, &key2),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
 					testAccCheckKmsKeyIsEnabled(&key2, false),
 				),
 			},
 			{
 				Config: testAccKmsKey_enabled(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsV1KeyExists("flexibleengine_kms_key_v1.bar", &key3),
-					resource.TestCheckResourceAttr("flexibleengine_kms_key_v1.bar", "is_enabled", "true"),
+					testAccCheckKmsV1KeyExists(resourceName, &key3),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
 					testAccCheckKmsKeyIsEnabled(&key3, true),
 				),
 			},
@@ -143,36 +150,36 @@ func testAccCheckKmsKeyIsEnabled(key *keys.Key, isEnabled bool) resource.TestChe
 
 func testAccKmsV1Key_basic(keyAlias string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_kms_key_v1" "key_2" {
-			key_alias = "%s"
-		}
-	`, keyAlias)
+resource "flexibleengine_kms_key_v1" "key_1" {
+  key_alias = "%s"
+}
+`, keyAlias)
 }
 
 func testAccKmsV1Key_update(keyAliasUpdate string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_kms_key_v1" "key_2" {
-           key_alias       = "%s"
-           key_description = "key update description"
-		}
-	`, keyAliasUpdate)
+resource "flexibleengine_kms_key_v1" "key_1" {
+  key_alias       = "%s"
+  key_description = "key update description"
+}
+`, keyAliasUpdate)
 }
 
 func testAccKmsKey_enabled(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_kms_key_v1" "bar" {
-    key_description = "Terraform acc test is_enabled %s"
-    pending_days    = "7"
-    key_alias       = "tf-acc-test-kms-key-%s"
+  key_alias       = "tf-acc-test-kms-key-%s"
+  key_description = "Terraform acc test is enabled %s"
+  pending_days    = "7"
 }`, rName, rName)
 }
 
 func testAccKmsKey_disabled(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_kms_key_v1" "bar" {
-    key_description = "Terraform acc test is_enabled %s"
-    pending_days    = "7"
-    key_alias       = "tf-acc-test-kms-key-%s"
-    is_enabled      = false
+  key_alias       = "tf-acc-test-kms-key-%s"
+  key_description = "Terraform acc test is disabled %s"
+  pending_days    = "7"
+  is_enabled      = false
 }`, rName, rName)
 }

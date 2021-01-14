@@ -56,9 +56,10 @@ resource "flexibleengine_kms_key_v1" "key1" {
 
 var testAccKmsKeyV1DataSource_basic = fmt.Sprintf(`
 %s
+
 data "flexibleengine_kms_key_v1" "key1" {
-  key_alias       = "${flexibleengine_kms_key_v1.key1.key_alias}"
-  key_id          = "${flexibleengine_kms_key_v1.key1.id}"
+  key_alias       = flexibleengine_kms_key_v1.key1.key_alias
+  key_id          = flexibleengine_kms_key_v1.key1.id
   key_description = "test description"
   key_state       = "2"
 }
