@@ -14,7 +14,6 @@ Manages a V2 volume resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  region      = "RegionOne"
   name        = "volume_1"
   description = "first test volume"
   size        = 3
@@ -72,6 +71,8 @@ The following arguments are supported:
 
 * `multiattach` - (Optional) Specifies whether the EVS disk is shareable.
 
+* `tags` - (Optional) The key/value pairs to associate with the volume.
+
 ## Attributes Reference
 
 The following attributes are exported:
@@ -87,6 +88,7 @@ The following attributes are exported:
 * `metadata` - See Argument Reference above.
 * `volume_type` - See Argument Reference above.
 * `multiattach` - See Argument Reference above.
+* `tags` - See Argument Reference above.
 * `attachment` - If a volume is attached to an instance, this attribute will
     display the Attachment ID, Instance ID, and the Device as the Instance
     sees it.
