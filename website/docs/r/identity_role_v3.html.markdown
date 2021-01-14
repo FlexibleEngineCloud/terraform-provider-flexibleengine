@@ -16,14 +16,32 @@ custom role management in FlexibleEngine
 
 ```hcl
 resource "flexibleengine_identity_role_v3" "role" {
-  name        = "custom_role"
-  description = "a custom role"
-  scope       = "domain"
-
-  policy {
-    effect = "Allow"
-    action = ["ecs:*:list*"]
-  }
+  name = "test"
+  description = "created by terraform"
+  type = "AX"
+    policy = <<EOF
+{
+  "Version": "1.1",
+  "Statement": [
+    {
+      "Action": [
+        "obs:bucket:GetBucketAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "obs:*:*:bucket:*"
+      ],
+      "Condition": {
+        "StringStartWith": {
+          "g:ProjectName": [
+            "eu-west-0"
+          ]
+        }
+      }
+    }
+  ]
+}
+EOF
 }
 ```
 
@@ -31,45 +49,13 @@ resource "flexibleengine_identity_role_v3" "role" {
 
 The following arguments are supported:
 
-* `name` -
-  (Required)
-  Specify the name of a role. The value cannot exceed 64 characters.
+* `name` - (Required, String) Name of the custom policy. 
 
-* `description` -
-  (Required)
-  Specify the description of a role. The value cannot exceed 256 characters.
+* `description` - (Required, String) Description of the custom policy.
 
-* `scope` -
-  (Required)
-  Specify the scope layer of a role. The value supports:
-  - domain - A role is displayed at the domain layer.
-  - project - A role is displayed at the project layer.
+* `type` - (Required, String) Display mode. Valid options are AX: Account level and XA: Project level.
 
-* `policy` -
-  (Required)
-  The policy field contains the `effect` and `action` elements.
-  Effect indicates whether the policy allows or denies access.
-  Action indicates authorization items. The number of policy
-  cannot exceed 8. Structure is documented below.
-
-The `policy` block supports:
-
-* `action` -
-  (Required)
-  Permission set, which specifies the operation permissions on
-  resources. The number of permission sets cannot exceed 100.
-  Format:  The value format is Service name:Resource type:Action,
-  for example, vpc:ports:create.  Service name: indicates the
-  product name, such as ecs, evs, or vpc. Only lowercase letters
-  are allowed.  Resource type and Action: The values are
-  case-insensitive, and the wildcard (*) are allowed. A wildcard
-  (*) can represent all or part of information about resource
-  types and actions for the specific service.
-
-* `effect` -
-  (Required)
-  The value can be Allow and Deny. If both Allow and Deny are
-  found in statements, the policy evaluation starts with Deny.
+* `policy` - (Required, String) Document of the custom policy.
 
 - - -
 
@@ -77,11 +63,11 @@ The `policy` block supports:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `catalog` -
-  Directory where a role locates
+* `id` - The role id.
 
-* `domain_id` -
-  ID of the domain to which a role belongs
+* `domain_id` - The account id.
+
+* `references` - The number of references.
 
 ## Import
 
