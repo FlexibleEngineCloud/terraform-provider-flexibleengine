@@ -54,7 +54,8 @@ In addition to all arguments above, the following attributes are exported:
     The block_device object structure is documented below.
 * `scheduler_hints` - The scheduler with hints on how the instance should be launched.
     The available hints are described below.
-* `tags` - The key/value pairs to associate with the instance.
+* `tags` - The tags of the instance in key/value format.
+* `metadata` - The metadata of the instance in key/value format.
 * `status` - The status of the instance.
 
 The `network` block supports:
@@ -70,6 +71,7 @@ The `block_device` block supports:
 * `uuid` - The volume id on that attachment.
 * `boot_index` - The volume boot index on that attachment.
 * `size` - The volume size on that attachment.
+* `type` - The volume type on that attachment.
 * `pci_address` - The volume pci address on that attachment.
 
 The `scheduler_hints` block supports:

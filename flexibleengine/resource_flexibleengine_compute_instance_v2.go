@@ -20,7 +20,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
 	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
 )
 
@@ -183,18 +182,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"access_ip_v4": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: false,
-			},
-			"access_ip_v6": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: false,
-			},
 			"block_device": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -332,6 +319,14 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"access_ip_v4": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"access_ip_v6": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"system_disk_id": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -355,6 +350,10 @@ func resourceComputeInstanceV2() *schema.Resource {
 						},
 						"size": {
 							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"type": {
+							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"pci_address": {
@@ -620,28 +619,15 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 
 	// Set volume attached
 	if len(server.VolumeAttached) > 0 {
-		instanceVolumes := make([]map[string]interface{}, len(server.VolumeAttached))
-		for i, b := range server.VolumeAttached {
-			va, err := block_devices.Get(ecsClient, d.Id(), b.ID).Extract()
-			if err != nil {
-				return err
-			}
-			log.Printf("[DEBUG] Retrieved block device %s: %#v", b.ID, va)
-			instanceVolumes[i] = map[string]interface{}{
-				"uuid":        b.ID,
-				"boot_index":  va.BootIndex,
-				"size":        va.Size,
-				"pci_address": va.PciAddress,
-			}
-
-			if va.BootIndex == 0 {
-				d.Set("system_disk_id", b.ID)
-			}
+		volumes, rootID, err := flattenInstanceVolumeAttached(d, config, server)
+		if err != nil {
+			return nil
 		}
-		d.Set("volume_attached", instanceVolumes)
+		d.Set("volume_attached", volumes)
+		d.Set("system_disk_id", rootID)
 	}
 
-	// set os:scheduler_hints
+	// set scheduler_hints
 	osHints := server.OsSchedulerHints
 	if len(osHints.Group) > 0 {
 		schedulerHints := make([]map[string]interface{}, len(osHints.Group))
@@ -655,14 +641,27 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 
 	// set all_metadata
 	if b, err := json.Marshal(server.Metadata); err == nil {
-		meta := make(map[string]interface{})
-		if err := json.Unmarshal(b, &meta); err == nil {
+		metaRaw := make(map[string]interface{})
+		if err := json.Unmarshal(b, &metaRaw); err == nil {
+			// omitempty
+			meta := make(map[string]interface{})
+			for key := range metaRaw {
+				if metaRaw[key].(string) != "" {
+					meta[key] = metaRaw[key]
+				}
+			}
 			log.Printf("[DEBUG] Retrieved compute instance Metadata: %s", meta)
 			d.Set("all_metadata", meta)
 		} else {
 			log.Printf("[WARN] failed to unmarshal Metadata: %s", err)
 		}
 	}
+
+	novaResp, err := servers.Get(computeClient, d.Id()).Extract()
+	if err != nil {
+		return CheckDeleted(d, err, "server")
+	}
+	d.Set("metadata", novaResp.Metadata)
 
 	ar, err := resourceECSAutoRecoveryV1Read(d, meta, d.Id())
 	if err != nil && !isResourceNotFound(err) {

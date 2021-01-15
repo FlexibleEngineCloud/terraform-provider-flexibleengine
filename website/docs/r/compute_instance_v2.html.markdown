@@ -300,8 +300,8 @@ The following arguments are supported:
 * `user_data` - (Optional) The user data to provide when launching the instance.
     Changing this creates a new server.
 
-* `metadata` - (Optional) Metadata key/value pairs to make available from
-    within the instance. Changing this updates the existing server metadata.
+* `metadata` - (Optional) The key/value pairs to associate with the instance.
+    Changing this updates the existing server metadata.
 
 * `config_drive` - (Optional) Whether to use the config_drive feature to
     configure the instance. Changing this creates a new server.
@@ -407,8 +407,7 @@ The following attributes are exported:
 
 * `region` - See Argument Reference above.
 * `name` - See Argument Reference above.
-* `access_ip_v4` - The first detected Fixed IPv4 address _or_ the
-    Floating IP.
+* `access_ip_v4` - The first detected Fixed IPv4 address _or_ the Floating IP.
 * `access_ip_v6` - The first detected Fixed IPv6 address.
 * `metadata` - See Argument Reference above.
 * `security_groups` - See Argument Reference above.
@@ -417,10 +416,8 @@ The following attributes are exported:
 * `network/uuid` - See Argument Reference above.
 * `network/name` - See Argument Reference above.
 * `network/port` - See Argument Reference above.
-* `network/fixed_ip_v4` - The Fixed IPv4 address of the Instance on that
-    network.
-* `network/fixed_ip_v6` - The Fixed IPv6 address of the Instance on that
-    network.
+* `network/fixed_ip_v4` - The Fixed IPv4 address of the Instance on that network.
+* `network/fixed_ip_v6` - The Fixed IPv6 address of the Instance on that network.
 * `network/mac` - The MAC address of the NIC on that network.
 * `all_metadata` - Contains all instance metadata, even metadata not set
     by Terraform.
@@ -437,6 +434,7 @@ The `volume_attached` block supports:
 * `uuid` - The volume id on that attachment.
 * `boot_index` - The volume boot index on that attachment.
 * `size` - The volume size on that attachment.
+* `type` - The volume type on that attachment.
 * `pci_address` - The volume pci address on that attachment.
 
 ## Import
@@ -445,12 +443,24 @@ Instances can be imported by their `id`. For example,
 ```
 terraform import flexibleengine_compute_instance_v2.my_instance b11b407c-e604-4e8d-8bc4-92398320b847
 ```
-Note that the imported state may not be identical to your resource definition, which
-could be because of a different network interface attachment order, missing ephemeral
-disk configuration, or some other reason. It is generally recommended running
+Note that the imported state may not be identical to your resource definition, due to some attrubutes
+missing from the API response, security or some other reason. The missing attributes include:
+`admin_pass`, `config_drive`, `user_data`, `block_device`, `scheduler_hints`, `stop_before_destroy`,
+`network/access_network` and arguments for pre-paid. It is generally recommended running
 `terraform plan` after importing an instance. You can then decide if changes should
 be applied to the instance, or the resource definition should be updated to align
-with the instance.
+with the instance. Also you can ignore changes as below.
+```
+resource "flexibleengine_compute_instance_v2" "my_instance" {
+    ...
+
+  lifecycle {
+    ignore_changes = [
+      user_data, block_device,
+    ]
+  }
+}
+```
 
 ## Notes
 

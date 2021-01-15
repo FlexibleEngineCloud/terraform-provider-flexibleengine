@@ -8,10 +8,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
 	bms "github.com/huaweicloud/golangsdk/openstack/bms/v2/servers"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
+	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
+	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/networks"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
@@ -289,4 +292,46 @@ func getInstanceNetworkInfo(
 
 	log.Printf("[DEBUG] getInstanceNetworkInfo: %#v", networkInfo)
 	return networkInfo, nil
+}
+
+func flattenInstanceVolumeAttached(
+	d *schema.ResourceData, meta interface{}, server *cloudservers.CloudServer) ([]map[string]interface{}, string, error) {
+
+	config := meta.(*Config)
+	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	if err != nil {
+		return nil, "", fmt.Errorf("Error creating FlexibleEngine client: %s", err)
+	}
+
+	var systemDiskID string = ""
+	bds := make([]map[string]interface{}, len(server.VolumeAttached))
+	for i, b := range server.VolumeAttached {
+		// retrieve volume `size` and `type`
+		volumeInfo, err := volumes.Get(blockStorageClient, b.ID).Extract()
+		if err != nil {
+			return nil, "", err
+		}
+		log.Printf("[DEBUG] Retrieved volume %s: %#v", b.ID, volumeInfo)
+
+		// retrieve volume `pci_address`
+		va, err := block_devices.Get(ecsClient, d.Id(), b.ID).Extract()
+		if err != nil {
+			return nil, "", err
+		}
+		log.Printf("[DEBUG] Retrieved block device %s: %#v", b.ID, va)
+
+		bds[i] = map[string]interface{}{
+			"uuid":        b.ID,
+			"size":        volumeInfo.Size,
+			"type":        volumeInfo.VolumeType,
+			"boot_index":  va.BootIndex,
+			"pci_address": va.PciAddress,
+		}
+
+		if va.BootIndex == 0 {
+			systemDiskID = b.ID
+		}
+	}
+	return bds, systemDiskID, nil
 }
