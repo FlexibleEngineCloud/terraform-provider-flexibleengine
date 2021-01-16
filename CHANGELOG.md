@@ -1,3 +1,42 @@
+## 1.19.0 (Unreleased)
+
+## 1.18.0 (January 16, 2020)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_vpcep_public_services` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
+* **New Resource:** `flexibleengine_vpcep_service` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
+* **New Resource:** `flexibleengine_vpcep_endpoint` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
+* **New Resource:** `flexibleengine_vpcep_approval` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
+* **New Resource:** `flexibleengine_dns_ptrrecord_v2` ([#441](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/441))
+
+ENHANCEMENTS:
+
+* `flexibleengine_compute_instance_v2`: Improve on compute instance to import more attributes ([#459](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/459))
+* `flexibleengine_networking_port_v2`: Support import fixed_ip block ([#435](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/435)) 
+* `flexibleengine_sfs_turbo`: Add encryption on SFS Turbo ([#443](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/433))
+* `flexibleengine_dns_recordset_v2`: Support CAA type ([#450](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/450))
+* `flexibleengine_rds_instance_v3`: Support time_zome ([#457](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/457))
+* `flexibleengine_identity_role_v3`: Support custom IAM policy ([#408](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/408))
+* **tags support:**
+  - `flexibleengine_as_group_v1` ([#453](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/453))
+  - `flexibleengine_blockstorage_volume_v2` ([#454](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/454))
+  - `flexibleengine_dns_zone_v2` ([#439](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/439))
+  - `flexibleengine_dns_recordset_v2` ([#440](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/440))
+  - `flexibleengine_lb_loadbalancer_v2` ([#453](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/453))
+  - `flexibleengine_lb_listener_v2` ([#453](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/453))
+  - `flexibleengine_rds_instance_v3` ([#449](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/449))
+  - `flexibleengine_rds_read_replica_v3` ([#449](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/449))
+  - `flexibleengine_vpc_v1` ([#448](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/448))
+  - `flexibleengine_vpc_subnet_v1` ([#448](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/448))
+
+BUG FIXES:
+
+* `flexibleengine_sfs_file_system_v2`: Fix output metadata is empty ([#421](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/421))
+* `flexibleengine_cce_node_pool_v3`: Enable to create node pool with 0 nodes ([#429](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/429))
+* `flexibleengine_kms_key_v1`: Fix docs issue ([#452](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/452))
+
+
 ## 1.17.0 (December 18, 2020)
 
 FEATURES:
