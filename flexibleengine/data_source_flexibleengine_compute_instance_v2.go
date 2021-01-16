@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
+	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
@@ -117,6 +117,10 @@ func dataSourceComputeInstance() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"type": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"pci_address": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -135,6 +139,11 @@ func dataSourceComputeInstance() *schema.Resource {
 						},
 					},
 				},
+			},
+			"metadata": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"tags": {
 				Type:     schema.TypeMap,
@@ -235,26 +244,13 @@ func dataSourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// Set volume attached
-	instanceVolumes := []map[string]interface{}{}
 	if len(server.VolumeAttached) > 0 {
-		for _, b := range server.VolumeAttached {
-			va, err := block_devices.Get(ecsClient, d.Id(), b.ID).Extract()
-			if err != nil {
-				return err
-			}
-			log.Printf("[DEBUG] Retrieved block device %s: %#v", d.Id(), va)
-			v := map[string]interface{}{
-				"uuid":        b.ID,
-				"boot_index":  va.BootIndex,
-				"size":        va.Size,
-				"pci_address": va.PciAddress,
-			}
-			instanceVolumes = append(instanceVolumes, v)
-			if va.BootIndex == 0 {
-				d.Set("system_disk_id", b.ID)
-			}
+		volumes, rootID, err := flattenInstanceVolumeAttached(d, config, &server)
+		if err != nil {
+			return nil
 		}
-		d.Set("block_device", instanceVolumes)
+		d.Set("block_device", volumes)
+		d.Set("system_disk_id", rootID)
 	}
 
 	// Set instance tags
@@ -264,6 +260,17 @@ func dataSourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) err
 		d.Set("tags", tagmap)
 	} else {
 		log.Printf("[WARN] Error fetching tags of ecs instance %s: %s", d.Id(), err)
+	}
+
+	// Set meta
+	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	if err == nil {
+		novaResp, err := servers.Get(computeClient, d.Id()).Extract()
+		if err == nil {
+			d.Set("metadata", novaResp.Metadata)
+		} else {
+			log.Printf("[WARN] Error fetching metadata of ecs instance %s: %s", d.Id(), err)
+		}
 	}
 
 	return nil

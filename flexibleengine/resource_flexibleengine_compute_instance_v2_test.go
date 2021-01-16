@@ -32,6 +32,14 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"stop_before_destroy",
+				},
+			},
 		},
 	})
 }
