@@ -5,6 +5,7 @@
 FEATURES:
 
 * **New Data Source:** `flexibleengine_vpcep_public_services` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
+* **New Data Source:** `flexibleengine_identity_custom_role_v3` ([#461](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/461))
 * **New Resource:** `flexibleengine_vpcep_service` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
 * **New Resource:** `flexibleengine_vpcep_endpoint` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
 * **New Resource:** `flexibleengine_vpcep_approval` ([#334](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/334))
