@@ -205,6 +205,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_sdrs_domain_v1":                     dataSourceSdrsDomainV1(),
 			"flexibleengine_identity_project_v3":                dataSourceIdentityProjectV3(),
 			"flexibleengine_identity_role_v3":                   dataSourceIdentityRoleV3(),
+			"flexibleengine_identity_custom_role_v3":            dataSourceIdentityCustomRoleV3(),
 			"flexibleengine_vpcep_public_services":              dataSourceVPCEPPublicServices(),
 		},
 
