@@ -58,10 +58,17 @@ func resourceComputeServerGroupV2Create(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
+	groupPolicies := resourceServerGroupPoliciesV2(d)
+	for _, p := range groupPolicies {
+		if p != "anti-affinity" {
+			return fmt.Errorf("Only the anti-affinity policy is supported")
+		}
+	}
+
 	createOpts := ServerGroupCreateOpts{
 		servergroups.CreateOpts{
 			Name:     d.Get("name").(string),
-			Policies: resourceServerGroupPoliciesV2(d),
+			Policies: groupPolicies,
 		},
 		MapValueSpecs(d),
 	}

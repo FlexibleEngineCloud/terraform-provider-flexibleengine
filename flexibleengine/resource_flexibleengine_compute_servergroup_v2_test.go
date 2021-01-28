@@ -13,6 +13,7 @@ import (
 
 func TestAccComputeV2ServerGroup_basic(t *testing.T) {
 	var sg servergroups.ServerGroup
+	resourceName := "flexibleengine_compute_servergroup_v2.sg_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,14 +23,21 @@ func TestAccComputeV2ServerGroup_basic(t *testing.T) {
 			{
 				Config: testAccComputeV2ServerGroup_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2ServerGroupExists("flexibleengine_compute_servergroup_v2.sg_1", &sg),
+					testAccCheckComputeV2ServerGroupExists(resourceName, &sg),
+					resource.TestCheckResourceAttr(resourceName, "policies.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "policies.0", "anti-affinity"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func TestAccComputeV2ServerGroup_affinity(t *testing.T) {
+func TestAccComputeV2ServerGroup_associate(t *testing.T) {
 	var instance servers.Server
 	var sg servergroups.ServerGroup
 
@@ -39,7 +47,7 @@ func TestAccComputeV2ServerGroup_affinity(t *testing.T) {
 		CheckDestroy: testAccCheckComputeV2ServerGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeV2ServerGroup_affinity,
+				Config: testAccComputeV2ServerGroup_associate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeV2ServerGroupExists("flexibleengine_compute_servergroup_v2.sg_1", &sg),
 					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
@@ -119,25 +127,26 @@ func testAccCheckComputeV2InstanceInServerGroup(instance *servers.Server, sg *se
 
 const testAccComputeV2ServerGroup_basic = `
 resource "flexibleengine_compute_servergroup_v2" "sg_1" {
-  name = "sg_1"
-  policies = ["affinity"]
+  name     = "sg_1"
+  policies = ["anti-affinity"]
 }
 `
 
-var testAccComputeV2ServerGroup_affinity = fmt.Sprintf(`
+var testAccComputeV2ServerGroup_associate = fmt.Sprintf(`
 resource "flexibleengine_compute_servergroup_v2" "sg_1" {
-  name = "sg_1"
-  policies = ["affinity"]
+  name     = "sg_1"
+  policies = ["anti-affinity"]
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
+  name            = "instance_1"
   security_groups = ["default"]
+
   network {
     uuid = "%s"
   }
   scheduler_hints {
-    group = "${flexibleengine_compute_servergroup_v2.sg_1.id}"
+    group = flexibleengine_compute_servergroup_v2.sg_1.id
   }
 }
 `, OS_NETWORK_ID)
