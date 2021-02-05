@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -119,6 +120,23 @@ func resourceCCEClusterV3() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validateIP,
 			},
+			"masters": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+				MaxItems: 3,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"availability_zone": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Computed: true,
+						},
+					},
+				},
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -208,6 +226,31 @@ func resourceClusterExtendParamV3(d *schema.ResourceData) map[string]string {
 	return m
 }
 
+func resourceClusterMastersV3(d *schema.ResourceData) ([]clusters.MasterSpec, error) {
+	if v, ok := d.GetOk("masters"); ok {
+		flavorId := d.Get("flavor_id").(string)
+		mastersRaw := v.([]interface{})
+		if strings.Contains(flavorId, "s1") && len(mastersRaw) != 1 {
+			return nil, fmt.Errorf("Error creating HuaweiCloud Cluster: "+
+				"single-master cluster need 1 az for master node, but got %d", len(mastersRaw))
+		}
+		if strings.Contains(flavorId, "s2") && len(mastersRaw) != 3 {
+			return nil, fmt.Errorf("Error creating HuaweiCloud Cluster: "+
+				"high-availability cluster need 3 az for master nodes, but got %d", len(mastersRaw))
+		}
+		masters := make([]clusters.MasterSpec, len(mastersRaw))
+		for i, raw := range mastersRaw {
+			rawMap := raw.(map[string]interface{})
+			masters[i] = clusters.MasterSpec{
+				MasterAZ: rawMap["availability_zone"].(string),
+			}
+		}
+		return masters, nil
+	}
+
+	return nil, nil
+}
+
 func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	cceClient, err := config.cceV3Client(GetRegion(d, config))
@@ -235,6 +278,12 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 			AuthenticatingProxy: make(map[string]string),
 		}
 	}
+
+	masters, err := resourceClusterMastersV3(d)
+	if err != nil {
+		return err
+	}
+	spec.Masters = masters
 
 	createOpts := clusters.CreateOpts{
 		Kind:       "Cluster",
@@ -332,6 +381,15 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 		userList = append(userList, userCert)
 	}
 	d.Set("certificate_users", userList)
+
+	// Set masters
+	var masterList []map[string]interface{}
+	for _, masterObj := range n.Spec.Masters {
+		master := make(map[string]interface{})
+		master["availability_zone"] = masterObj.MasterAZ
+		masterList = append(masterList, master)
+	}
+	d.Set("masters", masterList)
 
 	return nil
 }
