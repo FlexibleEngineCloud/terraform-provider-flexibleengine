@@ -129,6 +129,9 @@ The following arguments are supported:
 
 * `description` - (Optional) Human-readable description for the listener.
 
+* `http2_enable` - (Optional, Bool) Specifies whether to use HTTP/2. The default value is false.
+    This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
+
 * `default_tls_container_ref` - (Optional) A reference to a Barbican Secrets
     container which stores TLS information. This is required if the protocol
     is `TERMINATED_HTTPS`. See
@@ -187,7 +190,7 @@ The following attributes are exported:
 * `name` - See Argument Reference above.
 * `default_port_id` - See Argument Reference above.
 * `description` - See Argument Reference above.
-* `connection_limit` - See Argument Reference above.
+* `http2_enable` - See Argument Reference above.
 * `default_tls_container_ref` - See Argument Reference above.
 * `sni_container_refs` - See Argument Reference above.
 * `tls_ciphers_policy` - See Argument Reference above.
