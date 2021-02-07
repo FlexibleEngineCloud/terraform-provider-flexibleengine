@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -43,7 +44,7 @@ func resourceDcsInstanceV1() *schema.Resource {
 				ForceNew: true,
 			},
 			"capacity": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeFloat,
 				Required: true,
 				ForceNew: true,
 			},
@@ -253,7 +254,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		Description:      d.Get("description").(string),
 		Engine:           d.Get("engine").(string),
 		EngineVersion:    d.Get("engine_version").(string),
-		Capacity:         d.Get("capacity").(int),
+		Capacity:         d.Get("capacity").(float64),
 		NoPasswordAccess: no_password_access,
 		Password:         d.Get("password").(string),
 		AccessUser:       d.Get("access_user").(string),
@@ -330,7 +331,6 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("name", v.Name)
 	d.Set("engine", v.Engine)
 	d.Set("engine_version", v.EngineVersion)
-	d.Set("capacity", v.Capacity)
 	d.Set("used_memory", v.UsedMemory)
 	d.Set("max_memory", v.MaxMemory)
 	d.Set("port", v.Port)
@@ -353,6 +353,15 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
 	d.Set("ip", v.IP)
+
+	// set capacity by Capacity and CapacityMinor
+	var capacity float64 = float64(v.Capacity)
+	if v.CapacityMinor != "" {
+		if minor, err := strconv.ParseFloat(v.CapacityMinor, 64); err == nil {
+			capacity += minor
+		}
+	}
+	d.Set("capacity", capacity)
 
 	return nil
 }
