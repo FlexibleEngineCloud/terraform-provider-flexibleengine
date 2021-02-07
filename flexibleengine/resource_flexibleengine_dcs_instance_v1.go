@@ -63,14 +63,14 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"security_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
 			"network_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+			},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"available_zones": {
 				Type:     schema.TypeList,
@@ -175,6 +175,20 @@ func resourceDcsInstanceV1() *schema.Resource {
 	}
 }
 
+func resourceDcsInstancesCheck(d *schema.ResourceData) error {
+	engineVersion := d.Get("engine_version").(string)
+	secGroupID := d.Get("security_group_id").(string)
+
+	// check for Memcached and Redis 3.0
+	if engineVersion == "3.0" {
+		if secGroupID == "" {
+			return fmt.Errorf("security_group_id is mandatory for this DCS instance")
+		}
+	}
+
+	return nil
+}
+
 func getInstanceBackupPolicy(d *schema.ResourceData) *instances.InstanceBackupPolicy {
 	backupAts := d.Get("backup_at").([]interface{})
 	ats := make([]int, len(backupAts))
@@ -223,6 +237,10 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
+	}
+
+	if err := resourceDcsInstancesCheck(d); err != nil {
+		return err
 	}
 
 	no_password_access := "true"
@@ -303,7 +321,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	}
 	v, err := instances.Get(dcsV1Client, d.Id()).Extract()
 	if err != nil {
-		return err
+		return CheckDeleted(d, err, "DCS instance")
 	}
 
 	log.Printf("[DEBUG] Dcs instance %s: %+v", d.Id(), v)
@@ -345,6 +363,11 @@ func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) erro
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine dcs instance client: %s", err)
 	}
+
+	if err := resourceDcsInstancesCheck(d); err != nil {
+		return err
+	}
+
 	var updateOpts instances.UpdateOpts
 	if d.HasChange("name") {
 		updateOpts.Name = d.Get("name").(string)
