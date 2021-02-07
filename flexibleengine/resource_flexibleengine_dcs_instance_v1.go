@@ -67,18 +67,10 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"subnet_id": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"network_id"},
-				Deprecated:    "use network_id instead",
-			},
 			"network_id": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"subnet_id"},
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"available_zones": {
 				Type:     schema.TypeList,
@@ -248,21 +240,11 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		Password:         d.Get("password").(string),
 		AccessUser:       d.Get("access_user").(string),
 		VPCID:            d.Get("vpc_id").(string),
+		SubnetID:         d.Get("network_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
 		AvailableZones:   getAllAvailableZones(d),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
-	}
-
-	subnet_id, subnet_ok := d.GetOk("subnet_id")
-	network_id, network_ok := d.GetOk("network_id")
-	if !subnet_ok && !network_ok {
-		return fmt.Errorf("one of subnet_id or network_id must be configured")
-	}
-	if subnet_ok {
-		createOpts.SubnetID = subnet_id.(string)
-	} else {
-		createOpts.SubnetID = network_id.(string)
 	}
 
 	product_id, product_ok := d.GetOk("product_id")
@@ -339,6 +321,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("resource_spec_code", v.ResourceSpecCode)
 	d.Set("internal_version", v.InternalVersion)
 	d.Set("vpc_id", v.VPCID)
+	d.Set("network_id", v.SubnetID)
 	d.Set("vpc_name", v.VPCName)
 	d.Set("created_at", v.CreatedAt)
 	d.Set("product_id", v.ProductID)
@@ -352,12 +335,6 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
 	d.Set("ip", v.IP)
-
-	if _, ok := d.GetOk("subnet_id"); ok {
-		d.Set("subnet_id", v.SubnetID)
-	} else {
-		d.Set("network_id", v.SubnetID)
-	}
 
 	return nil
 }

@@ -16,37 +16,38 @@ Manages a DCS instance in the flexibleengine DCS Service.
 
 ```hcl
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup_1"
   description = "secgroup_1"
 }
-resource "flexibleengine_vpc_v1" "vpc_3" {
-  name = "terraform_provider_vpc3"
-  cidr= "192.168.0.0/16"
+
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "test_vpc1"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "flexibleengine_subnet"
-  cidr = "192.168.0.0/16"
+  name       = "test_subnet1"
+  cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
-  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
 }
 
 resource "flexibleengine_dcs_instance_v1" "instance_1" {
-  name  = "%s"
-  engine_version = "3.0"
-  password = var.password
-  engine = "Redis"
-  capacity = 2
-  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  name              = "test_dcs_instance"
+  engine            = "Redis"
+  engine_version    = "3.0"
+  password          = var.my_password
+  instance_type     = "dcs.master_standby"
+  capacity          = 2
+  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
+  network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
-  subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.id
-  available_zones = ["eu-west-0a"]
-  instance_type = "dcs.master_standby"
-  save_days = 1
-  backup_type = "manual"
-  begin_at = "00:00-01:00"
-  period_type = "weekly"
-  backup_at = [1]
+  available_zones   = ["eu-west-0a"]
+  save_days         = 1
+  backup_type       = "manual"
+  begin_at          = "00:00-01:00"
+  period_type       = "weekly"
+  backup_at         = [1]
 }
 ```
 
@@ -88,9 +89,7 @@ The following arguments are supported:
 * `security_group_id` - (Required) Tenant's security group ID. For details on how to
     create security groups, see the Virtual Private Cloud API Reference.
 
-* `subnet_id` - (Deprecated, Optional, conflict with `network_id`) Network ID. Changing this creates a new instance.
-
-* `network_id` - (Optional, conflict with `subnet_id`) Network ID. Changing this creates a new instance.
+* `network_id` - (Required) Network ID. Changing this creates a new instance.
 
 * `available_zones` - (Required) IDs or Names of the AZs where cache nodes reside. For details
     on how to query AZs, see Querying AZ Information.
@@ -194,7 +193,6 @@ The following attributes are exported:
 * `vpc_name` - Indicates the name of a vpc.
 * `security_group_id` - See Argument Reference above.
 * `security_group_name` - Indicates the name of a security group.
-* `subnet_id` - See Argument Reference above.
 * `subnet_name` - Indicates the name of a subnet.
 * `available_zones` - See Argument Reference above.
 * `product_id` - See Argument Reference above.
