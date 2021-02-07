@@ -70,10 +70,12 @@ func resourceSFSFileSystemV2() *schema.Resource {
 			"access_level": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"access_type": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"access_to": {
 				Type:     schema.TypeString,
@@ -325,11 +327,20 @@ func resourceSFSFileSystemV2Update(d *schema.ResourceData, meta interface{}) err
 			d.Set("share_access_id", "")
 		}
 
-		if _, ok := d.GetOk("access_to"); ok {
+		if v, ok := d.GetOk("access_to"); ok {
 			grantAccessOpts := shares.GrantAccessOpts{
-				AccessLevel: d.Get("access_level").(string),
-				AccessType:  d.Get("access_type").(string),
-				AccessTo:    d.Get("access_to").(string),
+				AccessTo: v.(string),
+			}
+
+			if v, ok := d.GetOk("access_level"); ok {
+				grantAccessOpts.AccessLevel = v.(string)
+			} else {
+				grantAccessOpts.AccessLevel = "rw"
+			}
+			if v, ok := d.GetOk("access_type"); ok {
+				grantAccessOpts.AccessType = v.(string)
+			} else {
+				grantAccessOpts.AccessType = "cert"
 			}
 
 			log.Printf("[DEBUG] Grant Access Rules: %#v", grantAccessOpts)
