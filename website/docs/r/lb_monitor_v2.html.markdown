@@ -14,7 +14,7 @@ Manages a V2 monitor resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_lb_monitor_v2" "monitor_1" {
-  pool_id     = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  pool_id     = flexibleengine_lb_pool_v2.pool_1.id
   type        = "PING"
   delay       = 20
   timeout     = 10

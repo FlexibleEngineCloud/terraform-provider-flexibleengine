@@ -14,22 +14,22 @@ Manages a Load Balancer L7 Policy resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "SUBNET_ID"
+  name          = "loadbalancer_1"
+  vip_subnet_id = var.subnet_id
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_pool_v2" "pool_1" {
   name            = "pool_1"
   protocol        = "HTTP"
   lb_method       = "ROUND_ROBIN"
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_l7policy_v2" "l7policy_1" {
@@ -37,8 +37,8 @@ resource "flexibleengine_lb_l7policy_v2" "l7policy_1" {
   action           = "REDIRECT_TO_POOL"
   description      = "test l7 policy"
   position         = 1
-  listener_id      = "${flexibleengine_lb_listener_v2.listener_1.id}"
-  redirect_pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
+  listener_id      = flexibleengine_lb_listener_v2.listener_1.id
+  redirect_pool_id = flexibleengine_lb_pool_v2.pool_1.id
 }
 ```
 
