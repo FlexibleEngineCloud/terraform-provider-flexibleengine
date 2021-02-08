@@ -108,7 +108,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   engine            = "Redis"
   engine_version    = "3.0"
   password          = "Huawei_test"
-  instance_type     = "dcs.master_standby"
+  product_id        = "dcs.master_standby-h"
   capacity          = 2
   vpc_id            = flexibleengine_vpc_v1.vpc_1.id
   network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id

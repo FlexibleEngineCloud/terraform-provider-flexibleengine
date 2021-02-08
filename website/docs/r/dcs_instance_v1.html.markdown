@@ -12,7 +12,7 @@ Manages a DCS instance in the flexibleengine DCS Service.
 
 ## Example Usage
 
-### Automatically detect the correct network
+### DCS instance for Redis 3.0
 
 ```hcl
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
@@ -37,12 +37,33 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   engine            = "Redis"
   engine_version    = "3.0"
   password          = var.my_password
-  instance_type     = "dcs.master_standby"
+  product_id        = "dcs.master_standby-h"
   capacity          = 2
   vpc_id            = flexibleengine_vpc_v1.vpc_1.id
   network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
   available_zones   = ["eu-west-0a"]
+  save_days         = 1
+  backup_type       = "manual"
+  begin_at          = "00:00-01:00"
+  period_type       = "weekly"
+  backup_at         = [1]
+}
+```
+
+### DCS instance for Redis 5.0
+
+```hcl
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name              = "test_dcs_instance"
+  engine            = "Redis"
+  engine_version    = "5.0"
+  password          = var.my_password
+  product_id        = "redis.cluster.xu1.large.r1.8-h"
+  capacity          = 8
+  vpc_id            = flexibleengine_vpc.vpc_1.id
+  subnet_id         = flexibleengine_vpc_subnet.subnet_1.id
+  available_zones   = ["eu-west-0a", "eu-west-0b"]
   save_days         = 1
   backup_type       = "manual"
   begin_at          = "00:00-01:00"
@@ -82,14 +103,12 @@ The following arguments are supported:
     The password of a DCS Redis instance must meet the following complexity requirements:
     Changing this creates a new instance.
 
-* `vpc_id` - (Required) Tenant's VPC ID. For details on how to create VPCs, see the
-    Virtual Private Cloud API Reference.
-    Changing this creates a new instance.
+* `vpc_id` - (Required) Specifies the id of the VPC. Changing this creates a new instance.
 
-* `security_group_id` - (Required) Tenant's security group ID. For details on how to
-    create security groups, see the Virtual Private Cloud API Reference.
+* `network_id` - (Required) Specifies the network id of the subnet. Changing this creates a new instance.
 
-* `network_id` - (Required) Network ID. Changing this creates a new instance.
+* `security_group_id` - (Optional) Specifies the id of the security group which the instance belongs to.
+    This parameter is mandatory for Memcached and Redis 3.0 versions.
 
 * `available_zones` - (Required) IDs or Names of the AZs where cache nodes reside. For details
     on how to query AZs, see Querying AZ Information.
@@ -135,7 +154,7 @@ For the whole list and the specification of product id please check the DCS API 
 
 Changing this creates a new instance.
 
-* `instance_type` - (Optional) DCS instance specification code. For example now there are following values available:
+* `instance_type` - (Deprecated, Optional) DCS instance specification code. For example now there are following values available:
 
 	- dcs.single_node
 	- dcs.master_standby

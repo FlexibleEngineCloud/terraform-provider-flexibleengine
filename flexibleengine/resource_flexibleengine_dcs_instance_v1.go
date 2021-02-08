@@ -81,9 +81,10 @@ func resourceDcsInstanceV1() *schema.Resource {
 			},
 			"instance_type": {
 				Type:          schema.TypeString,
-				ConflictsWith: []string{"product_id"},
 				ForceNew:      true,
 				Optional:      true,
+				ConflictsWith: []string{"product_id"},
+				Deprecated:    "use product_id instead",
 			},
 			"product_id": {
 				Type:          schema.TypeString,
