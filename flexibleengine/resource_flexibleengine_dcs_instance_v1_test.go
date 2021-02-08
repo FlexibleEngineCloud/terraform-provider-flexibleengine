@@ -87,37 +87,39 @@ func testAccCheckDcsV1InstanceExists(n string, instance instances.Instance) reso
 func testAccDcsV1Instance_basic(instanceName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup_1"
   description = "secgroup_1"
 }
-  resource "flexibleengine_vpc_v1" "vpc_3" {
-  name = "terraform_provider_vpc3"
-  cidr= "192.168.0.0/16"
+
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "terraform_vpc1"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "flexibleengine_subnet"
-  cidr = "192.168.0.0/16"
+  name       = "terraform_subnet"
+  cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
-  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
 }
 
 resource "flexibleengine_dcs_instance_v1" "instance_1" {
-  name  = "%s"
-  engine_version = "3.0"
-  password = "Huawei_test"
-  engine = "Redis"
-  capacity = 2
-  vpc_id = flexibleengine_vpc_v1.vpc_3.id
+  name              = "%s"
+  engine            = "Redis"
+  engine_version    = "3.0"
+  password          = "Huawei_test"
+  product_id        = "dcs.master_standby-h"
+  capacity          = 2
+  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
+  network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
-  subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.id
-  available_zones = ["eu-west-0a"]
-  instance_type = "dcs.master_standby"
-  save_days = 1
+  available_zones   = ["eu-west-0a"]
+
+  save_days   = 1
   backup_type = "manual"
-  begin_at = "00:00-01:00"
+  begin_at    = "00:00-01:00"
   period_type = "weekly"
-  backup_at = [1]
+  backup_at   = [1]
 }
 	`, instanceName)
 }

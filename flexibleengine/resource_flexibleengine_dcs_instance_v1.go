@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -43,7 +44,7 @@ func resourceDcsInstanceV1() *schema.Resource {
 				ForceNew: true,
 			},
 			"capacity": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeFloat,
 				Required: true,
 				ForceNew: true,
 			},
@@ -63,22 +64,14 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"security_group_id": {
+			"network_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
-			"subnet_id": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"network_id"},
-				Deprecated:    "use network_id instead",
-			},
-			"network_id": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"subnet_id"},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"available_zones": {
 				Type:     schema.TypeList,
@@ -88,9 +81,10 @@ func resourceDcsInstanceV1() *schema.Resource {
 			},
 			"instance_type": {
 				Type:          schema.TypeString,
-				ConflictsWith: []string{"product_id"},
 				ForceNew:      true,
 				Optional:      true,
+				ConflictsWith: []string{"product_id"},
+				Deprecated:    "use product_id instead",
 			},
 			"product_id": {
 				Type:          schema.TypeString,
@@ -183,6 +177,20 @@ func resourceDcsInstanceV1() *schema.Resource {
 	}
 }
 
+func resourceDcsInstancesCheck(d *schema.ResourceData) error {
+	engineVersion := d.Get("engine_version").(string)
+	secGroupID := d.Get("security_group_id").(string)
+
+	// check for Memcached and Redis 3.0
+	if engineVersion == "3.0" {
+		if secGroupID == "" {
+			return fmt.Errorf("security_group_id is mandatory for this DCS instance")
+		}
+	}
+
+	return nil
+}
+
 func getInstanceBackupPolicy(d *schema.ResourceData) *instances.InstanceBackupPolicy {
 	backupAts := d.Get("backup_at").([]interface{})
 	ats := make([]int, len(backupAts))
@@ -233,6 +241,10 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
 
+	if err := resourceDcsInstancesCheck(d); err != nil {
+		return err
+	}
+
 	no_password_access := "true"
 	if d.Get("access_user").(string) != "" || d.Get("password").(string) != "" {
 		no_password_access = "false"
@@ -243,26 +255,16 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		Description:      d.Get("description").(string),
 		Engine:           d.Get("engine").(string),
 		EngineVersion:    d.Get("engine_version").(string),
-		Capacity:         d.Get("capacity").(int),
+		Capacity:         d.Get("capacity").(float64),
 		NoPasswordAccess: no_password_access,
 		Password:         d.Get("password").(string),
 		AccessUser:       d.Get("access_user").(string),
 		VPCID:            d.Get("vpc_id").(string),
+		SubnetID:         d.Get("network_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
 		AvailableZones:   getAllAvailableZones(d),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
-	}
-
-	subnet_id, subnet_ok := d.GetOk("subnet_id")
-	network_id, network_ok := d.GetOk("network_id")
-	if !subnet_ok && !network_ok {
-		return fmt.Errorf("one of subnet_id or network_id must be configured")
-	}
-	if subnet_ok {
-		createOpts.SubnetID = subnet_id.(string)
-	} else {
-		createOpts.SubnetID = network_id.(string)
 	}
 
 	product_id, product_ok := d.GetOk("product_id")
@@ -321,7 +323,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	}
 	v, err := instances.Get(dcsV1Client, d.Id()).Extract()
 	if err != nil {
-		return err
+		return CheckDeleted(d, err, "DCS instance")
 	}
 
 	log.Printf("[DEBUG] Dcs instance %s: %+v", d.Id(), v)
@@ -330,7 +332,6 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("name", v.Name)
 	d.Set("engine", v.Engine)
 	d.Set("engine_version", v.EngineVersion)
-	d.Set("capacity", v.Capacity)
 	d.Set("used_memory", v.UsedMemory)
 	d.Set("max_memory", v.MaxMemory)
 	d.Set("port", v.Port)
@@ -339,6 +340,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("resource_spec_code", v.ResourceSpecCode)
 	d.Set("internal_version", v.InternalVersion)
 	d.Set("vpc_id", v.VPCID)
+	d.Set("network_id", v.SubnetID)
 	d.Set("vpc_name", v.VPCName)
 	d.Set("created_at", v.CreatedAt)
 	d.Set("product_id", v.ProductID)
@@ -353,11 +355,14 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("access_user", v.AccessUser)
 	d.Set("ip", v.IP)
 
-	if _, ok := d.GetOk("subnet_id"); ok {
-		d.Set("subnet_id", v.SubnetID)
-	} else {
-		d.Set("network_id", v.SubnetID)
+	// set capacity by Capacity and CapacityMinor
+	var capacity float64 = float64(v.Capacity)
+	if v.CapacityMinor != "" {
+		if minor, err := strconv.ParseFloat(v.CapacityMinor, 64); err == nil {
+			capacity += minor
+		}
 	}
+	d.Set("capacity", capacity)
 
 	return nil
 }
@@ -368,6 +373,11 @@ func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) erro
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine dcs instance client: %s", err)
 	}
+
+	if err := resourceDcsInstancesCheck(d); err != nil {
+		return err
+	}
+
 	var updateOpts instances.UpdateOpts
 	if d.HasChange("name") {
 		updateOpts.Name = d.Get("name").(string)
