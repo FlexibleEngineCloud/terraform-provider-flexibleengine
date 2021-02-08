@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/jen20/awspolicyequivalence"
+	awspolicy "github.com/jen20/awspolicyequivalence"
 )
 
 func suppressEquivalentAwsPolicyDiffs(k, old, new string, d *schema.ResourceData) bool {
@@ -144,4 +144,9 @@ func suppressLBWhitelistDiffs(k, old, new string, d *schema.ResourceData) bool {
 	sort.Strings(new_array)
 
 	return reflect.DeepEqual(old_array, new_array)
+}
+
+// Suppress changes if we get a string with or without new line
+func suppressNewLineDiffs(k, old, new string, d *schema.ResourceData) bool {
+	return strings.Trim(old, "\n") == strings.Trim(new, "\n")
 }

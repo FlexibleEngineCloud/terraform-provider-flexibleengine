@@ -87,6 +87,12 @@ func resourceListenerV2() *schema.Resource {
 				ForceNew: true,
 			}, */
 
+			"http2_enable": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+
 			"default_tls_container_ref": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -101,6 +107,7 @@ func resourceListenerV2() *schema.Resource {
 			"tls_ciphers_policy": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 
 			"admin_state_up": {
@@ -122,6 +129,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
+	http2Enable := d.Get("http2_enable").(bool)
 	var sniContainerRefs []string
 	if raw, ok := d.GetOk("sni_container_refs"); ok {
 		for _, v := range raw.([]interface{}) {
@@ -139,6 +147,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 		DefaultTlsContainerRef: d.Get("default_tls_container_ref").(string),
 		SniContainerRefs:       sniContainerRefs,
 		TlsCiphersPolicy:       d.Get("tls_ciphers_policy").(string),
+		Http2Enable:            &http2Enable,
 		AdminStateUp:           &adminStateUp,
 	}
 
@@ -216,6 +225,7 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("description", listener.Description)
 	d.Set("protocol_port", listener.ProtocolPort)
 	d.Set("admin_state_up", listener.AdminStateUp)
+	d.Set("http2_enable", listener.Http2Enable)
 	d.Set("default_pool_id", listener.DefaultPoolID)
 	//d.Set("connection_limit", listener.ConnLimit)
 	if err := d.Set("sni_container_refs", listener.SniContainerRefs); err != nil {
@@ -276,6 +286,10 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	if d.HasChange("admin_state_up") {
 		asu := d.Get("admin_state_up").(bool)
 		updateOpts.AdminStateUp = &asu
+	}
+	if d.HasChange("http2_enable") {
+		http2 := d.Get("http2_enable").(bool)
+		updateOpts.Http2Enable = &http2
 	}
 
 	// Wait for LoadBalancer to become active before continuing

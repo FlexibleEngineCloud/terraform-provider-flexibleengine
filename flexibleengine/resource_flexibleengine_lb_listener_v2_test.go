@@ -41,6 +41,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 
 func TestAccLBV2Listener_withCert(t *testing.T) {
 	var listener listeners.Listener
+	resourceName := "flexibleengine_lb_listener_v2.listener_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -50,7 +51,8 @@ func TestAccLBV2Listener_withCert(t *testing.T) {
 			{
 				Config: TestAccLBV2ListenerConfig_cert,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2ListenerExists("flexibleengine_lb_listener_v2.listener_1", &listener),
+					testAccCheckLBV2ListenerExists(resourceName, &listener),
+					resource.TestCheckResourceAttr(resourceName, "http2_enable", "true"),
 				),
 			},
 		},
@@ -218,6 +220,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   name                      = "listener_cert"
   protocol                  = "TERMINATED_HTTPS"
   protocol_port             = 8080
+  http2_enable              = true
   loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
   default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
 }

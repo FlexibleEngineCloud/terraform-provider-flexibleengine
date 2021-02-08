@@ -48,13 +48,15 @@ func resourceCertificateV2() *schema.Resource {
 			},
 
 			"private_key": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: suppressNewLineDiffs,
 			},
 
 			"certificate": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: suppressNewLineDiffs,
 			},
 
 			"update_time": {
