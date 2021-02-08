@@ -132,7 +132,6 @@ resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
   name         = "sfs-test1"
   description  = "sfs_c2c_test-file"
   access_to    = "%s"
-  access_type  = "cert"
   access_level = "rw"
   availability_zone = "%s"
 }
@@ -140,13 +139,12 @@ resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
 
 var testAccSFSFileSystemV2_update = fmt.Sprintf(`
 resource "flexibleengine_sfs_file_system_v2" "sfs_1" {
-  share_proto  = "NFS"
-  size         = 20
-  name         = "sfs-test2"
-  description  = "sfs_c2c_test-file"
-  access_to    = "%s"
-  access_type  = "cert"
-  access_level = "rw"
+  share_proto = "NFS"
+  size        = 20
+  name        = "sfs-test2"
+  description = "sfs_c2c_test-file"
+  access_to   = "%s"
+  access_type = "cert"
   availability_zone = "%s"
 }
 `, OS_VPC_ID, OS_AVAILABILITY_ZONE)
