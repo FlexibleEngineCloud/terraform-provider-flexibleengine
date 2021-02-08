@@ -1,5 +1,18 @@
 ## 1.19.0 (Unreleased)
 
+## 1.18.1 (February 8, 2020)
+
+ENHANCEMENTS:
+
+* `flexibleengine_lb_listener_v2`: Support `http2_enable` parameter ([#466](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/466))
+* `flexibleengine_cce_cluster_v3`: Support `masters` parameter ([#468](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/468))
+* `flexibleengine_dcs_instance_v1`: Support Redis 4.0 and 5.0 instance ([#471](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/471))
+
+BUG FIXES:
+
+* `flexibleengine_compute_servergroup_v2`: Support anti-affinity policy only ([#463](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/463))
+* `flexibleengine_sfs_file_system_v2`: Make access_type and access_level to be computed ([#470](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/470))
+
 ## 1.18.0 (January 16, 2020)
 
 FEATURES:
