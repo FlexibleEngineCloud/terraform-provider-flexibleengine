@@ -84,6 +84,13 @@ The following arguments are supported:
 
 * `eip` - (Optional) EIP address of the cluster. Changing this parameter will create a new cluster resource.
 
+* `masters` - (Optional, List, ForceNew) Advanced configuration of master nodes. Changing this creates a new cluster.
+
+
+The `masters` block supports:
+
+* `availability_zone` - (Optional, String, ForceNew) Specifies the availability zone of the master node. Changing this creates a new cluster.
+
 ## Attributes Reference
 
 All above argument parameters can be exported as attribute parameters along with attribute reference.
