@@ -14,41 +14,42 @@ Manages dds instance resource within FlexibleEngine
 
 ```hcl
 resource "flexibleengine_dds_instance_v3" "instance" {
-  name = "dds-instance"
+  name              = "dds-instance"
+  region            = "eu-west-0"
+  availability_zone = "eu-west-0a"
+  vpc_id            = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
+  subnet_id         = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
+  password          = "Test@123"
+  mode              = "Sharding"
+
   datastore {
-    type = "DDS-Community"
-    version = "3.4"
+    type           = "DDS-Community"
+    version        = "3.4"
     storage_engine = "wiredTiger"
   }
-  region = "eu-west-0"
-  availability_zone = "eu-west-0a"
-  vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
-  password = "Test@123"
-  mode = "Sharding"
   flavor {
-    type = "mongos"
-    num = 2
+    type      = "mongos"
+    num       = 2
     spec_code = "dds.mongodb.s3.medium.4.mongos"
   }
   flavor {
-    type = "shard"
-    num = 2
-    storage = "ULTRAHIGH"
-    size = 20
+    type      = "shard"
+    num       = 2
+    storage   = "ULTRAHIGH"
+    size      = 20
     spec_code = "dds.mongodb.s3.medium.4.shard"
   }
   flavor {
-    type = "config"
-    num = 1
-    storage = "ULTRAHIGH"
-    size = 20
+    type      = "config"
+    num       = 1
+    storage   = "ULTRAHIGH"
+    size      = 20
     spec_code = "dds.mongodb.s3.large.2.config"
   }
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = "8"
+    keep_days  = "8"
   }
 }
 ```
@@ -56,29 +57,30 @@ resource "flexibleengine_dds_instance_v3" "instance" {
 ## Example Usage: Creating a Replica Set
 ```hcl
 resource "flexibleengine_dds_instance_v3" "instance" {
-  name = "dds-instance"
+  name              = "dds-instance"
+  region            = "eu-west-0"
+  availability_zone = "eu-west-0a"
+  vpc_id            = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
+  subnet_id         = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
+  password          = "Test@123"
+  mode              = "ReplicaSet"
+
   datastore {
-    type = "DDS-Community"
-    version = "3.4"
+    type           = "DDS-Community"
+    version        = "3.4"
     storage_engine = "wiredTiger"
   }
-  region = "eu-west-0"
-  availability_zone = "eu-west-0a"
-  vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
-  password = "Test@123"
-  mode = "ReplicaSet"
   flavor {
-    type = "replica"
-    num = 1
-    storage = "ULTRAHIGH"
-    size = 30
+    type      = "replica"
+    num       = 1
+    storage   = "ULTRAHIGH"
+    size      = 30
     spec_code = "dds.mongodb.s3.medium.4.repset"
   }
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = "8"
+    keep_days  = "8"
   }
 }
 ```
@@ -99,9 +101,7 @@ The following arguments are supported:
 * `availability_zone` - (Required) Specifies the ID of the availability zone. Changing
 	this creates a new instance.
 
-* `vpc_id` - (Required) Specifies the VPC ID. For details about how to obtain this
-    parameter value, see section "Virtual Private Cloud" in the Virtual Private
-    Cloud API Reference. Changing this creates a new instance.
+* `vpc_id` - (Required) Specifies the VPC ID. Changing this creates a new instance.
 
 * `subnet_id` - (Required) Specifies the subnet Network ID. Changing this creates a new instance.
 
@@ -127,7 +127,7 @@ The `datastore` block supports:
 
 * `type` - (Required) Specifies the DB engine. Only DDS-Community is supported now.
 
-* `version` - (Required) Specifies the DB instance version. Only 3.4 is supported now.
+* `version` - (Required) Specifies the DB instance version. Only 3.4 and 4.0 are supported now.
 
 * `storage_engine` - (Optional) Specifies the storage engine of the DB instance. Only wiredTiger is supported now.
 

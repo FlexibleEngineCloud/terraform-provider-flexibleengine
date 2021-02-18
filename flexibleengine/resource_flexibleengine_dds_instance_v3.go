@@ -56,7 +56,7 @@ func resourceDdsInstanceV3() *schema.Resource {
 							Required: true,
 							ForceNew: true,
 							ValidateFunc: validation.StringInSlice([]string{
-								"3.4",
+								"4.0", "3.4",
 							}, true),
 						},
 						"storage_engine": {
