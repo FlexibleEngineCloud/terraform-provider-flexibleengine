@@ -13,6 +13,7 @@ import (
 func TestAccDDSV3Instance_basic(t *testing.T) {
 	var instance instances.Instance
 	var instanceName = fmt.Sprintf("dds-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_dds_instance_v3.instance"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,9 +23,11 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 			{
 				Config: testAccDDSInstanceV3Config_basic(instanceName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDDSV3InstanceExists("flexibleengine_dds_instance_v3.instance", &instance),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dds_instance_v3.instance", "name", instanceName),
+					testAccCheckDDSV3InstanceExists(resourceName, &instance),
+					resource.TestCheckResourceAttr(resourceName, "name", instanceName),
+					resource.TestCheckResourceAttr(resourceName, "ssl", "true"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 		},
@@ -142,6 +145,10 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   backup_strategy {
     start_time = "08:00-09:00"
     keep_days  = "8"
+  }
+  tags = {
+    foo   = "bar"
+    owner = "terraform"
   }
 }`, name, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)
 }

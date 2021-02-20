@@ -123,6 +123,11 @@ The following arguments are supported:
 * `backup_strategy` - (Optional) Specifies the advanced backup policy. The structure is
 	described below. Changing this creates a new instance.
 
+* `ssl` - (Optional) Specifies whether to enable or disable SSL. Defaults to true.
+  Changing this creates a new instance.
+
+* `tags` - (Optional) The key/value pairs to associate with the DDS instance.
+
 The `datastore` block supports:
 
 * `type` - (Required) Specifies the DB engine. Only DDS-Community is supported now.
@@ -183,20 +188,10 @@ The `backup_strategy ` block supports:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `datastore` - See Argument Reference above.
-* `availability_zone` - See Argument Reference above.
-* `vpc_id` - See Argument Reference above.
-* `subnet_id` - See Argument Reference above.
-* `security_group_id` - See Argument Reference above.
-* `password` - See Argument Reference above.
-* `disk_encryption_id` - See Argument Reference above.
-* `mode` - See Argument Reference above.
-* `flavor` - See Argument Reference above.
-* `backup_strategy` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
+* `status` - Indicates the the DB instance status.
 * `db_username` - Indicates the DB Administator name.
 * `port` - Indicates the database port number. The port range is 2100 to 9500.
 * `nodes` - Indicates the instance nodes information. Structure is documented below.
