@@ -3,8 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 	"testing"
-	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/huaweicloud/golangsdk/openstack/dds/v3/instances"
@@ -12,6 +12,7 @@ import (
 
 func TestAccDDSV3Instance_basic(t *testing.T) {
 	var instance instances.Instance
+	var instanceName = fmt.Sprintf("dds-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,11 +20,11 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDDSV3InstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccDDSInstanceV3Config_basic,
+				Config: testAccDDSInstanceV3Config_basic(instanceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDDSV3InstanceExists("flexibleengine_dds_instance_v3.instance", &instance),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_dds_instance_v3.instance", "name", "dds-instance"),
+						"flexibleengine_dds_instance_v3.instance", "name", instanceName),
 				),
 			},
 		},
@@ -93,48 +94,54 @@ func testAccCheckDDSV3InstanceExists(n string, instance *instances.Instance) res
 		if instances.TotalCount == 0 {
 			return fmt.Errorf("Instance not found. ")
 		}
-		time.Sleep(15 * time.Second)
 
 		return nil
 	}
 }
 
-var TestAccDDSInstanceV3Config_basic = fmt.Sprintf(`
+func testAccDDSInstanceV3Config_basic(name string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "secgroup_dds"
+}
+
 resource "flexibleengine_dds_instance_v3" "instance" {
-  name = "dds-instance"
+  name              = "%s"
+  region            = "%s"
+  availability_zone = "%s"
+  vpc_id            = "%s"
+  subnet_id         = "%s"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  password          = "Test@123"
+  mode              = "Sharding"
+
   datastore {
-    type = "DDS-Community"
-    version = "3.4"
+    type           = "DDS-Community"
+    version        = "3.4"
     storage_engine = "wiredTiger"
   }
-  region = "eu-west-0"
-  availability_zone = "eu-west-0a"
-  vpc_id = "%s"
-  subnet_id = "%s"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
-  password = "Test@123"
-  mode = "Sharding"
   flavor {
-    type = "mongos"
-    num = 2
+    type      = "mongos"
+    num       = 2
     spec_code = "dds.mongodb.s3.medium.4.mongos"
   }
   flavor {
-    type = "shard"
-    num = 2
-    storage = "ULTRAHIGH"
-    size = 20
+    type      = "shard"
+    num       = 2
+    storage   = "ULTRAHIGH"
+    size      = 20
     spec_code = "dds.mongodb.s3.medium.4.shard"
   }
   flavor {
-    type = "config"
-    num = 1
-    storage = "ULTRAHIGH"
-    size = 20
+    type      = "config"
+    num       = 1
+    storage   = "ULTRAHIGH"
+    size      = 20
     spec_code = "dds.mongodb.s3.large.2.config"
   }
   backup_strategy {
     start_time = "08:00-09:00"
-    keep_days = "8"
+    keep_days  = "8"
   }
-}`, OS_VPC_ID, OS_NETWORK_ID)
+}`, name, OS_REGION_NAME, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)
+}
