@@ -177,6 +177,9 @@ The following arguments are supported:
   (Optional)
   Specifies the parameter group ID. Changing this parameter will create a new resource.
 
+* `fixed_ip` - (Optional) Specifies an intranet floating IP address of the RDS instance.
+  Changing this parameter will create a new resource.
+
 * `time_zone` - (Optional) Specifies the UTC time zone. The value ranges from
   UTC-12:00 to UTC+12:00 at the full hour, and defaults to *UTC*.
 

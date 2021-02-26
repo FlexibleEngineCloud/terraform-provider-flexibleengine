@@ -44,6 +44,7 @@ func TestAccRdsInstanceV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttrSet(resourceName, "fixed_ip"),
 				),
 			},
 			{
