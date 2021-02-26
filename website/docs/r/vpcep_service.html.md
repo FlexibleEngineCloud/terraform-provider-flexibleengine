@@ -59,8 +59,8 @@ The following arguments are supported:
 
 The `port_mapping` block supports:
 
-* `type` - (Optional) Specifies the protocol used in port mappings.
-    The value can be TCP or UDP. The default value is TCP.
+* `protocol` - (Optional) Specifies the protocol used in port mappings.
+    The value can be _TCP_ or _UDP_. The default value is _TCP_.
 
 * `service_port` - (Optional) Specifies the port for accessing the VPC endpoint service.
     This port is provided by the backend service to provide services. The value ranges from 1 to 65535.
