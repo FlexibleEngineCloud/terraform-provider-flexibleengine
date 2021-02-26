@@ -3,13 +3,13 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/dds/v3/instances"
 )
 
@@ -17,6 +17,7 @@ func resourceDdsInstanceV3() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDdsInstanceV3Create,
 		Read:   resourceDdsInstanceV3Read,
+		Update: resourceDdsInstanceV3Update,
 		Delete: resourceDdsInstanceV3Delete,
 
 		Timeouts: &schema.ResourceTimeout{
@@ -91,9 +92,10 @@ func resourceDdsInstanceV3() *schema.Resource {
 				ForceNew: true,
 			},
 			"password": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:      schema.TypeString,
+				Sensitive: true,
+				Required:  true,
+				ForceNew:  true,
 			},
 			"disk_encryption_id": {
 				Type:      schema.TypeString,
@@ -168,7 +170,18 @@ func resourceDdsInstanceV3() *schema.Resource {
 					},
 				},
 			},
+			"ssl": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+				ForceNew: true,
+			},
+			"tags": tagsSchema(),
 			"db_username": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -308,6 +321,11 @@ func resourceDdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 		Flavor:           resourceDdsFlavors(d),
 		BackupStrategy:   resourceDdsBackupStrategy(d),
 	}
+	if d.Get("ssl").(bool) {
+		createOpts.Ssl = "1"
+	} else {
+		createOpts.Ssl = "0"
+	}
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 
 	instance, err := instances.Create(client, createOpts).Extract()
@@ -333,6 +351,15 @@ func resourceDdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 			instance.Id, err)
 	}
 
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(client, "instances", instance.Id, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of DDS instance %s: %s", instance.Id, tagErr)
+		}
+	}
+
 	return resourceDdsInstanceV3Read(d, meta)
 }
 
@@ -356,7 +383,9 @@ func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error extracting DDS instance: %s", err)
 	}
 	if instances.TotalCount == 0 {
-		return fmt.Errorf("Error fetching DDS instance: deleted")
+		log.Printf("[WARN] DDS instance (%s) was not found", instanceID)
+		d.SetId("")
+		return nil
 	}
 	insts := instances.Instances
 	instance := insts[0]
@@ -371,7 +400,14 @@ func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("disk_encryption_id", instance.DiskEncryptionId)
 	d.Set("mode", instance.Mode)
 	d.Set("db_username", instance.DbUserName)
+	d.Set("status", instance.Status)
 	d.Set("port", instance.Port)
+
+	sslEnable := true
+	if instance.Ssl == 0 {
+		sslEnable = false
+	}
+	d.Set("ssl", sslEnable)
 
 	datastoreList := make([]map[string]interface{}, 0, 1)
 	datastore := map[string]interface{}{
@@ -396,7 +432,34 @@ func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error setting nodes of DDS instance, err: %s", err)
 	}
 
+	// save tags
+	if resourceTags, err := tags.Get(client, "instances", d.Id()).Extract(); err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		if err := d.Set("tags", tagmap); err != nil {
+			return fmt.Errorf("Error saving tags to state for DDS instance (%s): %s", d.Id(), err)
+		}
+	} else {
+		log.Printf("[WARN] Error fetching tags of DDS instance (%s): %s", d.Id(), err)
+	}
+
 	return nil
+}
+
+func resourceDdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.ddsV3Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s ", err)
+	}
+
+	if d.HasChange("tags") {
+		tagErr := UpdateResourceTags(client, d, "instances", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of DDS instance:%s, err:%s", d.Id(), tagErr)
+		}
+	}
+
+	return resourceDdsInstanceV3Read(d, meta)
 }
 
 func resourceDdsInstanceV3Delete(d *schema.ResourceData, meta interface{}) error {
