@@ -120,7 +120,7 @@ func testAccPreCheckSdrs(t *testing.T) {
 }
 
 func testAccPreCheckAdminOnly(t *testing.T) {
-	v := os.Getenv("OS_USERNAME")
+	v := os.Getenv("OS_ADMIN")
 	if v != "admin" {
 		t.Skip("Skipping test because it requires the admin user")
 	}
