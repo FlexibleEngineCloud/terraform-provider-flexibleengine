@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/agency"
 	sdkprojects "github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
@@ -39,8 +41,15 @@ func resourceIdentityAgencyV3() *schema.Resource {
 				ForceNew: true,
 			},
 			"delegated_domain_name": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"delegated_service_name"},
+			},
+			"delegated_service_name": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				ValidateFunc: validation.StringMatch(regexp.MustCompile("^op_svc_[A-Za-z]+"),
+					"Please check your delegated_service_name input, it must be an existing cloud service"),
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -49,7 +58,8 @@ func resourceIdentityAgencyV3() *schema.Resource {
 			},
 			"duration": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Optional: true,
+				Default:  "FOREVER",
 			},
 			"expire_time": {
 				Type:     schema.TypeString,
@@ -257,11 +267,18 @@ func resourceIdentityAgencyV3Create(d *schema.ResourceData, meta interface{}) er
 	}
 
 	opts := agency.CreateOpts{
-		Name:            d.Get("name").(string),
-		DomainID:        domainID,
-		DelegatedDomain: d.Get("delegated_domain_name").(string),
-		Description:     d.Get("description").(string),
+		Name:        d.Get("name").(string),
+		DomainID:    domainID,
+		Description: d.Get("description").(string),
+		Duration:    d.Get("duration").(string),
 	}
+
+	if v, ok := d.GetOk("delegated_domain_name"); ok {
+		opts.DelegatedDomain = v.(string)
+	} else {
+		opts.DelegatedDomain = d.Get("delegated_service_name").(string)
+	}
+
 	log.Printf("[DEBUG] Create Identity-Agency Options: %#v", opts)
 	a, err := agency.Create(client, opts).Extract()
 	if err != nil {
@@ -336,11 +353,18 @@ func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Retrieved Identity-Agency %s: %#v", d.Id(), a)
 
 	d.Set("name", a.Name)
-	d.Set("delegated_domain_name", a.DelegatedDomainName)
 	d.Set("description", a.Description)
 	d.Set("duration", a.Duration)
 	d.Set("expire_time", a.ExpireTime)
 	d.Set("create_time", a.CreateTime)
+
+	if ok, err := regexp.MatchString("^op_svc_[A-Za-z]+$", a.DelegatedDomainName); err != nil {
+		log.Printf("[ERROR] Regexp error, err= %s", err)
+	} else if ok {
+		d.Set("delegated_service_name", a.DelegatedDomainName)
+	} else {
+		d.Set("delegated_domain_name", a.DelegatedDomainName)
+	}
 
 	projects, err := listProjectsOfDomain(a.DomainID, client)
 	if err != nil {
@@ -401,11 +425,18 @@ func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("the domain_id must be specified in the provider configuration")
 	}
 
-	if d.HasChange("delegated_domain_name") || d.HasChange("description") {
+	if d.HasChange("delegated_domain_name") || d.HasChange("delegated_service_name") ||
+		d.HasChange("description") || d.HasChange("duration") {
 		updateOpts := agency.UpdateOpts{
-			DelegatedDomain: d.Get("delegated_domain_name").(string),
-			Description:     d.Get("description").(string),
+			Description: d.Get("description").(string),
+			Duration:    d.Get("duration").(string),
 		}
+		if v, ok := d.GetOk("delegated_domain_name"); ok {
+			updateOpts.DelegatedDomain = v.(string)
+		} else {
+			updateOpts.DelegatedDomain = d.Get("delegated_service_name").(string)
+		}
+
 		log.Printf("[DEBUG] Updating Identity-Agency %s with options: %#v", aID, updateOpts)
 		timeout := d.Timeout(schema.TimeoutUpdate)
 		err = resource.Retry(timeout, func() *resource.RetryError {

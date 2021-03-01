@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
@@ -12,7 +13,9 @@ import (
 )
 
 func TestAccIdentityV3Agency_basic(t *testing.T) {
-	var a agency.Agency
+	var agency agency.Agency
+	rName := fmt.Sprintf("acc-agency-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_identity_agency_v3.agency_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -23,13 +26,69 @@ func TestAccIdentityV3Agency_basic(t *testing.T) {
 		CheckDestroy: testAccCheckIdentityV3AgencyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIdentityV3Agency_basic,
+				Config: testAccIdentityAgency_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIdentityV3AgencyExists("flexibleengine_identity_agency_v3.agency_1", &a),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_agency_v3.agency_1", "name", "test"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_agency_v3.agency_1", "delegated_domain_name", "op_svc_evs"),
+					testAccCheckIdentityV3AgencyExists(resourceName, &agency),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "description", "This is a test service agency"),
+					resource.TestCheckResourceAttr(resourceName, "delegated_service_name", "op_svc_obs"),
+					resource.TestCheckResourceAttr(resourceName, "duration", "FOREVER"),
+					resource.TestCheckResourceAttr(resourceName, "domain_roles.#", "1"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccIdentityAgency_update(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIdentityV3AgencyExists(resourceName, &agency),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "description", "This is a updated test service agency"),
+					resource.TestCheckResourceAttr(resourceName, "delegated_service_name", "op_svc_evs"),
+					resource.TestCheckResourceAttr(resourceName, "duration", "FOREVER"),
+					resource.TestCheckResourceAttr(resourceName, "domain_roles.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccIdentityV3Agency_domain(t *testing.T) {
+	var agency agency.Agency
+	rName := fmt.Sprintf("acc-agency-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_identity_agency_v3.agency_1"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccIdentityV3AgencyPreCheck(t)
+			testAccPreCheckAdminOnly(t)
+		},
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckIdentityV3AgencyDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIdentityAgency_domain(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIdentityV3AgencyExists(resourceName, &agency),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "description", "This is a test agency"),
+					resource.TestCheckResourceAttr(resourceName, "delegated_domain_name", OS_DELEGATED_DOMAIN_NAME),
+					resource.TestCheckResourceAttr(resourceName, "duration", "FOREVER"),
+					resource.TestCheckResourceAttr(resourceName, "domain_roles.#", "1"),
+				),
+			},
+			{
+				Config: testAccIdentityAgency_domainUpdate(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIdentityV3AgencyExists(resourceName, &agency),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "description", "This is a updated test agency"),
+					resource.TestCheckResourceAttr(resourceName, "delegated_domain_name", OS_DELEGATED_DOMAIN_NAME),
+					resource.TestCheckResourceAttr(resourceName, "duration", "ONEDAY"),
+					resource.TestCheckResourceAttr(resourceName, "domain_roles.#", "1"),
 				),
 			},
 		},
@@ -90,12 +149,59 @@ func testAccCheckIdentityV3AgencyExists(n string, a *agency.Agency) resource.Tes
 	}
 }
 
-var testAccIdentityV3Agency_basic = fmt.Sprintf(`
-    resource "flexibleengine_identity_agency_v3" "agency_1" {
-      name = "test"
-      delegated_domain_name = "op_svc_evs"
-      project_role {
-        project = "%s"
-        roles = ["KMS Administrator"]
-      }
-    }`, OS_TENANT_NAME)
+func testAccIdentityAgency_basic(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_identity_agency_v3" "agency_1" {
+  name                   = "%s"
+  description            = "This is a test service agency"
+  delegated_service_name = "op_svc_obs"
+
+  domain_roles = [
+    "OBS OperateAccess",
+  ]
+}
+`, rName)
+}
+
+func testAccIdentityAgency_update(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_identity_agency_v3" "agency_1" {
+  name                   = "%s"
+  description            = "This is a updated test service agency"
+  delegated_service_name = "op_svc_evs"
+
+  domain_roles = [
+    "Anti-DDoS Administrator",
+  ]
+}
+`, rName)
+}
+
+func testAccIdentityAgency_domain(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_identity_agency_v3" "agency_1" {
+  name                  = "%s"
+  description           = "This is a test agency"
+  delegated_domain_name = "%s"
+
+  domain_roles = [
+    "Anti-DDoS Administrator",
+  ]
+}
+`, rName, OS_DELEGATED_DOMAIN_NAME)
+}
+
+func testAccIdentityAgency_domainUpdate(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_identity_agency_v3" "agency_1" {
+  name                  = "%s"
+  description           = "This is a updated test agency"
+  delegated_domain_name = "%s"
+  duration              = "ONEDAY"
+
+  domain_roles = [
+    "Anti-DDoS Administrator",
+  ]
+}
+`, rName, OS_DELEGATED_DOMAIN_NAME)
+}
