@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/agency"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
 	sdkprojects "github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
 	sdkroles "github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
 )
@@ -204,51 +203,6 @@ func allRolesOfDomain(domainID string, client *golangsdk.ServiceClient) (map[str
 	return roles, nil
 }
 
-func getDomainID(config *Config, client *golangsdk.ServiceClient) (string, error) {
-	if config.DomainID != "" {
-		return config.DomainID, nil
-	}
-
-	name := config.DomainName
-	if name == "" {
-		return "", fmt.Errorf("The required domain name was missed")
-	}
-
-	old := client.Endpoint
-	defer func() { client.Endpoint = old }()
-	client.Endpoint = strings.Replace(old, "v3.0", "v3", 1) + "auth/"
-
-	opts := domains.ListOpts{
-		Name: name,
-	}
-	allPages, err := domains.List(client, &opts).AllPages()
-	if err != nil {
-		return "", fmt.Errorf("List domains failed, err=%s", err)
-	}
-
-	all, err := domains.ExtractDomains(allPages)
-	if err != nil {
-		return "", fmt.Errorf("Extract domains failed, err=%s", err)
-	}
-
-	count := len(all)
-	switch count {
-	case 0:
-		err := &golangsdk.ErrResourceNotFound{}
-		err.ResourceType = "iam"
-		err.Name = name
-		return "", err
-	case 1:
-		return all[0].ID, nil
-	default:
-		err := &golangsdk.ErrMultipleResourcesFound{}
-		err.ResourceType = "iam"
-		err.Name = name
-		err.Count = count
-		return "", err
-	}
-}
-
 func changeToPRPair(prs *schema.Set) (r map[string]bool) {
 	r = make(map[string]bool)
 	for _, v := range prs.List() {
@@ -297,9 +251,9 @@ func resourceIdentityAgencyV3Create(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error creating client: %s", err)
 	}
 
-	domainID, err := getDomainID(config, client)
-	if err != nil {
-		return fmt.Errorf("Error getting the domain id, err=%s", err)
+	domainID := config.DomainID
+	if domainID == "" {
+		return fmt.Errorf("the domain_id must be specified in the provider configuration")
 	}
 
 	opts := agency.CreateOpts{
@@ -442,6 +396,10 @@ func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) er
 	}
 
 	aID := d.Id()
+	domainID := config.DomainID
+	if domainID == "" {
+		return fmt.Errorf("the domain_id must be specified in the provider configuration")
+	}
 
 	if d.HasChange("delegated_domain_name") || d.HasChange("description") {
 		updateOpts := agency.UpdateOpts{
@@ -462,14 +420,8 @@ func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 
-	domainID := ""
 	var roles map[string]string
 	if d.HasChange("project_role") || d.HasChange("domain_roles") {
-		domainID, err = getDomainID(config, client)
-		if err != nil {
-			return fmt.Errorf("Error getting the domain id, err=%s", err)
-		}
-
 		roles, err = allRolesOfDomain(domainID, client)
 		if err != nil {
 			return fmt.Errorf("Error querying the roles, err=%s", err)
