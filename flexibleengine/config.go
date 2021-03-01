@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/httpclient"
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
 	"github.com/huaweicloud/golangsdk/openstack/objectstorage/v1/swauth"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
 )
@@ -84,6 +85,15 @@ func (c *Config) LoadAndValidate() error {
 
 	if err != nil {
 		return err
+	}
+
+	// set DomainID for IAM resource
+	if c.DomainID == "" {
+		if domainID, err := c.getDomainID(); err == nil {
+			c.DomainID = domainID
+		} else {
+			log.Printf("[WARN] get domain id failed: %s", err)
+		}
 	}
 
 	return c.newS3Session(logging.IsDebugOrHigher())
@@ -320,6 +330,34 @@ func (c *Config) determineRegion(region string) string {
 
 	log.Printf("[DEBUG] FlexibleEngine Region is: %s", region)
 	return region
+}
+
+func (c *Config) getDomainID() (string, error) {
+	identityClient, err := c.identityV3Client(c.Region)
+	if err != nil {
+		return "", fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+	}
+
+	identityClient.ResourceBase = identityClient.Endpoint + "auth/"
+
+	opts := domains.ListOpts{
+		Name: c.DomainName,
+	}
+	allPages, err := domains.List(identityClient, &opts).AllPages()
+	if err != nil {
+		return "", fmt.Errorf("List domains failed, err=%s", err)
+	}
+
+	all, err := domains.ExtractDomains(allPages)
+	if err != nil {
+		return "", fmt.Errorf("Extract domains failed, err=%s", err)
+	}
+
+	if len(all) == 0 {
+		return "", fmt.Errorf("domain was not found")
+	}
+
+	return all[0].ID, nil
 }
 
 func (c *Config) computeS3conn(region string) (*s3.S3, error) {
