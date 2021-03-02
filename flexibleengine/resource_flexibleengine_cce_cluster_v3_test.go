@@ -14,6 +14,7 @@ import (
 func TestAccCCEClusterV3_basic(t *testing.T) {
 	var cluster clusters.Clusters
 	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_cluster_v3.cluster_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,49 +24,26 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 			{
 				Config: testAccCCEClusterV3_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCCEClusterV3Exists("flexibleengine_cce_cluster_v3.cluster_1", &cluster),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "name", cceName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "status", "Available"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_type", "VirtualMachine"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "flavor_id", "cce.s1.small"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "cluster_version", "v1.11.7-r2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "container_network_type", "overlay_l2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "authentication_mode", "rbac"),
+					testAccCheckCCEClusterV3Exists(resourceName, &cluster),
+					resource.TestCheckResourceAttr(resourceName, "name", cceName),
+					resource.TestCheckResourceAttr(resourceName, "description", "a description"),
+					resource.TestCheckResourceAttr(resourceName, "status", "Available"),
+					resource.TestCheckResourceAttr(resourceName, "cluster_type", "VirtualMachine"),
+					resource.TestCheckResourceAttr(resourceName, "flavor_id", "cce.s1.small"),
+					resource.TestCheckResourceAttr(resourceName, "cluster_version", "v1.11.7-r2"),
+					resource.TestCheckResourceAttr(resourceName, "container_network_type", "overlay_l2"),
+					resource.TestCheckResourceAttr(resourceName, "authentication_mode", "rbac"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccCCEClusterV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "description", "new description"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccCCEClusterV3_timeout(t *testing.T) {
-	var cluster clusters.Clusters
-	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCCEClusterV3Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCCEClusterV3_timeout(cceName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCCEClusterV3Exists("flexibleengine_cce_cluster_v3.cluster_1", &cluster),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cce_cluster_v3.cluster_1", "authentication_mode", "rbac"),
+					resource.TestCheckResourceAttr(resourceName, "description", "a updated description"),
 				),
 			},
 		},
@@ -128,48 +106,27 @@ func testAccCheckCCEClusterV3Exists(n string, cluster *clusters.Clusters) resour
 func testAccCCEClusterV3_basic(cceName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
+  name            = "%s"
+  description     = "a description"
+  cluster_type    = "VirtualMachine"
   cluster_version = "v1.11.7-r2"
-  vpc_id="%s"
-  subnet_id="%s"
-  container_network_type="overlay_l2"
+  flavor_id       = "cce.s1.small"
+  vpc_id          = "%s"
+  subnet_id       = "%s"
+  container_network_type = "overlay_l2"
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID)
 }
 
 func testAccCCEClusterV3_update(cceName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
+  name            = "%s"
+  description     = "a updated description"
+  cluster_type    = "VirtualMachine"
   cluster_version = "v1.11.7-r2"
-  vpc_id="%s"
-  subnet_id="%s"
-  container_network_type="overlay_l2"
-  description="new description"
+  flavor_id       = "cce.s1.small"
+  vpc_id          = "%s"
+  subnet_id       = "%s"
+  container_network_type = "overlay_l2"
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID)
-}
-
-func testAccCCEClusterV3_timeout(cceName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-}
-
-resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
-  vpc_id="%s"
-  subnet_id="%s"
-  eip="${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  authentication_mode = "rbac"
-  container_network_type="overlay_l2"
-    timeouts {
-    create = "10m"
-    delete = "10m"
-  }
-}
-`, cceName, OS_VPC_ID, OS_NETWORK_ID)
 }
