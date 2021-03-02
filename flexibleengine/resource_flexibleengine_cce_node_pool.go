@@ -75,9 +75,10 @@ func resourceCCENodePool() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -95,9 +96,10 @@ func resourceCCENodePool() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -369,7 +371,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		volume := make(map[string]interface{})
 		volume["size"] = pairObject.Size
 		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_param"] = pairObject.ExtendParam
+		volume["extend_params"] = pairObject.ExtendParam
 		volumes = append(volumes, volume)
 	}
 	if err := d.Set("data_volumes", volumes); err != nil {
@@ -378,9 +380,9 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 
 	rootVolume := []map[string]interface{}{
 		{
-			"size":         s.Spec.NodeTemplate.RootVolume.Size,
-			"volumetype":   s.Spec.NodeTemplate.RootVolume.VolumeType,
-			"extend_param": s.Spec.NodeTemplate.RootVolume.ExtendParam,
+			"size":          s.Spec.NodeTemplate.RootVolume.Size,
+			"volumetype":    s.Spec.NodeTemplate.RootVolume.VolumeType,
+			"extend_params": s.Spec.NodeTemplate.RootVolume.ExtendParam,
 		},
 	}
 	if err := d.Set("root_volume", rootVolume); err != nil {

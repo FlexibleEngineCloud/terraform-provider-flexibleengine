@@ -110,9 +110,10 @@ func resourceCCENodeV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -130,9 +131,10 @@ func resourceCCENodeV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -289,10 +291,22 @@ func resourceCCEDataVolume(d *schema.ResourceData) []nodes.VolumeSpec {
 		volumes[i] = nodes.VolumeSpec{
 			Size:        rawMap["size"].(int),
 			VolumeType:  rawMap["volumetype"].(string),
-			ExtendParam: rawMap["extend_param"].(string),
+			ExtendParam: rawMap["extend_params"].(map[string]interface{}),
 		}
 	}
 	return volumes
+}
+
+func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
+	var root nodes.VolumeSpec
+	rootRaw := d.Get("root_volume").([]interface{})
+	if len(rootRaw) == 1 {
+		rawMap := rootRaw[0].(map[string]interface{})
+		root.Size = rawMap["size"].(int)
+		root.VolumeType = rawMap["volumetype"].(string)
+		root.ExtendParam = rawMap["extend_params"].(map[string]interface{})
+	}
+	return root
 }
 
 func resourceCCETaint(d *schema.ResourceData) []nodes.TaintSpec {
@@ -309,16 +323,6 @@ func resourceCCETaint(d *schema.ResourceData) []nodes.TaintSpec {
 	return taints
 }
 
-func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
-	var nics nodes.VolumeSpec
-	nicsRaw := d.Get("root_volume").([]interface{})
-	if len(nicsRaw) == 1 {
-		nics.Size = nicsRaw[0].(map[string]interface{})["size"].(int)
-		nics.VolumeType = nicsRaw[0].(map[string]interface{})["volumetype"].(string)
-		nics.ExtendParam = nicsRaw[0].(map[string]interface{})["extend_param"].(string)
-	}
-	return nics
-}
 func resourceCCEEipIDs(d *schema.ResourceData) []string {
 	rawID := d.Get("eip_ids").(*schema.Set)
 	id := make([]string, rawID.Len())
@@ -503,7 +507,7 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 		volume := make(map[string]interface{})
 		volume["size"] = pairObject.Size
 		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_param"] = pairObject.ExtendParam
+		volume["extend_params"] = pairObject.ExtendParam
 		volumes = append(volumes, volume)
 	}
 	if err := d.Set("data_volumes", volumes); err != nil {
@@ -512,9 +516,9 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 
 	rootVolume := []map[string]interface{}{
 		{
-			"size":         s.Spec.RootVolume.Size,
-			"volumetype":   s.Spec.RootVolume.VolumeType,
-			"extend_param": s.Spec.RootVolume.ExtendParam,
+			"size":          s.Spec.RootVolume.Size,
+			"volumetype":    s.Spec.RootVolume.VolumeType,
+			"extend_params": s.Spec.RootVolume.ExtendParam,
 		},
 	}
 	d.Set("root_volume", rootVolume)

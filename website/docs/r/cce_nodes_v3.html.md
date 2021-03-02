@@ -99,7 +99,7 @@ If the eip_ids parameter is configured, you do not need to configure the eip_cou
     
 * `volumetype` - (Required) Disk type.
     
-* `extend_param` - (Optional) Disk expansion parameters. 
+* `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
 
 **data_volumes** **- (Required)** Represents the data disk to be created. Changing this parameter will create a new resource.
     
@@ -107,7 +107,7 @@ If the eip_ids parameter is configured, you do not need to configure the eip_cou
     
 * `volumetype` - (Required) Disk type.
     
-* `extend_param` - (Optional) Disk expansion parameters. 
+* `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
 
 
 **taints** **- (Optional)** You can add taints to created nodes to configure anti-affinity. Each taint contains the following parameters:
