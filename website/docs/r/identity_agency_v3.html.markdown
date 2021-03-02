@@ -11,12 +11,13 @@ description: |-
 Manages an agency resource within FlexibleEngine.
 
 ## Example Usage
-
+### Delegate another account to perform operations on your resources
 ```hcl
 resource "flexibleengine_identity_agency_v3" "agency" {
-  name = "test_agency"
-  description = "test agency"
+  name                  = "test_agency"
+  description           = "this is a domain test agency"
   delegated_domain_name = "***"
+
   project_role {
     project = "eu-west-0"
     roles = [
@@ -29,48 +30,69 @@ resource "flexibleengine_identity_agency_v3" "agency" {
 }
 ```
 
-**Note**: It can not set `tenant_name` in `provider "flexibleengine"` when
-   using this resource.
+### Delegate a cloud service to access your resources in other cloud services
+```hcl
+resource "flexibleengine_identity_agency_v3" "agency" {
+  name                   = "test_agency"
+  description            = "this is a service test agency"
+  delegated_service_name = "op_svc_evs"
+
+  project_role {
+    project = "eu-west-0"
+    roles = [
+      "Tenant Administrator",
+    ]
+  }
+  domain_roles = [
+    "OBS OperateAccess",
+  ]
+}
+```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-* `name` - (Required) The name of agency. The name is a string of 1 to 64
-    characters.
+* `name` - (Required) Specifies the name of agency. The name is a string of 1 to 64 characters.
+    Changing this will create a new agency.
 
-* `description` - (Optional) Provides supplementary information about the
-    agency. The value is a string of 0 to 255 characters.
+* `description` - (Optional) Specifies the supplementary information about the agency.
+    The value is a string of 0 to 255 characters.
 
-* `delegated_domain_name` - (Required) The name of delegated domain.
+* `delegated_domain_name` - (Optional) Specifies the name of delegated user domain.
+    This parameter and `delegated_service_name` are alternative.
 
-* `project_role` - (Optional) An array of roles and projects which are used to
-    grant permissions to agency on project. The structure is documented below.
+* `delegated_service_name` - (Optional) Specifies the name of delegated cloud service.
+    This parameter and `delegated_domain_name` are alternative.
 
-* `domain_roles` - (optional) An array of role names which stand for the
-    permissionis to be granted to agency on domain.
+* `duration` - (Optional) Specifies the validity period of an agency.
+    The valid value are *ONEDAY* and *FOREVER*, defaults to *FOREVER*.
+
+* `project_role` - (Optional) Specifies an array of one or more roles and projects which are used to grant
+    permissions to agency on project. The structure is documented below.
+
+* `domain_roles` - (optional) Specifies an array of one or more role names which stand for the permissionis to
+    be granted to agency on domain.
 
 The `project_role` block supports:
 
-* `project` - (Required) The name of project
+* `project` - (Required) Specifies the name of project.
 
-* `roles` - (Required) An array of role names
+* `roles` - (Required) Specifies an array of role names.
 
-**note**:
-    one or both of `project_role` and `domain_roles` must be input when
-creating an agency.
+**note**: one or both of `project_role` and `domain_roles` must be input when creating an agency.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The agency ID.
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `delegated_domain_name` - See Argument Reference above.
-* `project_role` - See Argument Reference above.
-* `domain_roles` - See Argument Reference above.
-* `duration` - Validity period of an agency. The default value is null,
-    indicating that the agency is permanently valid.
-* `expire_time` - The expiration time of agency
+* `expire_time` - The expiration time of agency.
 * `create_time` - The time when the agency was created.
+
+## Import
+
+Agencies can be imported using the `id`, e.g.
+```
+$ terraform import flexibleengine_identity_agency_v3.agency 0b97661f9900f23f4fc2c00971ea4dc0
+```
