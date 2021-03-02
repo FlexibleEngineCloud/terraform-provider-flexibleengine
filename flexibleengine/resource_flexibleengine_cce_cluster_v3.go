@@ -111,7 +111,12 @@ func resourceCCEClusterV3() *schema.Resource {
 			"authentication_mode": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
+				ForceNew: true,
+				Default:  "rbac",
+			},
+			"authenticating_proxy_ca": {
+				Type:     schema.TypeString,
+				Optional: true,
 				ForceNew: true,
 			},
 			"eip": {
@@ -136,6 +141,11 @@ func resourceCCEClusterV3() *schema.Resource {
 						},
 					},
 				},
+			},
+			"kube_proxy_mode": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"status": {
 				Type:     schema.TypeString,
@@ -220,6 +230,9 @@ func resourceClusterExtendParamV3(d *schema.ResourceData) map[string]string {
 	for key, val := range d.Get("extend_param").(map[string]interface{}) {
 		m[key] = val.(string)
 	}
+	if v, ok := d.GetOk("kube_proxy_mode"); ok {
+		m["kubeProxyMode"] = v.(string)
+	}
 	if eip, ok := d.GetOk("eip"); ok {
 		m["clusterExternalIP"] = eip.(string)
 	}
@@ -259,24 +272,31 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Unable to create flexibleengine CCE client : %s", err)
 	}
 
+	authenticatingProxy := make(map[string]string)
+	if v, ok := d.GetOk("authenticating_proxy_ca"); ok {
+		authenticatingProxy["ca"] = v.(string)
+	}
+
 	spec := clusters.Spec{
 		Type:        d.Get("cluster_type").(string),
 		Flavor:      d.Get("flavor_id").(string),
 		Version:     d.Get("cluster_version").(string),
 		Description: d.Get("description").(string),
-		HostNetwork: clusters.HostNetworkSpec{VpcId: d.Get("vpc_id").(string),
+		HostNetwork: clusters.HostNetworkSpec{
+			VpcId:         d.Get("vpc_id").(string),
 			SubnetId:      d.Get("subnet_id").(string),
-			HighwaySubnet: d.Get("highway_subnet_id").(string)},
-		ContainerNetwork: clusters.ContainerNetworkSpec{Mode: d.Get("container_network_type").(string),
-			Cidr: d.Get("container_network_cidr").(string)},
+			HighwaySubnet: d.Get("highway_subnet_id").(string),
+		},
+		ContainerNetwork: clusters.ContainerNetworkSpec{
+			Mode: d.Get("container_network_type").(string),
+			Cidr: d.Get("container_network_cidr").(string),
+		},
+		Authentication: clusters.AuthenticationSpec{
+			Mode:                d.Get("authentication_mode").(string),
+			AuthenticatingProxy: authenticatingProxy,
+		},
 		BillingMode: d.Get("billing_mode").(int),
 		ExtendParam: resourceClusterExtendParamV3(d),
-	}
-	if hasFilledOpt(d, "authentication_mode") {
-		spec.Authentication = clusters.AuthenticationSpec{
-			Mode:                d.Get("authentication_mode").(string),
-			AuthenticatingProxy: make(map[string]string),
-		}
 	}
 
 	masters, err := resourceClusterMastersV3(d)
