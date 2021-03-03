@@ -177,6 +177,12 @@ func resourceCCENodePool() *schema.Resource {
 					}
 				},
 			},
+			"extend_param": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"subnet_id": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -229,14 +235,6 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	var base64PreInstall, base64PostInstall string
-	if v, ok := d.GetOk("preinstall"); ok {
-		base64PreInstall = installScriptEncode(v.(string))
-	}
-	if v, ok := d.GetOk("postinstall"); ok {
-		base64PostInstall = installScriptEncode(v.(string))
-	}
-
 	initialNodeCount := d.Get("initial_node_count").(int)
 
 	createOpts := nodepools.CreateOpts{
@@ -262,11 +260,8 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 						SubnetId: d.Get("subnet_id").(string),
 					},
 				},
-				ExtendParam: nodes.ExtendParam{
-					PreInstall:  base64PreInstall,
-					PostInstall: base64PostInstall,
-				},
-				Taints: resourceCCETaint(d),
+				ExtendParam: resourceCCEExtendParam(d),
+				Taints:      resourceCCETaint(d),
 			},
 			Autoscaling: nodepools.AutoscalingSpec{
 				Enable:                d.Get("scall_enable").(bool),
