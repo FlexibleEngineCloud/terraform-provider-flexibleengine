@@ -1,6 +1,21 @@
-## 1.19.0 (Unreleased)
+## 1.19.0 (March 9, 2021)
+ENHANCEMENTS:
 
-## 1.18.1 (February 8, 2020)
+* `flexibleengine_identity_agency_v3`: Support Agency type "Cloud service" Management ([#409](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/409))
+* `flexibleengine_rds_instance_v3`: Support `fixed_ip` parameter ([#477](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/477))
+* `flexibleengine_cce_cluster_v3`: support `authenticating_proxy_ca` and `kube_proxy_mode`([#484](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/484))
+* `flexibleengine_cce_node_v3`: Support `extend_param` to specify agency name ([#485](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/485))
+* `flexibleengine_dds_instance_v3`:
+    - Support version 4.0 ([#473](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/473))
+    - Support `tags` and `ssl` parameters ([#478](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/478))
+
+BUG FIXES:
+
+* `flexibleengine_vpcep_service`: fix documentation error ([#479](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/479))
+* `flexibleengine_lb_pool_v2`: Update available values of `protocol` ([#487](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/487))
+
+
+## 1.18.1 (February 8, 2021)
 
 ENHANCEMENTS:
 
@@ -13,7 +28,7 @@ BUG FIXES:
 * `flexibleengine_compute_servergroup_v2`: Support anti-affinity policy only ([#463](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/463))
 * `flexibleengine_sfs_file_system_v2`: Make access_type and access_level to be computed ([#470](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/470))
 
-## 1.18.0 (January 16, 2020)
+## 1.18.0 (January 16, 2021)
 
 FEATURES:
 
