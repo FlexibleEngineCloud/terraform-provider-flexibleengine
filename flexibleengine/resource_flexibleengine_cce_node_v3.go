@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -110,9 +111,10 @@ func resourceCCENodeV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -130,9 +132,10 @@ func resourceCCENodeV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -262,6 +265,12 @@ func resourceCCENodeV3() *schema.Resource {
 					}
 				},
 			},
+			"extend_param": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"private_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -289,10 +298,64 @@ func resourceCCEDataVolume(d *schema.ResourceData) []nodes.VolumeSpec {
 		volumes[i] = nodes.VolumeSpec{
 			Size:        rawMap["size"].(int),
 			VolumeType:  rawMap["volumetype"].(string),
-			ExtendParam: rawMap["extend_param"].(string),
+			ExtendParam: rawMap["extend_params"].(map[string]interface{}),
 		}
 	}
 	return volumes
+}
+
+func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
+	var root nodes.VolumeSpec
+	rootRaw := d.Get("root_volume").([]interface{})
+	if len(rootRaw) == 1 {
+		rawMap := rootRaw[0].(map[string]interface{})
+		root.Size = rawMap["size"].(int)
+		root.VolumeType = rawMap["volumetype"].(string)
+		root.ExtendParam = rawMap["extend_params"].(map[string]interface{})
+	}
+	return root
+}
+
+func resourceCCEExtendParam(d *schema.ResourceData) map[string]interface{} {
+	extendParam := make(map[string]interface{})
+	if v, ok := d.GetOk("extend_param"); ok {
+		for key, val := range v.(map[string]interface{}) {
+			extendParam[key] = val.(string)
+		}
+		if v, ok := extendParam["periodNum"]; ok {
+			periodNum, err := strconv.Atoi(v.(string))
+			if err != nil {
+				log.Printf("[WARNING] PeriodNum %s invalid, Type conversion error: %s", v.(string), err)
+			}
+			extendParam["periodNum"] = periodNum
+		}
+	}
+	if v, ok := d.GetOk("extend_param_charging_mode"); ok {
+		extendParam["chargingMode"] = v.(int)
+	}
+	if v, ok := d.GetOk("ecs_performance_type"); ok {
+		extendParam["ecs:performancetype"] = v.(string)
+	}
+	if v, ok := d.GetOk("max_pods"); ok {
+		extendParam["maxPods"] = v.(int)
+	}
+	if v, ok := d.GetOk("order_id"); ok {
+		extendParam["orderID"] = v.(string)
+	}
+	if v, ok := d.GetOk("product_id"); ok {
+		extendParam["productID"] = v.(string)
+	}
+	if v, ok := d.GetOk("public_key"); ok {
+		extendParam["publicKey"] = v.(string)
+	}
+	if v, ok := d.GetOk("preinstall"); ok {
+		extendParam["alpha.cce/preInstall"] = installScriptEncode(v.(string))
+	}
+	if v, ok := d.GetOk("postinstall"); ok {
+		extendParam["alpha.cce/postInstall"] = installScriptEncode(v.(string))
+	}
+
+	return extendParam
 }
 
 func resourceCCETaint(d *schema.ResourceData) []nodes.TaintSpec {
@@ -309,16 +372,6 @@ func resourceCCETaint(d *schema.ResourceData) []nodes.TaintSpec {
 	return taints
 }
 
-func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
-	var nics nodes.VolumeSpec
-	nicsRaw := d.Get("root_volume").([]interface{})
-	if len(nicsRaw) == 1 {
-		nics.Size = nicsRaw[0].(map[string]interface{})["size"].(int)
-		nics.VolumeType = nicsRaw[0].(map[string]interface{})["volumetype"].(string)
-		nics.ExtendParam = nicsRaw[0].(map[string]interface{})["extend_param"].(string)
-	}
-	return nics
-}
 func resourceCCEEipIDs(d *schema.ResourceData) []string {
 	rawID := d.Get("eip_ids").(*schema.Set)
 	id := make([]string, rawID.Len())
@@ -348,14 +401,6 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating flexibleengine CCE Node client: %s", err)
 	}
 
-	var base64PreInstall, base64PostInstall string
-	if v, ok := d.GetOk("preinstall"); ok {
-		base64PreInstall = installScriptEncode(v.(string))
-	}
-	if v, ok := d.GetOk("postinstall"); ok {
-		base64PostInstall = installScriptEncode(v.(string))
-	}
-
 	createOpts := nodes.CreateOpts{
 		Kind:       "Node",
 		ApiVersion: "v3",
@@ -370,6 +415,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 			Login:       nodes.LoginSpec{SshKey: d.Get("key_pair").(string)},
 			RootVolume:  resourceCCERootVolume(d),
 			DataVolumes: resourceCCEDataVolume(d),
+			ExtendParam: resourceCCEExtendParam(d),
 			UserTags:    resourceCCENodeUserTags(d),
 			K8sTags:     resourceCCENodeK8sTags(d),
 			Taints:      resourceCCETaint(d),
@@ -387,16 +433,6 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 			},
 			BillingMode: d.Get("billing_mode").(int),
 			Count:       1,
-			ExtendParam: nodes.ExtendParam{
-				ChargingMode:       d.Get("extend_param_charging_mode").(int),
-				EcsPerformanceType: d.Get("ecs_performance_type").(string),
-				MaxPods:            d.Get("max_pods").(int),
-				OrderID:            d.Get("order_id").(string),
-				ProductID:          d.Get("product_id").(string),
-				PublicKey:          d.Get("public_key").(string),
-				PreInstall:         base64PreInstall,
-				PostInstall:        base64PostInstall,
-			},
 		},
 	}
 
@@ -490,20 +526,21 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("availability_zone", s.Spec.Az)
 	d.Set("os", s.Spec.Os)
 	d.Set("billing_mode", s.Spec.BillingMode)
-	d.Set("extend_param_charging_mode", s.Spec.ExtendParam.ChargingMode)
-	d.Set("ecs:performance_type", s.Spec.ExtendParam.PublicKey)
-	d.Set("order_id", s.Spec.ExtendParam.OrderID)
-	d.Set("product_id", s.Spec.ExtendParam.ProductID)
-	d.Set("max_pods", s.Spec.ExtendParam.MaxPods)
-	d.Set("ecs_performance_type", s.Spec.ExtendParam.EcsPerformanceType)
 	d.Set("key_pair", s.Spec.Login.SshKey)
+
+	d.Set("extend_param_charging_mode", s.Spec.ExtendParam["chargingMode"])
+	d.Set("ecs_performance_type", s.Spec.ExtendParam["ecs:performancetype"])
+	d.Set("order_id", s.Spec.ExtendParam["orderID"])
+	d.Set("product_id", s.Spec.ExtendParam["productID"])
+	d.Set("public_key", s.Spec.ExtendParam["publicKey"])
+	d.Set("max_pods", s.Spec.ExtendParam["maxPods"])
 
 	var volumes []map[string]interface{}
 	for _, pairObject := range s.Spec.DataVolumes {
 		volume := make(map[string]interface{})
 		volume["size"] = pairObject.Size
 		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_param"] = pairObject.ExtendParam
+		volume["extend_params"] = pairObject.ExtendParam
 		volumes = append(volumes, volume)
 	}
 	if err := d.Set("data_volumes", volumes); err != nil {
@@ -512,9 +549,9 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 
 	rootVolume := []map[string]interface{}{
 		{
-			"size":         s.Spec.RootVolume.Size,
-			"volumetype":   s.Spec.RootVolume.VolumeType,
-			"extend_param": s.Spec.RootVolume.ExtendParam,
+			"size":          s.Spec.RootVolume.Size,
+			"volumetype":    s.Spec.RootVolume.VolumeType,
+			"extend_params": s.Spec.RootVolume.ExtendParam,
 		},
 	}
 	d.Set("root_volume", rootVolume)

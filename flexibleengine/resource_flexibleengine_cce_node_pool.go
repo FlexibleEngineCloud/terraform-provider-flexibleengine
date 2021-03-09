@@ -75,9 +75,10 @@ func resourceCCENodePool() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -95,9 +96,10 @@ func resourceCCENodePool() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
-						"extend_param": {
-							Type:     schema.TypeString,
+						"extend_params": {
+							Type:     schema.TypeMap,
 							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
 			},
@@ -175,6 +177,12 @@ func resourceCCENodePool() *schema.Resource {
 					}
 				},
 			},
+			"extend_param": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"subnet_id": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -227,14 +235,6 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	var base64PreInstall, base64PostInstall string
-	if v, ok := d.GetOk("preinstall"); ok {
-		base64PreInstall = installScriptEncode(v.(string))
-	}
-	if v, ok := d.GetOk("postinstall"); ok {
-		base64PostInstall = installScriptEncode(v.(string))
-	}
-
 	initialNodeCount := d.Get("initial_node_count").(int)
 
 	createOpts := nodepools.CreateOpts{
@@ -260,11 +260,8 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 						SubnetId: d.Get("subnet_id").(string),
 					},
 				},
-				ExtendParam: nodes.ExtendParam{
-					PreInstall:  base64PreInstall,
-					PostInstall: base64PostInstall,
-				},
-				Taints: resourceCCETaint(d),
+				ExtendParam: resourceCCEExtendParam(d),
+				Taints:      resourceCCETaint(d),
 			},
 			Autoscaling: nodepools.AutoscalingSpec{
 				Enable:                d.Get("scall_enable").(bool),
@@ -369,7 +366,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		volume := make(map[string]interface{})
 		volume["size"] = pairObject.Size
 		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_param"] = pairObject.ExtendParam
+		volume["extend_params"] = pairObject.ExtendParam
 		volumes = append(volumes, volume)
 	}
 	if err := d.Set("data_volumes", volumes); err != nil {
@@ -378,9 +375,9 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 
 	rootVolume := []map[string]interface{}{
 		{
-			"size":         s.Spec.NodeTemplate.RootVolume.Size,
-			"volumetype":   s.Spec.NodeTemplate.RootVolume.VolumeType,
-			"extend_param": s.Spec.NodeTemplate.RootVolume.ExtendParam,
+			"size":          s.Spec.NodeTemplate.RootVolume.Size,
+			"volumetype":    s.Spec.NodeTemplate.RootVolume.VolumeType,
+			"extend_params": s.Spec.NodeTemplate.RootVolume.ExtendParam,
 		},
 	}
 	if err := d.Set("root_volume", rootVolume); err != nil {
