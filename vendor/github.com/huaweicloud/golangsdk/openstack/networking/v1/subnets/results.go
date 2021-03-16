@@ -25,6 +25,15 @@ type Subnet struct {
 	//Specifies the gateway of the subnet.
 	GatewayIP string `json:"gateway_ip"`
 
+	//Specifies whether the IPv6 function is enabled for the subnet.
+	EnableIPv6 bool `json:"ipv6_enable"`
+
+	//Specifies the IPv6 subnet CIDR block.
+	IPv6CIDR string `json:"cidr_v6"`
+
+	//Specifies the IPv6 subnet gateway.
+	IPv6Gateway string `json:"gateway_ip_v6"`
+
 	//Specifies whether the DHCP function is enabled for the subnet.
 	EnableDHCP bool `json:"dhcp_enable"`
 
@@ -42,6 +51,14 @@ type Subnet struct {
 
 	//Specifies the subnet ID.
 	SubnetId string `json:"neutron_subnet_id"`
+
+	//Specifies the extra dhcp opts.
+	ExtraDhcpOpts []ExtraDhcp `json:"extra_dhcp_opts"`
+}
+
+type ExtraDhcp struct {
+	OptName  string `json:"opt_name"`
+	OptValue string `json:"opt_value"`
 }
 
 // SubnetPage is the page returned by a pager when traversing over a

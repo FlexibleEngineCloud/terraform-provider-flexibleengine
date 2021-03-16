@@ -2,6 +2,7 @@ package instances
 
 import (
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // InstanceCreate response
@@ -26,42 +27,49 @@ type DeleteResult struct {
 	golangsdk.ErrResult
 }
 
+type ListDcsResponse struct {
+	Instances  []Instance `json:"instances"`
+	TotalCount int        `json:"instance_num"`
+}
+
 // Instance response
 type Instance struct {
-	Name                 string               `json:"name"`
-	Engine               string               `json:"engine"`
-	Capacity             int                  `json:"capacity"`
-	CapacityMinor        string               `json:"capacity_minor"`
-	IP                   string               `json:"ip"`
-	Port                 int                  `json:"port"`
-	Status               string               `json:"status"`
-	Description          string               `json:"description"`
-	InstanceID           string               `json:"instance_id"`
-	ResourceSpecCode     string               `json:"resource_spec_code"`
-	EngineVersion        string               `json:"engine_version"`
-	InternalVersion      string               `json:"internal_version"`
-	ChargingMode         int                  `json:"charging_mode"`
-	VPCID                string               `json:"vpc_id"`
-	VPCName              string               `json:"vpc_name"`
-	CreatedAt            string               `json:"created_at"`
-	ErrorCode            string               `json:"error_code"`
-	ProductID            string               `json:"product_id"`
-	SecurityGroupID      string               `json:"security_group_id"`
-	SecurityGroupName    string               `json:"security_group_name"`
-	SubnetID             string               `json:"subnet_id"`
-	SubnetName           string               `json:"subnet_name"`
-	SubnetCIDR           string               `json:"subnet_cidr"`
-	AvailableZones       []string             `json:"available_zones"`
-	MaxMemory            int                  `json:"max_memory"`
-	UsedMemory           int                  `json:"used_memory"`
-	InstanceBackupPolicy InstanceBackupPolicy `json:"instance_backup_policy"`
-	UserID               string               `json:"user_id"`
-	UserName             string               `json:"user_name"`
-	OrderID              string               `json:"order_id"`
-	MaintainBegin        string               `json:"maintain_begin"`
-	MaintainEnd          string               `json:"maintain_end"`
-	NoPasswordAccess     string               `json:"no_password_access"`
-	AccessUser           string               `json:"access_user"`
+	Name                  string               `json:"name"`
+	Engine                string               `json:"engine"`
+	Capacity              int                  `json:"capacity"`
+	CapacityMinor         string               `json:"capacity_minor"`
+	IP                    string               `json:"ip"`
+	Port                  int                  `json:"port"`
+	Status                string               `json:"status"`
+	Description           string               `json:"description"`
+	InstanceID            string               `json:"instance_id"`
+	ResourceSpecCode      string               `json:"resource_spec_code"`
+	EngineVersion         string               `json:"engine_version"`
+	InternalVersion       string               `json:"internal_version"`
+	ChargingMode          int                  `json:"charging_mode"`
+	VPCID                 string               `json:"vpc_id"`
+	VPCName               string               `json:"vpc_name"`
+	CreatedAt             string               `json:"created_at"`
+	ErrorCode             string               `json:"error_code"`
+	ProductID             string               `json:"product_id"`
+	SecurityGroupID       string               `json:"security_group_id"`
+	SecurityGroupName     string               `json:"security_group_name"`
+	SubnetID              string               `json:"subnet_id"`
+	SubnetName            string               `json:"subnet_name"`
+	SubnetCIDR            string               `json:"subnet_cidr"`
+	AvailableZones        []string             `json:"available_zones"`
+	MaxMemory             int                  `json:"max_memory"`
+	UsedMemory            int                  `json:"used_memory"`
+	InstanceBackupPolicy  InstanceBackupPolicy `json:"instance_backup_policy"`
+	UserID                string               `json:"user_id"`
+	UserName              string               `json:"user_name"`
+	OrderID               string               `json:"order_id"`
+	MaintainBegin         string               `json:"maintain_begin"`
+	MaintainEnd           string               `json:"maintain_end"`
+	NoPasswordAccess      string               `json:"no_password_access"`
+	AccessUser            string               `json:"access_user"`
+	EnterpriseProjectID   string               `json:"enterprise_project_id"`
+	EnterpriseProjectName string               `json:"enterprise_project_name"`
 }
 
 // UpdateResult is a struct from which can get the result of update method
@@ -111,4 +119,23 @@ func (r UpdatePasswordResult) Extract() (*Password, error) {
 // ExtendResult is a struct from which can get the result of extend method
 type ExtendResult struct {
 	golangsdk.Result
+}
+
+type DcsPage struct {
+	pagination.SinglePageBase
+}
+
+func (r DcsPage) IsEmpty() (bool, error) {
+	data, err := ExtractDcsInstances(r)
+	if err != nil {
+		return false, err
+	}
+	return len(data.Instances) == 0, err
+}
+
+// ExtractCloudServers is a function that takes a ListResult and returns the services' information.
+func ExtractDcsInstances(r pagination.Page) (ListDcsResponse, error) {
+	var s ListDcsResponse
+	err := (r.(DcsPage)).ExtractInto(&s)
+	return s, err
 }

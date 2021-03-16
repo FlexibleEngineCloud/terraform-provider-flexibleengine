@@ -5,6 +5,11 @@ import (
 	"github.com/huaweicloud/golangsdk/pagination"
 )
 
+// FaultDomainInfo represents the response of `fault_domain`
+type FaultDomainInfo struct {
+	Names []string `json:"fault_domain_names"`
+}
+
 // A ServerGroup creates a policy for instance placement in the cloud.
 type ServerGroup struct {
 	// ID is the unique ID of the Server Group.
@@ -26,6 +31,9 @@ type ServerGroup struct {
 
 	// Members are the members of the server group.
 	Members []string `json:"members"`
+
+	// FaultDomain is valid when policy is "fault_domain"
+	FaultDomain FaultDomainInfo `json:"fault_domain"`
 
 	// Metadata includes a list of all user-specified key-value pairs attached
 	// to the Server Group.
@@ -83,5 +91,11 @@ type GetResult struct {
 // DeleteResult is the response from a Delete operation. Call its ExtractErr
 // method to determine if the call succeeded or failed.
 type DeleteResult struct {
+	golangsdk.ErrResult
+}
+
+// MemberResult is the response from a Member update operation. Call its ExtractErr
+// method to determine if the call succeeded or failed.
+type MemberResult struct {
 	golangsdk.ErrResult
 }

@@ -190,10 +190,6 @@ type UpdateSpec struct {
 	Autoscaling AutoscalingSpec `json:"autoscaling"`
 }
 
-type UpdateMetadata struct {
-	Name string `json:"name,omitempty"`
-}
-
 // ToNodePoolUpdateMap builds an update body based on UpdateOpts.
 func (opts UpdateOpts) ToNodePoolUpdateMap() (map[string]interface{}, error) {
 	return golangsdk.BuildRequestBody(opts, "")
