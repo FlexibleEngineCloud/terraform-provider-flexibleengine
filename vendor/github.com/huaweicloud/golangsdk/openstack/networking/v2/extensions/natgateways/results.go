@@ -2,19 +2,21 @@ package natgateways
 
 import (
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 // NatGateway is a struct that represents a nat gateway
 type NatGateway struct {
-	ID                string `json:"id"`
-	Name              string `json:"name"`
-	Description       string `json:"description"`
-	RouterID          string `json:"router_id"`
-	InternalNetworkID string `json:"internal_network_id"`
-	TenantID          string `json:"tenant_id"`
-	Spec              string `json:"spec"`
-	Status            string `json:"status"`
-	AdminStateUp      bool   `json:"admin_state_up"`
+	ID                  string `json:"id"`
+	Name                string `json:"name"`
+	Description         string `json:"description"`
+	RouterID            string `json:"router_id"`
+	InternalNetworkID   string `json:"internal_network_id"`
+	TenantID            string `json:"tenant_id"`
+	Spec                string `json:"spec"`
+	Status              string `json:"status"`
+	AdminStateUp        bool   `json:"admin_state_up"`
+	EnterpriseProjectID string `json:"enterprise_project_id"`
 }
 
 // GetResult is a return struct of get method
@@ -53,4 +55,32 @@ func (r UpdateResult) Extract() (NatGateway, error) {
 // DeleteResult is a return struct of delete method
 type DeleteResult struct {
 	golangsdk.ErrResult
+}
+
+type NatGatewayPage struct {
+	pagination.LinkedPageBase
+}
+
+func (r NatGatewayPage) NextPageURL() (string, error) {
+	var s struct {
+		Links []golangsdk.Link `json:"nat_gateways_links"`
+	}
+	err := r.ExtractInto(&s)
+	if err != nil {
+		return "", err
+	}
+	return golangsdk.ExtractNextURL(s.Links)
+}
+
+func (r NatGatewayPage) IsEmpty() (bool, error) {
+	is, err := ExtractNatGateways(r)
+	return len(is) == 0, err
+}
+
+func ExtractNatGateways(r pagination.Page) ([]NatGateway, error) {
+	var s struct {
+		NatGateways []NatGateway `json:"nat_gateways"`
+	}
+	err := (r.(NatGatewayPage)).ExtractInto(&s)
+	return s.NatGateways, err
 }

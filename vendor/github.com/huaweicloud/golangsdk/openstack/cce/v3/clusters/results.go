@@ -50,10 +50,14 @@ type Spec struct {
 	Version string `json:"version,omitempty"`
 	//Cluster description
 	Description string `json:"description,omitempty"`
+	//Public IP ID
+	PublicIP string `json:"publicip_id,omitempty"`
 	// Node network parameters
 	HostNetwork HostNetworkSpec `json:"hostNetwork" required:"true"`
 	//Container network parameters
 	ContainerNetwork ContainerNetworkSpec `json:"containerNetwork" required:"true"`
+	//ENI network parameters
+	EniNetwork *EniNetworkSpec `json:"eniNetwork,omitempty"`
 	//Authentication parameters
 	Authentication AuthenticationSpec `json:"authentication,omitempty"`
 	// Charging mode of the cluster, which is 0 (on demand)
@@ -85,6 +89,13 @@ type ContainerNetworkSpec struct {
 	Mode string `json:"mode" required:"true"`
 	//Container network segment: 172.16.0.0/16 ~ 172.31.0.0/16. If there is a network segment conflict, it will be automatically reselected.
 	Cidr string `json:"cidr,omitempty"`
+}
+
+type EniNetworkSpec struct {
+	//Eni network subnet id
+	SubnetId string `json:"eniSubnetId" required:"true"`
+	//Eni network cidr
+	Cidr string `json:"eniSubnetCIDR" required:"true"`
 }
 
 //Authentication parameters

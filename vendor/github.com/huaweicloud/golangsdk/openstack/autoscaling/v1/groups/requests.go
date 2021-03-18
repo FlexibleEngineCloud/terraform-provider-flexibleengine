@@ -26,6 +26,7 @@ type CreateOpts struct {
 	VpcID                     string              `json:"vpc_id" required:"ture"`
 	HealthPeriodicAuditMethod string              `json:"health_periodic_audit_method,omitempty"`
 	HealthPeriodicAuditTime   int                 `json:"health_periodic_audit_time,omitempty"`
+	HealthPeriodicAuditGrace  int                 `json:"health_periodic_audit_grace_period,omitempty"`
 	InstanceTerminatePolicy   string              `json:"instance_terminate_policy,omitempty"`
 	Notifications             []string            `json:"notifications,omitempty"`
 	IsDeletePublicip          bool                `json:"delete_publicip,omitempty"`
@@ -113,9 +114,9 @@ type UpdateOptsBuilder interface {
 //UpdateOpts is a struct which represents the parameters of update function
 type UpdateOpts struct {
 	Name                      string              `json:"scaling_group_name,omitempty"`
-	DesireInstanceNumber      int                 `json:"desire_instance_number,omitempty"`
-	MinInstanceNumber         int                 `json:"min_instance_number,omitempty"`
-	MaxInstanceNumber         int                 `json:"max_instance_number,omitempty"`
+	DesireInstanceNumber      int                 `json:"desire_instance_number"`
+	MinInstanceNumber         int                 `json:"min_instance_number"`
+	MaxInstanceNumber         int                 `json:"max_instance_number"`
 	CoolDownTime              int                 `json:"cool_down_time,omitempty"`
 	LBListenerID              string              `json:"lb_listener_id,omitempty"`
 	LBaaSListeners            []LBaaSListenerOpts `json:"lbaas_listeners,omitempty"`
@@ -124,6 +125,7 @@ type UpdateOpts struct {
 	SecurityGroup             []SecurityGroupOpts `json:"security_groups,omitempty"`
 	HealthPeriodicAuditMethod string              `json:"health_periodic_audit_method,omitempty"`
 	HealthPeriodicAuditTime   int                 `json:"health_periodic_audit_time,omitempty"`
+	HealthPeriodicAuditGrace  int                 `json:"health_periodic_audit_grace_period,omitempty"`
 	InstanceTerminatePolicy   string              `json:"instance_terminate_policy,omitempty"`
 	Notifications             []string            `json:"notifications,omitempty"`
 	IsDeletePublicip          bool                `json:"delete_publicip,omitempty"`

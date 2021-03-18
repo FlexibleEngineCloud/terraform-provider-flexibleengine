@@ -149,11 +149,14 @@ type ServerExtendParam struct {
 
 	IsAutoPay string `json:"isAutoPay,omitempty"`
 
+	EnterpriseProjectId string `json:"enterprise_project_id,omitempty"`
+
 	SupportAutoRecovery string `json:"support_auto_recovery,omitempty"`
 }
 
 type MetaData struct {
 	OpSvcUserId string `json:"op_svc_userid,omitempty"`
+	AgencyName  string `json:"agency_name,omitempty"`
 }
 
 type SecurityGroup struct {
@@ -161,7 +164,14 @@ type SecurityGroup struct {
 }
 
 type SchedulerHints struct {
-	Group string `json:"group,omitempty"`
+	Group       string `json:"group,omitempty"`
+	FaultDomain string `json:"fault_domain,omitempty"`
+
+	// Specifies whether the ECS is created on a Dedicated Host (DeH) or in a shared pool.
+	Tenancy string `json:"tenancy,omitempty"`
+
+	// DedicatedHostID specifies a DeH ID.
+	DedicatedHostID string `json:"dedicated_host_id,omitempty"`
 }
 
 type ServerTags struct {
@@ -171,6 +181,18 @@ type ServerTags struct {
 
 // Create requests a server to be provisioned to the user in the current tenant.
 func Create(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r JobResult) {
+	reqBody, err := opts.ToServerCreateMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+
+	_, r.Err = client.Post(createURL(client), reqBody, &r.Body, &golangsdk.RequestOpts{OkCodes: []int{200}})
+	return
+}
+
+// CreatePrePaid requests a server to be provisioned to the user in the current tenant.
+func CreatePrePaid(client *golangsdk.ServiceClient, opts CreateOptsBuilder) (r OrderResult) {
 	reqBody, err := opts.ToServerCreateMap()
 	if err != nil {
 		r.Err = err
@@ -213,6 +235,28 @@ func Delete(client *golangsdk.ServiceClient, opts DeleteOpts) (r JobResult) {
 		return
 	}
 	_, r.Err = client.Post(deleteURL(client), reqBody, &r.Body, &golangsdk.RequestOpts{OkCodes: []int{200}})
+	return
+}
+
+type DeleteOrderOpts struct {
+	ResourceIds []string `json:"resourceIds" required:"true"`
+	UnSubType   int      `json:"unSubType" required:"true"`
+}
+
+// ToServerDeleteOrderMap assembles a request body based on the contents of a
+// DeleteOrderOpts.
+func (opts DeleteOrderOpts) ToServerDeleteOrderMap() (map[string]interface{}, error) {
+	return golangsdk.BuildRequestBody(opts, "")
+}
+
+// DeleteOrder requests a server to be deleted to the user in the current tenant.
+func DeleteOrder(client *golangsdk.ServiceClient, opts DeleteOrderOpts) (r DeleteOrderResult) {
+	reqBody, err := opts.ToServerDeleteOrderMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+	_, r.Err = client.Post(deleteOrderURL(client), reqBody, &r.Body, &golangsdk.RequestOpts{OkCodes: []int{200}})
 	return
 }
 
@@ -275,4 +319,38 @@ func List(client *golangsdk.ServiceClient, opts ListOptsBuilder) pagination.Page
 	return pagination.NewPager(client, url, func(r pagination.PageResult) pagination.Page {
 		return ServerPage{pagination.LinkedPageBase{PageResult: r}}
 	})
+}
+
+type ResizeOpts struct {
+	FlavorRef   string             `json:"flavorRef" required:"true"`
+	Mode        string             `json:"mode,omitempty"`
+	ExtendParam *ResizeExtendParam `json:"extendparam,omitempty"`
+}
+
+type ResizeExtendParam struct {
+	AutoPay string `json:"isAutoPay,omitempty"`
+}
+
+// ResizeOptsBuilder allows extensions to add additional parameters to the
+// Resize request.
+type ResizeOptsBuilder interface {
+	ToServerResizeMap() (map[string]interface{}, error)
+}
+
+// ToServerResizeMap assembles a request body based on the contents of a
+// ResizeOpts.
+func (opts ResizeOpts) ToServerResizeMap() (map[string]interface{}, error) {
+	return golangsdk.BuildRequestBody(opts, "resize")
+}
+
+// Resize requests a server to be resizeed.
+func Resize(client *golangsdk.ServiceClient, opts ResizeOptsBuilder, serverId string) (r JobResult) {
+	reqBody, err := opts.ToServerResizeMap()
+	if err != nil {
+		r.Err = err
+		return
+	}
+
+	_, r.Err = client.Post(resizeURL(client, serverId), reqBody, &r.Body, &golangsdk.RequestOpts{OkCodes: []int{200}})
+	return
 }

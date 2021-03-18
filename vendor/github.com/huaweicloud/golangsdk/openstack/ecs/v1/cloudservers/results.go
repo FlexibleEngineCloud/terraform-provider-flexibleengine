@@ -30,7 +30,8 @@ type SysTags struct {
 }
 
 type OsSchedulerHints struct {
-	Group []string `json:"group"`
+	Group       []string `json:"group"`
+	FaultDomain string   `json:"fault_domain,omitempty"`
 }
 
 // Metadata is only used for method that requests details on a single server, by ID.
@@ -51,6 +52,7 @@ type Metadata struct {
 	LockSourceID      string `json:"lock_source_id"`
 	LockScene         string `json:"lock_scene"`
 	VirtualEnvType    string `json:"virtual_env_type"`
+	AgencyName        string `json:"agency_name"`
 }
 
 type Address struct {
