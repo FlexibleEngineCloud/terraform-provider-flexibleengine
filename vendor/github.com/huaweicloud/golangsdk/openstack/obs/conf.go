@@ -1,6 +1,19 @@
+// Copyright 2019 Huawei Technologies Co.,Ltd.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.  You may obtain a copy of the
+// License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations under the License.
+
 package obs
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
@@ -43,15 +56,19 @@ type config struct {
 	maxConnsPerHost  int
 	sslVerify        bool
 	pemCerts         []byte
+	transport        *http.Transport
+	ctx              context.Context
+	cname            bool
+	maxRedirectCount int
 }
 
 func (conf config) String() string {
 	return fmt.Sprintf("[endpoint:%s, signature:%s, pathStyle:%v, region:%s"+
 		"\nconnectTimeout:%d, socketTimeout:%dheaderTimeout:%d, idleConnTimeout:%d"+
-		"\nmaxRetryCount:%d, maxConnsPerHost:%d, sslVerify:%v, proxyUrl:%s]",
+		"\nmaxRetryCount:%d, maxConnsPerHost:%d, sslVerify:%v, proxyUrl:%s, maxRedirectCount:%d]",
 		conf.endpoint, conf.signature, conf.pathStyle, conf.region,
 		conf.connectTimeout, conf.socketTimeout, conf.headerTimeout, conf.idleConnTimeout,
-		conf.maxRetryCount, conf.maxConnsPerHost, conf.sslVerify, conf.proxyUrl,
+		conf.maxRetryCount, conf.maxConnsPerHost, conf.sslVerify, conf.proxyUrl, conf.maxRedirectCount,
 	)
 }
 
@@ -134,6 +151,30 @@ func WithSecurityToken(securityToken string) configurer {
 	}
 }
 
+func WithHttpTransport(transport *http.Transport) configurer {
+	return func(conf *config) {
+		conf.transport = transport
+	}
+}
+
+func WithRequestContext(ctx context.Context) configurer {
+	return func(conf *config) {
+		conf.ctx = ctx
+	}
+}
+
+func WithCustomDomainName(cname bool) configurer {
+	return func(conf *config) {
+		conf.cname = cname
+	}
+}
+
+func WithMaxRedirectCount(maxRedirectCount int) configurer {
+	return func(conf *config) {
+		conf.maxRedirectCount = maxRedirectCount
+	}
+}
+
 func (conf *config) initConfigWithDefault() error {
 	conf.securityProvider.ak = strings.TrimSpace(conf.securityProvider.ak)
 	conf.securityProvider.sk = strings.TrimSpace(conf.securityProvider.sk)
@@ -183,6 +224,10 @@ func (conf *config) initConfigWithDefault() error {
 		}
 	}
 
+	if IsIP(urlHolder.host) {
+		conf.pathStyle = true
+	}
+
 	conf.urlHolder = urlHolder
 
 	conf.region = strings.TrimSpace(conf.region)
@@ -216,71 +261,110 @@ func (conf *config) initConfigWithDefault() error {
 		conf.maxConnsPerHost = DEFAULT_MAX_CONN_PER_HOST
 	}
 
+	if conf.maxRedirectCount < 0 {
+		conf.maxRedirectCount = DEFAULT_MAX_REDIRECT_COUNT
+	}
+
 	conf.proxyUrl = strings.TrimSpace(conf.proxyUrl)
 	return nil
 }
 
-func (conf *config) getTransport() (*http.Transport, error) {
-	transport := &http.Transport{
-		Dial: func(network, addr string) (net.Conn, error) {
-			conn, err := net.DialTimeout(network, addr, time.Second*time.Duration(conf.connectTimeout))
-			if err != nil {
-				return nil, err
-			}
-			return getConnDelegate(conn, conf.socketTimeout, conf.finalTimeout), nil
-		},
-		MaxIdleConns:          conf.maxConnsPerHost,
-		MaxIdleConnsPerHost:   conf.maxConnsPerHost,
-		ResponseHeaderTimeout: time.Second * time.Duration(conf.headerTimeout),
-		IdleConnTimeout:       time.Second * time.Duration(conf.idleConnTimeout),
-	}
-
-	if conf.proxyUrl != "" {
-		proxyUrl, err := url.Parse(conf.proxyUrl)
-		if err != nil {
-			return nil, err
+func (conf *config) getTransport() error {
+	if conf.transport == nil {
+		conf.transport = &http.Transport{
+			Dial: func(network, addr string) (net.Conn, error) {
+				conn, err := net.DialTimeout(network, addr, time.Second*time.Duration(conf.connectTimeout))
+				if err != nil {
+					return nil, err
+				}
+				return getConnDelegate(conn, conf.socketTimeout, conf.finalTimeout), nil
+			},
+			MaxIdleConns:          conf.maxConnsPerHost,
+			MaxIdleConnsPerHost:   conf.maxConnsPerHost,
+			ResponseHeaderTimeout: time.Second * time.Duration(conf.headerTimeout),
+			IdleConnTimeout:       time.Second * time.Duration(conf.idleConnTimeout),
 		}
-		transport.Proxy = http.ProxyURL(proxyUrl)
+
+		if conf.proxyUrl != "" {
+			proxyUrl, err := url.Parse(conf.proxyUrl)
+			if err != nil {
+				return err
+			}
+			conf.transport.Proxy = http.ProxyURL(proxyUrl)
+		}
+
+		tlsConfig := &tls.Config{InsecureSkipVerify: !conf.sslVerify}
+		if conf.sslVerify && conf.pemCerts != nil {
+			pool := x509.NewCertPool()
+			pool.AppendCertsFromPEM(conf.pemCerts)
+			tlsConfig.RootCAs = pool
+		}
+
+		conf.transport.TLSClientConfig = tlsConfig
 	}
 
-	tlsConfig := &tls.Config{InsecureSkipVerify: !conf.sslVerify}
-	if conf.sslVerify && conf.pemCerts != nil {
-		pool := x509.NewCertPool()
-		pool.AppendCertsFromPEM(conf.pemCerts)
-		tlsConfig.RootCAs = pool
-	}
-	transport.TLSClientConfig = tlsConfig
-
-	return transport, nil
+	return nil
 }
 
 func checkRedirectFunc(req *http.Request, via []*http.Request) error {
 	return http.ErrUseLastResponse
 }
 
-func (conf *config) formatUrls(bucketName, objectKey string, params map[string]string) (requestUrl string, canonicalizedUrl string) {
+func DummyQueryEscape(s string) string {
+	return s
+}
+
+func (conf *config) formatUrls(bucketName, objectKey string, params map[string]string, escape bool) (requestUrl string, canonicalizedUrl string) {
 
 	urlHolder := conf.urlHolder
-
-	if bucketName == "" {
+	if conf.cname {
 		requestUrl = fmt.Sprintf("%s://%s:%d", urlHolder.scheme, urlHolder.host, urlHolder.port)
-		canonicalizedUrl = "/"
-	} else {
-		if conf.pathStyle {
-			requestUrl = fmt.Sprintf("%s://%s:%d/%s", urlHolder.scheme, urlHolder.host, urlHolder.port, bucketName)
-			canonicalizedUrl = "/" + bucketName
+		if conf.signature == "v4" {
+			canonicalizedUrl = "/"
 		} else {
-			requestUrl = fmt.Sprintf("%s://%s.%s:%d", urlHolder.scheme, bucketName, urlHolder.host, urlHolder.port)
-			if conf.signature == "v2" {
-				canonicalizedUrl = "/" + bucketName + "/"
+			canonicalizedUrl = "/" + urlHolder.host + "/"
+		}
+	} else {
+		if bucketName == "" {
+			requestUrl = fmt.Sprintf("%s://%s:%d", urlHolder.scheme, urlHolder.host, urlHolder.port)
+			canonicalizedUrl = "/"
+		} else {
+			if conf.pathStyle {
+				requestUrl = fmt.Sprintf("%s://%s:%d/%s", urlHolder.scheme, urlHolder.host, urlHolder.port, bucketName)
+				canonicalizedUrl = "/" + bucketName
 			} else {
-				canonicalizedUrl = "/"
+				requestUrl = fmt.Sprintf("%s://%s.%s:%d", urlHolder.scheme, bucketName, urlHolder.host, urlHolder.port)
+				if conf.signature == "v2" || conf.signature == "OBS" {
+					canonicalizedUrl = "/" + bucketName + "/"
+				} else {
+					canonicalizedUrl = "/"
+				}
 			}
 		}
 	}
+	var escapeFunc func(s string) string
+	if escape {
+		escapeFunc = url.QueryEscape
+	} else {
+		escapeFunc = DummyQueryEscape
+	}
 
 	if objectKey != "" {
-		encodeObjectKey := url.QueryEscape(objectKey)
+		var encodeObjectKey string
+		if escape {
+			tempKey := []rune(objectKey)
+			result := make([]string, 0, len(tempKey))
+			for _, value := range tempKey {
+				if string(value) == "/" {
+					result = append(result, string(value))
+				} else {
+					result = append(result, url.QueryEscape(string(value)))
+				}
+			}
+			encodeObjectKey = strings.Join(result, "")
+		} else {
+			encodeObjectKey = escapeFunc(objectKey)
+		}
 		requestUrl += "/" + encodeObjectKey
 		if !strings.HasSuffix(canonicalizedUrl, "/") {
 			canonicalizedUrl += "/"
@@ -294,6 +378,7 @@ func (conf *config) formatUrls(bucketName, objectKey string, params map[string]s
 	}
 	sort.Strings(keys)
 	i := 0
+
 	for index, key := range keys {
 		if index == 0 {
 			requestUrl += "?"
@@ -304,7 +389,6 @@ func (conf *config) formatUrls(bucketName, objectKey string, params map[string]s
 		requestUrl += _key
 
 		_value := params[key]
-
 		if conf.signature == "v4" {
 			requestUrl += "=" + url.QueryEscape(_value)
 		} else {
@@ -314,7 +398,15 @@ func (conf *config) formatUrls(bucketName, objectKey string, params map[string]s
 			} else {
 				_value = ""
 			}
-			if _, ok := allowed_resource_parameter_names[strings.ToLower(key)]; ok {
+			lowerKey := strings.ToLower(key)
+			_, ok := allowed_resource_parameter_names[lowerKey]
+			prefixHeader := HEADER_PREFIX
+			isObs := conf.signature == SignatureObs
+			if isObs {
+				prefixHeader = HEADER_PREFIX_OBS
+			}
+			ok = ok || strings.HasPrefix(lowerKey, prefixHeader)
+			if ok {
 				if i == 0 {
 					canonicalizedUrl += "?"
 				} else {

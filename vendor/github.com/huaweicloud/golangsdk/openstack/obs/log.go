@@ -1,3 +1,15 @@
+// Copyright 2019 Huawei Technologies Co.,Ltd.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.  You may obtain a copy of the
+// License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations under the License.
+
 package obs
 
 import (
@@ -20,8 +32,6 @@ const (
 	LEVEL_INFO  Level = 200
 	LEVEL_DEBUG Level = 100
 )
-
-const cacheCount = 50
 
 var logLevelMap = map[Level]string{
 	LEVEL_OFF:   "[OFF]: ",
@@ -52,30 +62,44 @@ func getDefaultLogConf() logConfType {
 var logConf logConfType
 
 type loggerWrapper struct {
-	fullPath string
-	fd       *os.File
-	queue    []string
-	logger   *log.Logger
-	index    int
-	lock     *sync.RWMutex
+	fullPath   string
+	fd         *os.File
+	ch         chan string
+	wg         sync.WaitGroup
+	queue      []string
+	logger     *log.Logger
+	index      int
+	cacheCount int
+	closed     bool
 }
 
 func (lw *loggerWrapper) doInit() {
-	lw.queue = make([]string, 0, cacheCount)
+	lw.queue = make([]string, 0, lw.cacheCount)
 	lw.logger = log.New(lw.fd, "", 0)
-	lw.lock = new(sync.RWMutex)
+	lw.ch = make(chan string, lw.cacheCount)
+	lw.wg.Add(1)
+	go lw.doWrite()
 }
 
 func (lw *loggerWrapper) rotate() {
 	stat, err := lw.fd.Stat()
-	if err == nil && stat.Size() >= logConf.maxLogSize {
-		lw.fd.Sync()
+	if err != nil {
 		lw.fd.Close()
-
+		panic(err)
+	}
+	if stat.Size() >= logConf.maxLogSize {
+		_err := lw.fd.Sync()
+		if _err != nil {
+			panic(err)
+		}
+		lw.fd.Close()
 		if lw.index > logConf.backups {
 			lw.index = 1
 		}
-		os.Rename(lw.fullPath, lw.fullPath+"."+IntToString(lw.index))
+		_err = os.Rename(lw.fullPath, lw.fullPath+"."+IntToString(lw.index))
+		if _err != nil {
+			panic(err)
+		}
 		lw.index += 1
 
 		fd, err := os.OpenFile(lw.fullPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -92,40 +116,45 @@ func (lw *loggerWrapper) doFlush() {
 	for _, m := range lw.queue {
 		lw.logger.Println(m)
 	}
-	lw.fd.Sync()
+	err := lw.fd.Sync()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (lw *loggerWrapper) doClose() {
-	lw.doFlush()
-	lw.fd.Close()
-	lw.queue = nil
-	lw.fd = nil
-	lw.logger = nil
-	lw.lock = nil
-	lw.fullPath = ""
+	lw.closed = true
+	close(lw.ch)
+	lw.wg.Wait()
+}
+
+func (lw *loggerWrapper) doWrite() {
+	defer lw.wg.Done()
+	for {
+		msg, ok := <-lw.ch
+		if !ok {
+			lw.doFlush()
+			lw.fd.Close()
+			break
+		}
+		if len(lw.queue) >= lw.cacheCount {
+			lw.doFlush()
+			lw.queue = make([]string, 0, lw.cacheCount)
+		}
+		lw.queue = append(lw.queue, msg)
+	}
+
 }
 
 func (lw *loggerWrapper) Printf(format string, v ...interface{}) {
-	msg := fmt.Sprintf(format, v...)
-	if len(lw.queue) >= cacheCount {
-		lw.lock.Lock()
-		defer lw.lock.Unlock()
-		if len(lw.queue) >= cacheCount {
-			lw.doFlush()
-			lw.queue = make([]string, 0, cacheCount)
-		} else {
-			lw.queue = append(lw.queue, msg)
-		}
-	} else {
-		lock.RLock()
-		defer lock.RUnlock()
-		lw.queue = append(lw.queue, msg)
+	if !lw.closed {
+		msg := fmt.Sprintf(format, v...)
+		lw.ch <- msg
 	}
 }
 
 var consoleLogger *log.Logger
 var fileLogger *loggerWrapper
-
 var lock *sync.RWMutex = new(sync.RWMutex)
 
 func isDebugLogEnabled() bool {
@@ -154,8 +183,15 @@ func reset() {
 }
 
 func InitLog(logFullPath string, maxLogSize int64, backups int, level Level, logToConsole bool) error {
+	return InitLogWithCacheCnt(logFullPath, maxLogSize, backups, level, logToConsole, 50)
+}
+
+func InitLogWithCacheCnt(logFullPath string, maxLogSize int64, backups int, level Level, logToConsole bool, cacheCnt int) error {
 	lock.Lock()
 	defer lock.Unlock()
+	if cacheCnt <= 0 {
+		cacheCnt = 50
+	}
 	reset()
 	if fullPath := strings.TrimSpace(logFullPath); fullPath != "" {
 		_fullPath, err := filepath.Abs(fullPath)
@@ -178,22 +214,34 @@ func InitLog(logFullPath string, maxLogSize int64, backups int, level Level, log
 		if err != nil {
 			return err
 		}
-		fileLogger = &loggerWrapper{fullPath: _fullPath, fd: fd, index: 1}
 
 		if stat == nil {
 			stat, err = os.Stat(_fullPath)
-		}
-		prefix := stat.Name() + "."
-		walkFunc := func(path string, info os.FileInfo, err error) error {
-			if name := info.Name(); strings.HasPrefix(name, prefix) {
-				if i := StringToInt(name[len(prefix):], 0); i >= fileLogger.index {
-					fileLogger.index = i + 1
-				}
+			if err != nil {
+				fd.Close()
+				return err
 			}
-			return nil
 		}
 
-		filepath.Walk(filepath.Dir(_fullPath), walkFunc)
+		prefix := stat.Name() + "."
+		index := 1
+		walkFunc := func(path string, info os.FileInfo, err error) error {
+			if err == nil {
+				if name := info.Name(); strings.HasPrefix(name, prefix) {
+					if i := StringToInt(name[len(prefix):], 0); i >= index {
+						index = i + 1
+					}
+				}
+			}
+			return err
+		}
+
+		if err = filepath.Walk(filepath.Dir(_fullPath), walkFunc); err != nil {
+			fd.Close()
+			return err
+		}
+
+		fileLogger = &loggerWrapper{fullPath: _fullPath, fd: fd, index: index, cacheCount: cacheCnt, closed: false}
 		fileLogger.doInit()
 	}
 	if maxLogSize > 0 {
@@ -210,7 +258,7 @@ func InitLog(logFullPath string, maxLogSize int64, backups int, level Level, log
 }
 
 func CloseLog() {
-	if fileLogger != nil || consoleLogger != nil {
+	if logEnabled() {
 		lock.Lock()
 		defer lock.Unlock()
 		reset()
@@ -218,21 +266,18 @@ func CloseLog() {
 }
 
 func SyncLog() {
-	if fileLogger != nil {
-		lock.Lock()
-		defer lock.Unlock()
-		fileLogger.doFlush()
-	}
 }
 
 func logEnabled() bool {
 	return consoleLogger != nil || fileLogger != nil
 }
 
+func DoLog(level Level, format string, v ...interface{}) {
+	doLog(level, format, v...)
+}
+
 func doLog(level Level, format string, v ...interface{}) {
 	if logEnabled() && logConf.level <= level {
-		lock.RLock()
-		defer lock.RUnlock()
 		msg := fmt.Sprintf(format, v...)
 		if _, file, line, ok := runtime.Caller(1); ok {
 			index := strings.LastIndex(file, "/")
@@ -248,28 +293,6 @@ func doLog(level Level, format string, v ...interface{}) {
 		if fileLogger != nil {
 			nowDate := FormatUtcNow("2006-01-02T15:04:05Z")
 			fileLogger.Printf("%s %s%s", nowDate, prefix, msg)
-		}
-	}
-}
-
-func LOG(level Level, format string, v ...interface{}) {
-	if logEnabled() && logConf.level <= level {
-		lock.RLock()
-		defer lock.RUnlock()
-		msg := fmt.Sprintf(format, v...)
-		if _, file, line, ok := runtime.Caller(1); ok {
-			index := strings.LastIndex(file, "/")
-			if index >= 0 {
-				file = file[index+1:]
-			}
-			msg = fmt.Sprintf("%s:%d|%s", file, line, msg)
-		}
-		prefix := logLevelMap[level]
-		if consoleLogger != nil {
-			consoleLogger.Printf("%s%s", prefix, msg)
-		}
-		if fileLogger != nil {
-			fileLogger.Printf("%s%s", prefix, msg)
 		}
 	}
 }

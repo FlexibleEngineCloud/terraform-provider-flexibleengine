@@ -158,7 +158,7 @@ func putContentToObject(obsClient *obs.ObsClient, d *schema.ResourceData) (*obs.
 		putInput.ACL = obs.AclType(v.(string))
 	}
 	if v, ok := d.GetOk("storage_class"); ok {
-		putInput.StorageClass = obs.StorageClassType(v.(string))
+		putInput.StorageClass = obs.ParseStringToStorageClassType(v.(string))
 	}
 	if v, ok := d.GetOk("content_type"); ok {
 		putInput.ContentType = v.(string)
@@ -192,7 +192,7 @@ func putFileToObject(obsClient *obs.ObsClient, d *schema.ResourceData) (*obs.Put
 		putInput.ACL = obs.AclType(v.(string))
 	}
 	if v, ok := d.GetOk("storage_class"); ok {
-		putInput.StorageClass = obs.StorageClassType(v.(string))
+		putInput.StorageClass = obs.ParseStringToStorageClassType(v.(string))
 	}
 	if v, ok := d.GetOk("content_type"); ok {
 		putInput.ContentType = v.(string)
@@ -246,7 +246,13 @@ func resourceObsBucketObjectRead(d *schema.ResourceData, meta interface{}) error
 	if class == "" {
 		d.Set("storage_class", "STANDARD")
 	} else {
-		d.Set("storage_class", class)
+		if isObsStorageClassType(d.Get("storage_class").(string)) {
+			obsClass := normalizeStorageClass(class)
+			log.Printf("[DEBUG] using OBS storage class type, transform %s to %s", class, obsClass)
+			d.Set("storage_class", obsClass)
+		} else {
+			d.Set("storage_class", class)
+		}
 	}
 	d.Set("size", object.Size)
 	d.Set("etag", strings.Trim(object.ETag, `"`))
