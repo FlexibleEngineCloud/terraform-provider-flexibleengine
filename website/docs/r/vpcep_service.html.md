@@ -53,7 +53,7 @@ The following arguments are supported:
 * `approval` (Optional) - Specifies whether connection approval is required. The default value is false.
 
 * `permissions` (Optional) - Specifies the list of accounts to access the VPC endpoint service.
-    The record is in the `iam:domain::domain_id` format. *iam:domain::\** allows all users to access the VPC endpoint service.
+    The record is in the `iam:domain::domain_id` format, while `*` allows all users to access the VPC endpoint service.
 
 * `tags` - (Optional) The key/value pairs to associate with the VPC endpoint service.
 
