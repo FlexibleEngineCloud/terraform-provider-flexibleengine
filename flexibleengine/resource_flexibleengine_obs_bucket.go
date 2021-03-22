@@ -251,7 +251,7 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	opts := &obs.CreateBucketInput{
 		Bucket:       bucket,
 		ACL:          obs.AclType(acl),
-		StorageClass: obs.StorageClassType(class),
+		StorageClass: obs.ParseStringToStorageClassType(class),
 	}
 	opts.Location = d.Get("region").(string)
 	log.Printf("[DEBUG] OBS bucket create opts: %#v", opts)
@@ -459,7 +459,7 @@ func resourceObsBucketClassUpdate(obsClient *obs.ObsClient, d *schema.ResourceDa
 
 	input := &obs.SetBucketStoragePolicyInput{}
 	input.Bucket = bucket
-	input.StorageClass = obs.StorageClassType(class)
+	input.StorageClass = obs.ParseStringToStorageClassType(class)
 	log.Printf("[DEBUG] set storage class of OBS bucket %s: %#v", bucket, input)
 
 	_, err := obsClient.SetBucketStoragePolicy(input)
@@ -568,7 +568,7 @@ func resourceObsBucketLifecycleUpdate(obsClient *obs.ObsClient, d *schema.Resour
 				list[j].Days = val
 			}
 			if val, ok := raw["storage_class"].(string); ok {
-				list[j].StorageClass = obs.StorageClassType(val)
+				list[j].StorageClass = obs.ParseStringToStorageClassType(val)
 			}
 		}
 		rules[i].Transitions = list
@@ -594,7 +594,7 @@ func resourceObsBucketLifecycleUpdate(obsClient *obs.ObsClient, d *schema.Resour
 				nc_list[j].NoncurrentDays = val
 			}
 			if val, ok := raw["storage_class"].(string); ok {
-				nc_list[j].StorageClass = obs.StorageClassType(val)
+				nc_list[j].StorageClass = obs.ParseStringToStorageClassType(val)
 			}
 		}
 		rules[i].NoncurrentVersionTransitions = nc_list
@@ -778,7 +778,13 @@ func setObsBucketStorageClass(obsClient *obs.ObsClient, d *schema.ResourceData) 
 	}
 
 	class := string(output.StorageClass)
-	d.Set("storage_class", class)
+	if isObsStorageClassType(d.Get("storage_class").(string)) {
+		obsClass := normalizeStorageClass(class)
+		log.Printf("[DEBUG] using OBS storage class type, transform %s to %s", class, obsClass)
+		d.Set("storage_class", obsClass)
+	} else {
+		d.Set("storage_class", class)
+	}
 
 	return nil
 }
@@ -1081,9 +1087,24 @@ func deleteAllBucketObjects(obsClient *obs.ObsClient, bucket string) error {
 func getObsError(action string, bucket string, err error) error {
 	if obsError, ok := err.(obs.ObsError); ok {
 		return fmt.Errorf("%s %s: %s,\n Reason: %s", action, bucket, obsError.Code, obsError.Message)
-	} else {
-		return err
 	}
+	return err
+}
+
+func isObsStorageClassType(class string) bool {
+	return class == "WARM" || class == "COLD"
+}
+
+// normalize format of storage class
+func normalizeStorageClass(class string) string {
+	var ret string = class
+
+	if class == "STANDARD_IA" {
+		ret = "WARM"
+	} else if class == "GLACIER" {
+		ret = "COLD"
+	}
+	return ret
 }
 
 func normalizeWebsiteRoutingRules(w []obs.RoutingRule) (string, error) {

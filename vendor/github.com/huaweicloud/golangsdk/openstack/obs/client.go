@@ -1,3 +1,15 @@
+// Copyright 2019 Huawei Technologies Co.,Ltd.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.  You may obtain a copy of the
+// License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations under the License.
+
 package obs
 
 import (
@@ -13,12 +25,12 @@ import (
 type ObsClient struct {
 	conf       *config
 	httpClient *http.Client
-	transport  *http.Transport
 }
 
 func New(ak, sk, endpoint string, configurers ...configurer) (*ObsClient, error) {
 	conf := &config{securityProvider: &securityProvider{ak: ak, sk: sk}, endpoint: endpoint}
 	conf.maxRetryCount = -1
+	conf.maxRedirectCount = -1
 	for _, configurer := range configurers {
 		configurer(conf)
 	}
@@ -26,23 +38,24 @@ func New(ak, sk, endpoint string, configurers ...configurer) (*ObsClient, error)
 	if err := conf.initConfigWithDefault(); err != nil {
 		return nil, err
 	}
-
-	transport, err := conf.getTransport()
+	err := conf.getTransport()
 	if err != nil {
 		return nil, err
 	}
 
-	info := make([]string, 3)
-	info[0] = fmt.Sprintf("[OBS SDK Version=%s", obs_sdk_version)
-	info[1] = fmt.Sprintf("Endpoint=%s", conf.endpoint)
-	accessMode := "Virtual Hosting"
-	if conf.pathStyle {
-		accessMode = "Path"
+	if isWarnLogEnabled() {
+		info := make([]string, 3)
+		info[0] = fmt.Sprintf("[OBS SDK Version=%s", obs_sdk_version)
+		info[1] = fmt.Sprintf("Endpoint=%s", conf.endpoint)
+		accessMode := "Virtual Hosting"
+		if conf.pathStyle {
+			accessMode = "Path"
+		}
+		info[2] = fmt.Sprintf("Access Mode=%s]", accessMode)
+		doLog(LEVEL_WARN, strings.Join(info, "];["))
 	}
-	info[2] = fmt.Sprintf("Access Mode=%s]", accessMode)
-	doLog(LEVEL_WARN, strings.Join(info, "];["))
 	doLog(LEVEL_DEBUG, "Create obsclient with config:\n%s\n", conf)
-	obsClient := &ObsClient{conf: conf, httpClient: &http.Client{Transport: transport, CheckRedirect: checkRedirectFunc}, transport: transport}
+	obsClient := &ObsClient{conf: conf, httpClient: &http.Client{Transport: conf.transport, CheckRedirect: checkRedirectFunc}}
 	return obsClient, nil
 }
 
@@ -52,15 +65,10 @@ func (obsClient ObsClient) Refresh(ak, sk, securityToken string) {
 }
 
 func (obsClient ObsClient) Close() {
-	obsClient.transport.CloseIdleConnections()
-	obsClient.transport = nil
 	obsClient.httpClient = nil
+	obsClient.conf.transport.CloseIdleConnections()
 	obsClient.conf = nil
 	SyncLog()
-}
-
-func (obsClient ObsClient) GetEndpoint() string {
-	return obsClient.conf.endpoint
 }
 
 func (obsClient ObsClient) ListBuckets(input *ListBucketsInput) (output *ListBucketsOutput, err error) {
@@ -107,14 +115,38 @@ func (obsClient ObsClient) SetBucketStoragePolicy(input *SetBucketStoragePolicyI
 	}
 	return
 }
-
-func (obsClient ObsClient) GetBucketStoragePolicy(bucketName string) (output *GetBucketStoragePolicyOutput, err error) {
+func (obsClient ObsClient) getBucketStoragePolicyS3(bucketName string) (output *GetBucketStoragePolicyOutput, err error) {
 	output = &GetBucketStoragePolicyOutput{}
-	err = obsClient.doActionWithBucket("GetBucketStoragePolicy", HTTP_GET, bucketName, newSubResourceSerial(SubResourceStoragePolicy), output)
+	var outputS3 *getBucketStoragePolicyOutputS3
+	outputS3 = &getBucketStoragePolicyOutputS3{}
+	err = obsClient.doActionWithBucket("GetBucketStoragePolicy", HTTP_GET, bucketName, newSubResourceSerial(SubResourceStoragePolicy), outputS3)
 	if err != nil {
 		output = nil
+		return
 	}
+	output.BaseModel = outputS3.BaseModel
+	output.StorageClass = fmt.Sprintf("%s", outputS3.StorageClass)
 	return
+}
+
+func (obsClient ObsClient) getBucketStoragePolicyObs(bucketName string) (output *GetBucketStoragePolicyOutput, err error) {
+	output = &GetBucketStoragePolicyOutput{}
+	var outputObs *getBucketStoragePolicyOutputObs
+	outputObs = &getBucketStoragePolicyOutputObs{}
+	err = obsClient.doActionWithBucket("GetBucketStoragePolicy", HTTP_GET, bucketName, newSubResourceSerial(SubResourceStorageClass), outputObs)
+	if err != nil {
+		output = nil
+		return
+	}
+	output.BaseModel = outputObs.BaseModel
+	output.StorageClass = outputObs.StorageClass
+	return
+}
+func (obsClient ObsClient) GetBucketStoragePolicy(bucketName string) (output *GetBucketStoragePolicyOutput, err error) {
+	if obsClient.conf.signature == SignatureObs {
+		return obsClient.getBucketStoragePolicyObs(bucketName)
+	}
+	return obsClient.getBucketStoragePolicyS3(bucketName)
 }
 
 func (obsClient ObsClient) ListObjects(input *ListObjectsInput) (output *ListObjectsOutput, err error) {
@@ -202,6 +234,17 @@ func (obsClient ObsClient) GetBucketMetadata(input *GetBucketMetadataInput) (out
 	return
 }
 
+func (obsClient ObsClient) SetObjectMetadata(input *SetObjectMetadataInput) (output *SetObjectMetadataOutput, err error) {
+	output = &SetObjectMetadataOutput{}
+	err = obsClient.doActionWithBucketAndKey("SetObjectMetadata", HTTP_PUT, input.Bucket, input.Key, input, output)
+	if err != nil {
+		output = nil
+	} else {
+		ParseSetObjectMetadataOutput(output)
+	}
+	return
+}
+
 func (obsClient ObsClient) GetBucketStorageInfo(bucketName string) (output *GetBucketStorageInfoOutput, err error) {
 	output = &GetBucketStorageInfoOutput{}
 	err = obsClient.doActionWithBucket("GetBucketStorageInfo", HTTP_GET, bucketName, newSubResourceSerial(SubResourceStorageInfo), output)
@@ -211,13 +254,37 @@ func (obsClient ObsClient) GetBucketStorageInfo(bucketName string) (output *GetB
 	return
 }
 
-func (obsClient ObsClient) GetBucketLocation(bucketName string) (output *GetBucketLocationOutput, err error) {
+func (obsClient ObsClient) getBucketLocationS3(bucketName string) (output *GetBucketLocationOutput, err error) {
 	output = &GetBucketLocationOutput{}
-	err = obsClient.doActionWithBucket("GetBucketLocation", HTTP_GET, bucketName, newSubResourceSerial(SubResourceLocation), output)
+	var outputS3 *getBucketLocationOutputS3
+	outputS3 = &getBucketLocationOutputS3{}
+	err = obsClient.doActionWithBucket("GetBucketLocation", HTTP_GET, bucketName, newSubResourceSerial(SubResourceLocation), outputS3)
 	if err != nil {
 		output = nil
+	} else {
+		output.BaseModel = outputS3.BaseModel
+		output.Location = outputS3.Location
 	}
 	return
+}
+func (obsClient ObsClient) getBucketLocationObs(bucketName string) (output *GetBucketLocationOutput, err error) {
+	output = &GetBucketLocationOutput{}
+	var outputObs *getBucketLocationOutputObs
+	outputObs = &getBucketLocationOutputObs{}
+	err = obsClient.doActionWithBucket("GetBucketLocation", HTTP_GET, bucketName, newSubResourceSerial(SubResourceLocation), outputObs)
+	if err != nil {
+		output = nil
+	} else {
+		output.BaseModel = outputObs.BaseModel
+		output.Location = outputObs.Location
+	}
+	return
+}
+func (obsClient ObsClient) GetBucketLocation(bucketName string) (output *GetBucketLocationOutput, err error) {
+	if obsClient.conf.signature == SignatureObs {
+		return obsClient.getBucketLocationObs(bucketName)
+	}
+	return obsClient.getBucketLocationS3(bucketName)
 }
 
 func (obsClient ObsClient) SetBucketAcl(input *SetBucketAclInput) (output *BaseModel, err error) {
@@ -231,9 +298,36 @@ func (obsClient ObsClient) SetBucketAcl(input *SetBucketAclInput) (output *BaseM
 	}
 	return
 }
+func (obsClient ObsClient) getBucketAclObs(bucketName string) (output *GetBucketAclOutput, err error) {
+	output = &GetBucketAclOutput{}
+	var outputObs *getBucketAclOutputObs
+	outputObs = &getBucketAclOutputObs{}
+	err = obsClient.doActionWithBucket("GetBucketAcl", HTTP_GET, bucketName, newSubResourceSerial(SubResourceAcl), outputObs)
+	if err != nil {
+		output = nil
+	} else {
+		output.BaseModel = outputObs.BaseModel
+		output.Owner = outputObs.Owner
+		output.Grants = make([]Grant, 0, len(outputObs.Grants))
+		for _, valGrant := range outputObs.Grants {
+			tempOutput := Grant{}
+			tempOutput.Delivered = valGrant.Delivered
+			tempOutput.Permission = valGrant.Permission
+			tempOutput.Grantee.DisplayName = valGrant.Grantee.DisplayName
+			tempOutput.Grantee.ID = valGrant.Grantee.ID
+			tempOutput.Grantee.Type = valGrant.Grantee.Type
+			tempOutput.Grantee.URI = GroupAllUsers
 
+			output.Grants = append(output.Grants, tempOutput)
+		}
+	}
+	return
+}
 func (obsClient ObsClient) GetBucketAcl(bucketName string) (output *GetBucketAclOutput, err error) {
 	output = &GetBucketAclOutput{}
+	if obsClient.conf.signature == SignatureObs {
+		return obsClient.getBucketAclObs(bucketName)
+	}
 	err = obsClient.doActionWithBucket("GetBucketAcl", HTTP_GET, bucketName, newSubResourceSerial(SubResourceAcl), output)
 	if err != nil {
 		output = nil
@@ -446,11 +540,41 @@ func (obsClient ObsClient) SetBucketNotification(input *SetBucketNotificationInp
 }
 
 func (obsClient ObsClient) GetBucketNotification(bucketName string) (output *GetBucketNotificationOutput, err error) {
+	if obsClient.conf.signature != SignatureObs {
+		return obsClient.getBucketNotificationS3(bucketName)
+	}
 	output = &GetBucketNotificationOutput{}
 	err = obsClient.doActionWithBucket("GetBucketNotification", HTTP_GET, bucketName, newSubResourceSerial(SubResourceNotification), output)
 	if err != nil {
 		output = nil
 	}
+	return
+}
+
+func (obsClient ObsClient) getBucketNotificationS3(bucketName string) (output *GetBucketNotificationOutput, err error) {
+	outputS3 := &getBucketNotificationOutputS3{}
+	err = obsClient.doActionWithBucket("GetBucketNotification", HTTP_GET, bucketName, newSubResourceSerial(SubResourceNotification), outputS3)
+	if err != nil {
+		return nil, err
+	}
+
+	output = &GetBucketNotificationOutput{}
+	output.BaseModel = outputS3.BaseModel
+	topicConfigurations := make([]TopicConfiguration, 0, len(outputS3.TopicConfigurations))
+	for _, topicConfigurationS3 := range outputS3.TopicConfigurations {
+		topicConfiguration := TopicConfiguration{}
+		topicConfiguration.ID = topicConfigurationS3.ID
+		topicConfiguration.Topic = topicConfigurationS3.Topic
+		topicConfiguration.FilterRules = topicConfigurationS3.FilterRules
+
+		events := make([]EventType, 0, len(topicConfigurationS3.Events))
+		for _, event := range topicConfigurationS3.Events {
+			events = append(events, ParseStringToEventType(event))
+		}
+		topicConfiguration.Events = events
+		topicConfigurations = append(topicConfigurations, topicConfiguration)
+	}
+	output.TopicConfigurations = topicConfigurations
 	return
 }
 
@@ -554,7 +678,7 @@ func (obsClient ObsClient) PutObject(input *PutObjectInput) (output *PutObjectOu
 	}
 
 	if input.ContentType == "" && input.Key != "" {
-		if contentType, ok := mime_types[input.Key[strings.LastIndex(input.Key, ".")+1:]]; ok {
+		if contentType, ok := mime_types[strings.ToLower(input.Key[strings.LastIndex(input.Key, ".")+1:])]; ok {
 			input.ContentType = contentType
 		}
 	}
@@ -616,9 +740,9 @@ func (obsClient ObsClient) PutFile(input *PutFileInput) (output *PutObjectOutput
 	_input.Body = body
 
 	if _input.ContentType == "" && _input.Key != "" {
-		if contentType, ok := mime_types[_input.Key[strings.LastIndex(_input.Key, ".")+1:]]; ok {
+		if contentType, ok := mime_types[strings.ToLower(_input.Key[strings.LastIndex(_input.Key, ".")+1:])]; ok {
 			_input.ContentType = contentType
-		} else if contentType, ok := mime_types[sourceFile[strings.LastIndex(sourceFile, ".")+1:]]; ok {
+		} else if contentType, ok := mime_types[strings.ToLower(sourceFile[strings.LastIndex(sourceFile, ".")+1:])]; ok {
 			_input.ContentType = contentType
 		}
 	}
@@ -676,7 +800,7 @@ func (obsClient ObsClient) InitiateMultipartUpload(input *InitiateMultipartUploa
 	}
 
 	if input.ContentType == "" && input.Key != "" {
-		if contentType, ok := mime_types[input.Key[strings.LastIndex(input.Key, ".")+1:]]; ok {
+		if contentType, ok := mime_types[strings.ToLower(input.Key[strings.LastIndex(input.Key, ".")+1:])]; ok {
 			input.ContentType = contentType
 		}
 	}
@@ -691,20 +815,32 @@ func (obsClient ObsClient) InitiateMultipartUpload(input *InitiateMultipartUploa
 	return
 }
 
-func (obsClient ObsClient) UploadPart(input *UploadPartInput) (output *UploadPartOutput, err error) {
-	if input == nil {
+func (obsClient ObsClient) UploadPart(_input *UploadPartInput) (output *UploadPartOutput, err error) {
+	if _input == nil {
 		return nil, errors.New("UploadPartInput is nil")
 	}
 
-	if input.UploadId == "" {
+	if _input.UploadId == "" {
 		return nil, errors.New("UploadId is empty")
 	}
+
+	input := &UploadPartInput{}
+	input.Bucket = _input.Bucket
+	input.Key = _input.Key
+	input.PartNumber = _input.PartNumber
+	input.UploadId = _input.UploadId
+	input.ContentMD5 = _input.ContentMD5
+	input.SourceFile = _input.SourceFile
+	input.Offset = _input.Offset
+	input.PartSize = _input.PartSize
+	input.SseHeader = _input.SseHeader
+	input.Body = _input.Body
 
 	output = &UploadPartOutput{}
 	var repeatable bool
 	if input.Body != nil {
 		_, repeatable = input.Body.(*strings.Reader)
-		if input.PartSize > 0 {
+		if _, ok := input.Body.(*readerWrapper); !ok && input.PartSize > 0 {
 			input.Body = &readerWrapper{reader: input.Body, totalCount: input.PartSize}
 		}
 	} else if sourceFile := strings.TrimSpace(input.SourceFile); sourceFile != "" {
@@ -730,7 +866,9 @@ func (obsClient ObsClient) UploadPart(input *UploadPartInput) (output *UploadPar
 			input.PartSize = fileSize - input.Offset
 		}
 		fileReaderWrapper.totalCount = input.PartSize
-		fd.Seek(input.Offset, 0)
+		if _, err = fd.Seek(input.Offset, io.SeekStart); err != nil {
+			return nil, err
+		}
 		input.Body = fileReaderWrapper
 		repeatable = true
 	}

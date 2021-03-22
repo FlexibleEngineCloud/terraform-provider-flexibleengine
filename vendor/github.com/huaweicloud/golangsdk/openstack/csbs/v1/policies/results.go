@@ -105,8 +105,8 @@ func (r *OperationDefinitionResp) UnmarshalJSON(b []byte) error {
 
 	if err != nil {
 		switch err.(type) {
-		case *json.UnmarshalTypeError: //check if type error occurred (handles if no type conversion is required for cloud like Huawei)
-
+		case *json.UnmarshalTypeError:
+			// handle type error to keep compatible with multi types
 			var s struct {
 				tmp
 				MaxBackups            int  `json:"max_backups"`

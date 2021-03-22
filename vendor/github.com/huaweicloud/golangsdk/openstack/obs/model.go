@@ -1,3 +1,15 @@
+// Copyright 2019 Huawei Technologies Co.,Ltd.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.  You may obtain a copy of the
+// License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations under the License.
+
 package obs
 
 import (
@@ -17,6 +29,7 @@ type Bucket struct {
 	XMLName      xml.Name  `xml:"Bucket"`
 	Name         string    `xml:"Name"`
 	CreationDate time.Time `xml:"CreationDate"`
+	Location     string    `xml:"Location"`
 }
 
 type Owner struct {
@@ -32,6 +45,7 @@ type Initiator struct {
 }
 
 type ListBucketsInput struct {
+	QueryLocation bool
 }
 
 type ListBucketsOutput struct {
@@ -41,16 +55,29 @@ type ListBucketsOutput struct {
 	Buckets []Bucket `xml:"Buckets>Bucket"`
 }
 
+type bucketLocationObs struct {
+	XMLName  xml.Name `xml:"Location"`
+	Location string   `xml:",chardata"`
+}
+
 type BucketLocation struct {
 	XMLName  xml.Name `xml:"CreateBucketConfiguration"`
-	Location string   `xml:"LocationConstraint"`
+	Location string   `xml:"LocationConstraint,omitempty"`
 }
 
 type CreateBucketInput struct {
 	BucketLocation
-	Bucket       string           `xml:"-"`
-	ACL          AclType          `xml:"-"`
-	StorageClass StorageClassType `xml:"-"`
+	Bucket                      string           `xml:"-"`
+	ACL                         AclType          `xml:"-"`
+	StorageClass                StorageClassType `xml:"-"`
+	GrantReadId                 string           `xml:"-"`
+	GrantWriteId                string           `xml:"-"`
+	GrantReadAcpId              string           `xml:"-"`
+	GrantWriteAcpId             string           `xml:"-"`
+	GrantFullControlId          string           `xml:"-"`
+	GrantReadDeliveredId        string           `xml:"-"`
+	GrantFullControlDeliveredId string           `xml:"-"`
+	Epid                        string           `xml:"-"`
 }
 
 type BucketStoragePolicy struct {
@@ -63,9 +90,23 @@ type SetBucketStoragePolicyInput struct {
 	BucketStoragePolicy
 }
 
-type GetBucketStoragePolicyOutput struct {
+type getBucketStoragePolicyOutputS3 struct {
 	BaseModel
 	BucketStoragePolicy
+}
+
+type GetBucketStoragePolicyOutput struct {
+	BaseModel
+	StorageClass string
+}
+
+type bucketStoragePolicyObs struct {
+	XMLName      xml.Name `xml:"StorageClass"`
+	StorageClass string   `xml:",chardata"`
+}
+type getBucketStoragePolicyOutputObs struct {
+	BaseModel
+	bucketStoragePolicyObs
 }
 
 type ListObjsInput struct {
@@ -206,9 +247,17 @@ type GetBucketStorageInfoOutput struct {
 	ObjectNumber int      `xml:"ObjectNumber"`
 }
 
-type GetBucketLocationOutput struct {
+type getBucketLocationOutputS3 struct {
 	BaseModel
 	BucketLocation
+}
+type getBucketLocationOutputObs struct {
+	BaseModel
+	bucketLocationObs
+}
+type GetBucketLocationOutput struct {
+	BaseModel
+	Location string `xml:"-"`
 }
 
 type Grantee struct {
@@ -219,21 +268,48 @@ type Grantee struct {
 	URI         GroupUriType `xml:"URI,omitempty"`
 }
 
+type granteeObs struct {
+	XMLName     xml.Name    `xml:"Grantee"`
+	Type        GranteeType `xml:"type,attr"`
+	ID          string      `xml:"ID,omitempty"`
+	DisplayName string      `xml:"DisplayName,omitempty"`
+	Canned      string      `xml:"Canned,omitempty"`
+}
+
 type Grant struct {
 	XMLName    xml.Name       `xml:"Grant"`
 	Grantee    Grantee        `xml:"Grantee"`
 	Permission PermissionType `xml:"Permission"`
+	Delivered  bool           `xml:"Delivered"`
+}
+type grantObs struct {
+	XMLName    xml.Name       `xml:"Grant"`
+	Grantee    granteeObs     `xml:"Grantee"`
+	Permission PermissionType `xml:"Permission"`
+	Delivered  bool           `xml:"Delivered"`
 }
 
 type AccessControlPolicy struct {
-	XMLName xml.Name `xml:"AccessControlPolicy"`
-	Owner   Owner    `xml:"Owner"`
-	Grants  []Grant  `xml:"AccessControlList>Grant"`
+	XMLName   xml.Name `xml:"AccessControlPolicy"`
+	Owner     Owner    `xml:"Owner"`
+	Grants    []Grant  `xml:"AccessControlList>Grant"`
+	Delivered string   `xml:"Delivered,omitempty"`
+}
+
+type accessControlPolicyObs struct {
+	XMLName xml.Name   `xml:"AccessControlPolicy"`
+	Owner   Owner      `xml:"Owner"`
+	Grants  []grantObs `xml:"AccessControlList>Grant"`
 }
 
 type GetBucketAclOutput struct {
 	BaseModel
 	AccessControlPolicy
+}
+
+type getBucketAclOutputObs struct {
+	BaseModel
+	accessControlPolicyObs
 }
 
 type SetBucketAclInput struct {
@@ -249,7 +325,7 @@ type SetBucketPolicyInput struct {
 
 type GetBucketPolicyOutput struct {
 	BaseModel
-	Policy string
+	Policy string `json:"body"`
 }
 
 type CorsRule struct {
@@ -351,19 +427,52 @@ type GetBucketMetadataInput struct {
 	RequestHeader string
 }
 
+type SetObjectMetadataInput struct {
+	Bucket                  string
+	Key                     string
+	VersionId               string
+	MetadataDirective       MetadataDirectiveType
+	CacheControl            string
+	ContentDisposition      string
+	ContentEncoding         string
+	ContentLanguage         string
+	ContentType             string
+	Expires                 string
+	WebsiteRedirectLocation string
+	StorageClass            StorageClassType
+	Metadata                map[string]string
+}
+
+type SetObjectMetadataOutput struct {
+	BaseModel
+	MetadataDirective       MetadataDirectiveType
+	CacheControl            string
+	ContentDisposition      string
+	ContentEncoding         string
+	ContentLanguage         string
+	ContentType             string
+	Expires                 string
+	WebsiteRedirectLocation string
+	StorageClass            StorageClassType
+	Metadata                map[string]string
+}
+
 type GetBucketMetadataOutput struct {
 	BaseModel
 	StorageClass  StorageClassType
 	Location      string
+	Version       string
 	AllowOrigin   string
 	AllowMethod   string
 	AllowHeader   string
 	MaxAgeSeconds int
 	ExposeHeader  string
+	Epid          string
 }
 
 type BucketLoggingStatus struct {
 	XMLName      xml.Name `xml:"BucketLoggingStatus"`
+	Agency       string   `xml:"Agency,omitempty"`
 	TargetBucket string   `xml:"LoggingEnabled>TargetBucket,omitempty"`
 	TargetPrefix string   `xml:"LoggingEnabled>TargetPrefix,omitempty"`
 	TargetGrants []Grant  `xml:"LoggingEnabled>TargetGrants>Grant,omitempty"`
@@ -459,8 +568,8 @@ type TopicConfiguration struct {
 	XMLName     xml.Name     `xml:"TopicConfiguration"`
 	ID          string       `xml:"Id,omitempty"`
 	Topic       string       `xml:"Topic"`
-	Events      []string     `xml:"Event"`
-	FilterRules []FilterRule `xml:"Filter>S3Key>FilterRule"`
+	Events      []EventType  `xml:"Event"`
+	FilterRules []FilterRule `xml:"Filter>Object>FilterRule"`
 }
 
 type BucketNotification struct {
@@ -471,6 +580,24 @@ type BucketNotification struct {
 type SetBucketNotificationInput struct {
 	Bucket string `xml:"-"`
 	BucketNotification
+}
+
+type topicConfigurationS3 struct {
+	XMLName     xml.Name     `xml:"TopicConfiguration"`
+	ID          string       `xml:"Id,omitempty"`
+	Topic       string       `xml:"Topic"`
+	Events      []string     `xml:"Event"`
+	FilterRules []FilterRule `xml:"Filter>S3Key>FilterRule"`
+}
+
+type bucketNotificationS3 struct {
+	XMLName             xml.Name               `xml:"NotificationConfiguration"`
+	TopicConfigurations []topicConfigurationS3 `xml:"TopicConfiguration"`
+}
+
+type getBucketNotificationOutputS3 struct {
+	BaseModel
+	bucketNotificationS3
 }
 
 type GetBucketNotificationOutput struct {
@@ -563,6 +690,7 @@ type ISseHeader interface {
 type SseKmsHeader struct {
 	Encryption string
 	Key        string
+	isObs      bool
 }
 
 type SseCHeader struct {
@@ -586,6 +714,8 @@ type GetObjectMetadataOutput struct {
 	WebsiteRedirectLocation string
 	Expiration              string
 	Restore                 string
+	ObjectType              string
+	NextAppendPosition      string
 	StorageClass            StorageClassType
 	ContentLength           int64
 	ContentType             string
@@ -632,8 +762,13 @@ type ObjectOperationInput struct {
 	Bucket                  string
 	Key                     string
 	ACL                     AclType
+	GrantReadId             string
+	GrantReadAcpId          string
+	GrantWriteAcpId         string
+	GrantFullControlId      string
 	StorageClass            StorageClassType
 	WebsiteRedirectLocation string
+	Expires                 int64
 	SseHeader               ISseHeader
 	Metadata                map[string]string
 }
@@ -680,6 +815,7 @@ type CopyObjectInput struct {
 	ContentType                 string
 	Expires                     string
 	MetadataDirective           MetadataDirectiveType
+	SuccessActionRedirect       string
 }
 
 type CopyObjectOutput struct {
