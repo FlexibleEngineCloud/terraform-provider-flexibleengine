@@ -3,13 +3,13 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
-	"strings"
-	"time"
 )
 
 func resourceRdsInstance() *schema.Resource {
@@ -311,7 +311,7 @@ func InstanceStateRefreshFunc(client *golangsdk.ServiceClient, instanceID string
 
 func resourceInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.RdsV1Client(GetRegion(d, config))
+	client, err := config.rdsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
 	}
@@ -364,7 +364,7 @@ func resourceInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.RdsV1Client(GetRegion(d, config))
+	client, err := config.rdsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
 	}
@@ -445,7 +445,7 @@ func resourceInstanceRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.RdsV1Client(GetRegion(d, config))
+	client, err := config.rdsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
 	}
@@ -511,7 +511,7 @@ func InstanceStateFlavorUpdateRefreshFunc(client *golangsdk.ServiceClient, insta
 
 func resourceInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.RdsV1Client(GetRegion(d, config))
+	client, err := config.rdsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error Updating FlexibleEngine rds client: %s ", err)
 	}

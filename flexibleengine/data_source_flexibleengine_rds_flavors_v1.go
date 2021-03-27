@@ -59,7 +59,7 @@ func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config %+v ", config)
 	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read d %+v ", d)
 
-	rdsClient, err := config.RdsV1Client(GetRegion(d, config))
+	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
 	}

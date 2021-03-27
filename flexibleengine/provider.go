@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+const defaultCloud string = "prod-cloud-ocb.orange-business.com"
+
 // This is a global MutexKV for use within this plugin.
 var osMutexKV = mutexkv.NewMutexKV()
 

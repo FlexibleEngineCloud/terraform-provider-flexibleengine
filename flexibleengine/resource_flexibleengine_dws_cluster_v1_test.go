@@ -29,7 +29,7 @@ func TestDWSClusterBasic(t *testing.T) {
 
 func testDWSClusterDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.loadDWSClient(OS_REGION_NAME)
+	client, err := config.dwsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DWS client: %s", err)
 	}
@@ -61,7 +61,7 @@ func testDWSClusterExists(n string, ar *cluster.Cluster) resource.TestCheckFunc 
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.loadDWSClient(OS_REGION_NAME)
+		client, err := config.dwsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine DWS client: %s", err)
 		}

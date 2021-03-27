@@ -82,7 +82,7 @@ func resourceNetworkACLCreate(d *schema.ResourceData, meta interface{}) error {
 	var inboundPolicyID, outboundPolicyID string
 
 	config := meta.(*Config)
-	fwClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	fwClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -212,7 +212,7 @@ func resourceNetworkACLCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceNetworkACLRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	fwClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -239,7 +239,7 @@ func resourceNetworkACLRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceNetworkACLUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	fwClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -326,7 +326,7 @@ func resourceNetworkACLDelete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Destroy firewall group: %s", d.Id())
 
 	config := meta.(*Config)
-	fwClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	fwClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
