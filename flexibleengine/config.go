@@ -512,14 +512,14 @@ func (c *Config) vpcepV1Client(region string) (*golangsdk.ServiceClient, error) 
 }
 
 func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewAutoScalingV1(c.HwClient, golangsdk.EndpointOpts{
+	return huaweisdk.NewAutoScalingService(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
 }
 
 func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewSmnServiceV2(c.HwClient, golangsdk.EndpointOpts{
+	return huaweisdk.NewSMNV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
@@ -667,7 +667,7 @@ func (c *Config) ddsV3Client(region string) (*golangsdk.ServiceClient, error) {
 }
 
 func (c *Config) sdrsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.SDRSV1(c.HwClient, golangsdk.EndpointOpts{
+	return huaweisdk.NewSDRSV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       region,
 		Availability: c.getHwEndpointType(),
 	})

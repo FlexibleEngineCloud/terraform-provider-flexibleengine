@@ -183,7 +183,7 @@ github.com/hashicorp/terraform-plugin-sdk/plugin
 github.com/hashicorp/terraform-plugin-sdk/terraform
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210317090109-79bd7f2bcf6f
+# github.com/huaweicloud/golangsdk v0.0.0-20210323075108-95a9f6c7bc44
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -242,12 +242,11 @@ github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants
 github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens
 github.com/huaweicloud/golangsdk/openstack/identity/v3.0/policies
 github.com/huaweicloud/golangsdk/openstack/identity/v3/agency
+github.com/huaweicloud/golangsdk/openstack/identity/v3/catalog
 github.com/huaweicloud/golangsdk/openstack/identity/v3/domains
-github.com/huaweicloud/golangsdk/openstack/identity/v3/endpoints
 github.com/huaweicloud/golangsdk/openstack/identity/v3/groups
 github.com/huaweicloud/golangsdk/openstack/identity/v3/projects
 github.com/huaweicloud/golangsdk/openstack/identity/v3/roles
-github.com/huaweicloud/golangsdk/openstack/identity/v3/services
 github.com/huaweicloud/golangsdk/openstack/identity/v3/tokens
 github.com/huaweicloud/golangsdk/openstack/identity/v3/users
 github.com/huaweicloud/golangsdk/openstack/imageservice/v2/imagedata
