@@ -86,7 +86,7 @@ func resourceFWRuleV2() *schema.Resource {
 func resourceFWRuleV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	config := meta.(*Config)
-	networkingClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -131,7 +131,7 @@ func resourceFWRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Retrieve information about firewall rule: %s", d.Id())
 
 	config := meta.(*Config)
-	networkingClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -166,7 +166,7 @@ func resourceFWRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceFWRuleV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -226,7 +226,7 @@ func resourceFWRuleV2Delete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Destroy firewall rule: %s", d.Id())
 
 	config := meta.(*Config)
-	networkingClient, err := config.hwNetworkV2Client(GetRegion(d, config))
+	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

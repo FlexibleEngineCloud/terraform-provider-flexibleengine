@@ -52,7 +52,7 @@ func TestAccFlexibleEngineVpcRouteV2_timeout(t *testing.T) {
 
 func testAccCheckFlexibleEngineRouteV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	routeClient, err := config.networkingHwV2Client(OS_REGION_NAME)
+	routeClient, err := config.networkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine route client: %s", err)
 	}
@@ -83,7 +83,7 @@ func testAccCheckFlexibleEngineRouteV2Exists(n string, route *routes.Route) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		routeClient, err := config.networkingHwV2Client(OS_REGION_NAME)
+		routeClient, err := config.networkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine route client: %s", err)
 		}

@@ -1,10 +1,10 @@
 package flexibleengine
 
 import (
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
-
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
 )
 
 func dataSourceVPCRouteIdsV2() *schema.Resource {
@@ -34,7 +34,7 @@ func dataSourceVPCRouteIdsV2() *schema.Resource {
 
 func dataSourceVpcRouteIdsV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vpcRouteClient, err := config.networkingHwV2Client(GetRegion(d, config))
+	vpcRouteClient, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine Vpc client: %s", err)
 	}

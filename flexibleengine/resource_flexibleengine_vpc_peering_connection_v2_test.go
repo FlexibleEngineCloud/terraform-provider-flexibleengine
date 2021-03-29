@@ -58,7 +58,7 @@ func TestAccFlexibleEngineVpcPeeringConnectionV2_timeout(t *testing.T) {
 
 func testAccCheckFlexibleEngineVpcPeeringConnectionV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	peeringClient, err := config.networkingHwV2Client(OS_REGION_NAME)
+	peeringClient, err := config.networkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine Peering client: %s", err)
 	}
@@ -89,7 +89,7 @@ func testAccCheckFlexibleEngineVpcPeeringConnectionV2Exists(n string, peering *p
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		peeringClient, err := config.networkingHwV2Client(OS_REGION_NAME)
+		peeringClient, err := config.networkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine Peering client: %s", err)
 		}
