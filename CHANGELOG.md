@@ -1,4 +1,13 @@
+## 1.19.1 (April 2, 2021)
+
+ENHANCEMENTS:
+
+* `flexibleengine_obs_bucket`: Add MaxItems in website block ([#491](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/491))
+* Update structure of website document ([#501](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/501))
+
+
 ## 1.19.0 (March 9, 2021)
+
 ENHANCEMENTS:
 
 * `flexibleengine_identity_agency_v3`: Support Agency type "Cloud service" Management ([#409](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/409))
