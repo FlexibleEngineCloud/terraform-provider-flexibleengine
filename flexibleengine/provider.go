@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/mutexkv"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
@@ -154,8 +155,11 @@ func Provider() terraform.ResourceProvider {
 			"endpoint_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
+				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", nil),
 				Deprecated:  "endpoint_type is deprecated",
+				ValidateFunc: validation.StringInSlice([]string{
+					"public", "publicURL", "admin", "adminURL", "internal", "internalURL",
+				}, false),
 			},
 		},
 
