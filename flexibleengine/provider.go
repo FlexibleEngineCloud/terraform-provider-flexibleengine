@@ -128,12 +128,6 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["insecure"],
 			},
 
-			"endpoint_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
-			},
-
 			"cacert_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -155,11 +149,11 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["key"],
 			},
 
-			"swauth": {
-				Type:        schema.TypeBool,
+			"endpoint_type": {
+				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_SWAUTH", false),
-				Description: descriptions["swauth"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
+				Deprecated:  "endpoint_type is deprecated",
 			},
 		},
 
@@ -378,9 +372,6 @@ func init() {
 		"cert": "A client certificate to authenticate with.",
 
 		"key": "A client private key to authenticate with.",
-
-		"swauth": "Use Swift's authentication system instead of Keystone. Only used for\n" +
-			"interaction with Swift.",
 	}
 }
 
@@ -398,7 +389,6 @@ func configureProvider(d *schema.ResourceData, terraformVersion string) (interfa
 		Insecure:         d.Get("insecure").(bool),
 		Password:         d.Get("password").(string),
 		Region:           d.Get("region").(string),
-		Swauth:           d.Get("swauth").(bool),
 		Token:            d.Get("token").(string),
 		SecurityToken:    d.Get("security_token").(string),
 		TenantID:         d.Get("tenant_id").(string),

@@ -151,13 +151,6 @@ The following arguments are supported:
   service catalog. It can be set using the OS_ENDPOINT_TYPE environment
   variable. If not set, public endpoints is used.
 
-* `swauth` - (Optional) Set to `true` to authenticate against Swauth, a
-  Swift-native authentication system. If omitted, the `OS_SWAUTH` environment
-  variable is used. You must also set `username` to the Swauth/Swift username
-  such as `username:project`. Set the `password` to the Swauth/Swift key.
-  Finally, set `auth_url` as the location of the Swift service. Note that this
-  will only work when used with the FlexibleEngine Object Storage resources.
-
 ## Logging
 
 This provider has the ability to log all HTTP requests and responses between
