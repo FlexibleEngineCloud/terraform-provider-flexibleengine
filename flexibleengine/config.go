@@ -343,45 +343,32 @@ func (c *Config) getDomainID() (string, error) {
 
 func (c *Config) computeS3conn(region string) (*s3.S3, error) {
 	if c.s3sess == nil {
-		return nil, fmt.Errorf("Missing credentials for Swift S3 Provider, need access_key and secret_key values for provider.")
+		return nil, fmt.Errorf("missing credentials for Swift S3 Provider, need access_key and secret_key values for provider")
 	}
 
-	client, err := huaweisdk.NewImageServiceV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-	// Bit of a hack, seems the only way to compute this.
-	endpoint := strings.Replace(client.Endpoint, "//ims", "//oss", 1)
-
+	endpoint := getObsEndpoint(c, region)
 	awsS3Sess := c.s3sess.Copy(&aws.Config{Endpoint: aws.String(endpoint)})
 	s3conn := s3.New(awsS3Sess)
 
-	return s3conn, err
+	return s3conn, nil
 }
 
 func (c *Config) newObjectStorageClient(region string) (*obs.ObsClient, error) {
 	if c.AccessKey == "" || c.SecretKey == "" {
-		return nil, fmt.Errorf("Missing credentials for OBS, need access_key and secret_key values for provider.")
-	}
-
-	client, err := huaweisdk.NewOBSService(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("missing credentials for OBS, need access_key and secret_key values for provider")
 	}
 
 	// init log
 	if logging.IsDebugOrHigher() {
 		var logfile = "./.obs-sdk.log"
 		// maxLogSize:10M, backups:10
-		if err = obs.InitLog(logfile, 1024*1024*10, 10, obs.LEVEL_DEBUG, false); err != nil {
+		if err := obs.InitLog(logfile, 1024*1024*10, 10, obs.LEVEL_DEBUG, false); err != nil {
 			log.Printf("[WARN] initial obs sdk log failed: %s", err)
 		}
 	}
 
-	return obs.New(c.AccessKey, c.SecretKey, client.Endpoint)
+	obsEndpoint := getObsEndpoint(c, region)
+	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint)
 }
 
 func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {
@@ -657,4 +644,11 @@ func (c *Config) getHwEndpointType() golangsdk.Availability {
 		return golangsdk.AvailabilityAdmin
 	}
 	return golangsdk.AvailabilityPublic
+}
+
+func getObsEndpoint(c *Config, region string) string {
+	if endpoint, ok := c.Endpoints["oss"]; ok {
+		return endpoint
+	}
+	return fmt.Sprintf("https://oss.%s.%s/", region, c.Cloud)
 }
