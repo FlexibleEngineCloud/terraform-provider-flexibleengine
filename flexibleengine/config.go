@@ -20,7 +20,6 @@ import (
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
-	"github.com/huaweicloud/golangsdk/openstack/objectstorage/v1/swauth"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
 )
 
@@ -37,7 +36,6 @@ type Config struct {
 	Insecure         bool
 	Password         string
 	Region           string
-	Swauth           bool
 	TenantID         string
 	TenantName       string
 	Token            string
@@ -464,21 +462,6 @@ func (c *Config) networkingV1Client(region string) (*golangsdk.ServiceClient, er
 
 func (c *Config) networkingV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNetworkV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) objectStorageV1Client(region string) (*golangsdk.ServiceClient, error) {
-	// If Swift Authentication is being used, return a swauth client.
-	if c.Swauth {
-		return swauth.NewObjectStorageV1(c.HwClient, swauth.AuthOpts{
-			User: c.Username,
-			Key:  c.Password,
-		})
-	}
-
-	return huaweisdk.NewObjectStorageV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
