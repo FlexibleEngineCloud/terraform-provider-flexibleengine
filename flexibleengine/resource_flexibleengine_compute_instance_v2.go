@@ -112,6 +112,7 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
+				MaxItems: 12,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"uuid": {
@@ -121,10 +122,11 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Computed: true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
-							Computed: true,
+							Type:       schema.TypeString,
+							Optional:   true,
+							ForceNew:   true,
+							Computed:   true,
+							Deprecated: "use uuid instead",
 						},
 						"port": {
 							Type:     schema.TypeString,
