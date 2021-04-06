@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Network ACL"
 ---
 
 # flexibleengine\_network\_acl\_rule

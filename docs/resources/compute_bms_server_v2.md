@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Cloud Server (ECS)"
+subcategory: "Bare Metal Server (BMS)"
 ---
 
 # flexibleengine_compute_bms_server_v2
