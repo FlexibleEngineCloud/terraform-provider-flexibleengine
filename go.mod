@@ -14,6 +14,5 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/smartystreets/assertions v0.0.0-20190215210624-980c5ac6f3ac // indirect
 	github.com/unknwon/com v1.0.1
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )
