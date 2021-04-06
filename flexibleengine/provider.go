@@ -128,12 +128,6 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["insecure"],
 			},
 
-			"endpoint_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
-			},
-
 			"cacert_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -153,6 +147,13 @@ func Provider() terraform.ResourceProvider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_KEY", ""),
 				Description: descriptions["key"],
+			},
+
+			"endpoint_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", ""),
+				Deprecated:  "endpoint_type is deprecated",
 			},
 		},
 
