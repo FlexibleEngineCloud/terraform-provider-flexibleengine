@@ -21,32 +21,15 @@ import (
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
+	huaweiconfig "github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 )
 
 type Config struct {
-	AccessKey        string
-	SecretKey        string
-	CACertFile       string
-	ClientCertFile   string
-	ClientKeyFile    string
-	DomainID         string
-	DomainName       string
-	EndpointType     string
-	IdentityEndpoint string
-	Insecure         bool
-	Password         string
-	Region           string
-	TenantID         string
-	TenantName       string
-	Token            string
-	SecurityToken    string
-	Username         string
-	UserID           string
-	terraformVersion string
+	huaweiconfig.Config
 
-	DomainClient *golangsdk.ProviderClient
-	HwClient     *golangsdk.ProviderClient
-	s3sess       *session.Session
+	EndpointType  string
+	SecurityToken string
+	s3sess        *session.Session
 }
 
 func (c *Config) LoadAndValidate() error {
@@ -143,7 +126,7 @@ func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.Provider
 	}
 
 	// Set UserAgent
-	client.UserAgent.Prepend(httpclient.TerraformUserAgent(c.terraformVersion))
+	client.UserAgent.Prepend(httpclient.TerraformUserAgent(c.TerraformVersion))
 
 	config, err := generateTLSConfig(c)
 	if err != nil {

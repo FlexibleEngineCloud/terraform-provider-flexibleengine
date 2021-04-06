@@ -225,8 +225,8 @@ func resourceClusterAnnotationsV3(d *schema.ResourceData) map[string]string {
 	}
 	return m
 }
-func resourceClusterExtendParamV3(d *schema.ResourceData) map[string]string {
-	m := make(map[string]string)
+func resourceClusterExtendParamV3(d *schema.ResourceData) map[string]interface{} {
+	m := make(map[string]interface{})
 	for key, val := range d.Get("extend_param").(map[string]interface{}) {
 		m[key] = val.(string)
 	}

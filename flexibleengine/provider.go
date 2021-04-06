@@ -1,6 +1,8 @@
 package flexibleengine
 
 import (
+	"sync"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/mutexkv"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -377,26 +379,30 @@ func init() {
 
 func configureProvider(d *schema.ResourceData, terraformVersion string) (interface{}, error) {
 	config := Config{
-		AccessKey:        d.Get("access_key").(string),
-		SecretKey:        d.Get("secret_key").(string),
-		CACertFile:       d.Get("cacert_file").(string),
-		ClientCertFile:   d.Get("cert").(string),
-		ClientKeyFile:    d.Get("key").(string),
-		DomainID:         d.Get("domain_id").(string),
-		DomainName:       d.Get("domain_name").(string),
-		EndpointType:     d.Get("endpoint_type").(string),
-		IdentityEndpoint: d.Get("auth_url").(string),
-		Insecure:         d.Get("insecure").(bool),
-		Password:         d.Get("password").(string),
-		Region:           d.Get("region").(string),
-		Token:            d.Get("token").(string),
-		SecurityToken:    d.Get("security_token").(string),
-		TenantID:         d.Get("tenant_id").(string),
-		TenantName:       d.Get("tenant_name").(string),
-		Username:         d.Get("user_name").(string),
-		UserID:           d.Get("user_id").(string),
-		terraformVersion: terraformVersion,
+		EndpointType:  d.Get("endpoint_type").(string),
+		SecurityToken: d.Get("security_token").(string),
 	}
+
+	config.AccessKey = d.Get("access_key").(string)
+	config.SecretKey = d.Get("secret_key").(string)
+	config.CACertFile = d.Get("cacert_file").(string)
+	config.ClientCertFile = d.Get("cert").(string)
+	config.ClientKeyFile = d.Get("key").(string)
+	config.DomainID = d.Get("domain_id").(string)
+	config.DomainName = d.Get("domain_name").(string)
+	config.IdentityEndpoint = d.Get("auth_url").(string)
+	config.Insecure = d.Get("insecure").(bool)
+	config.Password = d.Get("password").(string)
+	config.Region = d.Get("region").(string)
+	config.Token = d.Get("token").(string)
+	config.TenantID = d.Get("tenant_id").(string)
+	config.TenantName = d.Get("tenant_name").(string)
+	config.Username = d.Get("user_name").(string)
+	config.UserID = d.Get("user_id").(string)
+	config.TerraformVersion = terraformVersion
+	config.Cloud = defaultCloud
+	config.RegionProjectIDMap = make(map[string]string)
+	config.RPLock = new(sync.Mutex)
 
 	if err := config.LoadAndValidate(); err != nil {
 		return nil, err
