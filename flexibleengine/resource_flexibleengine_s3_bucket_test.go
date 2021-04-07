@@ -37,9 +37,9 @@ func TestAccS3Bucket_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr(
 						"flexibleengine_s3_bucket.bucket", "website_endpoint"),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_s3_bucket.bucket", "bucket", testAccBucketName(rInt)),
+						"flexibleengine_s3_bucket.bucket", "bucket", testAccObsBucketName(rInt)),
 					resource.TestCheckResourceAttr(
-						"flexibleengine_s3_bucket.bucket", "bucket_domain_name", testAccBucketDomainName(rInt)),
+						"flexibleengine_s3_bucket.bucket", "bucket_domain_name", testAccObsBucketDomainName(rInt)),
 				),
 			},
 		},
@@ -880,16 +880,6 @@ func testAccCheckS3BucketLogging(n, b, p string) resource.TestCheckFunc {
 
 		return nil
 	}
-}
-
-// These need a bit of randomness as the name can only be used once globally
-// within AWS
-func testAccBucketName(randInt int) string {
-	return fmt.Sprintf("tf-test-bucket-%d", randInt)
-}
-
-func testAccBucketDomainName(randInt int) string {
-	return fmt.Sprintf("tf-test-bucket-%d.s3.amazonaws.com", randInt)
 }
 
 func testAccWebsiteEndpoint(randInt int) string {
