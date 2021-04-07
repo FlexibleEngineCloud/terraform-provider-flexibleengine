@@ -33,25 +33,8 @@ type Config struct {
 }
 
 func (c *Config) LoadAndValidate() error {
-	validEndpoint := false
-	validEndpoints := []string{
-		"internal", "internalURL",
-		"admin", "adminURL",
-		"public", "publicURL",
-		"",
-	}
-
-	for _, endpoint := range validEndpoints {
-		if c.EndpointType == endpoint {
-			validEndpoint = true
-		}
-	}
-
-	if !validEndpoint {
-		return fmt.Errorf("Invalid endpoint type provided")
-	}
-
 	err := fmt.Errorf("Must config token or aksk or username password to be authorized")
+
 	if c.Token != "" {
 		err = buildClientByToken(c)
 	} else if c.Password != "" {
