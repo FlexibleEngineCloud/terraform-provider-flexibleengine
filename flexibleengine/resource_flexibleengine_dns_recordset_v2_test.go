@@ -34,9 +34,9 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "description", "a record set"),
 					resource.TestCheckResourceAttr(resourceName, "type", "A"),
 					resource.TestCheckResourceAttr(resourceName, "ttl", "3000"),
+					resource.TestCheckResourceAttr(resourceName, "records.#", "2"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
-					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.0"),
 				),
 			},
 			{
@@ -50,7 +50,6 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "description", "an updated record set"),
 					resource.TestCheckResourceAttr(resourceName, "ttl", "6000"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
-					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.1"),
 				),
 			},
 		},
@@ -96,9 +95,9 @@ func TestAccDNSV2RecordSet_private(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "description", "a private record set"),
 					resource.TestCheckResourceAttr(resourceName, "type", "A"),
 					resource.TestCheckResourceAttr(resourceName, "ttl", "3000"),
+					resource.TestCheckResourceAttr(resourceName, "records.#", "3"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
-					resource.TestCheckResourceAttr(resourceName, "records.0", "10.1.0.3"),
 				),
 			},
 		},
@@ -183,7 +182,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   type        = "A"
   description = "a record set"
   ttl         = 3000
-  records     = ["10.1.0.0"]
+  records     = ["10.1.0.0", "10.1.0.1"]
 
   tags = {
     foo = "bar"
@@ -208,7 +207,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   type        = "A"
   description = "an updated record set"
   ttl         = 6000
-  records     = ["10.1.0.1"]
+  records     = ["10.1.0.2", "10.1.0.1"]
 
   tags = {
     foo = "bar"
@@ -231,7 +230,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   zone_id = flexibleengine_dns_zone_v2.zone_1.id
   name    = "%s"
   type    = "A"
-  records = ["10.1.0.2"]
+  records = [ "10.1.0.1", "10.1.0.2"]
 }
 `, zoneName, zoneName)
 }
@@ -260,7 +259,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   type        = "A"
   description = "a private record set"
   ttl         = 3000
-  records     = ["10.1.0.3"]
+  records     = ["10.1.0.3", "10.1.0.2", "10.1.0.1"]
 
   tags = {
     foo = "bar"

@@ -55,10 +55,9 @@ func resourceDNSRecordSetV2() *schema.Resource {
 				ValidateFunc: validation.StringLenBetween(0, 255),
 			},
 			"records": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				MinItems: 1,
 			},
 			"ttl": {
 				Type:         schema.TypeInt,
@@ -98,7 +97,7 @@ func resourceDNSRecordSetV2Create(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error retrieving DNS zone %s: %s", zoneID, err)
 	}
 
-	recordsraw := d.Get("records").([]interface{})
+	recordsraw := d.Get("records").(*schema.Set).List()
 	records := make([]string, len(recordsraw))
 	for i, recordraw := range recordsraw {
 		records[i] = recordraw.(string)
@@ -223,7 +222,7 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	if d.HasChange("records") {
-		recordsraw := d.Get("records").([]interface{})
+		recordsraw := d.Get("records").(*schema.Set).List()
 		records := make([]string, len(recordsraw))
 		for i, recordraw := range recordsraw {
 			records[i] = recordraw.(string)
