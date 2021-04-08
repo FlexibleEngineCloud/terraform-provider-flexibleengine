@@ -264,14 +264,15 @@ func resourceDdsFlavors(d *schema.ResourceData) []instances.Flavor {
 func resourceDdsBackupStrategy(d *schema.ResourceData) instances.BackupStrategy {
 	var backupStrategy instances.BackupStrategy
 	backupStrategyRaw := d.Get("backup_strategy").([]interface{})
-	log.Printf("[DEBUG] backupStrategyRaw: %+v", backupStrategyRaw)
+
+	startTime := "00:00-01:00"
+	keepDays := 7
 	if len(backupStrategyRaw) == 1 {
-		backupStrategy.StartTime = backupStrategyRaw[0].(map[string]interface{})["start_time"].(string)
-		backupStrategy.KeepDays = backupStrategyRaw[0].(map[string]interface{})["keep_days"].(int)
-	} else {
-		backupStrategy.StartTime = "00:00-01:00"
-		backupStrategy.KeepDays = 7
+		startTime = backupStrategyRaw[0].(map[string]interface{})["start_time"].(string)
+		keepDays = backupStrategyRaw[0].(map[string]interface{})["keep_days"].(int)
 	}
+	backupStrategy.StartTime = startTime
+	backupStrategy.KeepDays = &keepDays
 	log.Printf("[DEBUG] backupStrategy: %+v", backupStrategy)
 	return backupStrategy
 }
