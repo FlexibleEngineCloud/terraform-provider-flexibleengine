@@ -209,6 +209,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_identity_role_v3":                   dataSourceIdentityRoleV3(),
 			"flexibleengine_identity_custom_role_v3":            dataSourceIdentityCustomRoleV3(),
 			"flexibleengine_vpcep_public_services":              dataSourceVPCEPPublicServices(),
+			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
