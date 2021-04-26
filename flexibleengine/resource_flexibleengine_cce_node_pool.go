@@ -20,6 +20,22 @@ func resourceCCENodePool() *schema.Resource {
 		Read:   resourceCCENodePoolRead,
 		Update: resourceCCENodePoolUpdate,
 		Delete: resourceCCENodePoolDelete,
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+				var err error = nil
+				arr := strings.Split(d.Id(), "/")
+				if len(arr) == 2 {
+					cluster_id := arr[0]
+					node_pool_id := arr[1]
+					d.Set("cluster_id", cluster_id)
+					d.SetId(node_pool_id)
+				} else {
+					err = fmt.Errorf("[ERROR] Missing argument, must be of the form: 'cluster_id/node_pool_id'")
+				}
+
+				return []*schema.ResourceData{d}, err
+			},
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
@@ -373,6 +389,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("max_node_count", s.Spec.Autoscaling.MaxNodeCount)
 	d.Set("scale_down_cooldown_time", s.Spec.Autoscaling.ScaleDownCooldownTime)
 	d.Set("priority", s.Spec.Autoscaling.Priority)
+	d.Set("type", s.Spec.Type)
 
 	labels := map[string]string{}
 	for key, val := range s.Spec.NodeTemplate.K8sTags {
