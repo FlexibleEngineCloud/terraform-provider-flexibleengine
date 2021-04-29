@@ -11,6 +11,7 @@ import (
 
 func TestCESAlarmRule_basic(t *testing.T) {
 	var ar alarmrule.AlarmRule
+	resourceName := "flexibleengine_ces_alarmrule.alarmrule_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,14 +21,21 @@ func TestCESAlarmRule_basic(t *testing.T) {
 			{
 				Config: testCESAlarmRule_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testCESAlarmRuleExists("flexibleengine_ces_alarmrule.alarmrule_1", &ar),
+					testCESAlarmRuleExists(resourceName, &ar),
+					resource.TestCheckResourceAttr(resourceName, "alarm_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alarm_action_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alarm_level", "2"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testCESAlarmRule_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_ces_alarmrule.alarmrule_1", "alarm_enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alarm_enabled", "false"),
 				),
 			},
 		},
@@ -36,7 +44,7 @@ func TestCESAlarmRule_basic(t *testing.T) {
 
 func testCESAlarmRuleDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.newCESClient(OS_REGION_NAME)
+	cesClient, err := config.CesV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ces client: %s", err)
 	}
@@ -47,7 +55,7 @@ func testCESAlarmRuleDestroy(s *terraform.State) error {
 		}
 
 		id := rs.Primary.ID
-		_, err := alarmrule.Get(networkingClient, id).Extract()
+		_, err := alarmrule.Get(cesClient, id).Extract()
 		if err == nil {
 			return fmt.Errorf("Alarm rule still exists")
 		}
@@ -68,13 +76,13 @@ func testCESAlarmRuleExists(n string, ar *alarmrule.AlarmRule) resource.TestChec
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.newCESClient(OS_REGION_NAME)
+		cesClient, err := config.CesV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine ces client: %s", err)
 		}
 
 		id := rs.Primary.ID
-		found, err := alarmrule.Get(networkingClient, id).Extract()
+		found, err := alarmrule.Get(cesClient, id).Extract()
 		if err != nil {
 			return err
 		}
@@ -99,8 +107,8 @@ resource "flexibleengine_smn_topic_v2" "topic_1" {
 }
 
 resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
-  alarm_name = "alarm_rule1"
-  alarm_action_enabled = false
+  alarm_name           = "alarm_rule1"
+  alarm_action_enabled = true
 
   metric {
     namespace   = "SYS.ECS"
@@ -111,12 +119,12 @@ resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
     }
   }
   condition  {
-    period = 300
-    filter = "average"
+    period              = 300
+    filter              = "average"
     comparison_operator = ">"
-    value = 6
-    unit = "B/s"
-    count = 1
+    value               = 6
+    unit                = "B/s"
+    count               = 1
   } 
 
   alarm_actions {
@@ -142,12 +150,12 @@ resource "flexibleengine_smn_topic_v2" "topic_1" {
 }
 
 resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
-  alarm_name = "alarm_rule1"
-  alarm_action_enabled = false
-  alarm_enabled = false
+  alarm_name           = "alarm_rule1"
+  alarm_enabled        = false
+  alarm_action_enabled = true
 
   metric {
-    namespace = "SYS.ECS"
+    namespace   = "SYS.ECS"
     metric_name = "network_outgoing_bytes_rate_inband"
     dimensions {
         name  = "instance_id"
@@ -155,12 +163,12 @@ resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
     }
   }
   condition  {
-    period = 300
-    filter = "average"
+    period              = 300
+    filter              = "average"
     comparison_operator = ">"
-    value = 6
-    unit = "B/s"
-    count = 1
+    value               = 6
+    unit                = "B/s"
+    count               = 1
   }
 
   alarm_actions {
