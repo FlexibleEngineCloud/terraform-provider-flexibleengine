@@ -1,3 +1,24 @@
+## 1.20.0 (April 30, 2021)
+
+FEATURES:
+
+* **New Data Source:** `flexibleengine_vpcep_endpoints` ([#514](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/514))
+
+ENHANCEMENTS:
+
+* `flexibleengine_ces_alarmrule`: add alarm_level parameter ([#526](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/526))
+
+BUG FIXES:
+
+* `flexibleengine_dns_recordset_v2`: change records type to set ([#492](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/492))
+* `flexibleengine_vpcep_approval`: vpcep approval can work cross-project ([#495](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/495))
+* `flexibleengine_lb_monitor_v2`: fix crashes if monitor type is HTTP ([#517](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/517))
+
+DEPRECATED:
+
+* deprecate `swauth` in provider: ([#508](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/508))
+* deprecate `network/name` in `flexibleengine_compute_instance_v2`: ([#498](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/498))
+
 ## 1.19.1 (April 2, 2021)
 
 ENHANCEMENTS:
