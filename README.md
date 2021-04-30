@@ -39,6 +39,7 @@ For previous versions, please continue to pin the version within the provider bl
 
     ```hcl
     # provider.tf
+
     # Configure the FlexibleEngine Provider with AK/SK
     provider "flexibleengine" {
       access_key  = "access key"
@@ -54,6 +55,7 @@ For previous versions, please continue to pin the version within the provider bl
 
     ```hcl
     # provider.tf
+
     # Configure the FlexibleEngine Provider with Username/Password 
     provider "flexibleengine" {
       user_name   = "user name"
@@ -121,24 +123,24 @@ tested with acceptance tests.
 
 The following environment variables are required before running the acceptance testing:
 
-    ```sh
-    export OS_ACCESS_KEY=xxx
-    export OS_SECRET_KEY=xxx
-    export OS_REGION_NAME=xxx
-    export OS_PROJECT_NAME=xxx
-    export OS_IMAGE_ID=xxx
-    export OS_FLAVOR_ID=xxx
-    export OS_NETWORK_ID=xxx
-    export OS_AUTH_URL="https://iam.${OS_REGION_NAME}.prod-cloud-ocb.orange-business.com/v3"
-    ```
+```sh
+export OS_ACCESS_KEY=xxx
+export OS_SECRET_KEY=xxx
+export OS_REGION_NAME=xxx
+export OS_PROJECT_NAME=xxx
+export OS_IMAGE_ID=xxx
+export OS_FLAVOR_ID=xxx
+export OS_NETWORK_ID=xxx
+export OS_AUTH_URL="https://iam.${OS_REGION_NAME}.prod-cloud-ocb.orange-business.com/v3"
+```
 
 Then we can run the acceptance tests with `make testacc`.
 
-    ```sh
-    $ make testacc TEST='./flexibleengine' TESTARGS='-run TestAccXXXX'
-    ```
+```sh
+$ make testacc TEST='./flexibleengine' TESTARGS='-run TestAccXXXX'
+```
 
-*Note:* Acceptance tests create real resources, and often cost money to run.
+**Note:** Acceptance tests create real resources, and often cost money to run.
 
 
 ## [Debugging Providers](https://www.terraform.io/docs/extend/debugging.html)
@@ -146,10 +148,10 @@ Then we can run the acceptance tests with `make testacc`.
 Add the `TF_LOG` and `TF_LOG_PATH` environment variables to the system, and then you can view detailed logs.
 For example, in a Linux operating system, run the following commands:
 
-    ```sh
-    $ export TF_LOG=TRACE
-    $ export TF_LOG_PATH="./terraform.log"
-    ```
+```sh
+$ export TF_LOG=TRACE
+$ export TF_LOG_PATH="./terraform.log"
+```
 
 ## Full Example
 ----------------
