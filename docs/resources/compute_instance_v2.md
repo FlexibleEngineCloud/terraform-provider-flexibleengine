@@ -333,14 +333,11 @@ The following arguments are supported:
 
 The `network` block supports:
 
-* `uuid` - (Required unless `port`  or `name` is provided) The network UUID to
+* `uuid` - (Required unless `port` is provided) The network UUID to
     attach to the server. Changing this creates a new server.
 
-* `name` - (Required unless `uuid` or `port` is provided) The human-readable
-    name of the network. Changing this creates a new server.
-
-* `port` - (Required unless `uuid` or `name` is provided) The port UUID of a
-    network to attach to the server. Changing this creates a new server.
+* `port` - (Required unless `uuid` is provided) The port UUID of a network to
+    attach to the server. Changing this creates a new server.
 
 * `fixed_ip_v4` - (Optional) Specifies a fixed IPv4 address to be used on this
     network. Changing this creates a new server.
@@ -410,8 +407,8 @@ The following attributes are exported:
 * `flavor_id` - See Argument Reference above.
 * `flavor_name` - See Argument Reference above.
 * `network/uuid` - See Argument Reference above.
-* `network/name` - See Argument Reference above.
 * `network/port` - See Argument Reference above.
+* `network/name` - The human-readable name of the network.
 * `network/fixed_ip_v4` - The Fixed IPv4 address of the Instance on that network.
 * `network/fixed_ip_v6` - The Fixed IPv6 address of the Instance on that network.
 * `network/mac` - The MAC address of the NIC on that network.
