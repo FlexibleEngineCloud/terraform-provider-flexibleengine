@@ -518,13 +518,6 @@ func (c *Config) orchestrationV1Client(region string) (*golangsdk.ServiceClient,
 	})
 }
 
-func (c *Config) newCESClient(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewCESClient(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) dwsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewDWSClient(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),

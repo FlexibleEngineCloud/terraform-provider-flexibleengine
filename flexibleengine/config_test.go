@@ -90,7 +90,7 @@ func TestAccServiceEndpoints_Management(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "CTS")
 
 	// test the endpoint of CES service
-	serviceClient, err = config.newCESClient(OS_REGION_NAME)
+	serviceClient, err = config.CesV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine CES client: %s", err)
 	}
