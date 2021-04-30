@@ -53,6 +53,10 @@ func getTenantName() string {
 }
 
 func testAccPreCheckRequiredEnvVars(t *testing.T) {
+	if OS_REGION_NAME == "" {
+		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
+	}
+
 	v := os.Getenv("OS_AUTH_URL")
 	if v == "" {
 		t.Fatal("OS_AUTH_URL must be set for acceptance tests")
@@ -62,28 +66,12 @@ func testAccPreCheckRequiredEnvVars(t *testing.T) {
 		t.Fatal("OS_IMAGE_ID or OS_IMAGE_NAME must be set for acceptance tests")
 	}
 
-	if OS_POOL_NAME == "" {
-		t.Fatal("OS_POOL_NAME must be set for acceptance tests")
-	}
-
-	if OS_REGION_NAME == "" {
-		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
-	}
-
-	if OS_REGION_NAME == "" {
-		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
-	}
-
 	if OS_FLAVOR_ID == "" && OS_FLAVOR_NAME == "" {
 		t.Fatal("OS_FLAVOR_ID or OS_FLAVOR_NAME must be set for acceptance tests")
 	}
 
 	if OS_NETWORK_ID == "" {
 		t.Fatal("OS_NETWORK_ID must be set for acceptance tests")
-	}
-
-	if OS_EXTGW_ID == "" {
-		t.Fatal("OS_EXTGW_ID must be set for acceptance tests")
 	}
 }
 
@@ -101,6 +89,18 @@ func testAccPreCheckDeprecated(t *testing.T) {
 
 	if OS_DEPRECATED_ENVIRONMENT == "" {
 		t.Skip("This environment does not support deprecated tests")
+	}
+}
+
+func testAccPreCheckFloatingIP(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_POOL_NAME == "" {
+		t.Fatal("OS_POOL_NAME must be set for floating network tests")
+	}
+
+	if OS_EXTGW_ID == "" {
+		t.Fatal("OS_EXTGW_ID must be set for floating network tests")
 	}
 }
 

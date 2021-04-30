@@ -41,7 +41,7 @@ func TestAccFWFirewallGroupV2_port0(t *testing.T) {
 	var firewall_group FirewallGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckFloatingIP(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{
@@ -80,7 +80,7 @@ func TestAccFWFirewallGroupV2_port_update(t *testing.T) {
 	var firewall_group FirewallGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckFloatingIP(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{
@@ -106,7 +106,7 @@ func TestAccFWFirewallGroupV2_port_remove(t *testing.T) {
 	var firewall_group FirewallGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckFloatingIP(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFWFirewallGroupV2Destroy,
 		Steps: []resource.TestStep{

@@ -39,7 +39,7 @@ func TestAccNetworkingV2Router_update_external_gw(t *testing.T) {
 	var router routers.Router
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckFloatingIP(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2RouterDestroy,
 		Steps: []resource.TestStep{

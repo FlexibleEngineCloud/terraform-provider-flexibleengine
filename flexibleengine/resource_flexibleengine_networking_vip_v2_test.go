@@ -15,7 +15,7 @@ func TestAccNetworkingV2VIP_basic(t *testing.T) {
 	var vip ports.Port
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckFloatingIP(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2VIPDestroy,
 		Steps: []resource.TestStep{
