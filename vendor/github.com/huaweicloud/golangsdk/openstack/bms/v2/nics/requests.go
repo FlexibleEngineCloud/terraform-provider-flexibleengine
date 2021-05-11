@@ -24,6 +24,9 @@ func List(c *golangsdk.ServiceClient, serverId string, opts ListOpts) ([]Nic, er
 	pages, err := pagination.NewPager(c, u, func(r pagination.PageResult) pagination.Page {
 		return NicPage{pagination.LinkedPageBase{PageResult: r}}
 	}).AllPages()
+	if err != nil {
+		return nil, err
+	}
 
 	allNICs, err := ExtractNics(pages)
 	if err != nil {
