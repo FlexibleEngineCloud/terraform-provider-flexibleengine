@@ -76,7 +76,11 @@ The `project_role` block supports:
 
 * `roles` - (Required) Specifies an array of role names.
 
-**note**: one or both of `project_role` and `domain_roles` must be input when creating an agency.
+-> **NOTE**
+    - At least one of `project_role` and `domain_roles` must be specified when creating an agency.
+    - We can get all **System-Defined Roles** from
+[FlexibleEngine](https://docs.prod-cloud-ocb.orange-business.com/permissions/index.html) or
+[data.flexibleengine_identity_role_v3](https://registry.terraform.io/providers/FlexibleEngineCloud/flexibleengine/latest/docs/data-sources/identity_role_v3).
 
 ## Attributes Reference
 

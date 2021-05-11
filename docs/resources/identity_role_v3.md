@@ -12,10 +12,11 @@ custom role management in FlexibleEngine
 
 ```hcl
 resource "flexibleengine_identity_role_v3" "role" {
-  name = "test"
+  name        = "test"
   description = "created by terraform"
-  type = "AX"
-    policy = <<EOF
+  type        = "AX"
+
+  policy = <<EOF
 {
   "Version": "1.1",
   "Statement": [

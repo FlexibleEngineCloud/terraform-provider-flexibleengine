@@ -9,6 +9,8 @@ import (
 )
 
 func TestAccIdentityV3RoleDataSource_basic(t *testing.T) {
+	resourceName := "data.flexibleengine_identity_role_v3.role_1"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -17,11 +19,11 @@ func TestAccIdentityV3RoleDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOpenStackIdentityV3RoleDataSource_basic,
+				Config: testAccIdentityRoleDataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIdentityV3DataSourceID("data.flexibleengine_identity_role_v3.role_1"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_identity_role_v3.role_1", "name", "rds_adm"),
+					testAccCheckIdentityV3DataSourceID(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "name", "rds_adm"),
+					resource.TestCheckResourceAttr(resourceName, "display_name", "RDS Administrator"),
 				),
 			},
 		},
@@ -43,8 +45,8 @@ func testAccCheckIdentityV3DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccOpenStackIdentityV3RoleDataSource_basic = `
+const testAccIdentityRoleDataSource_basic = `
 data "flexibleengine_identity_role_v3" "role_1" {
-    name = "rds_adm"
+  name = "rds_adm"
 }
 `

@@ -4,7 +4,7 @@ subcategory: "Identity and Access Management (IAM)"
 
 # flexibleengine\_identity\_role\_v3
 
-Use this data source to get the ID of a FlexibleEngine role.
+Use this data source to get the ID of an IAM **system-defined** role or policy.
 
 The Role in Terraform is the same as Policy on console. however,
 The policy name is the display name of Role, the Role name cannot
@@ -76,6 +76,8 @@ te_agency | Agent Operator
 vpc_netadm | VPC Administrator
 vpcep_adm | VPCEndpoint service enables you to privately connect your VPC to supported services
 
+## Example Usage
+
 ```hcl
 data "flexibleengine_identity_role_v3" "security_admin" {
   name = "secu_admin"
@@ -90,8 +92,11 @@ data "flexibleengine_identity_role_v3" "security_admin" {
 
 ## Attributes Reference
 
-`id` is set to the ID of the found role. In addition, the following attributes
-are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `name` - See Argument Reference above.
-* `domain_id` - See Argument Reference above.
+* `id` - The data source ID in UUID format.
+* `display_name` - The display name of the role displayed on the console.
+* `description` - The description of the policy.
+* `catalog` - The service catalog of the policy.
+* `type` - The display mode of the policy.
+* `policy` - The content of the policy.
