@@ -4,11 +4,9 @@ subcategory: "Identity and Access Management (IAM)"
 
 # flexibleengine\_identity\_custom\_role\_v3
 
-Use this data source to get the ID of a FlexibleEngine custom role.
+Use this data source to get the ID of an IAM **custom policy**.
 
-The Role in Terraform is the same as Policy on console. however,
-The policy name is the display name of Role, the Role name cannot
-be found on Console.
+## Example Usage
 
 ```hcl
 data "flexibleengine_identity_custom_role_v3" "role" {
@@ -37,4 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 * `policy` - Document of the custom policy.
 
 * `catalog` - The catalog of the custom policy.
-

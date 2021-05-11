@@ -41,15 +41,15 @@ func resourceIdentityAgencyV3() *schema.Resource {
 				ForceNew: true,
 			},
 			"delegated_domain_name": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"delegated_service_name"},
+				Type:         schema.TypeString,
+				Optional:     true,
+				ExactlyOneOf: []string{"delegated_service_name"},
 			},
 			"delegated_service_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ValidateFunc: validation.StringMatch(regexp.MustCompile("^op_svc_[A-Za-z]+"),
-					"Please check your delegated_service_name input, it must be an existing cloud service"),
+					"the value must start with op_svc_, for example, op_svc_obs"),
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -70,8 +70,9 @@ func resourceIdentityAgencyV3() *schema.Resource {
 				Computed: true,
 			},
 			"project_role": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Type:         schema.TypeSet,
+				Optional:     true,
+				AtLeastOneOf: []string{"project_role", "domain_roles"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"roles": {
@@ -177,11 +178,10 @@ func listRolesOfDomain(domainID string, client *golangsdk.ServiceClient) (map[st
 
 	r := make(map[string]string, len(all))
 	for _, item := range all {
-		dn, ok := item.Extra["display_name"].(string)
-		if ok {
-			r[dn] = item.ID
+		if name := item.DisplayName; name != "" {
+			r[name] = item.ID
 		} else {
-			log.Printf("[DEBUG] Can not retrieve role:%#v", item)
+			log.Printf("[WARN] role %s without displayname", item.Name)
 		}
 	}
 	log.Printf("[TRACE] list roles = %#v, len=%d\n", r, len(r))
@@ -382,7 +382,7 @@ func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) erro
 		}
 		v := schema.Set{F: schema.HashString}
 		for _, role := range roles {
-			v.Add(role.Extra["display_name"])
+			v.Add(role.DisplayName)
 		}
 		prs.Add(map[string]interface{}{
 			"project": pn,
@@ -401,7 +401,7 @@ func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) erro
 	if len(roles) != 0 {
 		v := schema.Set{F: schema.HashString}
 		for _, role := range roles {
-			v.Add(role.Extra["display_name"])
+			v.Add(role.DisplayName)
 		}
 		err = d.Set("domain_roles", &v)
 		if err != nil {

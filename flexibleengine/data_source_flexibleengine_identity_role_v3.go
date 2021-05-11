@@ -1,6 +1,7 @@
 package flexibleengine
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -13,22 +14,35 @@ func dataSourceIdentityRoleV3() *schema.Resource {
 		Read: dataSourceIdentityRoleV3Read,
 
 		Schema: map[string]*schema.Schema{
-			"domain_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"display_name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"catalog": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"policy": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 
-			"region": {
+			"domain_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
-				ForceNew: true,
 			},
 		},
 	}
@@ -43,8 +57,8 @@ func dataSourceIdentityRoleV3Read(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	listOpts := roles.ListOpts{
-		DomainID: d.Get("domain_id").(string),
 		Name:     d.Get("name").(string),
+		DomainID: d.Get("domain_id").(string),
 	}
 
 	log.Printf("[DEBUG] List Options: %#v", listOpts)
@@ -67,8 +81,8 @@ func dataSourceIdentityRoleV3Read(d *schema.ResourceData, meta interface{}) erro
 
 	if len(allRoles) > 1 {
 		log.Printf("[DEBUG] Multiple results found: %#v", allRoles)
-		return fmt.Errorf("Your query returned more than one result. Please try a more " +
-			"specific search criteria, or set `most_recent` attribute to true.")
+		return fmt.Errorf("Your query returned more than one result. " +
+			"Please try a more specific search criteria.")
 	}
 	role = allRoles[0]
 
@@ -82,8 +96,16 @@ func dataSourceIdentityRoleV3Attributes(d *schema.ResourceData, config *Config, 
 
 	d.SetId(role.ID)
 	d.Set("name", role.Name)
-	d.Set("domain_id", role.DomainID)
-	d.Set("region", GetRegion(d, config))
+	d.Set("description", role.Description)
+	d.Set("display_name", role.DisplayName)
+	d.Set("catalog", role.Catalog)
+	d.Set("type", role.Type)
+
+	policy, err := json.Marshal(role.Policy)
+	if err != nil {
+		return fmt.Errorf("Error marshalling policy: %s", err)
+	}
+	d.Set("policy", string(policy))
 
 	return nil
 }
