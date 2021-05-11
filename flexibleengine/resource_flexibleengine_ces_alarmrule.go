@@ -369,13 +369,17 @@ func resourceAlarmRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 		log.Printf("[WARN] %s Nothing will be updated", nameCESAR)
 		return nil
 	}
-	updateOpts := alarmrule.UpdateOpts{AlarmEnabled: d.Get("alarm_enabled").(bool)}
-	log.Printf("[DEBUG] Updating %s %s with options: %#v", nameCESAR, arId, updateOpts)
+
+	enabled := d.Get("alarm_enabled").(bool)
+	enableOpts := alarmrule.EnableOpts{
+		AlarmEnabled: enabled,
+	}
+	log.Printf("[DEBUG] Updating %s %s to %#v", nameCESAR, arId, enabled)
 
 	timeout := d.Timeout(schema.TimeoutUpdate)
 	//lintignore:R006
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err := alarmrule.Update(client, arId, updateOpts).ExtractErr()
+		err := alarmrule.Enable(client, arId, enableOpts).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}

@@ -191,7 +191,7 @@ func readAvailabilityZone(resp instances.RdsInstanceResponse) string {
 }
 
 func getRdsInstanceByID(client *golangsdk.ServiceClient, instanceID string) (*instances.RdsInstanceResponse, error) {
-	listOpts := instances.ListRdsInstanceOpts{
+	listOpts := instances.ListOpts{
 		Id: instanceID,
 	}
 	pages, err := instances.List(client, listOpts).AllPages()

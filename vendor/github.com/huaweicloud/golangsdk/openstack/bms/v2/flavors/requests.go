@@ -67,6 +67,9 @@ func List(c *golangsdk.ServiceClient, opts ListOpts) ([]Flavor, error) {
 	pages, err := pagination.NewPager(c, u, func(r pagination.PageResult) pagination.Page {
 		return FlavorPage{pagination.LinkedPageBase{PageResult: r}}
 	}).AllPages()
+	if err != nil {
+		return nil, err
+	}
 
 	allFlavors, err := ExtractFlavors(pages)
 	if err != nil {
