@@ -204,6 +204,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_dns_zone_v2":                        dataSourceDNSZoneV2(),
 			"flexibleengine_dds_flavor_v3":                      dataSourceDDSFlavorV3(),
 			"flexibleengine_lb_certificate_v2":                  dataSourceCertificateV2(),
+			"flexibleengine_lb_loadbalancer_v2":                 dataSourceELBV2Loadbalancer(),
 			"flexibleengine_sdrs_domain_v1":                     dataSourceSdrsDomainV1(),
 			"flexibleengine_identity_project_v3":                dataSourceIdentityProjectV3(),
 			"flexibleengine_identity_role_v3":                   dataSourceIdentityRoleV3(),
