@@ -27,11 +27,15 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
 					resource.TestCheckResourceAttr(resourceName, "name", "loadbalancer_1"),
+					resource.TestMatchResourceAttr(resourceName, "vip_port_id", regexp.MustCompile("^[a-f0-9-]+")),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
-					resource.TestMatchResourceAttr(resourceName, "vip_port_id",
-						regexp.MustCompile("^[a-f0-9-]+")),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccLBV2LoadBalancerConfig_update,
@@ -48,6 +52,7 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
 	var sg_1, sg_2 groups.SecGroup
+	resourceName := "flexibleengine_lb_loadbalancer_v2.loadbalancer_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -57,28 +62,29 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 			{
 				Config: testAccLBV2LoadBalancer_secGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2LoadBalancerExists(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
+					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
 					testAccCheckNetworkingV2SecGroupExists(
 						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_2),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
+						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
+					resource.TestCheckResourceAttr(resourceName, "security_group_ids.#", "1"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_1),
 				),
 			},
 			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccLBV2LoadBalancer_secGroup_update1,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2LoadBalancerExists(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
+					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
 					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
 						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "security_group_ids.#", "2"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_1),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_2),
 				),
@@ -86,14 +92,12 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 			{
 				Config: testAccLBV2LoadBalancer_secGroup_update2,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckLBV2LoadBalancerExists(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", &lb),
+					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
 					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_1),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &sg_1),
 					testAccCheckNetworkingV2SecGroupExists(
 						"flexibleengine_networking_secgroup_v2.secgroup_2", &sg_2),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_lb_loadbalancer_v2.loadbalancer_1", "security_group_ids.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "security_group_ids.#", "1"),
 					testAccCheckLBV2LoadBalancerHasSecGroup(&lb, &sg_2),
 				),
 			},
