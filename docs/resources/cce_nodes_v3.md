@@ -7,7 +7,7 @@ Add a node to a container cluster.
 
 ## Example Usage
 
- ```hcl
+```hcl
 variable "cluster_id" { }
 variable "ssh_key" { }
 variable "availability_zone" { }
@@ -23,15 +23,15 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   bandwidth_size    = 100
 
   root_volume {
-    size= 40
-    volumetype= "SATA"
+    size       = 40
+    volumetype = "SATA"
   }
   data_volumes {
-    size= 100
-    volumetype= "SATA"
+    size       = 100
+    volumetype = "SATA"
   }
 }
- ```    
+```
 
 ## Argument Reference
 The following arguments are supported:
@@ -57,35 +57,29 @@ The following arguments are supported:
 
 * `eip_ids` - (Optional) List of existing elastic IP IDs. Changing this parameter will create a new resource.
 
-**Note:**
+-> **Note:**
 If the `eip_ids` parameter is configured, you do not need to configure the `eip_count` and bandwidth parameters:
 `iptype`, `bandwidth_charge_mode`, `bandwidth_size` and `share_type`.
 
 * `eip_count` - (Optional) Number of elastic IPs to be dynamically created. Changing this parameter will create a new resource.
 
-* `iptype` - (Required) Elastic IP type. 
+* `iptype` - (Optional) Elastic IP type. 
 
 * `bandwidth_charge_mode` - (Optional) Bandwidth billing type. Changing this parameter will create a new resource.
 
-* `sharetype` - (Required) Bandwidth sharing type. Changing this parameter will create a new resource.
+* `sharetype` - (Optional) Bandwidth sharing type. Changing this parameter will create a new resource.
 
-* `bandwidth_size` - (Required) Bandwidth size. Changing this parameter will create a new resource.
+* `bandwidth_size` - (Optional) Bandwidth size. Changing this parameter will create a new resource.
 
+* `ecs_performance_type` - (Optional) Classification of cloud server specifications.
+    Changing this parameter will create a new resource.
 
-* `billing_mode` - (Optional) Node's billing mode: The value is 0 (on demand). Changing this parameter will create a new resource.
+* `product_id` - (Optional) The Product ID. Changing this parameter will create a new resource.
 
-* `extend_param_charging_mode` - (Optional) Node charging mode, 0 is on-demand charging. Changing this parameter will create a new cluster resource.
+* `max_pods` - (Optional) The maximum number of instances a node is allowed to create.
+    Changing this parameter will create a new resource.
 
-* `ecs_performance_type` - (Optional) Classification of cloud server specifications. Changing this parameter will create a new cluster resource.
-
-* `order_id` - (Optional) Order ID, mandatory when the node payment type is the automatic payment package period type.
-    Changing this parameter will create a new cluster resource.
-
-* `product_id` - (Optional) The Product ID. Changing this parameter will create a new cluster resource.
-
-* `max_pods` - (Optional) The maximum number of instances a node is allowed to create. Changing this parameter will create a new cluster resource.
-
-* `public_key` - (Optional) The Public key. Changing this parameter will create a new cluster resource.
+* `public_key` - (Optional) The Public key. Changing this parameter will create a new resource.
 
 * `preinstall` - (Optional) Script required before installation. The input value can be a Base64 encoded string or not.
     Changing this parameter will create a new resource.
@@ -99,30 +93,28 @@ If the `eip_ids` parameter is configured, you do not need to configure the `eip_
     * `dockerBaseSize` - The available disk space of a single docker container on the node in device mapper mode.
     * `DockerLVMConfigOverride` - Docker data disk configurations. The following is an example default configuration:
 
-```hcl
-  extend_param = {
-    DockerLVMConfigOverride = "dockerThinpool=vgpaas/90%VG;kubernetesLV=vgpaas/10%VG;diskType=evs;lvType=linear"
-  }
-```
+    ```hcl
+    extend_param = {
+      DockerLVMConfigOverride = "dockerThinpool=vgpaas/90%VG;kubernetesLV=vgpaas/10%VG;diskType=evs;lvType=linear"
+    }
+    ```
 
-**root_volume** **- (Required)** It corresponds to the system disk related configuration. Changing this parameter will create a new resource.
+**root_volume** **- (Required)** It corresponds to the system disk related configuration.
+  Changing this parameter will create a new resource.
 
-* `size` - (Required) Disk size in GB.
-    
-* `volumetype` - (Required) Disk type.
-    
-* `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
+  * `size` - (Required) Disk size in GB. 
+  * `volumetype` - (Required) Disk type.    
+  * `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
 
-**data_volumes** **- (Required)** Represents the data disk to be created. Changing this parameter will create a new resource.
+**data_volumes** **- (Required)** Represents the data disk to be created.
+  Changing this parameter will create a new resource.
     
-* `size` - (Required) Disk size in GB.
-    
-* `volumetype` - (Required) Disk type.
-    
-* `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
+  * `size` - (Required) Disk size in GB.
+  * `volumetype` - (Required) Disk type.  
+  * `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
 
-
-**taints** **- (Optional)** You can add taints to created nodes to configure anti-affinity. Each taint contains the following parameters:
+**taints** **- (Optional)** You can add taints to created nodes to configure anti-affinity.
+  Each taint contains the following parameters:
 
   * `key` - (Required) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits, hyphens (-),
     underscores (_), and periods (.) are allowed. A DNS subdomain name can be used as the prefix of a key.
@@ -134,8 +126,8 @@ If the `eip_ids` parameter is configured, you do not need to configure the `eip_
 
 All above argument parameters can be exported as attribute parameters along with attribute reference.
 
- * `status` -  Node status information.
-
- * `private_ip` - Private IP of the CCE node.
-
- * `public_ip` - Public IP of the CCE node.
+* `id` - The resource ID in UUID format.
+* `status` -  Node status information.
+* `server_id` - ID of the ECS instance associated with the node.
+* `private_ip` - Private IP of the CCE node.
+* `public_ip` - Public IP of the CCE node.

@@ -63,19 +63,13 @@ func resourceCCENodeV3() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
-			},
-			"server_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"annotations": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
 			},
+			"tags": tagsSchema(),
+
 			"flavor_id": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -101,6 +95,7 @@ func resourceCCENodeV3() *schema.Resource {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"size": {
@@ -197,25 +192,7 @@ func resourceCCENodeV3() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
-			"billing_mode": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
-			"extend_param_charging_mode": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
 			"ecs_performance_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
-			"order_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
@@ -278,6 +255,34 @@ func resourceCCENodeV3() *schema.Resource {
 			"public_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"server_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+
+			// Deprecated
+			"billing_mode": {
+				Type:       schema.TypeInt,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "will be removed later",
+			},
+			"extend_param_charging_mode": {
+				Type:       schema.TypeInt,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "will be removed later",
+			},
+			"order_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "will be removed later",
 			},
 		},
 	}
@@ -521,16 +526,14 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error retrieving flexibleengine Node: %s", err)
 	}
 
+	d.Set("region", GetRegion(d, config))
 	d.Set("name", s.Metadata.Name)
 	d.Set("flavor_id", s.Spec.Flavor)
 	d.Set("availability_zone", s.Spec.Az)
 	d.Set("os", s.Spec.Os)
-	d.Set("billing_mode", s.Spec.BillingMode)
 	d.Set("key_pair", s.Spec.Login.SshKey)
 
-	d.Set("extend_param_charging_mode", s.Spec.ExtendParam["chargingMode"])
 	d.Set("ecs_performance_type", s.Spec.ExtendParam["ecs:performancetype"])
-	d.Set("order_id", s.Spec.ExtendParam["orderID"])
 	d.Set("product_id", s.Spec.ExtendParam["productID"])
 	d.Set("public_key", s.Spec.ExtendParam["publicKey"])
 	d.Set("max_pods", s.Spec.ExtendParam["maxPods"])
@@ -561,9 +564,9 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 
 	d.Set("eip_ids", s.Spec.PublicIP.Ids)
 	d.Set("eip_count", s.Spec.PublicIP.Count)
-	d.Set("region", GetRegion(d, config))
 	d.Set("private_ip", s.Status.PrivateIP)
 	d.Set("public_ip", s.Status.PublicIP)
+	d.Set("status", s.Status.Phase)
 
 	serverId := s.Status.ServerID
 	d.Set("server_id", serverId)
