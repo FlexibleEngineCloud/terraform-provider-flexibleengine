@@ -30,18 +30,27 @@ func TestAccCCENodePool_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodePoolExists(resourceName, clusterName, &nodePool),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "scall_enable", "false"),
+					resource.TestCheckResourceAttr(resourceName, "initial_node_count", "1"),
+					resource.TestCheckResourceAttr(resourceName, "min_node_count", "0"),
+					resource.TestCheckResourceAttr(resourceName, "max_node_count", "0"),
+					resource.TestCheckResourceAttr(resourceName, "max_pods", "200"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
 			},
 			{
 				Config: testAccCCENodePool_update(rName, updateName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", updateName),
-					resource.TestCheckResourceAttr(resourceName, "initial_node_count", "2"),
 					resource.TestCheckResourceAttr(resourceName, "scall_enable", "true"),
+					resource.TestCheckResourceAttr(resourceName, "initial_node_count", "2"),
 					resource.TestCheckResourceAttr(resourceName, "min_node_count", "2"),
 					resource.TestCheckResourceAttr(resourceName, "max_node_count", "9"),
 					resource.TestCheckResourceAttr(resourceName, "scale_down_cooldown_time", "100"),
 					resource.TestCheckResourceAttr(resourceName, "priority", "1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 		},
@@ -156,15 +165,16 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   name               = "%s"
   os                 = "EulerOS 2.5"
   flavor_id          = "s3.large.2"
-  initial_node_count = 1
   availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
   key_pair           = flexibleengine_compute_keypair_v2.test.name
-  scall_enable      = false
-  min_node_count    = 0
-  max_node_count    = 0
+  scall_enable       = false
+  initial_node_count = 1
+  min_node_count     = 0
+  max_node_count     = 0
+  max_pods           = 200
   scale_down_cooldown_time = 0
   priority          = 0
-  type 				= "vm"
+  type              = "vm"
 
   root_volume {
     size       = 40
@@ -173,6 +183,11 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   data_volumes {
     size       = 100
     volumetype = "SSD"
+  }
+
+  tags = {
+    key = "value"
+    foo = "bar"
   }
 }
 `, testAccCCENodePool_Base(rName), rName)
@@ -187,15 +202,15 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   name               = "%s"
   os                 = "EulerOS 2.5"
   flavor_id          = "s3.large.2"
-  initial_node_count = 2
   availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
   key_pair           = flexibleengine_compute_keypair_v2.test.name
-  scall_enable      = true
-  min_node_count    = 2
-  max_node_count    = 9
+  scall_enable       = true
+  initial_node_count = 2
+  min_node_count     = 2
+  max_node_count     = 9
   scale_down_cooldown_time = 100
   priority          = 1
-  type 				= "vm"
+  type              = "vm"
 
   root_volume {
     size       = 40
@@ -204,6 +219,11 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   data_volumes {
     size       = 100
     volumetype = "SSD"
+  }
+
+  tags = {
+    key   = "value1"
+    owner = "terraform"
   }
 }
 `, testAccCCENodePool_Base(rName), updateName)

@@ -27,6 +27,7 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
 					resource.TestCheckResourceAttr(resourceName, "name", "test-node"),
 					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s1.medium"),
+					resource.TestCheckResourceAttr(resourceName, "status", "Active"),
 				),
 			},
 			{

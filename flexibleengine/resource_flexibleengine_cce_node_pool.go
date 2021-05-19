@@ -11,6 +11,7 @@ import (
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodepools"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 )
 
 func resourceCCENodePool() *schema.Resource {
@@ -59,6 +60,7 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"root_volume": {
 				Type:     schema.TypeList,
@@ -115,17 +117,17 @@ func resourceCCENodePool() *schema.Resource {
 				Computed: true,
 			},
 			"key_pair": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				// ExactlyOneOf: []string{"password", "key_pair"},
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ExactlyOneOf: []string{"password", "key_pair"},
 			},
 			"password": {
-				Type:      schema.TypeString,
-				Optional:  true,
-				ForceNew:  true,
-				Sensitive: true,
-				// ExactlyOneOf: []string{"password", "key_pair"},
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Sensitive:    true,
+				ExactlyOneOf: []string{"password", "key_pair"},
 			},
 			"taints": {
 				Type:     schema.TypeList,
@@ -147,9 +149,11 @@ func resourceCCENodePool() *schema.Resource {
 						},
 					}},
 			},
-			"billing_mode": {
+			"tags": tagsSchema(),
+			"max_pods": {
 				Type:     schema.TypeInt,
-				Computed: true,
+				Optional: true,
+				ForceNew: true,
 			},
 			"preinstall": {
 				Type:     schema.TypeString,
@@ -208,12 +212,37 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+
+			"billing_mode": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
 	}
+}
+
+func resourceCCENodePoolTags(d *schema.ResourceData) []tags.ResourceTag {
+	tagRaw := d.Get("tags").(map[string]interface{})
+	return expandResourceTags(tagRaw)
+}
+
+func buildCCENodePoolLoginSpec(d *schema.ResourceData) nodes.LoginSpec {
+	var loginSpec nodes.LoginSpec
+
+	if v1, ok := d.GetOk("key_pair"); ok {
+		loginSpec.SshKey = v1.(string)
+	} else if v2, ok := d.GetOk("password"); ok {
+		loginSpec.UserPassword = nodes.UserPassword{
+			Username: "root",
+			Password: v2.(string),
+		}
+	}
+
+	return loginSpec
 }
 
 func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
@@ -223,20 +252,20 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating Flexibleengine CCE Node Pool client: %s", err)
 	}
 
-	var loginSpec nodes.LoginSpec
-	if hasFilledOpt(d, "key_pair") {
-		loginSpec = nodes.LoginSpec{SshKey: d.Get("key_pair").(string)}
-	} else if hasFilledOpt(d, "password") {
-		loginSpec = nodes.LoginSpec{
-			UserPassword: nodes.UserPassword{
-				Username: "root",
-				Password: d.Get("password").(string),
-			},
-		}
+	// wait for the cce cluster to become available
+	clusterid := d.Get("cluster_id").(string)
+	stateCluster := &resource.StateChangeConf{
+		Target:     []string{"Available"},
+		Refresh:    waitForClusterAvailable(nodePoolClient, clusterid),
+		Timeout:    d.Timeout(schema.TimeoutCreate),
+		Delay:      5 * time.Second,
+		MinTimeout: 5 * time.Second,
+	}
+	if _, err = stateCluster.WaitForState(); err != nil {
+		return fmt.Errorf("CCE Cluster %s is inactive: %s", clusterid, err)
 	}
 
 	initialNodeCount := d.Get("initial_node_count").(int)
-
 	createOpts := nodepools.CreateOpts{
 		Kind:       "NodePool",
 		ApiVersion: "v3",
@@ -249,7 +278,6 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				Flavor:      d.Get("flavor_id").(string),
 				Az:          d.Get("availability_zone").(string),
 				Os:          d.Get("os").(string),
-				Login:       loginSpec,
 				RootVolume:  resourceCCERootVolume(d),
 				DataVolumes: resourceCCEDataVolume(d),
 				K8sTags:     resourceCCENodeK8sTags(d),
@@ -262,6 +290,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				},
 				ExtendParam: resourceCCEExtendParam(d),
 				Taints:      resourceCCETaint(d),
+				UserTags:    resourceCCENodePoolTags(d),
 			},
 			Autoscaling: nodepools.AutoscalingSpec{
 				Enable:                d.Get("scall_enable").(bool),
@@ -274,17 +303,10 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 		},
 	}
 
-	clusterid := d.Get("cluster_id").(string)
-	stateCluster := &resource.StateChangeConf{
-		Target:     []string{"Available"},
-		Refresh:    waitForClusterAvailable(nodePoolClient, clusterid),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      15 * time.Second,
-		MinTimeout: 5 * time.Second,
-	}
-	_, err = stateCluster.WaitForState()
-
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
+	// Add loginSpec here so it wouldn't go in the above log entry
+	createOpts.Spec.NodeTemplate.Login = buildCCENodePoolLoginSpec(d)
+
 	s, err := nodepools.Create(nodePoolClient, clusterid, createOpts).Extract()
 	if err != nil {
 		if _, ok := err.(golangsdk.ErrDefault403); ok {
@@ -384,6 +406,13 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("[DEBUG] Error saving root Volume to state for Flexibleengine Node Pool (%s): %s", d.Id(), err)
 	}
 
+	tagmap := tagsToMap(s.Spec.NodeTemplate.UserTags)
+	// ignore "CCE-Dynamic-Provisioning-Node"
+	delete(tagmap, "CCE-Dynamic-Provisioning-Node")
+	if err := d.Set("tags", tagmap); err != nil {
+		return fmt.Errorf("Error saving tags to state for CCE Node Pool(%s): %s", d.Id(), err)
+	}
+
 	d.Set("status", s.Status.Phase)
 
 	return nil
@@ -397,7 +426,6 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	initialNodeCount := d.Get("initial_node_count").(int)
-
 	updateOpts := nodepools.UpdateOpts{
 		Kind:       "NodePool",
 		ApiVersion: "v3",
@@ -413,6 +441,16 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 				ScaleDownCooldownTime: d.Get("scale_down_cooldown_time").(int),
 				Priority:              d.Get("priority").(int),
 			},
+			NodeTemplate: nodes.Spec{
+				Flavor:      d.Get("flavor_id").(string),
+				Az:          d.Get("availability_zone").(string),
+				Login:       buildCCENodePoolLoginSpec(d),
+				RootVolume:  resourceCCERootVolume(d),
+				DataVolumes: resourceCCEDataVolume(d),
+				Count:       1,
+				UserTags:    resourceCCENodePoolTags(d),
+			},
+			Type: d.Get("type").(string),
 		},
 	}
 

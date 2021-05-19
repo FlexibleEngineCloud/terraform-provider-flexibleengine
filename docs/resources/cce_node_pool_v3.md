@@ -43,8 +43,6 @@ resource "flexibleengine_cce_node_pool_v3" "node_pool" {
 ## Argument Reference
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the cce pool resource. If omitted, the provider-level region will be used. Changing this creates a new cce node pool resource.
-
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster. Changing this parameter will create a new resource.
 
 * `name` - (Required, String) Node Pool Name.
@@ -55,28 +53,33 @@ The following arguments are supported:
 
 *  `type` - (Optional, String, ForceNew) Node Pool type. Possible values are: "vm" and "ElasticBMS".
  
-* `availability_zone` - (Optional, String, ForceNew) specify the name of the available partition (AZ). Default value is random 
-    to create nodes in a random AZ in the node pool.
+* `availability_zone` - (Optional, String, ForceNew) specify the name of the available partition (AZ).
+    Default value is random to create nodes in a random AZ in the node pool.
     Changing this parameter will create a new resource.
 
 * `os` - (Optional, String) Operating System of the node. The value can be EulerOS 2.5 and CentOS 7.6.
     Changing this parameter will create a new resource.
 
-* `key_pair` - (Optional, String, ForceNew) Key pair name when logging in to select the key pair mode. This parameter and `password` are alternative.
+* `key_pair` - (Optional, String, ForceNew) Key pair name when logging in to select the key pair mode.
+    This parameter and `password` are alternative. Changing this parameter will create a new resource.
+
+* `password` - (Optional, String, ForceNew) root password when logging in to select the password mode.
+    This parameter must be **salted** and alternative to `key_pair`. Changing this parameter will create a new resource.
+
+* `subnet_id` - (Optional, String, ForceNew) The ID of the subnet to which the NIC belongs.
     Changing this parameter will create a new resource.
 
-* `password` - (Optional, String, ForceNew) root password when logging in to select the password mode. This parameter must be salted and alternative to `key_pair`.
+* `max_pods` - (Optional, Int, ForceNew) The maximum number of instances a node is allowed to create.
     Changing this parameter will create a new resource.
 
-* `subnet_id` - (Optional, String, ForceNew) The ID of the subnet to which the NIC belongs. Changing this parameter will create a new resource.
+* `preinstall` - (Optional, String, ForceNew) Script required before installation. The input value can be
+    a Base64 encoded string or not. Changing this parameter will create a new resource.
 
-* `preinstall` - (Optional, String, ForceNew) Script required before installation. The input value can be a Base64 encoded string or not.
-    Changing this parameter will create a new resource.
+* `postinstall` - (Optional, String, ForceNew) Script required after the installation. The input value can be
+    a Base64 encoded string or not. Changing this parameter will create a new resource.
 
-* `postinstall` - (Optional, String, ForceNew) Script required after the installation. The input value can be a Base64 encoded string or not.
-    Changing this parameter will create a new resource.
-
-* `scall_enable` - (Optional, Bool) Whether to enable auto scaling. If Autoscaler is enabled, install the autoscaler add-on to use the auto scaling feature.
+* `scall_enable` - (Optional, Bool) Whether to enable auto scaling. If Autoscaler is enabled, install the autoscaler
+    add-on to use the auto scaling feature.
 
 * `min_node_count` - (Optional, Int) Minimum number of nodes allowed if auto scaling is enabled.
 
@@ -86,14 +89,19 @@ The following arguments are supported:
 
 * `priority` - (Optional, Int) Weight of a node pool. A node pool with a higher weight has a higher priority during scaling.
 
-* `labels` - (Optional, Map, ForceNew) Tags of a Kubernetes node, key/value pair format. Changing this parameter will create a new resource.
+* `labels` - (Optional, Map, ForceNew) Tags of a Kubernetes node, key/value pair format.
+    Changing this parameter will create a new resource.
 
-* `root_volume` - (Required, List, ForceNew) It corresponds to the system disk related configuration. Changing this parameter will create a new resource.
+* `tags` - (Optional, Map) Tags of a VM node, key/value pair format.
 
-* `data_volumes` - (Required, List, ForceNew) Represents the data disk to be created. Changing this parameter will create a new resource.
+* `root_volume` - (Required, List, ForceNew) It corresponds to the system disk related configuration.
+    The object structure is documented below. Changing this parameter will create a new resource.
 
-* `taints` - (Optional, List, ForceNew) You can add taints to created nodes to configure anti-affinity. Each taint contains the following parameters:
+* `data_volumes` - (Required, List, ForceNew) Represents the data disk to be created.
+    The object structure is documented below. Changing this parameter will create a new resource.
 
+* `taints` - (Optional, List, ForceNew) You can add taints to created nodes to configure anti-affinity.
+    The object structure is documented below.
 
 The `root_volume` block supports:
 
@@ -113,13 +121,14 @@ The `data_volumes` block supports:
 
 The `taints` block supports:
     
-* `key` - (Required, String, ForceNew) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits, hyphens (-), 
-  underscores (_), and periods (.) are allowed. A DNS subdomain name can be used as the prefix of a key.
+* `key` - (Required, String, ForceNew) A key must contain 1 to 63 characters starting with a letter or digit.
+  Only letters, digits, hyphens (-), underscores (_), and periods (.) are allowed.
+  A DNS subdomain name can be used as the prefix of a key.
     
-* `value` - (Required, String) A value must start with a letter or digit and can contain a maximum of 63 characters, including letters, 
-  digits, hyphens (-), underscores (_), and periods (.).
+* `value` - (Required, String) A value must start with a letter or digit and can contain a maximum of 63 characters,
+  including letters, digits, hyphens (-), underscores (_), and periods (.).
     
-* `effect` - (Required, String) Available options are NoSchedule, PreferNoSchedule, and NoExecute. 
+* `effect` - (Required, String) Available options are *NoSchedule*, *PreferNoSchedule* and *NoExecute*.
     
 ## Attributes Reference
 
@@ -135,4 +144,3 @@ In addition to all arguments above, the following attributes are exported:
 This resource provides the following timeouts configuration options:
 - `create` - Default is 20 minute.
 - `delete` - Default is 20 minute.
-
