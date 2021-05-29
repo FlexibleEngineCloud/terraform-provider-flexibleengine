@@ -2,7 +2,7 @@
 subcategory: "Relational Database Service (RDS)"
 ---
 
-# flexibleengine\_rds\_read\_replica\_v3
+# flexibleengine_rds_read_replica_v3
 
 RDS read replica management
 
@@ -62,7 +62,6 @@ The following arguments are supported:
     Changing this parameter will create a new resource.
 
 * `flavor` - (Required) Specifies the specification code.
-    Changing this parameter will create a new resource.
 
 * `replica_of_id` - (Required) Specifies the DB instance ID, which is used to
     create a read replica. Changing this parameter will create a new resource.
@@ -80,7 +79,6 @@ The following arguments are supported:
     the `region` argument of the provider is used. Currently, read replicas can
     be created only in the same region as that of the promary DB instance.
     Changing this parameter will create a new resource.
-
 
 The `volume` block supports:
 
