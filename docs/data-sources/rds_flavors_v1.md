@@ -1,10 +1,12 @@
 ---
-subcategory: "Relational Database Service (RDS)"
+subcategory: "Deprecated"
 ---
 
-# flexibleengine\_rds\_flavors\_v1
+# flexibleengine_rds_flavors_v1
 
 Use this data source to get the ID of an available FlexibleEngine rds flavor.
+
+!> **Warning:** It has been deprecated, using `flexibleengine_rds_flavors_v3` instead.
 
 ## Example Usage
 

@@ -1,10 +1,12 @@
 ---
-subcategory: "Relational Database Service (RDS)"
+subcategory: "Deprecated"
 ---
 
-# flexibleengine\_rds\_instance\_v1
+# flexibleengine_rds_instance_v1
 
 Manages rds instance resource within FlexibleEngine
+
+!> **Warning:** It has been deprecated, using `flexibleengine_rds_instance_v3` instead.
 
 ## Example Usage:  Creating a PostgreSQL RDS instance
 
