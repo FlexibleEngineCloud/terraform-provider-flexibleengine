@@ -1,3 +1,21 @@
+## 1.21.0 (May 31, 2021)
+
+FEATURES:
+* **New Data Source:** `flexibleengine_lb_loadbalancer_v2` ([#476](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/476))
+* **New Resurce:** `flexibleengine_as_lifecycle_hook_v1` ([#525](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/525))
+
+ENHANCEMENTS:
+* `flexibleengine_lb_loadbalancer_v2`: Add ability to import ([#538](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/538))
+* `flexibleengine_cce_node_pool_v3`: Support tags and max_pods ([#519](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/519))
+* `flexibleengine_rds_instance_v3`: Add ability to update flavor, volume size and backup_strategy ([#522](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/522))
+
+BUG FIXES:
+* `flexibleengine_vpc_subnet_v1`: Allow DNS Nameservers to be cleared ([#544](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/544))
+
+DEPRECATED:
+* resource/flexibleengine_rds_instance_v1: ([#542](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/542))
+* data/flexibleengine_rds_flavors_v1: ([#542](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/542))
+
 ## 1.20.0 (April 30, 2021)
 
 FEATURES:
