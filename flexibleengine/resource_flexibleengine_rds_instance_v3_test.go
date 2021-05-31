@@ -16,35 +16,48 @@ package flexibleengine
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/rds/v3/instances"
 )
 
 func TestAccRdsInstanceV3_basic(t *testing.T) {
+	var instance instances.RdsInstanceResponse
 	name := acctest.RandString(10)
+	resourceType := "flexibleengine_rds_instance_v3"
 	resourceName := "flexibleengine_rds_instance_v3.instance"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRdsInstanceV3Destroy,
+		CheckDestroy: testAccCheckRdsInstanceV3Destroy(resourceType),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRdsInstanceV3_basic(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRdsInstanceV3Exists(),
+					testAccCheckRdsInstanceV3Exists(resourceName, &instance),
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("rds_acc_instance-%s", name)),
+					resource.TestCheckResourceAttr(resourceName, "flavor", "rds.pg.s1.medium"),
 					resource.TestCheckResourceAttr(resourceName, "time_zone", "UTC+01:00"),
 					resource.TestCheckResourceAttr(resourceName, "backup_strategy.0.keep_days", "1"),
-					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
+					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "60"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttrSet(resourceName, "fixed_ip"),
+				),
+			},
+			{
+				Config: testAccRdsInstanceV3_update(name),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "flavor", "rds.pg.s1.large"),
+					resource.TestCheckResourceAttr(resourceName, "time_zone", "UTC+01:00"),
+					resource.TestCheckResourceAttr(resourceName, "backup_strategy.0.keep_days", "2"),
+					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "100"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 			{
@@ -53,72 +66,68 @@ func TestAccRdsInstanceV3_basic(t *testing.T) {
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"db",
+					"status",
 				},
 			},
 		},
 	})
 }
 
-func testAccCheckRdsInstanceV3Destroy(s *terraform.State) error {
-	config := testAccProvider.Meta().(*Config)
-	client, err := config.sdkClient(OS_REGION_NAME, "rdsv1")
-	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
-	}
-	client.Endpoint = strings.Replace(client.Endpoint, "/rds/v1/", "/v3/", 1)
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_rds_instance_v3" {
-			continue
-		}
-
-		v, err := fetchRdsInstanceV3ByListOnTest(rs, client)
-		if err != nil {
-			return err
-		}
-		if v != nil {
-			return fmt.Errorf("flexibleengine rds instance still exists")
-		}
-	}
-
-	return nil
-}
-
-func testAccCheckRdsInstanceV3Exists() resource.TestCheckFunc {
+func testAccCheckRdsInstanceV3Destroy(rsType string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.sdkClient(OS_REGION_NAME, "rdsv1")
+		client, err := config.RdsV3Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating sdk client, err=%s", err)
-		}
-		client.Endpoint = strings.Replace(client.Endpoint, "/rds/v1/", "/v3/", 1)
-
-		rs, ok := s.RootModule().Resources["flexibleengine_rds_instance_v3.instance"]
-		if !ok {
-			return fmt.Errorf("Error checking flexibleengine_rds_instance_v3.instance exist, err=not found this resource")
+			return fmt.Errorf("Error creating flexibleengine rds client: %s", err)
 		}
 
-		v, err := fetchRdsInstanceV3ByListOnTest(rs, client)
-		if err != nil {
-			return fmt.Errorf("Error checking flexibleengine_rds_instance_v3.instance exist, err=%s", err)
-		}
-		if v == nil {
-			return fmt.Errorf("flexibleengine rds instance is not exist")
+		for _, rs := range s.RootModule().Resources {
+			if rs.Type != rsType {
+				continue
+			}
+
+			id := rs.Primary.ID
+			instance, err := getRdsInstanceByID(client, id)
+			if err != nil {
+				return err
+			}
+			if instance.Id != "" {
+				return fmt.Errorf("%s (%s) still exists", rsType, id)
+			}
 		}
 		return nil
 	}
 }
 
-func fetchRdsInstanceV3ByListOnTest(rs *terraform.ResourceState,
-	client *golangsdk.ServiceClient) (interface{}, error) {
+func testAccCheckRdsInstanceV3Exists(name string, instance *instances.RdsInstanceResponse) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[name]
+		if !ok {
+			return fmt.Errorf("Not found: %s", name)
+		}
 
-	identity := map[string]interface{}{"id": rs.Primary.ID}
+		id := rs.Primary.ID
+		if id == "" {
+			return fmt.Errorf("No ID is set")
+		}
 
-	queryLink := "?id=" + identity["id"].(string)
+		config := testAccProvider.Meta().(*Config)
+		client, err := config.RdsV3Client(OS_REGION_NAME)
+		if err != nil {
+			return fmt.Errorf("Error creating flexibleengine rds client: %s", err)
+		}
 
-	link := client.ServiceURL("instances") + queryLink
+		found, err := getRdsInstanceByID(client, id)
+		if err != nil {
+			return fmt.Errorf("Error checking %s exist, err=%s", name, err)
+		}
+		if found.Id == "" {
+			return fmt.Errorf("resource %s does not exist", name)
+		}
 
-	return findRdsInstanceV3ByList(client, link, identity)
+		instance = found
+		return nil
+	}
 }
 
 func testAccRdsInstanceV3_basic(val string) string {
@@ -145,7 +154,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   }
   volume {
     type = "COMMON"
-    size = 100
+    size = 60
   }
   backup_strategy {
     start_time = "08:00-09:00"
@@ -155,6 +164,45 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   tags = {
     key = "value"
     foo = "bar"
+  }
+}
+	`, val, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)
+}
+
+func testAccRdsInstanceV3_update(val string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+  name        = "sg-acc-%s"
+  description = "security group for rds instance"
+}
+
+resource "flexibleengine_rds_instance_v3" "instance" {
+  name              = "rds_acc_instance-%s"
+  flavor            = "rds.pg.s1.large"
+  availability_zone = ["%s"]
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  vpc_id            = "%s"
+  subnet_id         = "%s"
+  time_zone         = "UTC+01:00"
+
+  db {
+    password = "Huangwei!120521"
+    type     = "PostgreSQL"
+    version  = "11"
+    port     = "8635"
+  }
+  volume {
+    type = "COMMON"
+    size = 100
+  }
+  backup_strategy {
+    start_time = "08:00-09:00"
+    keep_days  = 2
+  }
+
+  tags = {
+    key   = "value1"
+    owner = "terraform"
   }
 }
 	`, val, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)

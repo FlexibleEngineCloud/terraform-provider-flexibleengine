@@ -5,19 +5,18 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v3/instances"
 )
 
-func resourceReplicaRdsInstance() *schema.Resource {
+func resourceRdsReadReplicaInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceReplicaInstanceCreate,
-		Read:   resourceReplicaInstanceRead,
-		Update: resourceReplicaInstanceUpdate,
-		Delete: resourceReplicaInstanceDelete,
+		Create: resourceRdsReadReplicaInstanceCreate,
+		Read:   resourceRdsReadReplicaInstanceRead,
+		Update: resourceRdsReadReplicaInstanceUpdate,
+		Delete: resourceRdsInstanceDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -56,7 +55,6 @@ func resourceReplicaRdsInstance() *schema.Resource {
 			"flavor": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 
 			"volume": {
@@ -156,7 +154,7 @@ func resourceReplicaRdsInstance() *schema.Resource {
 	}
 }
 
-func resourceReplicaInstanceVolume(d *schema.ResourceData) *instances.Volume {
+func buildRdsReplicaInstanceVolume(d *schema.ResourceData) *instances.Volume {
 	var volume *instances.Volume
 	volumeRaw := d.Get("volume").([]interface{})
 
@@ -174,74 +172,11 @@ func resourceReplicaInstanceVolume(d *schema.ResourceData) *instances.Volume {
 	return volume
 }
 
-func resourceDiskEncryptionID(d *schema.ResourceData) string {
-	var encryptionID string
-	volumeRaw := d.Get("volume").([]interface{})
-
-	if len(volumeRaw) == 1 {
-		encryptionID = volumeRaw[0].(map[string]interface{})["disk_encryption_id"].(string)
-	}
-
-	return encryptionID
-}
-
-func readAvailabilityZone(resp instances.RdsInstanceResponse) string {
-	node := resp.Nodes[0]
-	return node.AvailabilityZone
-}
-
-func getRdsInstanceByID(client *golangsdk.ServiceClient, instanceID string) (*instances.RdsInstanceResponse, error) {
-	listOpts := instances.ListOpts{
-		Id: instanceID,
-	}
-	pages, err := instances.List(client, listOpts).AllPages()
-	if err != nil {
-		return nil, fmt.Errorf("An error occured while querying rds instance %s: %s", instanceID, err)
-	}
-
-	resp, err := instances.ExtractRdsInstances(pages)
-	if err != nil {
-		return nil, err
-	}
-
-	instanceList := resp.Instances
-	if len(instanceList) == 0 {
-		// return an empty rds instance
-		log.Printf("[WARN] can not find the specified rds instance %s", instanceID)
-		instance := new(instances.RdsInstanceResponse)
-		return instance, nil
-	}
-
-	if len(instanceList) > 1 {
-		return nil, fmt.Errorf("retrieving more than one rds instance by %s", instanceID)
-	}
-	if instanceList[0].Id != instanceID {
-		return nil, fmt.Errorf("the id of rds instance was expected %s, but got %s",
-			instanceID, instanceList[0].Id)
-	}
-
-	return &instanceList[0], nil
-}
-
-func rdsInstanceStateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		instance, err := getRdsInstanceByID(client, instanceID)
-		if err != nil {
-			return nil, "FOUND ERROR", err
-		}
-		if instance.Id == "" {
-			return instance, "DELETED", nil
-		}
-
-		return instance, instance.Status, nil
-	}
-}
-
-func resourceReplicaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceRdsReadReplicaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.rdsV3Client(GetRegion(d, config))
+	client, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
+		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s ", err)
 	}
 
 	createOpts := instances.CreateReplicaOpts{
@@ -250,8 +185,8 @@ func resourceReplicaInstanceCreate(d *schema.ResourceData, meta interface{}) err
 		FlavorRef:        d.Get("flavor").(string),
 		Region:           GetRegion(d, config),
 		AvailabilityZone: d.Get("availability_zone").(string),
-		Volume:           resourceReplicaInstanceVolume(d),
-		DiskEncryptionId: resourceDiskEncryptionID(d),
+		Volume:           buildRdsReplicaInstanceVolume(d),
+		DiskEncryptionId: d.Get("volume.0.disk_encryption_id").(string),
 	}
 	log.Printf("[DEBUG] Create replica instance Options: %#v", createOpts)
 
@@ -262,40 +197,28 @@ func resourceReplicaInstanceCreate(d *schema.ResourceData, meta interface{}) err
 
 	instance := resp.Instance
 	d.SetId(instance.Id)
-	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"BUILD", "RESTORING"},
-		Target:     []string{"ACTIVE"},
-		Refresh:    rdsInstanceStateRefreshFunc(client, instance.Id),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      15 * time.Second,
-		MinTimeout: 5 * time.Second,
+	instanceID := d.Id()
+	if err := checkRDSInstanceJobFinish(client, resp.JobId, d.Timeout(schema.TimeoutCreate)); err != nil {
+		return fmt.Errorf("Error creating instance (%s): %s", instanceID, err)
 	}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
-		return fmt.Errorf(
-			"Error waiting for instance (%s) to become ready: %s ",
-			instance.Id, err)
-	}
-
-	// set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
 		tagList := expandResourceTags(tagRaw)
-		err := tags.Create(client, "instances", instance.Id, tagList).ExtractErr()
+		err := tags.Create(client, "instances", instanceID, tagList).ExtractErr()
 		if err != nil {
-			return fmt.Errorf("Error setting tags of Rds read replica instance %s: %s", instance.Id, err)
+			return fmt.Errorf("Error setting tags of Rds read replica instance %s: %s", instanceID, err)
 		}
 	}
 
-	return resourceReplicaInstanceRead(d, meta)
+	return resourceRdsReadReplicaInstanceRead(d, meta)
 }
 
-func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error {
+func resourceRdsReadReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.rdsV3Client(GetRegion(d, config))
+	client, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
 
 	instanceID := d.Id()
@@ -308,13 +231,10 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 		return nil
 	}
 
-	log.Printf("[DEBUG] Retrieved rds instance %s: %#v", instanceID, instance)
-
-	az := readAvailabilityZone(*instance)
+	log.Printf("[DEBUG] Retrieved rds read replica instance %s: %#v", instanceID, instance)
 	d.Set("name", instance.Name)
 	d.Set("flavor", instance.FlavorRef)
 	d.Set("region", instance.Region)
-	d.Set("availability_zone", az)
 	d.Set("private_ips", instance.PrivateIps)
 	d.Set("public_ips", instance.PublicIps)
 	d.Set("vpc_id", instance.VpcId)
@@ -322,21 +242,17 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 	d.Set("security_group_id", instance.SecurityGroupId)
 	d.Set("type", instance.Type)
 	d.Set("status", instance.Status)
+	d.Set("tags", tagsToMap(instance.Tags))
 
-	if primaryInstanceID, err := readPrimaryInstanceID(instance); err == nil {
+	az := expandAvailabilityZone(instance)
+	d.Set("availability_zone", az)
+
+	if primaryInstanceID, err := expandPrimaryInstanceID(instance); err == nil {
 		d.Set("replica_of_id", primaryInstanceID)
 	} else {
-		log.Printf("[WARN] %s", err)
+		return err
 	}
 
-	// set tags
-	tagsMap := make(map[string]interface{})
-	for _, tag := range instance.Tags {
-		tagsMap[tag.Key] = tag.Value
-	}
-	d.Set("tags", tagsMap)
-
-	// save volume
 	volumeList := make([]map[string]interface{}, 0, 1)
 	volume := map[string]interface{}{
 		"type":               instance.Volume.Type,
@@ -345,11 +261,9 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 	}
 	volumeList = append(volumeList, volume)
 	if err := d.Set("volume", volumeList); err != nil {
-		return fmt.Errorf(
-			"[DEBUG] Error saving volume to RDS instance (%s): %s", d.Id(), err)
+		return fmt.Errorf("[DEBUG] Error saving volume to RDS read replica instance (%s): %s", instanceID, err)
 	}
 
-	// save database
 	dbList := make([]map[string]interface{}, 0, 1)
 	database := map[string]interface{}{
 		"type":      instance.DataStore.Type,
@@ -359,66 +273,40 @@ func resourceReplicaInstanceRead(d *schema.ResourceData, meta interface{}) error
 	}
 	dbList = append(dbList, database)
 	if err := d.Set("db", dbList); err != nil {
-		return fmt.Errorf(
-			"[DEBUG] Error saving data base to RDS instance (%s): %s", d.Id(), err)
+		return fmt.Errorf("[DEBUG] Error saving data base to RDS read replica instance (%s): %s", instanceID, err)
 	}
 
 	return nil
 }
 
-func resourceReplicaInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceRdsReadReplicaInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.rdsV3Client(GetRegion(d, config))
+	client, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
+		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s ", err)
 	}
 
-	// update tags
+	instanceID := d.Id()
+	if err := updateRdsInstanceFlavor(d, client, instanceID); err != nil {
+		return fmt.Errorf("[ERROR] %s", err)
+	}
+
 	if d.HasChange("tags") {
-		tagErr := UpdateResourceTags(client, d, "instances", d.Id())
+		tagErr := UpdateResourceTags(client, d, "instances", instanceID)
 		if tagErr != nil {
-			return fmt.Errorf("Error updating tags of RDS read replica instance: %s, err: %s", d.Id(), tagErr)
+			return fmt.Errorf("Error updating tags of RDS read replica instance: %s, err: %s", instanceID, tagErr)
 		}
 	}
 
-	return resourceReplicaInstanceRead(d, meta)
+	return resourceRdsReadReplicaInstanceRead(d, meta)
 }
 
-func resourceReplicaInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	client, err := config.rdsV3Client(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
-	}
-
-	log.Printf("[DEBUG] Deleting Instance %s", d.Id())
-
-	id := d.Id()
-	result := instances.Delete(client, id)
-	if result.Err != nil {
-		return err
-	}
-	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"ACTIVE"},
-		Target:     []string{"DELETED"},
-		Refresh:    rdsInstanceStateRefreshFunc(client, id),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      15 * time.Second,
-		MinTimeout: 5 * time.Second,
-	}
-
-	_, err = stateConf.WaitForState()
-	if err != nil {
-		return fmt.Errorf(
-			"Error waiting for instance (%s) to be deleted: %s ",
-			id, err)
-	}
-
-	log.Printf("[DEBUG] Successfully deleted rds instance %s", id)
-	return nil
+func expandAvailabilityZone(resp *instances.RdsInstanceResponse) string {
+	node := resp.Nodes[0]
+	return node.AvailabilityZone
 }
 
-func readPrimaryInstanceID(resp *instances.RdsInstanceResponse) (string, error) {
+func expandPrimaryInstanceID(resp *instances.RdsInstanceResponse) (string, error) {
 	relatedInst := resp.RelatedInstance
 	for _, relate := range relatedInst {
 		if relate.Type == "replica_of" {

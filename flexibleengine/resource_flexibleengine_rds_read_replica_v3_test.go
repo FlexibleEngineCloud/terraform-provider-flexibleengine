@@ -6,23 +6,23 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v3/instances"
 )
 
 func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
-	var resourceName string = "flexibleengine_rds_read_replica_v3.replica_instance"
 	var replica instances.RdsInstanceResponse
+	resourceName := "flexibleengine_rds_read_replica_v3.replica_instance"
+	resourceType := "flexibleengine_rds_read_replica_v3"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRdsReplicaInstanceV3Destroy,
+		CheckDestroy: testAccCheckRdsInstanceV3Destroy(resourceType),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRdsReplicaInstanceV3_basic(acctest.RandString(10)),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRdsReplicaInstanceV3Exists(resourceName, &replica),
+					testAccCheckRdsInstanceV3Exists(resourceName, &replica),
 					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 					resource.TestCheckResourceAttr(resourceName, "type", "Replica"),
 					resource.TestCheckResourceAttr(resourceName, "volume.0.type", "ULTRAHIGH"),
@@ -40,62 +40,6 @@ func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccCheckRdsReplicaInstanceV3Destroy(s *terraform.State) error {
-	config := testAccProvider.Meta().(*Config)
-	client, err := config.rdsV3Client(OS_REGION_NAME)
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
-	}
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_rds_read_replica_v3" {
-			continue
-		}
-
-		id := rs.Primary.ID
-		instance, err := getRdsInstanceByID(client, id)
-		if err != nil {
-			return err
-		}
-		if instance.Id != "" {
-			return fmt.Errorf("flexibleengine_rds_read_replica_v3 (%s) still exists", id)
-		}
-	}
-
-	return nil
-}
-
-func testAccCheckRdsReplicaInstanceV3Exists(n string, instance *instances.RdsInstanceResponse) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
-		if !ok {
-			return fmt.Errorf("Not found: %s. ", n)
-		}
-
-		id := rs.Primary.ID
-		if id == "" {
-			return fmt.Errorf("No ID is set. ")
-		}
-
-		config := testAccProvider.Meta().(*Config)
-		client, err := config.rdsV3Client(OS_REGION_NAME)
-		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
-		}
-
-		found, err := getRdsInstanceByID(client, id)
-		if err != nil {
-			return fmt.Errorf("Error checking %s exist, err=%s", n, err)
-		}
-		if found.Id == "" {
-			return fmt.Errorf("resource %s does not exist", n)
-		}
-
-		instance = found
-		return nil
-	}
 }
 
 func testAccRdsReplicaInstanceV3_basic(val string) string {
