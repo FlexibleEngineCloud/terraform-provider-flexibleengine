@@ -276,6 +276,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_as_group_v1":                        resourceASGroup(),
 			"flexibleengine_as_configuration_v1":                resourceASConfiguration(),
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
+			"flexibleengine_as_lifecycle_hook_v1":               resourceASLifecycleHook(),
 			"flexibleengine_smn_topic_v2":                       resourceTopic(),
 			"flexibleengine_smn_subscription_v2":                resourceSubscription(),
 			"flexibleengine_rds_instance_v3":                    resourceRdsInstanceV3(),
