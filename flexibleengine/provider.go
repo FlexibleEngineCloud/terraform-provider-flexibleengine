@@ -174,7 +174,6 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_s3_bucket_object":                   dataSourceS3BucketObject(),
 			"flexibleengine_kms_key_v1":                         dataSourceKmsKeyV1(),
 			"flexibleengine_kms_data_key_v1":                    dataSourceKmsDataKeyV1(),
-			"flexibleengine_rds_flavors_v1":                     dataSourceRdsFlavorV1(),
 			"flexibleengine_rds_flavors_v3":                     dataSourceRdsFlavorV3(),
 			"flexibleengine_vpc_v1":                             dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":                      dataSourceVpcSubnetV1(),
@@ -211,6 +210,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_identity_custom_role_v3":            dataSourceIdentityCustomRoleV3(),
 			"flexibleengine_vpcep_public_services":              dataSourceVPCEPPublicServices(),
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
+
+			// Deprecated data source
+			"flexibleengine_rds_flavors_v1": dataSourceRdsFlavorV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -276,7 +278,6 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
 			"flexibleengine_smn_topic_v2":                       resourceTopic(),
 			"flexibleengine_smn_subscription_v2":                resourceSubscription(),
-			"flexibleengine_rds_instance_v1":                    resourceRdsInstance(),
 			"flexibleengine_rds_instance_v3":                    resourceRdsInstanceV3(),
 			"flexibleengine_rds_read_replica_v3":                resourceReplicaRdsInstance(),
 			"flexibleengine_rds_parametergroup_v3":              resourceRdsConfigurationV3(),
@@ -321,6 +322,9 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpcep_approval":                     resourceVPCEndpointApproval(),
 			"flexibleengine_vpcep_endpoint":                     resourceVPCEndpoint(),
 			"flexibleengine_vpcep_service":                      resourceVPCEndpointService(),
+
+			// Deprecated resource
+			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
 		},
 	}
 

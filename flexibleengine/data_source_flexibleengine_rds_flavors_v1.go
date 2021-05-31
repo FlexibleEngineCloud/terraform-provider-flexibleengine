@@ -14,6 +14,7 @@ func dataSourceRdsFlavorV1() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourcedataSourceRdsFlavorV1Read,
 
+		DeprecationMessage: "It has been deprecated, using flexibleengine_rds_flavors_v3 instead",
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,
