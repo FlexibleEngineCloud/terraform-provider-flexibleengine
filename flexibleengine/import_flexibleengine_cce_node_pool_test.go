@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccCCENodePool_importBasic(t *testing.T) {
@@ -24,8 +25,21 @@ func TestAccCCENodePool_importBasic(t *testing.T) {
 			{
 				ResourceName:      resourceName,
 				ImportState:       true,
+				ImportStateIdFunc: nodePoolImportStateIdFunc(resourceName),
 				ImportStateVerify: true,
 			},
 		},
 	})
+}
+
+func nodePoolImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
+	return func(s *terraform.State) (string, error) {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return "", fmt.Errorf("not found: %s", resourceName)
+		}
+
+		cluster_id := rs.Primary.Attributes["cluster_id"]
+		return fmt.Sprintf("%s/%s", cluster_id, rs.Primary.Attributes["id"]), nil
+	}
 }
