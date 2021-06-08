@@ -144,3 +144,11 @@ In addition to all arguments above, the following attributes are exported:
 This resource provides the following timeouts configuration options:
 - `create` - Default is 20 minute.
 - `delete` - Default is 20 minute.
+
+## Import
+
+Node_pool can be imported using the cluster and node_pool id, e.g.
+
+```
+$ terraform import flexibleengine_cce_node_pool_v3.node_pool_1 <cluster-id>/<node_pool-id>
+```
