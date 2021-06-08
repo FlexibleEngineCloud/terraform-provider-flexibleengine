@@ -23,10 +23,11 @@ func TestAccCCENodePool_importBasic(t *testing.T) {
 			},
 
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateIdFunc: nodePoolImportStateIdFunc(resourceName),
-				ImportStateVerify: true,
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateIdFunc:       nodePoolImportStateIdFunc(resourceName),
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"max_pods"},
 			},
 		},
 	})
