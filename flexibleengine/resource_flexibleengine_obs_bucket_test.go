@@ -22,26 +22,51 @@ func TestAccObsBucket_basic(t *testing.T) {
 				Config: testAccObsBucket_basic(rInt),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckObsBucketExists(resourceName),
-					resource.TestCheckResourceAttr(
-						resourceName, "bucket", testAccObsBucketName(rInt)),
-					resource.TestCheckResourceAttr(
-						resourceName, "bucket_domain_name", testAccObsBucketDomainName(rInt)),
-					resource.TestCheckResourceAttr(
-						resourceName, "acl", "private"),
-					resource.TestCheckResourceAttr(
-						resourceName, "storage_class", "STANDARD"),
-					resource.TestCheckResourceAttr(
-						resourceName, "region", OS_REGION_NAME),
+					resource.TestCheckResourceAttr(resourceName, "bucket", testAccObsBucketName(rInt)),
+					resource.TestCheckResourceAttr(resourceName, "bucket_domain_name", testAccObsBucketDomainName(rInt)),
+					resource.TestCheckResourceAttr(resourceName, "acl", "private"),
+					resource.TestCheckResourceAttr(resourceName, "storage_class", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "multi_az", "false"),
+					resource.TestCheckResourceAttr(resourceName, "region", OS_REGION_NAME),
 				),
 			},
 			{
 				Config: testAccObsBucket_basic_update(rInt),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckObsBucketExists(resourceName),
-					resource.TestCheckResourceAttr(
-						resourceName, "acl", "public-read"),
-					resource.TestCheckResourceAttr(
-						resourceName, "storage_class", "GLACIER"),
+					resource.TestCheckResourceAttr(resourceName, "acl", "public-read"),
+					resource.TestCheckResourceAttr(resourceName, "storage_class", "GLACIER"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"acl",
+					"force_destroy",
+				},
+			},
+		},
+	})
+}
+
+func TestAccObsBucket_multiAZ(t *testing.T) {
+	rInt := acctest.RandInt()
+	resourceName := "flexibleengine_obs_bucket.bucket"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheckS3(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccObsBucketConfig_multiAZ(rInt),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckObsBucketExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "bucket", testAccObsBucketName(rInt)),
+					resource.TestCheckResourceAttr(resourceName, "acl", "public-read"),
+					resource.TestCheckResourceAttr(resourceName, "storage_class", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "multi_az", "true"),
 				),
 			},
 		},
@@ -156,14 +181,6 @@ func TestAccObsBucket_lifecycle(t *testing.T) {
 						resourceName, "lifecycle_rule.2.noncurrent_version_transition.0.days", "60"),
 					resource.TestCheckResourceAttr(
 						resourceName, "lifecycle_rule.2.noncurrent_version_transition.1.days", "180"),
-					/*
-						resource.TestCheckResourceAttr(
-							resourceName, "lifecycle_rule.0.expiration.days", "365"),
-						resource.TestCheckResourceAttr(
-							resourceName, "lifecycle_rule.1.expiration.days", "365"),
-						resource.TestCheckResourceAttr(
-							resourceName, "lifecycle_rule.2.noncurrent_version_expiration.days", "365"),
-					*/
 				),
 			},
 		},
@@ -310,9 +327,9 @@ func testAccObsBucketDomainName(randInt int) string {
 func testAccObsBucket_basic(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-  bucket = "tf-test-bucket-%d"
+  bucket        = "tf-test-bucket-%d"
   storage_class = "STANDARD"
-  acl = "private"
+  acl           = "private"
 }
 `, randInt)
 }
@@ -320,9 +337,19 @@ resource "flexibleengine_obs_bucket" "bucket" {
 func testAccObsBucket_basic_update(randInt int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_obs_bucket" "bucket" {
-  bucket = "tf-test-bucket-%d"
+  bucket        = "tf-test-bucket-%d"
   storage_class = "GLACIER"
-  acl = "public-read"
+  acl           = "public-read"
+}
+`, randInt)
+}
+
+func testAccObsBucketConfig_multiAZ(randInt int) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_obs_bucket" "bucket" {
+  bucket   = "tf-test-bucket-%d"
+  acl      = "public-read"
+  multi_az = true
 }
 `, randInt)
 }

@@ -230,6 +230,13 @@ func resourceObsBucket() *schema.Resource {
 				Computed: true,
 			},
 
+			"multi_az": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
+
 			"bucket_domain_name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -254,8 +261,11 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 		StorageClass: obs.ParseStringToStorageClassType(class),
 	}
 	opts.Location = d.Get("region").(string)
-	log.Printf("[DEBUG] OBS bucket create opts: %#v", opts)
+	if _, ok := d.GetOk("multi_az"); ok {
+		opts.AvailableZone = "3az"
+	}
 
+	log.Printf("[DEBUG] OBS bucket create opts: %#v", opts)
 	_, err = obsClient.CreateBucket(opts)
 	if err != nil {
 		return getObsError("Error creating bucket", bucket, err)
@@ -334,9 +344,8 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 			log.Printf("[WARN] OBS bucket(%s) not found", d.Id())
 			d.SetId("")
 			return nil
-		} else {
-			return fmt.Errorf("error reading OBS bucket %s: %s", d.Id(), err)
 		}
+		return fmt.Errorf("error reading OBS bucket %s: %s", d.Id(), err)
 	}
 
 	// for import case
@@ -349,6 +358,11 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 
 	// Read storage class
 	if err := setObsBucketStorageClass(obsClient, d); err != nil {
+		return err
+	}
+
+	// Read multi_az
+	if err := setObsBucketMetadata(obsClient, d); err != nil {
 		return err
 	}
 
@@ -784,6 +798,25 @@ func setObsBucketStorageClass(obsClient *obs.ObsClient, d *schema.ResourceData) 
 		d.Set("storage_class", obsClass)
 	} else {
 		d.Set("storage_class", class)
+	}
+
+	return nil
+}
+
+func setObsBucketMetadata(obsClient *obs.ObsClient, d *schema.ResourceData) error {
+	bucket := d.Id()
+	input := &obs.GetBucketMetadataInput{
+		Bucket: bucket,
+	}
+	output, err := obsClient.GetBucketMetadata(input)
+	if err != nil {
+		return getObsError("Error getting metadata of OBS bucket", bucket, err)
+	}
+
+	if output.AvailableZone == "3az" {
+		d.Set("multi_az", true)
+	} else {
+		d.Set("multi_az", false)
 	}
 
 	return nil

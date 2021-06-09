@@ -2,7 +2,7 @@
 subcategory: "Object Storage Service (OSS)"
 ---
 
-# flexibleengine\_obs\_bucket
+# flexibleengine_obs_bucket
 
 Manages an OBS bucket resource within FlexibleEngine.
 
@@ -141,11 +141,13 @@ The following arguments are supported:
 
 * `bucket` - (Required) Specifies the name of the bucket. Changing this parameter will create a new resource.
   A bucket must be named according to the globally applied DNS naming regulations as follows:
-	* The name must be globally unique in OBS.
-	* The name must contain 3 to 63 characters. Only lowercase letters, digits, hyphens (-), and periods (.) are allowed.
-	* The name cannot start or end with a period (.) or hyphen (-), and cannot contain two consecutive periods (.) or contain a period (.) and a hyphen (-) adjacent to each other.
-	* The name cannot be an IP address.
-	* If the name contains any periods (.), a security certificate verification message may appear when you access the bucket or its objects by entering a domain name.
+  * The name must be globally unique in OBS.
+  * The name must contain 3 to 63 characters. Only lowercase letters, digits, hyphens (-), and periods (.) are allowed.
+  * The name cannot start or end with a period (.) or hyphen (-), and cannot contain two consecutive periods (.) or
+    contain a period (.) and a hyphen (-) adjacent to each other.
+  * The name cannot be an IP address.
+  * If the name contains any periods (.), a security certificate verification message may appear when you access
+    the bucket or its objects by entering a domain name.
 
 * `storage_class` - (Optional) Specifies the storage class of the bucket. OBS provides three storage classes:
     "STANDARD", "STANDARD_IA" (Infrequent Access) and "GLACIER" (Archive). Defaults to `STANDARD`.
@@ -164,7 +166,12 @@ The following arguments are supported:
 * `force_destroy` - (Optional) A boolean that indicates all objects should be deleted from the bucket so that
     the bucket can be destroyed without error. Default to `false`.
 
+* `multi_az` - (Optional) Whether enable the multi-AZ mode for the bucket. When the multi-AZ mode is enabled,
+    data in the bucket is duplicated and stored in multiple AZs.
+    Changing this creates a new bucket.
+
 * `region` - (Optional) If specified, the region this bucket should reside in. Otherwise, the region used by the provider.
+    Changing this creates a new bucket.
 
 The `logging` object supports the following:
 
@@ -186,10 +193,10 @@ The `website` object supports the following:
 * `routing_rules` - (Optional) A JSON or XML format containing routing rules describing redirect behavior and when redirects are applied.
   Each rule contains a `Condition` and a `Redirect` as shown in the following table:
 
-Parameter | Key
--|-
-Condition | KeyPrefixEquals, HttpErrorCodeReturnedEquals
-Redirect | Protocol, HostName, ReplaceKeyPrefixWith, ReplaceKeyWith, HttpRedirectCode
+  Parameter | Key
+  --- | ---
+  Condition | KeyPrefixEquals, HttpErrorCodeReturnedEquals
+  Redirect | Protocol, HostName, ReplaceKeyPrefixWith, ReplaceKeyWith, HttpRedirectCode
 
 The `cors_rule` object supports the following:
 
@@ -259,4 +266,20 @@ OBS bucket can be imported using the `bucket`, e.g.
 
 ```
 $ terraform import flexibleengine_obs_bucket.bucket bucket-name
+```
+
+Note that the imported state may not be identical to your resource definition, due to some attrubutes
+missing from the API response. The missing attributes include `acl` and `force_destroy`.
+It is generally recommended running `terraform plan` after importing an OBS bucket.
+Also you can ignore changes as below.
+```
+resource "flexibleengine_obs_bucket" "bucket" {
+    ...
+
+  lifecycle {
+    ignore_changes = [
+      acl, force_destroy,
+    ]
+  }
+}
 ```
