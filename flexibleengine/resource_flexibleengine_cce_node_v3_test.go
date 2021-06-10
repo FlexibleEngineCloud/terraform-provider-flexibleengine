@@ -11,7 +11,7 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
 )
 
-func TestAccCCENodesV3_basic(t *testing.T) {
+func TestAccCCENodeV3_basic(t *testing.T) {
 	var node nodes.Nodes
 	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
 	resourceName := "flexibleengine_cce_node_v3.node_1"
@@ -28,12 +28,16 @@ func TestAccCCENodesV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", "test-node"),
 					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s1.medium"),
 					resource.TestCheckResourceAttr(resourceName, "status", "Active"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
 			},
 			{
 				Config: testAccCCENodeV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", "test-node2"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 		},
@@ -128,6 +132,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   flavor_id         = "s1.medium"
   availability_zone = "%s"
   key_pair          = "%s"
+
   root_volume {
     size       = 40
     volumetype = "SATA"
@@ -135,6 +140,10 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   data_volumes {
     size       = 100
     volumetype = "SATA"
+  }
+  tags = {
+    key = "value"
+    foo = "bar"
   }
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }
@@ -156,6 +165,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   flavor_id         = "s1.medium"
   availability_zone = "%s"
   key_pair          = "%s"
+
   root_volume {
     size       = 40
     volumetype = "SATA"
@@ -163,6 +173,10 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   data_volumes {
     size       = 100
     volumetype = "SATA"
+  }
+  tags = {
+    key   = "value1"
+    owner = "terraform"
   }
 }`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
 }
