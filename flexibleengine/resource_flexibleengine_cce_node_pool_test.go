@@ -130,14 +130,6 @@ func testAccCheckCCENodePoolExists(n string, cluster string, nodePool *nodepools
 
 func testAccCCENodePool_Base(rName string) string {
 	return fmt.Sprintf(`
-data "flexibleengine_vpc_v1" "test" {
-  name = "vpc-default"
-}
-
-data "flexibleengine_vpc_subnet_v1" "test" {
-	name = "subnet-default"
-  }
-
 data "flexibleengine_compute_availability_zones_v2" "test" {}
 
 resource "flexibleengine_compute_keypair_v2" "test" {
@@ -149,11 +141,11 @@ resource "flexibleengine_cce_cluster_v3" "test" {
   name                   = "%s"
   cluster_type           = "VirtualMachine"
   flavor_id              = "cce.s1.small"
-  vpc_id                 = data.flexibleengine_vpc_v1.test.id
-  subnet_id              = data.flexibleengine_vpc_subnet_v1.test.id
+  vpc_id                 = "%s"
+  subnet_id              = "%s"
   container_network_type = "overlay_l2"
 }
-`, rName, rName)
+`, rName, rName, OS_VPC_ID, OS_NETWORK_ID)
 }
 
 func testAccCCENodePool_basic(rName string) string {
