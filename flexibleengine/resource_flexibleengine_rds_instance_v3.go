@@ -264,8 +264,8 @@ func resourceRdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 		TimeZone:         d.Get("time_zone").(string),
 		FixedIp:          d.Get("fixed_ip").(string),
 		DiskEncryptionId: d.Get("volume.0.disk_encryption_id").(string),
-		Port:             strconv.Itoa(d.Get("db.0.port").(int)),
 		Region:           region,
+		Port:             buildRdsInstanceV3DBPort(d),
 		AvailabilityZone: buildRdsInstanceAvailabilityZone(d),
 		Datastore:        buildRdsInstanceDatastore(d),
 		Volume:           buildRdsInstanceVolume(d),
@@ -322,15 +322,12 @@ func resourceRdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("region", instance.Region)
 	d.Set("name", instance.Name)
 	d.Set("status", instance.Status)
-	d.Set("port", instance.Port)
-	d.Set("type", instance.Type)
 	d.Set("created", instance.Created)
 	d.Set("ha_replication_mode", instance.Ha.ReplicationMode)
 	d.Set("vpc_id", instance.VpcId)
 	d.Set("subnet_id", instance.SubnetId)
 	d.Set("security_group_id", instance.SecurityGroupId)
 	d.Set("flavor", instance.FlavorRef)
-	d.Set("disk_encryption_id", instance.DiskEncryptionId)
 	d.Set("time_zone", instance.TimeZone)
 
 	publicIps := make([]interface{}, len(instance.PublicIps))
@@ -523,6 +520,13 @@ func getRdsInstanceByID(client *golangsdk.ServiceClient, instanceID string) (*in
 	}
 
 	return &instanceList[0], nil
+}
+
+func buildRdsInstanceV3DBPort(d *schema.ResourceData) string {
+	if v, ok := d.GetOk("db.0.port"); ok {
+		return strconv.Itoa(v.(int))
+	}
+	return ""
 }
 
 func buildRdsInstanceAvailabilityZone(d *schema.ResourceData) string {
