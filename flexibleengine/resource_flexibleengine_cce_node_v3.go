@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
@@ -25,15 +26,7 @@ func resourceCCENodeV3() *schema.Resource {
 		Update: resourceCCENodeV3Update,
 		Delete: resourceCCENodeV3Delete,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-				arr := strings.Split(d.Id(), "/")
-				cluster_id := arr[0]
-				node_id := arr[1]
-				d.Set("cluster_id", cluster_id)
-				d.SetId(node_id)
-
-				return []*schema.ResourceData{d}, nil
-			},
+			State: resourceCCENodeV3Import,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -483,7 +476,11 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 			break
 		}
 	}
+	if nodeid == "" {
+		return fmt.Errorf("Error fetching CreateNodeVM Job resource id")
+	}
 
+	d.SetId(nodeid)
 	log.Printf("[DEBUG] Waiting for CCE Node (%s) to become available", s.Metadata.Name)
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"Build", "Installing"},
@@ -498,13 +495,6 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating flexibleengine CCE Node: %s", err)
 	}
 
-	node, err := nodes.Get(nodeClient, clusterid, nodeid).Extract()
-	d.SetId(node.Metadata.Id)
-	d.Set("iptype", s.Spec.PublicIP.Eip.IpType)
-	d.Set("bandwidth_charge_mode", s.Spec.PublicIP.Eip.Bandwidth.ChargeMode)
-	d.Set("bandwidth_size", s.Spec.PublicIP.Eip.Bandwidth.Size)
-	d.Set("sharetype", s.Spec.PublicIP.Eip.Bandwidth.ShareType)
-
 	return resourceCCENodeV3Read(d, meta)
 }
 
@@ -514,9 +504,13 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE Node client: %s", err)
 	}
+	computeClient, err := config.computeV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
+	}
+
 	clusterid := d.Get("cluster_id").(string)
 	s, err := nodes.Get(nodeClient, clusterid, d.Id()).Extract()
-
 	if err != nil {
 		if _, ok := err.(golangsdk.ErrDefault404); ok {
 			d.SetId("")
@@ -526,67 +520,59 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error retrieving flexibleengine Node: %s", err)
 	}
 
-	d.Set("region", GetRegion(d, config))
-	d.Set("name", s.Metadata.Name)
-	d.Set("flavor_id", s.Spec.Flavor)
-	d.Set("availability_zone", s.Spec.Az)
-	d.Set("os", s.Spec.Os)
-	d.Set("key_pair", s.Spec.Login.SshKey)
+	mErr := multierror.Append(
+		d.Set("region", GetRegion(d, config)),
+		d.Set("name", s.Metadata.Name),
+		d.Set("flavor_id", s.Spec.Flavor),
+		d.Set("availability_zone", s.Spec.Az),
+		d.Set("os", s.Spec.Os),
+		d.Set("key_pair", s.Spec.Login.SshKey),
+		d.Set("ecs_performance_type", s.Spec.ExtendParam["ecs:performancetype"]),
+		d.Set("product_id", s.Spec.ExtendParam["productID"]),
+		d.Set("public_key", s.Spec.ExtendParam["publicKey"]),
+		d.Set("max_pods", s.Spec.ExtendParam["maxPods"]),
+		d.Set("private_ip", s.Status.PrivateIP),
+		d.Set("public_ip", s.Status.PublicIP),
+		d.Set("status", s.Status.Phase),
+		d.Set("server_id", s.Status.ServerID),
 
-	d.Set("ecs_performance_type", s.Spec.ExtendParam["ecs:performancetype"])
-	d.Set("product_id", s.Spec.ExtendParam["productID"])
-	d.Set("public_key", s.Spec.ExtendParam["publicKey"])
-	d.Set("max_pods", s.Spec.ExtendParam["maxPods"])
-
-	var volumes []map[string]interface{}
-	for _, pairObject := range s.Spec.DataVolumes {
-		volume := make(map[string]interface{})
-		volume["size"] = pairObject.Size
-		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_params"] = pairObject.ExtendParam
-		volumes = append(volumes, volume)
-	}
-	if err := d.Set("data_volumes", volumes); err != nil {
-		return fmt.Errorf("[DEBUG] Error saving dataVolumes to state for flexibleengine Node (%s): %s", d.Id(), err)
+		d.Set("eip_ids", s.Spec.PublicIP.Ids),
+		d.Set("eip_count", s.Spec.PublicIP.Count),
+		d.Set("iptype", s.Spec.PublicIP.Eip.IpType),
+		d.Set("bandwidth_charge_mode", s.Spec.PublicIP.Eip.Bandwidth.ChargeMode),
+		d.Set("bandwidth_size", s.Spec.PublicIP.Eip.Bandwidth.Size),
+		d.Set("sharetype", s.Spec.PublicIP.Eip.Bandwidth.ShareType),
+	)
+	if err := mErr.ErrorOrNil(); err != nil {
+		return err
 	}
 
-	rootVolume := []map[string]interface{}{
-		{
-			"size":          s.Spec.RootVolume.Size,
-			"volumetype":    s.Spec.RootVolume.VolumeType,
-			"extend_params": s.Spec.RootVolume.ExtendParam,
-		},
-	}
+	rootVolume := expandResourceCCERootVolume(s.Spec)
 	d.Set("root_volume", rootVolume)
 	if err := d.Set("root_volume", rootVolume); err != nil {
-		return fmt.Errorf("[DEBUG] Error saving root Volume to state for flexibleengine Node (%s): %s", d.Id(), err)
+		return fmt.Errorf("Error saving root volume of cce node %s: %s", d.Id(), err)
 	}
 
-	d.Set("eip_ids", s.Spec.PublicIP.Ids)
-	d.Set("eip_count", s.Spec.PublicIP.Count)
-	d.Set("private_ip", s.Status.PrivateIP)
-	d.Set("public_ip", s.Status.PublicIP)
-	d.Set("status", s.Status.Phase)
-
-	serverId := s.Status.ServerID
-	d.Set("server_id", serverId)
-
-	// fetch tags from ECS instance
-	computeClient, err := config.computeV1Client(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
+	volumes := expandResourceCCEDataVolumes(s.Spec)
+	if err := d.Set("data_volumes", volumes); err != nil {
+		return fmt.Errorf("Error saving data volumes of cce node %s: %s", d.Id(), err)
 	}
 
-	resourceTags, err := tags.Get(computeClient, "servers", serverId).Extract()
-	if err != nil {
-		return fmt.Errorf("Error fetching Flexibleengine instance tags: %s", err)
+	nodeTaints := expandResourceCCETaints(s.Spec)
+	if err := d.Set("taints", nodeTaints); err != nil {
+		return fmt.Errorf("Error saving taints of cce node %s: %s", d.Id(), err)
 	}
 
-	tagmap := tagsToMap(resourceTags.Tags)
-	//ignore "CCE-Dynamic-Provisioning-Node"
-	delete(tagmap, "CCE-Dynamic-Provisioning-Node")
-	if err := d.Set("tags", tagmap); err != nil {
-		return fmt.Errorf("Error saving tags of cce node: %s", err)
+	labels := expandResourceCCEK8sTags(s.Spec)
+	if err := d.Set("labels", labels); err != nil {
+		return fmt.Errorf("Error saving labels/k8stags of cce node %s: %s", d.Id(), err)
+	}
+
+	// fetch tags from ECS instance as Spec.UserTags is empty
+	if tagmap, err := expandResourceCCETagsByServer(computeClient, s.Status.ServerID); err == nil {
+		d.Set("tags", tagmap)
+	} else {
+		return err
 	}
 
 	return nil
@@ -714,15 +700,12 @@ func recursiveCreate(cceClient *golangsdk.ServiceClient, opts nodes.CreateOptsBu
 		}
 		s, err := nodes.Create(cceClient, ClusterID, opts).Extract()
 		if err != nil {
-			//if err.(golangsdk.ErrUnexpectedResponseCode).Actual == 403 {
 			if _, ok := err.(golangsdk.ErrDefault403); ok {
 				return recursiveCreate(cceClient, opts, ClusterID, 403)
-			} else {
-				return s, "fail"
 			}
-		} else {
-			return s, "success"
+			return s, "fail"
 		}
+		return s, "success"
 	}
 	return nil, "fail"
 }
@@ -745,4 +728,82 @@ func installScriptEncode(script string) string {
 		return base64.StdEncoding.EncodeToString([]byte(script))
 	}
 	return script
+}
+
+func expandResourceCCERootVolume(spec nodes.Spec) []map[string]interface{} {
+	rootVolume := []map[string]interface{}{
+		{
+			"size":          spec.RootVolume.Size,
+			"volumetype":    spec.RootVolume.VolumeType,
+			"extend_params": spec.RootVolume.ExtendParam,
+		},
+	}
+
+	return rootVolume
+}
+
+func expandResourceCCEDataVolumes(spec nodes.Spec) []map[string]interface{} {
+	volumes := make([]map[string]interface{}, len(spec.DataVolumes))
+	for i, item := range spec.DataVolumes {
+		volumes[i] = map[string]interface{}{
+			"size":          item.Size,
+			"volumetype":    item.VolumeType,
+			"extend_params": item.ExtendParam,
+		}
+	}
+	return volumes
+}
+
+func expandResourceCCETaints(spec nodes.Spec) []map[string]interface{} {
+	taints := make([]map[string]interface{}, len(spec.Taints))
+	for i, item := range spec.Taints {
+		taints[i] = map[string]interface{}{
+			"key":    item.Key,
+			"value":  item.Value,
+			"effect": item.Effect,
+		}
+	}
+	return taints
+}
+
+func expandResourceCCEK8sTags(spec nodes.Spec) map[string]string {
+	labels := map[string]string{}
+	for key, val := range spec.K8sTags {
+		if strings.Contains(key, "cce.cloud.com") {
+			continue
+		}
+		labels[key] = val
+	}
+	return labels
+}
+
+// expandResourceCCETagsByServer fetch tags from compute instance
+// we have to call it as Spec.UserTags is empty in nodes.Get response
+func expandResourceCCETagsByServer(client *golangsdk.ServiceClient, serverID string) (map[string]string, error) {
+	resourceTags, err := tags.Get(client, "servers", serverID).Extract()
+	if err != nil {
+		return nil, fmt.Errorf("Error fetching compute instance tags: %s", err)
+	}
+
+	tagmap := tagsToMap(resourceTags.Tags)
+	//ignore "CCE-Dynamic-Provisioning-Node"
+	delete(tagmap, "CCE-Dynamic-Provisioning-Node")
+
+	return tagmap, nil
+}
+
+func resourceCCENodeV3Import(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	parts := strings.SplitN(d.Id(), "/", 2)
+	if len(parts) != 2 {
+		err := fmt.Errorf("Invalid format specified for CCE Node. Format must be <cluster id>/<node id>")
+		return nil, err
+	}
+
+	clusterID := parts[0]
+	nodeID := parts[1]
+
+	d.SetId(nodeID)
+	d.Set("cluster_id", clusterID)
+
+	return []*schema.ResourceData{d}, nil
 }
