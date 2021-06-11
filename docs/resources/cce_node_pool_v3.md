@@ -89,8 +89,7 @@ The following arguments are supported:
 
 * `priority` - (Optional, Int) Weight of a node pool. A node pool with a higher weight has a higher priority during scaling.
 
-* `labels` - (Optional, Map, ForceNew) Tags of a Kubernetes node, key/value pair format.
-    Changing this parameter will create a new resource.
+* `labels` - (Optional, Map) Tags of a Kubernetes node, key/value pair format.
 
 * `tags` - (Optional, Map) Tags of a VM node, key/value pair format.
 
@@ -100,7 +99,7 @@ The following arguments are supported:
 * `data_volumes` - (Required, List, ForceNew) Represents the data disk to be created.
     The object structure is documented below. Changing this parameter will create a new resource.
 
-* `taints` - (Optional, List, ForceNew) You can add taints to created nodes to configure anti-affinity.
+* `taints` - (Optional, List) You can add taints to created nodes to configure anti-affinity.
     The object structure is documented below.
 
 The `root_volume` block supports:
@@ -121,7 +120,7 @@ The `data_volumes` block supports:
 
 The `taints` block supports:
     
-* `key` - (Required, String, ForceNew) A key must contain 1 to 63 characters starting with a letter or digit.
+* `key` - (Required, String) A key must contain 1 to 63 characters starting with a letter or digit.
   Only letters, digits, hyphens (-), underscores (_), and periods (.) are allowed.
   A DNS subdomain name can be used as the prefix of a key.
     

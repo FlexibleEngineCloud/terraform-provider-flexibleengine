@@ -35,6 +35,10 @@ func TestAccCCENodePool_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "min_node_count", "0"),
 					resource.TestCheckResourceAttr(resourceName, "max_node_count", "0"),
 					resource.TestCheckResourceAttr(resourceName, "max_pods", "200"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.key", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.value", "foo"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.effect", "NoSchedule"),
+					resource.TestCheckResourceAttr(resourceName, "labels.pool", "acc-test-pool"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 				),
@@ -49,6 +53,10 @@ func TestAccCCENodePool_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "max_node_count", "9"),
 					resource.TestCheckResourceAttr(resourceName, "scale_down_cooldown_time", "100"),
 					resource.TestCheckResourceAttr(resourceName, "priority", "1"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.key", "looks"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.value", "bad"),
+					resource.TestCheckResourceAttr(resourceName, "taints.0.effect", "NoExecute"),
+					resource.TestCheckResourceAttr(resourceName, "labels.pool", "acc-test-pool-update"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
@@ -177,6 +185,14 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
     volumetype = "SSD"
   }
 
+  taints {
+    key    = "bar"
+    value  = "foo"
+    effect = "NoSchedule"
+  }
+  labels = {
+    pool = "acc-test-pool"
+  }
   tags = {
     key = "value"
     foo = "bar"
@@ -213,6 +229,14 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
     volumetype = "SSD"
   }
 
+  taints {
+    key    = "looks"
+    value  = "bad"
+    effect = "NoExecute"
+  }
+  labels = {
+    pool = "acc-test-pool-update"
+  }
   tags = {
     key   = "value1"
     owner = "terraform"
