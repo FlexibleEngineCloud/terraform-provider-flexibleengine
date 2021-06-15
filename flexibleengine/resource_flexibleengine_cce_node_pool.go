@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodepools"
 	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
-	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 )
 
 func resourceCCENodePool() *schema.Resource {
@@ -71,12 +71,6 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-			},
-			"labels": { //(k8s_tags)
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"root_volume": {
 				Type:     schema.TypeList,
@@ -145,10 +139,14 @@ func resourceCCENodePool() *schema.Resource {
 				Sensitive:    true,
 				ExactlyOneOf: []string{"password", "key_pair"},
 			},
+			"labels": { //(k8s_tags)
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"taints": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
@@ -241,11 +239,6 @@ func resourceCCENodePool() *schema.Resource {
 	}
 }
 
-func resourceCCENodePoolTags(d *schema.ResourceData) []tags.ResourceTag {
-	tagRaw := d.Get("tags").(map[string]interface{})
-	return expandResourceTags(tagRaw)
-}
-
 func buildCCENodePoolLoginSpec(d *schema.ResourceData) nodes.LoginSpec {
 	var loginSpec nodes.LoginSpec
 
@@ -306,7 +299,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				},
 				ExtendParam: resourceCCEExtendParam(d),
 				Taints:      resourceCCETaint(d),
-				UserTags:    resourceCCENodePoolTags(d),
+				UserTags:    resourceCCENodeUserTags(d),
 			},
 			Autoscaling: nodepools.AutoscalingSpec{
 				Enable:                d.Get("scall_enable").(bool),
@@ -377,50 +370,45 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error retrieving Flexibleengine Node Pool: %s", err)
 	}
 
-	d.Set("name", s.Metadata.Name)
-	d.Set("flavor_id", s.Spec.NodeTemplate.Flavor)
-	d.Set("availability_zone", s.Spec.NodeTemplate.Az)
-	d.Set("os", s.Spec.NodeTemplate.Os)
-	d.Set("billing_mode", s.Spec.NodeTemplate.BillingMode)
-	d.Set("key_pair", s.Spec.NodeTemplate.Login.SshKey)
-	d.Set("initial_node_count", s.Spec.InitialNodeCount)
-	d.Set("scall_enable", s.Spec.Autoscaling.Enable)
-	d.Set("min_node_count", s.Spec.Autoscaling.MinNodeCount)
-	d.Set("max_node_count", s.Spec.Autoscaling.MaxNodeCount)
-	d.Set("scale_down_cooldown_time", s.Spec.Autoscaling.ScaleDownCooldownTime)
-	d.Set("priority", s.Spec.Autoscaling.Priority)
-	d.Set("type", s.Spec.Type)
-
-	labels := map[string]string{}
-	for key, val := range s.Spec.NodeTemplate.K8sTags {
-		if strings.Contains(key, "cce.cloud.com") {
-			continue
-		}
-		labels[key] = val
-	}
-	d.Set("labels", labels)
-
-	var volumes []map[string]interface{}
-	for _, pairObject := range s.Spec.NodeTemplate.DataVolumes {
-		volume := make(map[string]interface{})
-		volume["size"] = pairObject.Size
-		volume["volumetype"] = pairObject.VolumeType
-		volume["extend_params"] = pairObject.ExtendParam
-		volumes = append(volumes, volume)
-	}
-	if err := d.Set("data_volumes", volumes); err != nil {
-		return fmt.Errorf("[DEBUG] Error saving dataVolumes to state for Flexibleengine Node Pool (%s): %s", d.Id(), err)
+	mErr := multierror.Append(
+		d.Set("name", s.Metadata.Name),
+		d.Set("flavor_id", s.Spec.NodeTemplate.Flavor),
+		d.Set("availability_zone", s.Spec.NodeTemplate.Az),
+		d.Set("os", s.Spec.NodeTemplate.Os),
+		d.Set("billing_mode", s.Spec.NodeTemplate.BillingMode),
+		d.Set("key_pair", s.Spec.NodeTemplate.Login.SshKey),
+		d.Set("initial_node_count", s.Spec.InitialNodeCount),
+		d.Set("scall_enable", s.Spec.Autoscaling.Enable),
+		d.Set("min_node_count", s.Spec.Autoscaling.MinNodeCount),
+		d.Set("max_node_count", s.Spec.Autoscaling.MaxNodeCount),
+		d.Set("scale_down_cooldown_time", s.Spec.Autoscaling.ScaleDownCooldownTime),
+		d.Set("priority", s.Spec.Autoscaling.Priority),
+		d.Set("type", s.Spec.Type),
+		d.Set("status", s.Status.Phase),
+	)
+	if err := mErr.ErrorOrNil(); err != nil {
+		return err
 	}
 
-	rootVolume := []map[string]interface{}{
-		{
-			"size":          s.Spec.NodeTemplate.RootVolume.Size,
-			"volumetype":    s.Spec.NodeTemplate.RootVolume.VolumeType,
-			"extend_params": s.Spec.NodeTemplate.RootVolume.ExtendParam,
-		},
-	}
+	rootVolume := expandResourceCCERootVolume(s.Spec.NodeTemplate)
+	d.Set("root_volume", rootVolume)
 	if err := d.Set("root_volume", rootVolume); err != nil {
-		return fmt.Errorf("[DEBUG] Error saving root Volume to state for Flexibleengine Node Pool (%s): %s", d.Id(), err)
+		return fmt.Errorf("Error saving root volume of cce node pool %s: %s", d.Id(), err)
+	}
+
+	volumes := expandResourceCCEDataVolumes(s.Spec.NodeTemplate)
+	if err := d.Set("data_volumes", volumes); err != nil {
+		return fmt.Errorf("Error saving data volumes of cce node pool %s: %s", d.Id(), err)
+	}
+
+	nodeTaints := expandResourceCCETaints(s.Spec.NodeTemplate)
+	if err := d.Set("taints", nodeTaints); err != nil {
+		return fmt.Errorf("Error saving taints of cce node %s: %s", d.Id(), err)
+	}
+
+	labels := expandResourceCCEK8sTags(s.Spec.NodeTemplate)
+	if err := d.Set("labels", labels); err != nil {
+		return fmt.Errorf("Error saving labels/k8stags of cce node pool %s: %s", d.Id(), err)
 	}
 
 	tagmap := tagsToMap(s.Spec.NodeTemplate.UserTags)
@@ -429,8 +417,6 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("tags", tagmap); err != nil {
 		return fmt.Errorf("Error saving tags to state for CCE Node Pool(%s): %s", d.Id(), err)
 	}
-
-	d.Set("status", s.Status.Phase)
 
 	return nil
 }
@@ -465,7 +451,10 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 				RootVolume:  resourceCCERootVolume(d),
 				DataVolumes: resourceCCEDataVolume(d),
 				Count:       1,
-				UserTags:    resourceCCENodePoolTags(d),
+				K8sTags:     resourceCCENodeK8sTags(d),
+				UserTags:    resourceCCENodeUserTags(d),
+				Taints:      resourceCCETaint(d),
+				ExtendParam: resourceCCEExtendParam(d),
 			},
 			Type: d.Get("type").(string),
 		},
