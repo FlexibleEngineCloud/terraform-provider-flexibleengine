@@ -93,12 +93,26 @@ var allServiceCatalog = map[string]ServiceCatalog{
 	},
 	"cciv1": {
 		Name:             "cci",
+		Version:          "api/v1",
+		WithOutProjectID: true,
+	},
+	"cciv1_bata": {
+		Name:             "cci",
 		Version:          "apis/networking.cci.io/v1beta1",
 		WithOutProjectID: true,
 	},
 	"fgsv2": {
 		Name:    "functiongraph",
 		Version: "v2",
+	},
+	"swr": {
+		Name:             "swr-api",
+		Version:          "v2",
+		WithOutProjectID: true,
+	},
+	"bms": {
+		Name:    "bms",
+		Version: "v1",
 	},
 
 	// ******* catalog for storage ******
@@ -117,6 +131,10 @@ var allServiceCatalog = map[string]ServiceCatalog{
 	"sfs-turbo": {
 		Name:    "sfs-turbo",
 		Version: "v1",
+	},
+	"cbr": {
+		Name:    "cbr",
+		Version: "v3",
 	},
 	"csbs": {
 		Name:    "csbs",
@@ -155,6 +173,14 @@ var allServiceCatalog = map[string]ServiceCatalog{
 		Name:             "elb",
 		Version:          "v2.0",
 		WithOutProjectID: true,
+	},
+	"elbv3": {
+		Name:    "elb",
+		Version: "v3",
+	},
+	"loadbalancer": {
+		Name:    "elb",
+		Version: "v2",
 	},
 	"fwv2": {
 		Name:             "vpc",
@@ -232,6 +258,11 @@ var allServiceCatalog = map[string]ServiceCatalog{
 		Version:          "v1.0",
 		WithOutProjectID: true,
 	},
+	"waf": {
+		Name:         "waf",
+		Version:      "v1",
+		ResourceBase: "waf",
+	},
 
 	// catalog for Enterprise Intelligence
 	"mrs": {
@@ -278,6 +309,10 @@ var allServiceCatalog = map[string]ServiceCatalog{
 		ResourceBase:     "apigw",
 		WithOutProjectID: true,
 	},
+	"bcs": {
+		Name:    "bcs",
+		Version: "v2",
+	},
 	"dcsv1": {
 		Name:    "dcs",
 		Version: "v1.0",
@@ -295,11 +330,12 @@ var allServiceCatalog = map[string]ServiceCatalog{
 		Version: "v2",
 	},
 
-	// catalog for edge / IoT
+	// catalog for IEC which is a global service
 	"iec": {
 		Name:             "iecs",
 		Version:          "v1",
 		Scope:            "global",
+		Admin:            true,
 		WithOutProjectID: true,
 	},
 

@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/pathorcontents"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
@@ -37,6 +38,7 @@ type Config struct {
 	TenantID            string
 	TenantName          string
 	Token               string
+	SecurityToken       string
 	Username            string
 	UserID              string
 	AgencyName          string
@@ -86,6 +88,10 @@ func (c *Config) LoadAndValidate() error {
 	}
 	if err != nil {
 		return err
+	}
+
+	if c.HwClient != nil && c.HwClient.ProjectID != "" {
+		c.RegionProjectIDMap[c.Region] = c.HwClient.ProjectID
 	}
 
 	// set DomainID for IAM resource
@@ -252,6 +258,10 @@ func buildClientByAKSK(c *Config) error {
 		ao.IdentityEndpoint = c.IdentityEndpoint
 		ao.AccessKey = c.AccessKey
 		ao.SecretKey = c.SecretKey
+		if c.SecurityToken != "" {
+			ao.SecurityToken = c.SecurityToken
+			ao.WithUserCatalog = true
+		}
 	}
 	return genClients(c, pao, dao)
 }
@@ -331,6 +341,10 @@ func (c *Config) ObjectStorageClientWithSignature(region string) (*obs.ObsClient
 	}
 
 	obsEndpoint := getObsEndpoint(c, region)
+	if c.SecurityToken != "" {
+		return obs.New(c.AccessKey, c.SecretKey, obsEndpoint,
+			obs.WithSignature("OBS"), obs.WithSecurityToken(c.SecurityToken))
+	}
 	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint, obs.WithSignature("OBS"))
 }
 
@@ -347,6 +361,9 @@ func (c *Config) ObjectStorageClient(region string) (*obs.ObsClient, error) {
 	}
 
 	obsEndpoint := getObsEndpoint(c, region)
+	if c.SecurityToken != "" {
+		return obs.New(c.AccessKey, c.SecretKey, obsEndpoint, obs.WithSecurityToken(c.SecurityToken))
+	}
 	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint)
 }
 
@@ -501,6 +518,28 @@ func (c *Config) loadUserProjects(client *golangsdk.ProviderClient, region strin
 	return nil
 }
 
+// GetRegion returns the region that was specified in the resource. If a
+// region was not set, the provider-level region is checked. The provider-level
+// region can either be set by the region argument or by HW_REGION_NAME.
+func (c *Config) GetRegion(d *schema.ResourceData) string {
+	if v, ok := d.GetOk("region"); ok {
+		return v.(string)
+	}
+
+	return c.Region
+}
+
+// GetEnterpriseProjectID returns the enterprise_project_id that was specified in the resource.
+// If it was not set, the provider-level value is checked. The provider-level value can
+// either be set by the `enterprise_project_id` argument or by HW_ENTERPRISE_PROJECT_ID.
+func (c *Config) GetEnterpriseProjectID(d *schema.ResourceData) string {
+	if v, ok := d.GetOk("enterprise_project_id"); ok {
+		return v.(string)
+	}
+
+	return c.EnterpriseProjectID
+}
+
 // ********** client for Global Service **********
 func (c *Config) IAMV3Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("iam", region)
@@ -551,12 +590,24 @@ func (c *Config) AomV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("aom", region)
 }
 
+func (c *Config) CciV1BetaClient(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("cciv1_bata", region)
+}
+
 func (c *Config) CciV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("cciv1", region)
 }
 
 func (c *Config) FgsV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("fgsv2", region)
+}
+
+func (c *Config) SwrV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("swr", region)
+}
+
+func (c *Config) BmsV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("bms", region)
 }
 
 // ********** client for Storage **********
@@ -574,6 +625,10 @@ func (c *Config) SfsV2Client(region string) (*golangsdk.ServiceClient, error) {
 
 func (c *Config) SfsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("sfs-turbo", region)
+}
+
+func (c *Config) CbrV3Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("cbr", region)
 }
 
 func (c *Config) CsbsV1Client(region string) (*golangsdk.ServiceClient, error) {
@@ -613,8 +668,19 @@ func (c *Config) ElasticLBClient(region string) (*golangsdk.ServiceClient, error
 	return c.NewServiceClient("elb", region)
 }
 
+// client for v2.0 api
 func (c *Config) ElbV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("elbv2", region)
+}
+
+// client for v3 api
+func (c *Config) ElbV3Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("elbv3", region)
+}
+
+// client for v2 api
+func (c *Config) LoadBalancerClient(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("loadbalancer", region)
 }
 
 func (c *Config) FwV2Client(region string) (*golangsdk.ServiceClient, error) {
@@ -653,6 +719,11 @@ func (c *Config) AntiDDosV1Client(region string) (*golangsdk.ServiceClient, erro
 
 func (c *Config) KmsKeyV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("kms", region)
+}
+
+// WafV1Client is not avaliable in HuaweiCloud, will be imported by other clouds
+func (c *Config) WafV1Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("waf", region)
 }
 
 // ********** client for Enterprise Intelligence **********
@@ -695,6 +766,10 @@ func (c *Config) GesV1Client(region string) (*golangsdk.ServiceClient, error) {
 // ********** client for Application **********
 func (c *Config) ApiGatewayV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("apig", region)
+}
+
+func (c *Config) BcsV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("bcs", region)
 }
 
 func (c *Config) DcsV1Client(region string) (*golangsdk.ServiceClient, error) {

@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/hashicorp/terraform-plugin-sdk v1.16.0
 	github.com/huaweicloud/golangsdk v0.0.0-20210616094011-88532780cf01
-	github.com/huaweicloud/terraform-provider-huaweicloud v1.23.1-0.20210406030556-c63d7fdb3533
+	github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210617120809-f8e7bbf67cb6
 	github.com/jen20/awspolicyequivalence v1.1.0
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/mitchellh/go-homedir v1.1.0
