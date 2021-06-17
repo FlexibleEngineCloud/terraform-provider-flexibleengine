@@ -158,6 +158,10 @@ The following arguments are supported:
 * `versioning` - (Optional) Whether enable versioning. Once you version-enable a bucket, it can never return to an unversioned state.
   You can, however, suspend versioning on that bucket.
 
+* `encryption` - (Optional) Whether enable default server-side encryption of the bucket in SSE-KMS mode.
+
+* `kms_key_id` - (Optional) Specifies the ID of a kms key. If omitted, the default master key will be used.
+
 * `logging` - (Optional) A settings of bucket logging (documented below).
 * `website` - (Optional) A website object (documented below).
 * `cors_rule` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).

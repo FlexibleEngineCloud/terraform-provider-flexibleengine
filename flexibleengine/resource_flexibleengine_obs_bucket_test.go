@@ -26,6 +26,7 @@ func TestAccObsBucket_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "bucket_domain_name", testAccObsBucketDomainName(rInt)),
 					resource.TestCheckResourceAttr(resourceName, "acl", "private"),
 					resource.TestCheckResourceAttr(resourceName, "storage_class", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "encryption", "false"),
 					resource.TestCheckResourceAttr(resourceName, "multi_az", "false"),
 					resource.TestCheckResourceAttr(resourceName, "region", OS_REGION_NAME),
 				),

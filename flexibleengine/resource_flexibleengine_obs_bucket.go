@@ -229,7 +229,15 @@ func resourceObsBucket() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-
+			"encryption": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"kms_key_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"multi_az": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -302,6 +310,12 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
+	if d.HasChanges("encryption", "kms_key_id") {
+		if err := resourceObsBucketEncryptionUpdate(obsClient, d); err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("logging") {
 		if err := resourceObsBucketLoggingUpdate(obsClient, d); err != nil {
 			return err
@@ -370,6 +384,12 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 	if err := setObsBucketVersioning(obsClient, d); err != nil {
 		return err
 	}
+
+	// Read the encryption configuration
+	if err := setObsBucketEncryption(obsClient, d); err != nil {
+		return err
+	}
+
 	// Read the logging configuration
 	if err := setObsBucketLogging(obsClient, d); err != nil {
 		return err
@@ -526,6 +546,30 @@ func resourceObsBucketLoggingUpdate(obsClient *obs.ObsClient, d *schema.Resource
 	_, err := obsClient.SetBucketLoggingConfiguration(loggingStatus)
 	if err != nil {
 		return getObsError("Error setting logging configuration of OBS bucket", bucket, err)
+	}
+
+	return nil
+}
+
+func resourceObsBucketEncryptionUpdate(obsClient *obs.ObsClient, d *schema.ResourceData) error {
+	bucket := d.Get("bucket").(string)
+
+	if d.Get("encryption").(bool) {
+		input := &obs.SetBucketEncryptionInput{}
+		input.Bucket = bucket
+		input.SSEAlgorithm = obs.DEFAULT_SSE_KMS_ENCRYPTION
+		input.KMSMasterKeyID = d.Get("kms_key_id").(string)
+
+		log.Printf("[DEBUG] enable default encryption of OBS bucket %s: %#v", bucket, input)
+		_, err := obsClient.SetBucketEncryption(input)
+		if err != nil {
+			return getObsError("failed to enable default encryption of OBS bucket", bucket, err)
+		}
+	} else if !d.IsNewResource() {
+		_, err := obsClient.DeleteBucketEncryption(bucket)
+		if err != nil {
+			return getObsError("failed to disable default encryption of OBS bucket", bucket, err)
+		}
 	}
 
 	return nil
@@ -833,6 +877,33 @@ func setObsBucketVersioning(obsClient *obs.ObsClient, d *schema.ResourceData) er
 		d.Set("versioning", true)
 	} else {
 		d.Set("versioning", false)
+	}
+
+	return nil
+}
+
+func setObsBucketEncryption(obsClient *obs.ObsClient, d *schema.ResourceData) error {
+	bucket := d.Id()
+	output, err := obsClient.GetBucketEncryption(bucket)
+	if err != nil {
+		if obsError, ok := err.(obs.ObsError); ok {
+			if obsError.Code == "NoSuchEncryptionConfiguration" {
+				d.Set("encryption", false)
+				d.Set("kms_key_id", nil)
+				return nil
+			}
+			return fmt.Errorf("Error getting encryption configuration of OBS bucket %s: %s,\n Reason: %s",
+				bucket, obsError.Code, obsError.Message)
+		}
+		return err
+	}
+
+	if output.SSEAlgorithm != "" {
+		d.Set("encryption", true)
+		d.Set("kms_key_id", output.KMSMasterKeyID)
+	} else {
+		d.Set("encryption", false)
+		d.Set("kms_key_id", nil)
 	}
 
 	return nil
