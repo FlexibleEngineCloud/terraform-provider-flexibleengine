@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/pathorcontents"
-	"github.com/hashicorp/terraform-plugin-sdk/httpclient"
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
@@ -49,6 +48,10 @@ func (c *Config) LoadAndValidate() error {
 
 	if err != nil {
 		return err
+	}
+
+	if c.HwClient != nil && c.HwClient.ProjectID != "" {
+		c.RegionProjectIDMap[c.Region] = c.HwClient.ProjectID
 	}
 
 	// set DomainID for IAM resource
@@ -109,7 +112,7 @@ func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.Provider
 	}
 
 	// Set UserAgent
-	client.UserAgent.Prepend(httpclient.TerraformUserAgent(c.TerraformVersion))
+	client.UserAgent.Prepend("terraform-provider-flexibleengine")
 
 	config, err := generateTLSConfig(c)
 	if err != nil {
