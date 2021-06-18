@@ -323,6 +323,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpcep_approval":                     resourceVPCEndpointApproval(),
 			"flexibleengine_vpcep_endpoint":                     resourceVPCEndpoint(),
 			"flexibleengine_vpcep_service":                      resourceVPCEndpointService(),
+			"flexibleengine_waf_certificate":                    resourceWafCertificateV1(),
+			"flexibleengine_waf_policy":                         resourceWafPolicyV1(),
 
 			// Deprecated resource
 			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
