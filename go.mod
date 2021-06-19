@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.1
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/hashicorp/terraform-plugin-sdk v1.16.0
-	github.com/huaweicloud/golangsdk v0.0.0-20210618085032-346d1a790f57
+	github.com/huaweicloud/golangsdk v0.0.0-20210619075926-bc59084e8485
 	github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210617120809-f8e7bbf67cb6
 	github.com/jen20/awspolicyequivalence v1.1.0
 	github.com/jtolds/gls v4.20.0+incompatible // indirect

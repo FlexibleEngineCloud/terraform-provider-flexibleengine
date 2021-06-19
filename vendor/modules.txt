@@ -261,7 +261,7 @@ github.com/hashicorp/terraform-svchost/auth
 github.com/hashicorp/terraform-svchost/disco
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210618085032-346d1a790f57
+# github.com/huaweicloud/golangsdk v0.0.0-20210619075926-bc59084e8485
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -394,6 +394,7 @@ github.com/huaweicloud/golangsdk/openstack/vbs/v2/policies
 github.com/huaweicloud/golangsdk/openstack/vpcep/v1/endpoints
 github.com/huaweicloud/golangsdk/openstack/vpcep/v1/services
 github.com/huaweicloud/golangsdk/openstack/waf/v1/certificates
+github.com/huaweicloud/golangsdk/openstack/waf/v1/domains
 github.com/huaweicloud/golangsdk/openstack/waf/v1/policies
 github.com/huaweicloud/golangsdk/pagination
 # github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210617120809-f8e7bbf67cb6
