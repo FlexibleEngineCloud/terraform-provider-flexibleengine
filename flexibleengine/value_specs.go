@@ -3,6 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/servergroups"
 	"github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets"
@@ -31,17 +33,18 @@ type FirewallGroupCreateOpts struct {
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
 }
 
-// ToFirewallCreateMap casts a CreateOptsExt struct to a map.
+// ToFirewallCreateMap casts a FirewallGroupCreateOpts struct to a map.
 // It overrides firewalls.ToFirewallCreateMap to add the ValueSpecs field.
 func (opts FirewallGroupCreateOpts) ToFirewallCreateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall_group")
 }
 
-//FirewallUpdateOpts
+// FirewallGroupUpdateOpts represents the attributes used when updating a firewall
 type FirewallGroupUpdateOpts struct {
 	firewall_groups.UpdateOptsBuilder
 }
 
+// ToFirewallUpdateMap casts a FirewallGroupUpdateOpts struct to a map.
 func (opts FirewallGroupUpdateOpts) ToFirewallUpdateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall")
 }
@@ -88,7 +91,7 @@ type PolicyCreateOpts struct {
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
 }
 
-// ToPolicyCreateMap casts a CreateOpts struct to a map.
+// ToFirewallPolicyCreateMap casts a PolicyCreateOpts struct to a map.
 // It overrides policies.ToFirewallPolicyCreateMap to add the ValueSpecs field.
 func (opts PolicyCreateOpts) ToFirewallPolicyCreateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall_policy")
@@ -222,4 +225,48 @@ func (opts ZoneCreateOpts) ToZoneCreateMap() (map[string]interface{}, error) {
 type EIPCreateOpts struct {
 	eips.ApplyOpts
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
+}
+
+// BuildRequest takes an opts struct and builds a request body for
+// golangsdk to execute
+func BuildRequest(opts interface{}, parent string) (map[string]interface{}, error) {
+	b, err := golangsdk.BuildRequestBody(opts, "")
+	if err != nil {
+		return nil, err
+	}
+
+	b = AddValueSpecs(b)
+
+	return map[string]interface{}{parent: b}, nil
+}
+
+// AddValueSpecs expands the 'value_specs' object and removes 'value_specs'
+// from the reqeust body.
+func AddValueSpecs(body map[string]interface{}) map[string]interface{} {
+	if body["value_specs"] != nil {
+		for k, v := range body["value_specs"].(map[string]interface{}) {
+			body[k] = v
+		}
+		delete(body, "value_specs")
+	}
+
+	return body
+}
+
+// MapValueSpecs converts ResourceData into a map
+func MapValueSpecs(d *schema.ResourceData) map[string]string {
+	m := make(map[string]string)
+	for key, val := range d.Get("value_specs").(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
+}
+
+// MapResourceProp converts ResourceData property into a map
+func MapResourceProp(d *schema.ResourceData, prop string) map[string]interface{} {
+	m := make(map[string]interface{})
+	for key, val := range d.Get(prop).(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
 }
