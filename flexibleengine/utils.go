@@ -8,7 +8,74 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk"
 )
+
+// CheckDeleted checks the error to see if it's a 404 (Not Found) and, if so,
+// sets the resource ID to the empty string instead of throwing an error.
+func CheckDeleted(d *schema.ResourceData, err error, msg string) error {
+	if _, ok := err.(golangsdk.ErrDefault404); ok {
+		d.SetId("")
+		return nil
+	}
+
+	return fmt.Errorf("%s: %s", msg, err)
+}
+
+// GetRegion returns the region that was specified in the resource. If a
+// region was not set, the provider-level region is checked. The provider-level
+// region can either be set by the region argument or by OS_REGION_NAME.
+func GetRegion(d *schema.ResourceData, config *Config) string {
+	if v, ok := d.GetOk("region"); ok {
+		return v.(string)
+	}
+
+	return config.Region
+}
+
+func checkForRetryableError(err error) *resource.RetryError {
+	switch errCode := err.(type) {
+	case golangsdk.ErrDefault500:
+		return resource.RetryableError(err)
+	case golangsdk.ErrUnexpectedResponseCode:
+		switch errCode.Actual {
+		case 409, 503:
+			return resource.RetryableError(err)
+		default:
+			return resource.NonRetryableError(err)
+		}
+	default:
+		return resource.NonRetryableError(err)
+	}
+}
+
+func isResourceNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	_, ok := err.(golangsdk.ErrDefault404)
+	_, ok1 := err.(golangsdk.ErrDefault404)
+	return ok || ok1
+}
+
+func hasFilledOpt(d *schema.ResourceData, param string) bool {
+	_, b := d.GetOkExists(param)
+	return b
+}
+
+// strSliceContains checks if a given string is contained in a slice
+// When anybody asks why Go needs generics, here you go.
+func strSliceContains(haystack []string, needle string) bool {
+	for _, s := range haystack {
+		if s == needle {
+			return true
+		}
+	}
+	return false
+}
 
 func jsonBytesEqual(b1, b2 []byte) bool {
 	var o1 interface{}

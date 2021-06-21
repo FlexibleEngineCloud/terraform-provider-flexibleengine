@@ -121,7 +121,7 @@ func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.Provider
 	transport := &http.Transport{Proxy: http.ProxyFromEnvironment, TLSClientConfig: config}
 
 	client.HTTPClient = http.Client{
-		Transport: &LogRoundTripper{
+		Transport: &huaweiconfig.LogRoundTripper{
 			Rt:      transport,
 			OsDebug: logging.IsDebugOrHigher(),
 		},

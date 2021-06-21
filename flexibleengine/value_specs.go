@@ -1,15 +1,10 @@
 package flexibleengine
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/servergroups"
 	"github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets"
@@ -26,134 +21,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/subnets"
 )
 
-// LogRoundTripper satisfies the http.RoundTripper interface and is used to
-// customize the default http client RoundTripper to allow for logging.
-type LogRoundTripper struct {
-	Rt      http.RoundTripper
-	OsDebug bool
-}
-
-// RoundTrip performs a round-trip HTTP request and logs relevant information about it.
-func (lrt *LogRoundTripper) RoundTrip(request *http.Request) (*http.Response, error) {
-	defer func() {
-		if request.Body != nil {
-			request.Body.Close()
-		}
-	}()
-
-	// for future reference, this is how to access the Transport struct:
-	//tlsconfig := lrt.Rt.(*http.Transport).TLSClientConfig
-
-	var err error
-
-	if lrt.OsDebug {
-		log.Printf("[DEBUG] FlexibleEngine Request URL: %s %s", request.Method, request.URL)
-		log.Printf("[DEBUG] FlexibleEngine Request Headers:\n%s", FormatHeaders(request.Header, "\n"))
-
-		if request.Body != nil {
-			request.Body, err = lrt.logRequest(request.Body, request.Header.Get("Content-Type"))
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	response, err := lrt.Rt.RoundTrip(request)
-	if response == nil {
-		return nil, err
-	}
-
-	if lrt.OsDebug {
-		log.Printf("[DEBUG] FlexibleEngine Response Code: %d", response.StatusCode)
-		log.Printf("[DEBUG] FlexibleEngine Response Headers:\n%s", FormatHeaders(response.Header, "\n"))
-
-		response.Body, err = lrt.logResponse(response.Body, response.Header.Get("Content-Type"))
-	}
-
-	return response, err
-}
-
-// logRequest will log the HTTP Request details.
-// If the body is JSON, it will attempt to be pretty-formatted.
-func (lrt *LogRoundTripper) logRequest(original io.ReadCloser, contentType string) (io.ReadCloser, error) {
-	defer original.Close()
-
-	var bs bytes.Buffer
-	_, err := io.Copy(&bs, original)
-	if err != nil {
-		return nil, err
-	}
-
-	// Handle request contentType
-	if strings.HasPrefix(contentType, "application/json") {
-		debugInfo := lrt.formatJSON(bs.Bytes())
-		log.Printf("[DEBUG] FlexibleEngine Request Body: %s", debugInfo)
-	} else {
-		log.Printf("[DEBUG] FlexibleEngine Request Body: %s", bs.String())
-	}
-
-	return ioutil.NopCloser(strings.NewReader(bs.String())), nil
-}
-
-// logResponse will log the HTTP Response details.
-// If the body is JSON, it will attempt to be pretty-formatted.
-func (lrt *LogRoundTripper) logResponse(original io.ReadCloser, contentType string) (io.ReadCloser, error) {
-	if strings.HasPrefix(contentType, "application/json") {
-		var bs bytes.Buffer
-		defer original.Close()
-		_, err := io.Copy(&bs, original)
-		if err != nil {
-			return nil, err
-		}
-		debugInfo := lrt.formatJSON(bs.Bytes())
-		if debugInfo != "" {
-			log.Printf("[DEBUG] FlexibleEngine Response Body: %s", debugInfo)
-		}
-		return ioutil.NopCloser(strings.NewReader(bs.String())), nil
-	}
-
-	log.Printf("[DEBUG] Not logging because FlexibleEngine response body isn't JSON")
-	return original, nil
-}
-
-// formatJSON will try to pretty-format a JSON body.
-// It will also mask known fields which contain sensitive information.
-func (lrt *LogRoundTripper) formatJSON(raw []byte) string {
-	var data map[string]interface{}
-
-	err := json.Unmarshal(raw, &data)
-	if err != nil {
-		log.Printf("[DEBUG] Unable to parse FlexibleEngine JSON: %s", err)
-		return string(raw)
-	}
-
-	// Mask known password fields
-	if v, ok := data["auth"].(map[string]interface{}); ok {
-		if v, ok := v["identity"].(map[string]interface{}); ok {
-			if v, ok := v["password"].(map[string]interface{}); ok {
-				if v, ok := v["user"].(map[string]interface{}); ok {
-					v["password"] = "***"
-				}
-			}
-		}
-	}
-
-	// Ignore the catalog
-	if v, ok := data["token"].(map[string]interface{}); ok {
-		if _, ok := v["catalog"]; ok {
-			return ""
-		}
-	}
-
-	pretty, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		log.Printf("[DEBUG] Unable to re-marshal FlexibleEngine JSON: %s", err)
-		return string(raw)
-	}
-
-	return string(pretty)
-}
-
 // FirewallGroup is an FlexibleEngine firewall group.
 type FirewallGroup struct {
 	firewall_groups.FirewallGroup
@@ -166,17 +33,18 @@ type FirewallGroupCreateOpts struct {
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
 }
 
-// ToFirewallCreateMap casts a CreateOptsExt struct to a map.
+// ToFirewallCreateMap casts a FirewallGroupCreateOpts struct to a map.
 // It overrides firewalls.ToFirewallCreateMap to add the ValueSpecs field.
 func (opts FirewallGroupCreateOpts) ToFirewallCreateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall_group")
 }
 
-//FirewallUpdateOpts
+// FirewallGroupUpdateOpts represents the attributes used when updating a firewall
 type FirewallGroupUpdateOpts struct {
 	firewall_groups.UpdateOptsBuilder
 }
 
+// ToFirewallUpdateMap casts a FirewallGroupUpdateOpts struct to a map.
 func (opts FirewallGroupUpdateOpts) ToFirewallUpdateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall")
 }
@@ -223,7 +91,7 @@ type PolicyCreateOpts struct {
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
 }
 
-// ToPolicyCreateMap casts a CreateOpts struct to a map.
+// ToFirewallPolicyCreateMap casts a PolicyCreateOpts struct to a map.
 // It overrides policies.ToFirewallPolicyCreateMap to add the ValueSpecs field.
 func (opts PolicyCreateOpts) ToFirewallPolicyCreateMap() (map[string]interface{}, error) {
 	return BuildRequest(opts, "firewall_policy")
@@ -357,4 +225,48 @@ func (opts ZoneCreateOpts) ToZoneCreateMap() (map[string]interface{}, error) {
 type EIPCreateOpts struct {
 	eips.ApplyOpts
 	ValueSpecs map[string]string `json:"value_specs,omitempty"`
+}
+
+// BuildRequest takes an opts struct and builds a request body for
+// golangsdk to execute
+func BuildRequest(opts interface{}, parent string) (map[string]interface{}, error) {
+	b, err := golangsdk.BuildRequestBody(opts, "")
+	if err != nil {
+		return nil, err
+	}
+
+	b = AddValueSpecs(b)
+
+	return map[string]interface{}{parent: b}, nil
+}
+
+// AddValueSpecs expands the 'value_specs' object and removes 'value_specs'
+// from the reqeust body.
+func AddValueSpecs(body map[string]interface{}) map[string]interface{} {
+	if body["value_specs"] != nil {
+		for k, v := range body["value_specs"].(map[string]interface{}) {
+			body[k] = v
+		}
+		delete(body, "value_specs")
+	}
+
+	return body
+}
+
+// MapValueSpecs converts ResourceData into a map
+func MapValueSpecs(d *schema.ResourceData) map[string]string {
+	m := make(map[string]string)
+	for key, val := range d.Get("value_specs").(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
+}
+
+// MapResourceProp converts ResourceData property into a map
+func MapResourceProp(d *schema.ResourceData, prop string) map[string]interface{} {
+	m := make(map[string]interface{})
+	for key, val := range d.Get(prop).(map[string]interface{}) {
+		m[key] = val.(string)
+	}
+	return m
 }
