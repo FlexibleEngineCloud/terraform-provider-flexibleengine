@@ -2,14 +2,10 @@ package flexibleengine
 
 import (
 	"fmt"
-	"net/http"
-	"sort"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
-	"github.com/unknwon/com"
 )
 
 // BuildRequest takes an opts struct and builds a request body for
@@ -76,34 +72,6 @@ func MapResourceProp(d *schema.ResourceData, prop string) map[string]interface{}
 		m[key] = val.(string)
 	}
 	return m
-}
-
-// List of headers that need to be redacted
-var REDACT_HEADERS = []string{"x-auth-token", "x-auth-key", "x-service-token",
-	"x-storage-token", "x-account-meta-temp-url-key", "x-account-meta-temp-url-key-2",
-	"x-container-meta-temp-url-key", "x-container-meta-temp-url-key-2", "set-cookie",
-	"x-subject-token"}
-
-// RedactHeaders processes a headers object, returning a redacted list
-func RedactHeaders(headers http.Header) (processedHeaders []string) {
-	for name, header := range headers {
-		for _, v := range header {
-			if com.IsSliceContainsStr(REDACT_HEADERS, name) {
-				processedHeaders = append(processedHeaders, fmt.Sprintf("%v: %v", name, "***"))
-			} else {
-				processedHeaders = append(processedHeaders, fmt.Sprintf("%v: %v", name, v))
-			}
-		}
-	}
-	return
-}
-
-// FormatHeaders processes a headers object plus a deliminator, returning a string
-func FormatHeaders(headers http.Header, seperator string) string {
-	redactedHeaders := RedactHeaders(headers)
-	sort.Strings(redactedHeaders)
-
-	return strings.Join(redactedHeaders, seperator)
 }
 
 func checkForRetryableError(err error) *resource.RetryError {

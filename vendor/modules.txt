@@ -397,7 +397,7 @@ github.com/huaweicloud/golangsdk/openstack/waf/v1/certificates
 github.com/huaweicloud/golangsdk/openstack/waf/v1/domains
 github.com/huaweicloud/golangsdk/openstack/waf/v1/policies
 github.com/huaweicloud/golangsdk/pagination
-# github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210617120809-f8e7bbf67cb6
+# github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210621022651-b1aa07d8ce12
 ## explicit
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config
 # github.com/imdario/mergo v0.3.9
@@ -458,7 +458,6 @@ github.com/ulikunitz/xz/internal/hash
 github.com/ulikunitz/xz/internal/xlog
 github.com/ulikunitz/xz/lzma
 # github.com/unknwon/com v1.0.1
-## explicit
 github.com/unknwon/com
 # github.com/vmihailenco/msgpack v4.0.1+incompatible
 github.com/vmihailenco/msgpack
