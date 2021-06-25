@@ -323,3 +323,21 @@ func validateECSTagValue(v interface{}, k string) (ws []string, errors []error) 
 	}
 	return
 }
+
+// RFC3339ZNoTNoZ is a time format
+const RFC3339ZNoTNoZ = "2006-01-02 15:04:05"
+
+// IsRFC3339Time is a SchemaValidateFunc which tests if the provided value is of type string and a valid RFC33349Time
+func IsRFC3339Time(i interface{}, k string) (warnings []string, errors []error) {
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %q to be string", k))
+		return warnings, errors
+	}
+
+	if _, err := time.Parse(RFC3339ZNoTNoZ, v); err != nil {
+		errors = append(errors, fmt.Errorf("expected %q to be a valid date, got %q: %+v", k, i, err))
+	}
+
+	return warnings, errors
+}
