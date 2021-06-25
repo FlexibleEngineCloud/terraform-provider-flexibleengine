@@ -261,7 +261,7 @@ github.com/hashicorp/terraform-svchost/auth
 github.com/hashicorp/terraform-svchost/disco
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210621115823-3cecb9fc9172
+# github.com/huaweicloud/golangsdk v0.0.0-20210624022515-eefdf1d43b21
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -393,11 +393,13 @@ github.com/huaweicloud/golangsdk/openstack/vbs/v2/backups
 github.com/huaweicloud/golangsdk/openstack/vbs/v2/policies
 github.com/huaweicloud/golangsdk/openstack/vpcep/v1/endpoints
 github.com/huaweicloud/golangsdk/openstack/vpcep/v1/services
+github.com/huaweicloud/golangsdk/openstack/waf/v1/ccattackprotection_rules
 github.com/huaweicloud/golangsdk/openstack/waf/v1/certificates
 github.com/huaweicloud/golangsdk/openstack/waf/v1/datamasking_rules
 github.com/huaweicloud/golangsdk/openstack/waf/v1/domains
 github.com/huaweicloud/golangsdk/openstack/waf/v1/falsealarmmasking_rules
 github.com/huaweicloud/golangsdk/openstack/waf/v1/policies
+github.com/huaweicloud/golangsdk/openstack/waf/v1/whiteblackip_rules
 github.com/huaweicloud/golangsdk/pagination
 # github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210621022651-b1aa07d8ce12
 ## explicit

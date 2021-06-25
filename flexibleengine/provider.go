@@ -326,8 +326,10 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_waf_certificate":                    resourceWafCertificateV1(),
 			"flexibleengine_waf_domain":                         resourceWafDomainV1(),
 			"flexibleengine_waf_policy":                         resourceWafPolicyV1(),
+			"flexibleengine_waf_rule_blacklist":                 resourceWafRuleBlackList(),
 			"flexibleengine_waf_rule_alarm_masking":             resourceWafRuleAlarmMasking(),
 			"flexibleengine_waf_rule_data_masking":              resourceWafRuleDataMasking(),
+			"flexibleengine_waf_rule_cc_protection":             resourceWafRuleCCAttackProtection(),
 
 			// Deprecated resource
 			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
