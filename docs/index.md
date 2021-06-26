@@ -135,6 +135,12 @@ The following arguments are supported:
 * `insecure` - (Optional) Trust self-signed SSL certificates. If omitted, the
   `OS_INSECURE` environment variable is used.
 
+* `max_retries` - (Optional) This is the maximum number of times an API
+  call is retried, in the case where requests are being throttled or
+  experiencing transient failures. The delay between the subsequent API
+  calls increases exponentially. The default value is `5`.
+  If omitted, the `OS_MAX_RETRIES` environment variable is used.
+
 * `cacert_file` - (Optional) Specify a custom CA certificate when communicating
   over SSL. You can specify either a path to the file or the contents of the
   certificate. If omitted, the `OS_CACERT` environment variable is used.

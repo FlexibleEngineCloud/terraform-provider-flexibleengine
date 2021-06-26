@@ -131,6 +131,13 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["insecure"],
 			},
 
+			"max_retries": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: descriptions["max_retries"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_MAX_RETRIES", 5),
+			},
+
 			"cacert_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -387,6 +394,8 @@ func init() {
 
 		"insecure": "Trust self-signed certificates.",
 
+		"max_retries": "How many times HTTP connection should be retried until giving up.",
+
 		"cacert_file": "A Custom CA certificate.",
 
 		"endpoint_type": "The catalog endpoint type to use.",
@@ -419,6 +428,7 @@ func configureProvider(d *schema.ResourceData, terraformVersion string) (interfa
 	config.TenantName = d.Get("tenant_name").(string)
 	config.Username = d.Get("user_name").(string)
 	config.UserID = d.Get("user_id").(string)
+	config.MaxRetries = d.Get("max_retries").(int)
 	config.TerraformVersion = terraformVersion
 	config.Cloud = defaultCloud
 	config.RegionProjectIDMap = make(map[string]string)
