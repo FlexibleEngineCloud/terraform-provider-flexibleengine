@@ -1,3 +1,30 @@
+## 1.22.0 (June 28, 2021)
+
+FEATURES:
+* **New Resurce:**
+  - `flexibleengine_waf_certificate` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_domain` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_policy` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_alarm_masking` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_blacklist` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_cc_protection` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_data_masking` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_precise_protection` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+  - `flexibleengine_waf_rule_web_tamper_protection` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
+
+ENHANCEMENTS:
+* **provider:** add max_retries to try more times when an API call is experiencing transient failures ([#566](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/566))
+* `flexibleengine_obs_bucket`: Support default encryption ([#419](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/419))
+* `flexibleengine_obs_bucket`: Support to enable multi-AZ mode ([#505](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/505))
+* `flexibleengine_cce_node_pool_v3`: Add ability to import ([#528](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/528))
+* `flexibleengine_cce_node_pool_v3`: Make taints and labels be updatable ([#549](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/549))
+* `flexibleengine_rds_instance_v3`: Omit empty if port is not specified ([#550](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/550))
+
+BUG FIXES:
+* `flexibleengine_rds_instance_v3`: set RegionProjectIDMap as early as possible in config
+ ([#548](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/548))
+
+
 ## 1.21.0 (May 31, 2021)
 
 FEATURES:
