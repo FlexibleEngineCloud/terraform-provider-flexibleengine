@@ -30,6 +30,12 @@ The following arguments are supported:
   - *2*: medium
   - *3*: high
 
+* `full_detection` - (Optional, Bool) Specifies the detection mode in Precise Protection. Valid values are:
+  * *true*: full detection, Full detection finishes all threat detections before blocking requests that
+    meet Precise Protection specified conditions.
+  * *false*: instant detection. Instant detection immediately ends threat detection after blocking a request that
+    meets Precise Protection specified conditions.
+
 * `domains` - (Optional, List) An array of domain IDs.
 
 ## Attributes Reference
@@ -38,19 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - The policy ID in UUID format.
 
-* `full_detection` - The detection mode in Precise Protection.
-  * *true*: full detection, Full detection finishes all threat detections before blocking requests that meet Precise Protection specified conditions.
-  * *false*: instant detection. Instant detection immediately ends threat detection after blocking a request that meets Precise Protection specified conditions.
+* `protection_status` - The protection switches. The object structure is documented below.
 
-* `options` - The protection switches. The options object structure is documented below.
+The `protection_status` block supports:
 
-The `options` block supports:
+* `basic_web_protection` - Indicates whether Basic Web Protection is enabled.
 
-* `webattack` - Indicates whether Basic Web Protection is enabled.
-
-* `common` - Indicates whether General Check in Basic Web Protection is enabled.
-
-* `crawler` - Indicates whether the master crawler detection switch in Basic Web Protection is enabled.
+* `general_check` - Indicates whether General Check in Basic Web Protection is enabled.
 
 * `crawler_engine` - Indicates whether the Search Engine switch in Basic Web Protection is enabled.
 
@@ -62,17 +62,17 @@ The `options` block supports:
 
 * `webshell` - Indicates whether webshell detection in Basic Web Protection is enabled.
 
-* `cc` - Indicates whether CC Attack Protection is enabled.
+* `cc_protection` - Indicates whether CC Attack Protection is enabled.
 
-* `custom` - Indicates whether Precise Protection is enabled.
+* `precise_protection` - Indicates whether Precise Protection is enabled.
 
-* `whiteblackip` - Indicates whether Blacklist and Whitelist is enabled.
+* `blacklist` - Indicates whether Blacklist and Whitelist is enabled.
 
-* `privacy` - Indicates whether Data Masking is enabled.
+* `data_masking` - Indicates whether Data Masking is enabled.
 
-* `ignore` - Indicates whether False Alarm Masking is enabled.
+* `false_alarm_masking` - Indicates whether False Alarm Masking is enabled.
 
-* `antitamper` - Indicates whether Web Tamper Protection is enabled.
+* `web_tamper_protection` - Indicates whether Web Tamper Protection is enabled.
 
 ## Import
 

@@ -16,7 +16,7 @@ func TestAccWafPolicyV1_basic(t *testing.T) {
 	randName := acctest.RandString(5)
 	resourceName := "flexibleengine_waf_policy.policy_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckWafPolicyV1Destroy,
@@ -29,6 +29,8 @@ func TestAccWafPolicyV1_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "protection_mode", "log"),
 					resource.TestCheckResourceAttr(resourceName, "level", "2"),
 					resource.TestCheckResourceAttr(resourceName, "full_detection", "false"),
+					resource.TestCheckResourceAttr(resourceName, "protection_status.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "protection_status.0.basic_web_protection", "true"),
 				),
 			},
 			{
@@ -38,6 +40,7 @@ func TestAccWafPolicyV1_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("policy-%s-updated", randName)),
 					resource.TestCheckResourceAttr(resourceName, "protection_mode", "block"),
 					resource.TestCheckResourceAttr(resourceName, "level", "1"),
+					resource.TestCheckResourceAttr(resourceName, "full_detection", "true"),
 				),
 			},
 			{
@@ -116,6 +119,7 @@ resource "flexibleengine_waf_policy" "policy_1" {
   name            = "policy-%s-updated"
   level           = 1
   protection_mode = "block"
+  full_detection  = true
 }
 `, name)
 }
