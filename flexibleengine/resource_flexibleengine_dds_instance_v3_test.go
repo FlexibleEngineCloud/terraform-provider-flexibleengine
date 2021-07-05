@@ -25,6 +25,7 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDDSV3InstanceExists(resourceName, &instance),
 					resource.TestCheckResourceAttr(resourceName, "name", instanceName),
+					resource.TestCheckResourceAttr(resourceName, "port", "8635"),
 					resource.TestCheckResourceAttr(resourceName, "ssl", "true"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
