@@ -3,8 +3,10 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -393,22 +395,33 @@ func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Retrieved instance %s: %#v", instanceID, instance)
 
-	d.Set("region", instance.Region)
-	d.Set("name", instance.Name)
-	d.Set("vpc_id", instance.VpcId)
-	d.Set("subnet_id", instance.SubnetId)
-	d.Set("security_group_id", instance.SecurityGroupId)
-	d.Set("disk_encryption_id", instance.DiskEncryptionId)
-	d.Set("mode", instance.Mode)
-	d.Set("db_username", instance.DbUserName)
-	d.Set("status", instance.Status)
-	d.Set("port", instance.Port)
-
 	sslEnable := true
 	if instance.Ssl == 0 {
 		sslEnable = false
 	}
-	d.Set("ssl", sslEnable)
+
+	mErr := multierror.Append(
+		d.Set("region", instance.Region),
+		d.Set("name", instance.Name),
+		d.Set("vpc_id", instance.VpcId),
+		d.Set("subnet_id", instance.SubnetId),
+		d.Set("security_group_id", instance.SecurityGroupId),
+		d.Set("disk_encryption_id", instance.DiskEncryptionId),
+		d.Set("mode", instance.Mode),
+		d.Set("db_username", instance.DbUserName),
+		d.Set("status", instance.Status),
+		d.Set("ssl", sslEnable),
+	)
+	if err := mErr.ErrorOrNil(); err != nil {
+		return err
+	}
+
+	// convert port to int
+	if port, err := strconv.Atoi(instance.Port); err == nil {
+		d.Set("port", port)
+	} else {
+		log.Printf("[WARN] Error convert port %s to int: %s", instance.Port, err)
+	}
 
 	datastoreList := make([]map[string]interface{}, 0, 1)
 	datastore := map[string]interface{}{
