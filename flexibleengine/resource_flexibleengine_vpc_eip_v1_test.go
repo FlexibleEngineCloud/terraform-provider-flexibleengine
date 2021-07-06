@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
@@ -12,6 +13,8 @@ import (
 
 func TestAccVpcV1EIP_basic(t *testing.T) {
 	var eip eips.PublicIp
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_vpc_eip_v1.eip_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,28 +22,20 @@ func TestAccVpcV1EIP_basic(t *testing.T) {
 		CheckDestroy: testAccCheckVpcV1EIPDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcV1EIP_basic,
+				Config: testAccVpcV1EIP_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVpcV1EIPExists("flexibleengine_vpc_eip_v1.eip_1", &eip),
+					testAccCheckVpcV1EIPExists(resourceName, &eip),
+					resource.TestCheckResourceAttr(resourceName, "status", "UNBOUND"),
+					resource.TestCheckResourceAttr(resourceName, "publicip.0.type", "5_bgp"),
+					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.name", rName),
+					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.share_type", "PER"),
+					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.charge_mode", "traffic"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccVpcV1EIP_timeout(t *testing.T) {
-	var eip eips.PublicIp
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckVpcV1EIPDestroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcV1EIP_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVpcV1EIPExists("flexibleengine_vpc_eip_v1.eip_1", &eip),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -99,34 +94,17 @@ func testAccCheckVpcV1EIPExists(n string, kp *eips.PublicIp) resource.TestCheckF
 	}
 }
 
-const testAccVpcV1EIP_basic = `
+func testAccVpcV1EIP_basic(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_vpc_eip_v1" "eip_1" {
   publicip {
     type = "5_bgp"
   }
   bandwidth {
-    name = "test"
-    size = 8
     share_type = "PER"
-    charge_mode = "traffic"
+    name       = "%s"
+    size       = 5
   }
 }
-`
-
-const testAccVpcV1EIP_timeout = `
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
-  publicip {
-    type = "5_bgp"
-  }
-  bandwidth {
-    name = "test"
-    size = 8
-    share_type = "PER"
-    charge_mode = "traffic"
-  }
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
+`, rName)
 }
-`

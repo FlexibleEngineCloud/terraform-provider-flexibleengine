@@ -38,7 +38,7 @@ func resourceVpcEIPV1() *schema.Resource {
 			"publicip": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: false,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -55,7 +55,6 @@ func resourceVpcEIPV1() *schema.Resource {
 						"port_id": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: false,
 							Computed: true,
 						},
 					},
@@ -64,7 +63,7 @@ func resourceVpcEIPV1() *schema.Resource {
 			"bandwidth": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: false,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -91,10 +90,10 @@ func resourceVpcEIPV1() *schema.Resource {
 					},
 				},
 			},
-			"value_specs": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: false,
+
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -107,12 +106,9 @@ func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating networking client: %s", err)
 	}
 
-	createOpts := EIPCreateOpts{
-		eips.ApplyOpts{
-			IP:        resourcePublicIP(d),
-			Bandwidth: resourceBandWidth(d),
-		},
-		MapValueSpecs(d),
+	createOpts := eips.ApplyOpts{
+		IP:        resourcePublicIP(d),
+		Bandwidth: resourceBandWidth(d),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -178,6 +174,13 @@ func resourceVpcEIPV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("bandwidth", bW)
 	d.Set("region", GetRegion(d, config))
+
+	// "DOWN" means the publicips is active but unbound
+	if eIP.Status == "DOWN" {
+		d.Set("status", "UNBOUND")
+	} else {
+		d.Set("status", eIP.Status)
+	}
 
 	return nil
 }
@@ -262,49 +265,6 @@ func resourceVpcEIPV1Delete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func getEIPStatus(networkingClient *golangsdk.ServiceClient, eId string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		e, err := eips.Get(networkingClient, eId).Extract()
-		if err != nil {
-			return nil, "", err
-		}
-
-		log.Printf("[DEBUG] EIP: %+v", e)
-		if e.Status == "DOWN" || e.Status == "ACTIVE" {
-			return e, "ACTIVE", nil
-		}
-
-		return e, "", nil
-	}
-}
-
-func waitForEIPDelete(networkingClient *golangsdk.ServiceClient, eId string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		log.Printf("[DEBUG] Attempting to delete EIP %s.\n", eId)
-
-		e, err := eips.Get(networkingClient, eId).Extract()
-		if err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted EIP %s", eId)
-				return e, "DELETED", nil
-			}
-			return e, "ACTIVE", err
-		}
-
-		err = eips.Delete(networkingClient, eId).ExtractErr()
-		if err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted EIP %s", eId)
-				return e, "DELETED", nil
-			}
-			return e, "ACTIVE", err
-		}
-
-		log.Printf("[DEBUG] EIP %s still active.\n", eId)
-		return e, "ACTIVE", nil
-	}
-}
-
 func resourcePublicIP(d *schema.ResourceData) eips.PublicIpOpts {
 	publicIPRaw := d.Get("publicip").([]interface{})
 	rawMap := publicIPRaw[0].(map[string]interface{})
@@ -332,12 +292,12 @@ func resourceBandWidth(d *schema.ResourceData) eips.BandwidthOpts {
 func bindToPort(d *schema.ResourceData, eipID string, networkingClient *golangsdk.ServiceClient, timeout time.Duration) error {
 	publicIPRaw := d.Get("publicip").([]interface{})
 	rawMap := publicIPRaw[0].(map[string]interface{})
-	port_id, ok := rawMap["port_id"]
-	if !ok || port_id == "" {
+	portID, ok := rawMap["port_id"]
+	if !ok || portID == "" {
 		return nil
 	}
 
-	pd := port_id.(string)
+	pd := portID.(string)
 	log.Printf("[DEBUG] Bind eip:%s to port: %s", eipID, pd)
 
 	updateOpts := eips.UpdateOpts{PortID: pd}
@@ -351,12 +311,12 @@ func bindToPort(d *schema.ResourceData, eipID string, networkingClient *golangsd
 func unbindToPort(d *schema.ResourceData, eipID string, networkingClient *golangsdk.ServiceClient, timeout time.Duration) error {
 	publicIPRaw := d.Get("publicip").([]interface{})
 	rawMap := publicIPRaw[0].(map[string]interface{})
-	port_id, ok := rawMap["port_id"]
-	if !ok || port_id == "" {
+	portID, ok := rawMap["port_id"]
+	if !ok || portID == "" {
 		return nil
 	}
 
-	pd := port_id.(string)
+	pd := portID.(string)
 	log.Printf("[DEBUG] Unbind eip:%s to port: %s", eipID, pd)
 
 	updateOpts := eips.UpdateOpts{PortID: ""}
@@ -365,6 +325,22 @@ func unbindToPort(d *schema.ResourceData, eipID string, networkingClient *golang
 		return err
 	}
 	return waitForEIPActive(networkingClient, eipID, timeout)
+}
+
+func getEIPStatus(networkingClient *golangsdk.ServiceClient, eId string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		e, err := eips.Get(networkingClient, eId).Extract()
+		if err != nil {
+			return nil, "", err
+		}
+
+		log.Printf("[DEBUG] EIP: %+v", e)
+		if e.Status == "DOWN" || e.Status == "ACTIVE" {
+			return e, "ACTIVE", nil
+		}
+
+		return e, "", nil
+	}
 }
 
 func waitForEIPActive(networkingClient *golangsdk.ServiceClient, eipID string, timeout time.Duration) error {
@@ -378,4 +354,31 @@ func waitForEIPActive(networkingClient *golangsdk.ServiceClient, eipID string, t
 
 	_, err := stateConf.WaitForState()
 	return err
+}
+
+func waitForEIPDelete(networkingClient *golangsdk.ServiceClient, eId string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		log.Printf("[DEBUG] Attempting to delete EIP %s.\n", eId)
+
+		e, err := eips.Get(networkingClient, eId).Extract()
+		if err != nil {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
+				log.Printf("[DEBUG] Successfully deleted EIP %s", eId)
+				return e, "DELETED", nil
+			}
+			return e, "ACTIVE", err
+		}
+
+		err = eips.Delete(networkingClient, eId).ExtractErr()
+		if err != nil {
+			if _, ok := err.(golangsdk.ErrDefault404); ok {
+				log.Printf("[DEBUG] Successfully deleted EIP %s", eId)
+				return e, "DELETED", nil
+			}
+			return e, "ACTIVE", err
+		}
+
+		log.Printf("[DEBUG] EIP %s still active.\n", eId)
+		return e, "ACTIVE", nil
+	}
 }
