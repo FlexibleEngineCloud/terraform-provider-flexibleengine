@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/bandwidths"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/eips"
 
@@ -90,7 +91,7 @@ func resourceVpcEIPV1() *schema.Resource {
 					},
 				},
 			},
-
+			"tags": tagsSchema(),
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -117,6 +118,7 @@ func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error allocating EIP: %s", err)
 	}
 
+	d.SetId(eIP.ID)
 	log.Printf("[DEBUG] Waiting for EIP %#v to become available.", eIP)
 
 	timeout := d.Timeout(schema.TimeoutCreate)
@@ -132,7 +134,18 @@ func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error binding eip:%s to port: %s", eIP.ID, err)
 	}
 
-	d.SetId(eIP.ID)
+	//set tags
+	tagRaw := d.Get("tags").(map[string]interface{})
+	if len(tagRaw) > 0 {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		}
+		taglist := expandResourceTags(tagRaw)
+		if tagErr := tags.Create(vpcV2Client, "publicips", eIP.ID, taglist).ExtractErr(); tagErr != nil {
+			return fmt.Errorf("Error setting tags of EIP %s: %s", eIP.ID, tagErr)
+		}
+	}
 
 	return resourceVpcEIPV1Read(d, meta)
 }
@@ -182,6 +195,19 @@ func resourceVpcEIPV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("status", eIP.Status)
 	}
 
+	// save tags
+	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+	}
+	resourceTags, err := tags.Get(vpcV2Client, "publicips", d.Id()).Extract()
+	if err == nil {
+		tagmap := tagsToMap(resourceTags.Tags)
+		d.Set("tags", tagmap)
+	} else {
+		log.Printf("[WARN] fetching EIP %s tags failed: %s", d.Id(), err)
+	}
+
 	return nil
 }
 
@@ -228,6 +254,19 @@ func resourceVpcEIPV1Update(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("Error updating publicip: %s", err)
 		}
 
+	}
+
+	//update tags
+	if d.HasChange("tags") {
+		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		}
+
+		tagErr := UpdateResourceTags(vpcV2Client, d, "publicips", d.Id())
+		if tagErr != nil {
+			return fmt.Errorf("Error updating tags of EIP %s: %s", d.Id(), tagErr)
+		}
 	}
 
 	return resourceVpcEIPV1Read(d, meta)

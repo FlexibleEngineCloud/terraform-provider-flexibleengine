@@ -19,6 +19,21 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
     share_type = "PER"
   }
 }
+
+resource "flexibleengine_vpc_eip_v1" "eip_with_tags" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "mybandwidth"
+    size       = 10
+    share_type = "PER"
+  }
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}
 ```
 
 ## Argument Reference
@@ -32,6 +47,7 @@ The following arguments are supported:
 
 * `bandwidth` - (Required) The bandwidth object.
 
+* `tags` - (Optional) The key/value pairs to associate with the EIP.
 
 The `publicip` block supports:
 

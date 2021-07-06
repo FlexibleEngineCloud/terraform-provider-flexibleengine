@@ -33,6 +33,15 @@ func TestAccVpcV1EIP_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccVpcV1EIP_tags(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcV1EIPExists(resourceName, &eip),
+					resource.TestCheckResourceAttr(resourceName, "status", "UNBOUND"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+				),
+			},
+			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -104,6 +113,25 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
     share_type = "PER"
     name       = "%s"
     size       = 5
+  }
+}
+`, rName)
+}
+
+func testAccVpcV1EIP_tags(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_eip_v1" "eip_1" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    share_type = "PER"
+    name       = "%s"
+    size       = 5
+  }
+  tags = {
+    foo = "bar"
+    key = "value"
   }
 }
 `, rName)
