@@ -83,7 +83,7 @@ func Get(c *golangsdk.ServiceClient, id string) (r GetResult) {
 // Delete will permanently delete a particular certificate based on its unique ID.
 func Delete(c *golangsdk.ServiceClient, id string) (r DeleteResult) {
 	reqOpt := &golangsdk.RequestOpts{
-		OkCodes:     []int{204},
+		OkCodes:     []int{200, 204},
 		MoreHeaders: RequestOpts.MoreHeaders,
 	}
 	_, r.Err = c.Delete(resourceURL(c, id), reqOpt)
