@@ -1,6 +1,7 @@
 package flexibleengine
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/mutexkv"
@@ -18,39 +19,49 @@ var osMutexKV = mutexkv.NewMutexKV()
 func Provider() terraform.ResourceProvider {
 	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
+			"region": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: descriptions["region"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_REGION_NAME", nil),
+			},
+
 			"access_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ACCESS_KEY", ""),
 				Description: descriptions["access_key"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_ACCESS_KEY", nil),
 			},
 
 			"secret_key": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_SECRET_KEY", ""),
-				Description: descriptions["secret_key"],
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  descriptions["secret_key"],
+				RequiredWith: []string{"access_key"},
+				DefaultFunc:  schema.EnvDefaultFunc("OS_SECRET_KEY", nil),
 			},
 
-			"auth_url": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_AUTH_URL", nil),
-				Description: descriptions["auth_url"],
-			},
-
-			"region": {
+			"domain_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: descriptions["region"],
-				DefaultFunc: schema.EnvDefaultFunc("OS_REGION_NAME", ""),
+				Description: descriptions["domain_id"],
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_USER_DOMAIN_ID",
+					"OS_PROJECT_DOMAIN_ID",
+					"OS_DOMAIN_ID",
+				}, ""),
 			},
 
-			"user_name": {
+			"domain_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_USERNAME", ""),
-				Description: descriptions["user_name"],
+				Description: descriptions["domain_name"],
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_USER_DOMAIN_NAME",
+					"OS_PROJECT_DOMAIN_NAME",
+					"OS_DOMAIN_NAME",
+					"OS_DEFAULT_DOMAIN",
+				}, ""),
 			},
 
 			"user_id": {
@@ -60,24 +71,11 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["user_name"],
 			},
 
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"OS_TENANT_ID",
-					"OS_PROJECT_ID",
-				}, ""),
-				Description: descriptions["tenant_id"],
-			},
-
-			"tenant_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"OS_TENANT_NAME",
-					"OS_PROJECT_NAME",
-				}, ""),
-				Description: descriptions["tenant_name"],
+			"user_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("OS_USERNAME", ""),
+				Description: descriptions["user_name"],
 			},
 
 			"password": {
@@ -86,6 +84,26 @@ func Provider() terraform.ResourceProvider {
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_PASSWORD", ""),
 				Description: descriptions["password"],
+			},
+
+			"tenant_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: descriptions["tenant_id"],
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_TENANT_ID",
+					"OS_PROJECT_ID",
+				}, ""),
+			},
+
+			"tenant_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: descriptions["tenant_name"],
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_TENANT_NAME",
+					"OS_PROJECT_NAME",
+				}, ""),
 			},
 
 			"token": {
@@ -101,27 +119,11 @@ func Provider() terraform.ResourceProvider {
 				Description: descriptions["security_token"],
 			},
 
-			"domain_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"OS_USER_DOMAIN_ID",
-					"OS_PROJECT_DOMAIN_ID",
-					"OS_DOMAIN_ID",
-				}, ""),
-				Description: descriptions["domain_id"],
-			},
-
-			"domain_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"OS_USER_DOMAIN_NAME",
-					"OS_PROJECT_DOMAIN_NAME",
-					"OS_DOMAIN_NAME",
-					"OS_DEFAULT_DOMAIN",
-				}, ""),
-				Description: descriptions["domain_name"],
+			"auth_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: descriptions["auth_url"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_AUTH_URL", nil),
 			},
 
 			"insecure": {
@@ -412,23 +414,36 @@ func configureProvider(d *schema.ResourceData, terraformVersion string) (interfa
 		SecurityToken: d.Get("security_token").(string),
 	}
 
+	region := d.Get("region").(string)
+	config.Region = region
+
+	config.TenantID = d.Get("tenant_id").(string)
+	config.TenantName = d.Get("tenant_name").(string)
+	// set tenant_name to region when neither `tenant_name` nor `tenant_id` was specified
+	if config.TenantID == "" && config.TenantName == "" {
+		config.TenantName = region
+	}
+
+	if v, ok := d.GetOk("auth_url"); ok {
+		config.IdentityEndpoint = v.(string)
+	} else {
+		config.IdentityEndpoint = fmt.Sprintf("https://iam.%s.%s/v3", region, defaultCloud)
+	}
+
+	config.DomainID = d.Get("domain_id").(string)
+	config.DomainName = d.Get("domain_name").(string)
+	config.UserID = d.Get("user_id").(string)
+	config.Username = d.Get("user_name").(string)
+	config.Password = d.Get("password").(string)
 	config.AccessKey = d.Get("access_key").(string)
 	config.SecretKey = d.Get("secret_key").(string)
+	config.Token = d.Get("token").(string)
+
+	config.MaxRetries = d.Get("max_retries").(int)
+	config.Insecure = d.Get("insecure").(bool)
 	config.CACertFile = d.Get("cacert_file").(string)
 	config.ClientCertFile = d.Get("cert").(string)
 	config.ClientKeyFile = d.Get("key").(string)
-	config.DomainID = d.Get("domain_id").(string)
-	config.DomainName = d.Get("domain_name").(string)
-	config.IdentityEndpoint = d.Get("auth_url").(string)
-	config.Insecure = d.Get("insecure").(bool)
-	config.Password = d.Get("password").(string)
-	config.Region = d.Get("region").(string)
-	config.Token = d.Get("token").(string)
-	config.TenantID = d.Get("tenant_id").(string)
-	config.TenantName = d.Get("tenant_name").(string)
-	config.Username = d.Get("user_name").(string)
-	config.UserID = d.Get("user_id").(string)
-	config.MaxRetries = d.Get("max_retries").(int)
 	config.TerraformVersion = terraformVersion
 	config.Cloud = defaultCloud
 	config.RegionProjectIDMap = make(map[string]string)
