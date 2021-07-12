@@ -45,9 +45,7 @@ For previous versions, please continue to pin the version within the provider bl
       access_key  = "access key"
       secret_key  = "secret key"
       domain_name = "domain name"
-      tenant_name = "eu-west-0"
       region      = "eu-west-0"
-      auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com:443/v3"
     }
     ```
 
@@ -61,9 +59,7 @@ For previous versions, please continue to pin the version within the provider bl
       user_name   = "user name"
       password    = "password"
       domain_name = "domain name"
-      tenant_name = "eu-west-0"
       region      = "eu-west-0"
-      auth_url    = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com:443/v3"
     }
     ```
 
@@ -131,7 +127,6 @@ export OS_PROJECT_NAME=xxx
 export OS_IMAGE_ID=xxx
 export OS_FLAVOR_ID=xxx
 export OS_NETWORK_ID=xxx
-export OS_AUTH_URL="https://iam.${OS_REGION_NAME}.prod-cloud-ocb.orange-business.com/v3"
 ```
 
 Then we can run the acceptance tests with `make testacc`.
