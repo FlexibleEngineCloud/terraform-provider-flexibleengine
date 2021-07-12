@@ -1,3 +1,16 @@
+## 1.22.1 (July 9, 2021)
+
+ENHANCEMENTS:
+* **provider:** Try to request more times when the API call is return 429 error code ([#527](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/527))
+* **provider:** Set default value for `tenant_name` and `auth_url` ([#569](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/569)))
+* **provider:** Unset *Connection* header when sending API requests ([#577](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/577))
+* `resource/flexibleengine_vpc_eip_v1`: Add tags support ([#564](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/564))
+
+BUG FIXES:
+* `resource/flexibleengine_dds_instance_v3`: fix to set port attribute of DDS instance
+ ([#571](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/571))
+
+
 ## 1.22.0 (June 28, 2021)
 
 FEATURES:

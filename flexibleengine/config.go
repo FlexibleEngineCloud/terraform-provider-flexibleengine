@@ -1,12 +1,15 @@
 package flexibleengine
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -109,6 +112,28 @@ func generateTLSConfig(c *Config) (*tls.Config, error) {
 	return config, nil
 }
 
+func retryBackoffFunc(ctx context.Context, respErr *golangsdk.ErrUnexpectedResponseCode, e error, retries uint) error {
+	minutes := int(math.Pow(2, float64(retries)))
+	if minutes > 30 { // won't wait more than 30 minutes
+		minutes = 30
+	}
+
+	log.Printf("[WARN] Received StatusTooManyRequests response code, try to sleep %d minutes", minutes)
+	sleep := time.Duration(minutes) * time.Minute
+
+	if ctx != nil {
+		select {
+		case <-time.After(sleep):
+		case <-ctx.Done():
+			return e
+		}
+	} else {
+		time.Sleep(sleep)
+	}
+
+	return nil
+}
+
 func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.ProviderClient, error) {
 	client, err := huaweisdk.NewClient(ao.GetIdentityEndpoint())
 	if err != nil {
@@ -139,6 +164,11 @@ func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.Provider
 			}
 			return nil
 		},
+	}
+
+	if c.MaxRetries > 0 {
+		client.MaxBackoffRetries = uint(c.MaxRetries)
+		client.RetryBackoffFunc = retryBackoffFunc
 	}
 
 	// Validate authentication normally.
