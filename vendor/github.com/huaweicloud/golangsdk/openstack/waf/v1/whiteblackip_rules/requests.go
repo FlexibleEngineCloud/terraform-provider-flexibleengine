@@ -68,7 +68,9 @@ func Update(c *golangsdk.ServiceClient, policyID, ruleID string, opts UpdateOpts
 
 // Get retrieves a particular whiteblackip rule based on its unique ID.
 func Get(c *golangsdk.ServiceClient, policyID, ruleID string) (r GetResult) {
-	_, r.Err = c.Get(resourceURL(c, policyID, ruleID), &r.Body, &RequestOpts)
+	_, r.Err = c.Get(resourceURL(c, policyID, ruleID), &r.Body, &golangsdk.RequestOpts{
+		MoreHeaders: RequestOpts.MoreHeaders,
+	})
 	return
 }
 

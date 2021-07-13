@@ -78,7 +78,9 @@ func Get(c *golangsdk.ServiceClient, policyID, ruleID string) (r GetResult) {
 
 // List retrieves falsealarmmasking rules.
 func List(c *golangsdk.ServiceClient, policyID string) (r ListResult) {
-	_, r.Err = c.Get(rootURL(c, policyID), &r.Body, &RequestOpts)
+	_, r.Err = c.Get(rootURL(c, policyID), &r.Body, &golangsdk.RequestOpts{
+		MoreHeaders: RequestOpts.MoreHeaders,
+	})
 	return
 }
 
