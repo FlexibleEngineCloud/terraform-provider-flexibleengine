@@ -10,8 +10,6 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/dli/v1/queues"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/fmtp"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/logp"
 )
 
 var regexp4Name = regexp.MustCompile(`^[a-z0-9_]+$`)
@@ -194,7 +192,7 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 	dliClient, err := config.Config.DliV1Client(region)
 
 	if err != nil {
-		return fmtp.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating sdk client, err=%s", err)
 	}
 
 	queueName := d.Get("queue_name").(string)
@@ -204,7 +202,7 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if queueDetail, ok := result.Body.(*queues.Queue); ok {
-		logp.Printf("[debug]The detail of queue from SDK:%+v", queueDetail)
+		log.Printf("[debug]The detail of queue from SDK:%+v", queueDetail)
 
 		d.Set("queue_name", queueDetail.QueueName)
 		d.Set("queue_type", queueDetail.QueueType)
@@ -220,7 +218,7 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("feature", queueDetail.Feature)
 		d.Set("Labels", queueDetail.Labels)
 	} else {
-		return fmtp.Errorf("sdk-client response type is wrong, expect type:%T acutal Type:%T", "CreateOpts", result.Body)
+		return fmt.Errorf("sdk-client response type is wrong, expect type:*queues.Queue,acutal Type:%T", result.Body)
 	}
 	return nil
 }
@@ -231,15 +229,15 @@ func resourceDliQueueV1Delete(d *schema.ResourceData, meta interface{}) error {
 
 	client, err := config.Config.DliV1Client(region)
 	if err != nil {
-		return fmtp.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating sdk client, err=%s", err)
 	}
 
 	queueName := d.Get("queue_name").(string)
-	logp.Printf("[DEBUG] Deleting dli Queue %q", d.Id())
+	log.Printf("[DEBUG] Deleting dli Queue %q", d.Id())
 
 	result := queues.Delete(client, queueName)
 	if result.Err != nil {
-		return fmtp.Errorf("Error deleting dli Queue %q, err=%s", d.Id(), result.Err)
+		return fmt.Errorf("Error deleting dli Queue %q, err=%s", d.Id(), result.Err)
 	}
 
 	return nil
