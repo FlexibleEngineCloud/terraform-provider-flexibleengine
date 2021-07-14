@@ -303,6 +303,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_vpc_eip_v1":                         resourceVpcEIPV1(),
 			"flexibleengine_vpc_v1":                             resourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1":                      resourceVpcSubnetV1(),
+			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
 			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
 			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
