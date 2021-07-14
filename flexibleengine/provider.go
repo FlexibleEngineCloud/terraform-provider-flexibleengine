@@ -273,6 +273,8 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_identity_role_v3":                   resourceIdentityRoleV3(),
 			"flexibleengine_identity_role_assignment_v3":        resourceIdentityRoleAssignmentV3(),
 			"flexibleengine_identity_user_v3":                   resourceIdentityUserV3(),
+			"flexibleengine_lts_group":                          resourceLTSGroupV2(),
+			"flexibleengine_lts_topic":                          resourceLTSTopicV2(),
 			"flexibleengine_s3_bucket":                          resourceS3Bucket(),
 			"flexibleengine_s3_bucket_policy":                   resourceS3BucketPolicy(),
 			"flexibleengine_s3_bucket_object":                   resourceS3BucketObject(),

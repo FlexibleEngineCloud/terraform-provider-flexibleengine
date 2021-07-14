@@ -77,6 +77,8 @@ func Delete(client *golangsdk.ServiceClient, id string) (r DeleteResult) {
 
 //get an instance with detailed information by id
 func Get(client *golangsdk.ServiceClient, id string) (r GetResult) {
-	_, r.Err = client.Get(resourceURL(client, id), &r.Body, &RequestOpts)
+	_, r.Err = client.Get(resourceURL(client, id), &r.Body, &golangsdk.RequestOpts{
+		MoreHeaders: RequestOpts.MoreHeaders,
+	})
 	return
 }
