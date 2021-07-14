@@ -93,10 +93,6 @@ func resourceSFSFileSystemV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"host": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"volume_type": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -234,7 +230,6 @@ func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error
 	d.Set("availability_zone", n.AvailabilityZone)
 	d.Set("region", GetRegion(d, config))
 	d.Set("export_location", n.ExportLocation)
-	d.Set("host", n.Host)
 
 	// NOTE: only support the following metadata key
 	var metaKeys = [3]string{"#sfs_crypt_key_id", "#sfs_crypt_domain_id", "#sfs_crypt_alias"}
