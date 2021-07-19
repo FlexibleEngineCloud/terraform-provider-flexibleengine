@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/pathorcontents"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -260,7 +259,7 @@ func TestAccProvider_clientCertString(t *testing.T) {
 }
 
 func envVarContents(varName string) (string, error) {
-	contents, _, err := pathorcontents.Read(os.Getenv(varName))
+	contents, _, err := PathOrContentsRead(os.Getenv(varName))
 	if err != nil {
 		return "", fmt.Errorf("Error reading %s: %s", varName, err)
 	}

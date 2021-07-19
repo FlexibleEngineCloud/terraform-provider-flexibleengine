@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -12,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
+	"github.com/mitchellh/go-homedir"
 )
 
 // CheckDeleted checks the error to see if it's a 404 (Not Found) and, if so,
@@ -165,4 +168,35 @@ func HashStrings(strings []string) string {
 	}
 
 	return fmt.Sprintf("%d", schema.HashString(buf.String()))
+}
+
+// PathOrContentsRead if the argument is a path, Read loads it and returns the contents,
+// otherwise the argument is assumed to be the desired contents and is simply
+// returned.
+//
+// The boolean second return value can be called `wasPath` - it indicates if a
+// path was detected and a file loaded.
+func PathOrContentsRead(poc string) (string, bool, error) {
+	if len(poc) == 0 {
+		return poc, false, nil
+	}
+
+	path := poc
+	if path[0] == '~' {
+		var err error
+		path, err = homedir.Expand(path)
+		if err != nil {
+			return path, true, err
+		}
+	}
+
+	if _, err := os.Stat(path); err == nil {
+		contents, err := ioutil.ReadFile(path)
+		if err != nil {
+			return string(contents), true, err
+		}
+		return string(contents), true, nil
+	}
+
+	return poc, false, nil
 }
