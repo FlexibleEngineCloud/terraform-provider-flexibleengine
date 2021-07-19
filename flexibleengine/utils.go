@@ -155,3 +155,14 @@ func compareJsonTemplateAreEquivalent(tem1, tem2 string) (bool, error) {
 	}
 	return equal, nil
 }
+
+// HashStrings hashes a list of strings to a unique hashcode.
+func HashStrings(strings []string) string {
+	var buf bytes.Buffer
+
+	for _, s := range strings {
+		buf.WriteString(fmt.Sprintf("%s-", s))
+	}
+
+	return fmt.Sprintf("%d", schema.HashString(buf.String()))
+}

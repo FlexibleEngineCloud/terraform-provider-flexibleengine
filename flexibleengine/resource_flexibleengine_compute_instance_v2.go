@@ -9,7 +9,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/huaweicloud/golangsdk"
@@ -1071,7 +1070,7 @@ func resourceComputeSchedulerHintsHash(v interface{}) int {
 	buf.WriteString(fmt.Sprintf("%s-", m["same_host"].([]interface{})))
 	buf.WriteString(fmt.Sprintf("%s-", m["query"].([]interface{})))
 
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func resourceComputeInstancePersonalityHash(v interface{}) int {
@@ -1079,7 +1078,7 @@ func resourceComputeInstancePersonalityHash(v interface{}) int {
 	m := v.(map[string]interface{})
 	buf.WriteString(fmt.Sprintf("%s-", m["file"].(string)))
 
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func resourceInstancePersonalityV2(d *schema.ResourceData) servers.Personality {
