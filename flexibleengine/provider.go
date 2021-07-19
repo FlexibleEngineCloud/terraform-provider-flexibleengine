@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/mutexkv"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -13,7 +12,7 @@ import (
 const defaultCloud string = "prod-cloud-ocb.orange-business.com"
 
 // This is a global MutexKV for use within this plugin.
-var osMutexKV = mutexkv.NewMutexKV()
+var osMutexKV = NewMutexKV()
 
 // Provider returns a schema.Provider for FlexibleEngine.
 func Provider() terraform.ResourceProvider {
