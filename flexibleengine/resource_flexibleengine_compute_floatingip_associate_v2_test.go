@@ -8,8 +8,8 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/layer3/floatingips"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccComputeV2FloatingIPAssociate_basic(t *testing.T) {

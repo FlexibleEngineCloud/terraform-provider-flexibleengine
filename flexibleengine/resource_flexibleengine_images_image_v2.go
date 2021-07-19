@@ -15,8 +15,8 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/imageservice/v2/imagedata"
 	"github.com/huaweicloud/golangsdk/openstack/imageservice/v2/images"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceImagesImageV2() *schema.Resource {

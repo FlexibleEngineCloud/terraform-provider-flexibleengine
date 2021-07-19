@@ -3,7 +3,7 @@ package flexibleengine
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // PASS, but Taking 15m+ in time...
