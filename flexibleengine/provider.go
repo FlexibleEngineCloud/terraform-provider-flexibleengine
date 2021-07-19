@@ -6,7 +6,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 const defaultCloud string = "prod-cloud-ocb.orange-business.com"
@@ -15,7 +14,7 @@ const defaultCloud string = "prod-cloud-ocb.orange-business.com"
 var osMutexKV = NewMutexKV()
 
 // Provider returns a schema.Provider for FlexibleEngine.
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"region": {
