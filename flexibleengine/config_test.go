@@ -1,11 +1,11 @@
 package flexibleengine
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/huaweicloud/golangsdk"
 )
@@ -45,15 +45,16 @@ func testCheckServiceURL(t *testing.T, expected, actual, service string) {
 func TestAccServiceEndpoints_Global(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of identity service
@@ -69,15 +70,16 @@ func TestAccServiceEndpoints_Global(t *testing.T) {
 func TestAccServiceEndpoints_Management(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of CTS service
@@ -105,16 +107,17 @@ func TestAccServiceEndpoints_Management(t *testing.T) {
 func TestAccServiceEndpoints_Compute(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	config := testProvider.Meta().(*Config)
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 
 	// test for computeV1Client
 	serviceClient, err = config.computeV1Client(OS_REGION_NAME)
@@ -181,16 +184,17 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	config := testProvider.Meta().(*Config)
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 
 	// test for blockStorageV2Client
 	serviceClient, err = nil, nil
@@ -248,16 +252,17 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	config := testProvider.Meta().(*Config)
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 
 	// test endpoint of network v1 service
 	serviceClient, err = config.networkingV1Client(OS_REGION_NAME)
@@ -330,15 +335,16 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 func TestAccServiceEndpoints_Database(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of RDS v1 service
@@ -372,15 +378,16 @@ func TestAccServiceEndpoints_Database(t *testing.T) {
 func TestAccServiceEndpoints_Security(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of anti-ddos service
@@ -405,15 +412,16 @@ func TestAccServiceEndpoints_Security(t *testing.T) {
 func TestAccServiceEndpoints_Application(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of DCS v1 service
@@ -430,15 +438,16 @@ func TestAccServiceEndpoints_Application(t *testing.T) {
 func TestAccServiceEndpoints_EnterpriseIntelligence(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of MRS service
@@ -480,15 +489,16 @@ func TestAccServiceEndpoints_EnterpriseIntelligence(t *testing.T) {
 func TestAccServiceEndpoints_Others(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
 
-	testProvider := Provider().(*schema.Provider)
+	testProvider := Provider()
 	raw := make(map[string]interface{})
-	err := testProvider.Configure(terraform.NewResourceConfigRaw(raw))
-	if err != nil {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", err)
+	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
+	if diags.HasError() {
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
 	}
 
 	var expectedURL, actualURL string
 	var serviceClient *golangsdk.ServiceClient
+	var err error
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of DRS service
