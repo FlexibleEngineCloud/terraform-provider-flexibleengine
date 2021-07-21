@@ -261,7 +261,7 @@ github.com/hashicorp/terraform-svchost/auth
 github.com/hashicorp/terraform-svchost/disco
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210713111729-281bb8a384e0
+# github.com/huaweicloud/golangsdk v0.0.0-20210720120127-9c0ea4e2f8de
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -308,6 +308,7 @@ github.com/huaweicloud/golangsdk/openstack/dcs/v1/maintainwindows
 github.com/huaweicloud/golangsdk/openstack/dcs/v1/products
 github.com/huaweicloud/golangsdk/openstack/dds/v3/flavors
 github.com/huaweicloud/golangsdk/openstack/dds/v3/instances
+github.com/huaweicloud/golangsdk/openstack/dli/v1/queues
 github.com/huaweicloud/golangsdk/openstack/dns/v2/ptrrecords
 github.com/huaweicloud/golangsdk/openstack/dns/v2/recordsets
 github.com/huaweicloud/golangsdk/openstack/dns/v2/zones
@@ -409,6 +410,7 @@ github.com/huaweicloud/golangsdk/pagination
 # github.com/huaweicloud/terraform-provider-huaweicloud v1.25.1-0.20210621022651-b1aa07d8ce12
 ## explicit
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config
+github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils
 # github.com/imdario/mergo v0.3.9
 github.com/imdario/mergo
 # github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
