@@ -2,17 +2,28 @@
 subcategory: "NAT Gateway (NAT)"
 ---
 
-# flexibleengine\_nat\_snat\_rule_v2
+# flexibleengine_nat_snat_rule_v2
 
-Manages a V2 snat rule resource within FlexibleEngine Nat
+Manages a V2 SNAT rule resource within FlexibleEngine.
 
 ## Example Usage
 
+### SNAT rule in VPC scenario
 ```hcl
 resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
-  nat_gateway_id = "3c0dffda-7c76-452b-9dcc-5bce7ae56b17"
-  network_id = "dc8632e2-d9ff-41b1-aa0c-d455557314a0"
-  floating_ip_id = "0a166fc5-a904-42fb-b1ef-cf18afeeddca"
+  nat_gateway_id = var.natgw_id
+  floating_ip_id = var.publicip_id
+  network_id     = var.network_id
+}
+```
+
+### SNAT rule in Direct Connect scenario
+```hcl
+resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
+  nat_gateway_id = var.natgw_id
+  floating_ip_id = var.publicip_id
+  source_type    = 1
+  cidr           = "192.168.10.0/24"
 }
 ```
 

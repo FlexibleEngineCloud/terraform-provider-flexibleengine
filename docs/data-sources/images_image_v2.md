@@ -2,7 +2,7 @@
 subcategory: "Image Management Service (IMS)"
 ---
 
-# flexibleengine\_images\_image\_v2
+# flexibleengine_images_image_v2
 
 Use this data source to get the ID of an available FlexibleEngine image.
 
@@ -10,22 +10,16 @@ Use this data source to get the ID of an available FlexibleEngine image.
 
 ```hcl
 data "flexibleengine_images_image_v2" "ubuntu" {
-  name = "Ubuntu 16.04"
-  most_recent = true
+  name = "OBS Ubuntu 18.04"
 }
 ```
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Glance client.
-    A Glance client is needed to create an Image that can be used with
-    a compute instance. If omitted, the `region` argument of the provider
-    is used.
+* `region` - (Optional) The region in which to obtain the image.
+    If omitted, the `region` argument of the provider is used.
 
-* `most_recent` - (Optional) If more than one result is returned, use the most
-  recent image.
-
-* `name` - (Optional) The name of the image.
+* `name` - (Optional) The name of the image. Exact matching is used.
 
 * `owner` - (Optional) The owner (UUID) of the image.
 
@@ -40,8 +34,10 @@ data "flexibleengine_images_image_v2" "ubuntu" {
 * `tag` - (Optional) Search for images with a specific tag.
 
 * `visibility` - (Optional) The visibility of the image. Must be one of
-   "public", "private", "community", or "shared". Defaults to "private".
+   "public", "private", "community", or "shared".
 
+* `most_recent` - (Optional) If more than one result is returned, use the most
+  recent image.
 
 ## Attributes Reference
 
@@ -52,11 +48,9 @@ are exported:
 * `created_at` - The date the image was created.
 * `container_format`: The format of the image's container.
 * `disk_format`: The format of the image's disk.
-* `file` - the trailing path after the glance endpoint that represent the
-location of the image or the path to retrieve it.
+* `file` - The URL for uploading and downloading the image file.
 * `metadata` - The metadata associated with the image.
-   Image metadata allow for meaningfully define the image properties
-   and tags. See http://docs.openstack.org/developer/glance/metadefs-concepts.html.
+   Image metadata allow for meaningfully define the image properties and tags.
 * `min_disk_gb`: The minimum amount of disk space required to use the image.
 * `min_ram_mb`: The minimum amount of ram required to use the image.
 * `protected` - Whether or not the image is protected.

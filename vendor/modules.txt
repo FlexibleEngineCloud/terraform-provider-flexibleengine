@@ -261,7 +261,7 @@ github.com/hashicorp/terraform-svchost/auth
 github.com/hashicorp/terraform-svchost/disco
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210708072926-e14b0cd78758
+# github.com/huaweicloud/golangsdk v0.0.0-20210713111729-281bb8a384e0
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -332,11 +332,14 @@ github.com/huaweicloud/golangsdk/openstack/identity/v3/users
 github.com/huaweicloud/golangsdk/openstack/imageservice/v2/imagedata
 github.com/huaweicloud/golangsdk/openstack/imageservice/v2/images
 github.com/huaweicloud/golangsdk/openstack/kms/v1/keys
+github.com/huaweicloud/golangsdk/openstack/lts/v2/loggroups
+github.com/huaweicloud/golangsdk/openstack/lts/v2/logtopics
 github.com/huaweicloud/golangsdk/openstack/mls/v1/instances
 github.com/huaweicloud/golangsdk/openstack/mrs/v1/cluster
 github.com/huaweicloud/golangsdk/openstack/mrs/v1/job
 github.com/huaweicloud/golangsdk/openstack/networking/v1/bandwidths
 github.com/huaweicloud/golangsdk/openstack/networking/v1/eips
+github.com/huaweicloud/golangsdk/openstack/networking/v1/flowlogs
 github.com/huaweicloud/golangsdk/openstack/networking/v1/subnets
 github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs
 github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas
