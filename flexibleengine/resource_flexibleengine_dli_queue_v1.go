@@ -86,20 +86,6 @@ func ResourceDliQueueV1() *schema.Resource {
 				ValidateFunc: validation.IntInSlice([]int{0, 1}),
 			},
 
-			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-
-			"feature": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validation.StringInSlice([]string{"basic", "ai"}, false),
-			},
-
 			"tags": {
 				Type: schema.TypeMap,
 				Elem: &schema.Schema{
@@ -138,8 +124,6 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 		EnterpriseProjectId: config.GetEnterpriseProjectID(d),
 		Platform:            d.Get("platform").(string),
 		ResourceMode:        d.Get("resource_mode").(int),
-		Feature:             d.Get("feature").(string),
-		Labels:              assembleMapFromRecource("Labels", d),
 		Tags:                assembleTagsFromRecource("tags", d),
 	}
 
@@ -153,18 +137,6 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(queueName)
 
 	return resourceDliQueueV1Read(d, meta)
-}
-
-func assembleMapFromRecource(key string, d *schema.ResourceData) map[string]string {
-	m := make(map[string]string)
-
-	if v, ok := d.GetOk(key); ok {
-		for key, val := range v.(map[string]interface{}) {
-			m[key] = val.(string)
-		}
-	}
-
-	return m
 }
 
 func assembleTagsFromRecource(key string, d *schema.ResourceData) []tags.ResourceTag {
@@ -216,7 +188,6 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("charging_mode", queueDetail.ChargingMode)
 		d.Set("platform", queueDetail.Platform)
 		d.Set("resource_mode", queueDetail.ResourceMode)
-		d.Set("feature", queueDetail.Feature)
 	}
 
 	return nil
@@ -254,7 +225,7 @@ func resourceDliQueueV1Delete(d *schema.ResourceData, meta interface{}) error {
 
 	result := queues.Delete(client, queueName)
 	if result.Err != nil {
-		return fmt.Errorf("Error deleting dli Queue %q, err=%s", d.Id(), result.Err)
+		return fmt.Errorf("error deleting dli Queue %q, err=%s", d.Id(), result.Err)
 	}
 
 	return nil

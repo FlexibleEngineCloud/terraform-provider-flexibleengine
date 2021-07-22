@@ -344,7 +344,7 @@ func Provider() terraform.ResourceProvider {
 			"flexibleengine_waf_rule_cc_protection":             resourceWafRuleCCAttackProtection(),
 			"flexibleengine_waf_rule_precise_protection":        resourceWafRulePreciseProtection(),
 			"flexibleengine_waf_rule_web_tamper_protection":     resourceWafRuleWebTamperProtection(),
-			"flexibleengine_dli_queues":                         ResourceDliQueueV1(),
+			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 			// Deprecated resource
 			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
 		},
