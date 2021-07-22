@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/dli/v1/queues"
@@ -21,7 +22,7 @@ func ResourceDliQueueV1() *schema.Resource {
 		Delete: resourceDliQueueV1Delete,
 
 		Schema: map[string]*schema.Schema{
-			"queue_name": {
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -35,10 +36,11 @@ func ResourceDliQueueV1() *schema.Resource {
 			},
 
 			"queue_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Default:  "sql",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      "sql",
+				ValidateFunc: validation.StringInSlice([]string{"sql", "general"}, false),
 			},
 
 			"description": {
@@ -49,9 +51,10 @@ func ResourceDliQueueV1() *schema.Resource {
 			},
 
 			"cu_count": {
-				Type:     schema.TypeInt,
-				Required: true,
-				ForceNew: true,
+				Type:         schema.TypeInt,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.IntInSlice([]int{16, 64, 256}),
 			},
 
 			"charging_mode": {
@@ -65,27 +68,22 @@ func ResourceDliQueueV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default:  "0",
-				StateFunc: func(val interface{}) string {
-					if val.(string) == "" {
-						return "0"
-					} else {
-						return val.(string)
-					}
-				},
+				Computed: true,
 			},
 
 			"platform": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Default:  "x86_64",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      "x86_64",
+				ValidateFunc: validation.StringInSlice([]string{"x86_64", "aarch64"}, false),
 			},
 
 			"resource_mode": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.IntInSlice([]int{0, 1}),
 			},
 
 			"labels": {
@@ -96,10 +94,10 @@ func ResourceDliQueueV1() *schema.Resource {
 			},
 
 			"feature": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Default:  "basic",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"basic", "ai"}, false),
 			},
 
 			"tags": {
@@ -107,12 +105,6 @@ func ResourceDliQueueV1() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"cidr_in_vpc": {
-				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
@@ -134,7 +126,7 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("creating dli client failed: %s", err)
 	}
 
-	queueName := d.Get("queue_name").(string)
+	queueName := d.Get("name").(string)
 
 	log.Printf("[DEBUG] create dli queues queueName: %s", queueName)
 	createOpts := queues.CreateOpts{
@@ -143,7 +135,7 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 		Description:         d.Get("description").(string),
 		CuCount:             d.Get("cu_count").(int),
 		ChargingMode:        d.Get("charging_mode").(int),
-		EnterpriseProjectId: d.Get("enterprise_project_id").(string),
+		EnterpriseProjectId: config.GetEnterpriseProjectID(d),
 		Platform:            d.Get("platform").(string),
 		ResourceMode:        d.Get("resource_mode").(int),
 		Feature:             d.Get("feature").(string),
@@ -195,7 +187,7 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("creating sdk client failed, err=%s", err)
 	}
 
-	queueName := d.Get("queue_name").(string)
+	queueName := d.Get("name").(string)
 
 	queryOpts := queues.ListOpts{
 		QueueType: d.Get("queue_type").(string),
@@ -217,15 +209,11 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 	if queueDetail != nil {
 		log.Printf("[debug]The detail of queue from SDK:%+v", queueDetail)
 
-		d.Set("queue_name", queueDetail.QueueName)
+		d.Set("name", queueDetail.QueueName)
 		d.Set("queue_type", queueDetail.QueueType)
 		d.Set("description", queueDetail.Description)
 		d.Set("cu_count", queueDetail.CuCount)
 		d.Set("charging_mode", queueDetail.ChargingMode)
-		if queueDetail.EnterpriseProjectId != "" {
-			d.Set("enterprise_project_id", queueDetail.EnterpriseProjectId)
-		}
-
 		d.Set("platform", queueDetail.Platform)
 		d.Set("resource_mode", queueDetail.ResourceMode)
 		d.Set("feature", queueDetail.Feature)
@@ -261,7 +249,7 @@ func resourceDliQueueV1Delete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("creating sdk client failed, err=%s", err)
 	}
 
-	queueName := d.Get("queue_name").(string)
+	queueName := d.Get("name").(string)
 	log.Printf("[DEBUG] Deleting dli Queue %q", d.Id())
 
 	result := queues.Delete(client, queueName)

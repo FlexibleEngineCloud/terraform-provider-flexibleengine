@@ -15,7 +15,7 @@ import (
 
 func TestAccDliQueueV1_basic(t *testing.T) {
 	rName := fmt.Sprintf("tf_acc_test_dli_queue_%s", acctest.RandString(5))
-	resourceName := "flexibleengine_dli_queues_v1.test"
+	resourceName := "flexibleengine_dli_queues.test"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -34,10 +34,10 @@ func TestAccDliQueueV1_basic(t *testing.T) {
 
 func testAccDliQueueV1_basic(rName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dli_queues_v1" "test" {
- 		 queue_name = "%s"
+		resource "flexibleengine_dli_queues" "test" {
+ 		 name = "%s"
 		 cu_count              = 16
-		 resource_mode         = 1
+		 resource_mode         = 0
 	}`, rName)
 }
 
@@ -49,13 +49,13 @@ func testAccCheckDliQueueV1Destroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_dli_queues_v1" {
+		if rs.Type != "flexibleengine_dli_queues" {
 			continue
 		}
 
 		res, err := fetchDliQueueV1ByQueueNameOnTest(rs.Primary.ID, client)
 		if err == nil && res != nil {
-			return fmt.Errorf("flexibleengine_dli_queues_v1 still exists:%s,%+v,%+v", rs.Primary.ID, err, res)
+			return fmt.Errorf("flexibleengine_dli_queues still exists:%s,%+v,%+v", rs.Primary.ID, err, res)
 		}
 	}
 
@@ -72,14 +72,14 @@ func testAccCheckDliQueueV1Exists(resourceName string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[resourceName]
 		if !ok {
-			return fmt.Errorf("Error checking flexibleengine_dli_queues_v1.queue exist, err=not found this resource")
+			return fmt.Errorf("Error checking flexibleengine_dli_queues.queue exist, err=not found this resource")
 		}
 		_, err = fetchDliQueueV1ByQueueNameOnTest(rs.Primary.ID, client)
 		if err != nil {
 			if strings.Contains(err.Error(), "Error finding the resource by list api") {
-				return fmt.Errorf("flexibleengine_dli_queues_v1 is not exist")
+				return fmt.Errorf("flexibleengine_dli_queues is not exist")
 			}
-			return fmt.Errorf("Error checking flexibleengine_dli_queues_v1.queue exist, err=%s", err)
+			return fmt.Errorf("Error checking flexibleengine_dli_queues.queue exist, err=%s", err)
 		}
 		return nil
 	}
