@@ -38,30 +38,6 @@ func resourceDWSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 
-			"created": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
-			"endpoints": {
-				Type:     schema.TypeList,
-				Computed: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"connect_info": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-
-						"jdbc_url": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
-			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -80,31 +56,39 @@ func resourceDWSClusterV1() *schema.Resource {
 				ForceNew: true,
 			},
 
+			"user_name": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"user_pwd": {
+				Type:      schema.TypeString,
+				Required:  true,
+				ForceNew:  true,
+				Sensitive: true,
+			},
+
+			"vpc_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+			"subnet_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
 			"port": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
 			},
-
-			"public_endpoints": {
-				Type:     schema.TypeList,
-				Computed: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"jdbc_url": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-
-						"public_connect_info": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
-			},
-
 			"public_ip": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -125,10 +109,45 @@ func resourceDWSClusterV1() *schema.Resource {
 				},
 			},
 
-			"security_group_id": {
+			"endpoints": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connect_info": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"jdbc_url": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+
+			"public_endpoints": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"jdbc_url": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"public_connect_info": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+
+			"version": {
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Computed: true,
 			},
 
 			"status": {
@@ -141,13 +160,12 @@ func resourceDWSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 
-			"subnet_id": {
+			"task_status": {
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Computed: true,
 			},
 
-			"task_status": {
+			"created": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -155,29 +173,6 @@ func resourceDWSClusterV1() *schema.Resource {
 			"updated": {
 				Type:     schema.TypeString,
 				Computed: true,
-			},
-
-			"user_name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
-			"user_pwd": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
-			"version": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
-			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
 			},
 		},
 	}
