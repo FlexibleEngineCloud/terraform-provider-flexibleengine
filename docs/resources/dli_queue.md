@@ -5,7 +5,7 @@ subcategory: "Data Lake Insight (DLI)"
 # flexibleengine_dli_queue
 
 DLI Queue management
-This is an alternative to `flexibleengine_dli_queue`
+Allows you to create a queue. The queue will be bound to specified compute resources.
 
 ## Example Usage
 
@@ -15,6 +15,9 @@ This is an alternative to `flexibleengine_dli_queue`
 resource "flexibleengine_dli_queue" "queue" {
   name     = "terraform_dli_queue_test"
   cu_count = 16
+  tags     = {
+    k1   =   "1"
+  }
 }
 ```
 
@@ -40,8 +43,6 @@ The following arguments are supported:
     - all
     > NOTE: If the type is not specified, the default value sql is used. 
 
-* `subnet_cidr` - (Optional, String, ForceNew) Subnet CIDR. Changing this parameter will create a new resource.
-
 * `enterprise_project_id` - (Optional, String, ForceNew) Enterprise project ID. 
     The value 0 indicates the default enterprise project. Changing this parameter will create a new resource.
 
@@ -54,7 +55,7 @@ The following arguments are supported:
   - 0: indicates the shared resource mode.
   - 1: indicates the exclusive resource mode. 
 
-* `tags` - (Optional, String, ForceNew) Label of a queue. Changing this parameter will create a new resource.
+* `tags` - (Optional, Map, ForceNew) Label of a queue. Changing this parameter will create a new resource.
 
 ## Attributes Reference
 

@@ -13,7 +13,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
-var regexp4Name = regexp.MustCompile(`^[a-z0-9_]+$`)
+var regexp4Name = regexp.MustCompile(`^[a-z0-9_]{1,128}$`)
 
 func ResourceDliQueueV1() *schema.Resource {
 	return &schema.Resource{
@@ -45,7 +45,6 @@ func ResourceDliQueueV1() *schema.Resource {
 
 			"description": {
 				Type:     schema.TypeString,
-				Computed: true,
 				Optional: true,
 				ForceNew: true,
 			},
@@ -55,13 +54,6 @@ func ResourceDliQueueV1() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.IntInSlice([]int{16, 64, 256}),
-			},
-
-			"charging_mode": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Default:  1,
 			},
 
 			"enterprise_project_id": {
@@ -107,7 +99,7 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
 
-	dliClient, err := config.Config.DliV1Client(region)
+	dliClient, err := config.DliV1Client(region)
 	if err != nil {
 		return fmt.Errorf("creating dli client failed: %s", err)
 	}
@@ -120,7 +112,6 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 		QueueType:           d.Get("queue_type").(string),
 		Description:         d.Get("description").(string),
 		CuCount:             d.Get("cu_count").(int),
-		ChargingMode:        d.Get("charging_mode").(int),
 		EnterpriseProjectId: config.GetEnterpriseProjectID(d),
 		Platform:            d.Get("platform").(string),
 		ResourceMode:        d.Get("resource_mode").(int),
@@ -153,10 +144,10 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
 
-	dliClient, err := config.Config.DliV1Client(region)
+	dliClient, err := config.DliV1Client(region)
 
 	if err != nil {
-		return fmt.Errorf("creating sdk client failed, err=%s", err)
+		return fmt.Errorf("creating dli client failed, err=%s", err)
 	}
 
 	queueName := d.Get("name").(string)
@@ -179,13 +170,12 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if queueDetail != nil {
-		log.Printf("[debug]The detail of queue from SDK:%+v", queueDetail)
+		log.Printf("[DEBUG]The detail of queue from SDK:%+v", queueDetail)
 
 		d.Set("name", queueDetail.QueueName)
 		d.Set("queue_type", queueDetail.QueueType)
 		d.Set("description", queueDetail.Description)
 		d.Set("cu_count", queueDetail.CuCount)
-		d.Set("charging_mode", queueDetail.ChargingMode)
 		d.Set("platform", queueDetail.Platform)
 		d.Set("resource_mode", queueDetail.ResourceMode)
 	}
@@ -195,7 +185,7 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func filterByQueueName(body interface{}, queueName string) (r *queues.Queue, err error) {
 	if queueList, ok := body.(*queues.ListResult); ok {
-		log.Printf("[debug]The list of queue from SDK:%+v", queueList)
+		log.Printf("[DEBUG]The list of queue from SDK:%+v", queueList)
 
 		for _, v := range queueList.Queues {
 			if v.QueueName == queueName {
@@ -215,9 +205,9 @@ func resourceDliQueueV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
 
-	client, err := config.Config.DliV1Client(region)
+	client, err := config.DliV1Client(region)
 	if err != nil {
-		return fmt.Errorf("creating sdk client failed, err=%s", err)
+		return fmt.Errorf("creating dli client failed, err=%s", err)
 	}
 
 	queueName := d.Get("name").(string)

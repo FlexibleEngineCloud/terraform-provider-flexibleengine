@@ -34,14 +34,14 @@ func TestAccDliQueueV1_basic(t *testing.T) {
 
 func testAccDliQueueV1_basic(rName string) string {
 	return fmt.Sprintf(`
-		resource "flexibleengine_dli_queue" "test" {
- 		 name = "%s"
-		 cu_count              = 16
-		 resource_mode         = 0
-		 tags = {
-			"k1" = "1"
-		  }
-	}`, rName)
+resource flexibleengine_dli_queue "test" {
+    name             =  "%s"
+    cu_count         =   16
+    resource_mode    =   0
+    tags             = {
+        k1    =    "1"
+    }
+}`, rName)
 }
 
 func testAccCheckDliQueueV1Destroy(s *terraform.State) error {
