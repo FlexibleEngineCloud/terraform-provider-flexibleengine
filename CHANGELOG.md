@@ -1,3 +1,17 @@
+
+## 1.23.0 (July 27, 2021)
+
+FEATURES:
+* **New Resurce:**
+  - `flexibleengine_lts_group` ([#583](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/583))
+  - `flexibleengine_lts_topic` ([#583](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/583))
+  - `flexibleengine_vpc_flow_log_v1` ([#451](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/451))
+  - `flexibleengine_dli_queue` ([#588](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/588))
+
+BUG FIXES:
+* `resource/flexibleengine_sfs_file_system_v2`: remove unused `host` attribute ([#420](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/420))
+
+
 ## 1.22.1 (July 9, 2021)
 
 ENHANCEMENTS:
