@@ -10,7 +10,6 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/dli/v1/queues"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 var regexp4Name = regexp.MustCompile(`^[a-z0-9_]{1,128}$`)
@@ -56,21 +55,6 @@ func ResourceDliQueueV1() *schema.Resource {
 				ValidateFunc: validation.IntInSlice([]int{16, 64, 256}),
 			},
 
-			"enterprise_project_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
-
-			"platform": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				Default:      "x86_64",
-				ValidateFunc: validation.StringInSlice([]string{"x86_64", "aarch64"}, false),
-			},
-
 			"resource_mode": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -108,14 +92,12 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] create dli queues queueName: %s", queueName)
 	createOpts := queues.CreateOpts{
-		QueueName:           queueName,
-		QueueType:           d.Get("queue_type").(string),
-		Description:         d.Get("description").(string),
-		CuCount:             d.Get("cu_count").(int),
-		EnterpriseProjectId: config.GetEnterpriseProjectID(d),
-		Platform:            d.Get("platform").(string),
-		ResourceMode:        d.Get("resource_mode").(int),
-		Tags:                assembleTagsFromRecource("tags", d),
+		QueueName:    queueName,
+		QueueType:    d.Get("queue_type").(string),
+		Description:  d.Get("description").(string),
+		CuCount:      d.Get("cu_count").(int),
+		ResourceMode: d.Get("resource_mode").(int),
+		Tags:         assembleTagsFromRecource("tags", d),
 	}
 
 	log.Printf("[DEBUG] create dli queues using paramaters: %+v", createOpts)
@@ -133,7 +115,7 @@ func resourceDliQueueCreate(d *schema.ResourceData, meta interface{}) error {
 func assembleTagsFromRecource(key string, d *schema.ResourceData) []tags.ResourceTag {
 	if v, ok := d.GetOk(key); ok {
 		tagRaw := v.(map[string]interface{})
-		taglist := utils.ExpandResourceTags(tagRaw)
+		taglist := expandResourceTags(tagRaw)
 		return taglist
 	}
 	return nil
@@ -176,7 +158,6 @@ func resourceDliQueueV1Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("queue_type", queueDetail.QueueType)
 		d.Set("description", queueDetail.Description)
 		d.Set("cu_count", queueDetail.CuCount)
-		d.Set("platform", queueDetail.Platform)
 		d.Set("resource_mode", queueDetail.ResourceMode)
 	}
 

@@ -40,14 +40,7 @@ The following arguments are supported:
     Changing this parameter will create a new resource. The options are as follows:
     - sql,
     - general
-    - all
     > NOTE: If the type is not specified, the default value sql is used. 
-
-* `enterprise_project_id` - (Optional, String, ForceNew) Enterprise project ID. 
-    The value 0 indicates the default enterprise project. Changing this parameter will create a new resource.
-
-* `platform` - (Optional, String, ForceNew) CPU architecture of queue compute resources. The value can be x86_64. 
-    Changing this parameter will create a new resource.
 
 * `resource_mode` - (Optional, String, ForceNew) Queue resource mode. 
   Changing this parameter will create a new resource. 
