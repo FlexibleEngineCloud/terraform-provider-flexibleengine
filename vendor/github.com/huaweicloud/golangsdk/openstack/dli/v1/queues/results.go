@@ -59,10 +59,6 @@ type Queue struct {
 	// Whether to restart the queue. The default value is false.
 	IsRestarting bool `json:"is_restarting"`
 
-	// Specifies the tag information of the queue to be created, including the JSON character string indicating
-	//whether the queue is Dual-AZ. Currently, only the value 2 is supported, indicating that two queues are created.
-	Labels string `json:"labels"`
-
 	// Indicates the queue feature. The options are as follows:
 	// basic: basic type
 	// ai: AI-enhanced (Only the SQL x86_64 dedicated queue supports this option.)

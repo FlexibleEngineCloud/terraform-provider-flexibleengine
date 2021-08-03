@@ -14,9 +14,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceS3Bucket() *schema.Resource {
@@ -202,7 +201,7 @@ func resourceS3Bucket() *schema.Resource {
 					m := v.(map[string]interface{})
 					buf.WriteString(fmt.Sprintf("%s-", m["target_bucket"]))
 					buf.WriteString(fmt.Sprintf("%s-", m["target_prefix"]))
-					return hashcode.String(buf.String())
+					return schema.HashString(buf.String())
 				},
 			},
 
@@ -1418,7 +1417,7 @@ func expirationHash(v interface{}) int {
 	if v, ok := m["expired_object_delete_marker"]; ok {
 		buf.WriteString(fmt.Sprintf("%t-", v.(bool)))
 	}
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func transitionHash(v interface{}) int {
@@ -1433,7 +1432,7 @@ func transitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func rulesHash(v interface{}) int {
@@ -1449,7 +1448,7 @@ func rulesHash(v interface{}) int {
 	if v, ok := m["status"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func destinationHash(v interface{}) int {
@@ -1462,7 +1461,7 @@ func destinationHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 type S3Website struct {

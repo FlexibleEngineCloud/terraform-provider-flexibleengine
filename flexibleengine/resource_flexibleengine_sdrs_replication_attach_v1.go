@@ -10,7 +10,7 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/attachreplication"
 	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/protectedinstances"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func ExtractAttachId(s string) (string, string) {

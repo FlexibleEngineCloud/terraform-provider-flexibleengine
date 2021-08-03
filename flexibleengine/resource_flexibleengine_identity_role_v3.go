@@ -6,8 +6,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3.0/policies"
 )
 
@@ -37,7 +37,7 @@ func resourceIdentityRoleV3() *schema.Resource {
 			"policy": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.ValidateJsonString,
+				ValidateFunc: validation.StringIsJSON,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					equal, _ := compareJsonTemplateAreEquivalent(old, new)
 					return equal

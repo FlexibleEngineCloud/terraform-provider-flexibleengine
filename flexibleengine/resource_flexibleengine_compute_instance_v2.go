@@ -9,9 +9,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/bootfromvolume"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
@@ -154,12 +153,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  false,
-						},
-						"floating_ip": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-							Removed:  "Use the flexibleengine_compute_floatingip_associate_v2 resource instead",
 						},
 					},
 				},
@@ -360,31 +353,6 @@ func resourceComputeInstanceV2() *schema.Resource {
 						},
 						"pci_address": {
 							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
-			},
-
-			// Removed
-			"volume": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Removed:  "Use block_device or flexibleengine_compute_volume_attach_v2 instead",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"volume_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"device": {
-							Type:     schema.TypeString,
-							Optional: true,
 							Computed: true,
 						},
 					},
@@ -1071,7 +1039,7 @@ func resourceComputeSchedulerHintsHash(v interface{}) int {
 	buf.WriteString(fmt.Sprintf("%s-", m["same_host"].([]interface{})))
 	buf.WriteString(fmt.Sprintf("%s-", m["query"].([]interface{})))
 
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func resourceComputeInstancePersonalityHash(v interface{}) int {
@@ -1079,7 +1047,7 @@ func resourceComputeInstancePersonalityHash(v interface{}) int {
 	m := v.(map[string]interface{})
 	buf.WriteString(fmt.Sprintf("%s-", m["file"].(string)))
 
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
 
 func resourceInstancePersonalityV2(d *schema.ResourceData) servers.Personality {

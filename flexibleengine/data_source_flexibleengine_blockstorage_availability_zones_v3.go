@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones"
 )
 
@@ -65,7 +64,7 @@ func dataSourceBlockStorageAvailabilityZonesV3Read(d *schema.ResourceData, meta 
 	// sort.Strings sorts in place, returns nothing
 	sort.Strings(zones)
 
-	d.SetId(hashcode.Strings(zones))
+	d.SetId(HashStrings(zones))
 	d.Set("names", zones)
 	d.Set("region", GetRegion(d, config))
 

@@ -6,9 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/blockstorage/extensions/volumeactions"
 	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
@@ -430,5 +429,5 @@ func resourceVolumeV2AttachmentHash(v interface{}) int {
 	if m["instance_id"] != nil {
 		buf.WriteString(fmt.Sprintf("%s-", m["instance_id"].(string)))
 	}
-	return hashcode.String(buf.String())
+	return schema.HashString(buf.String())
 }
