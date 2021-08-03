@@ -41,12 +41,12 @@ type CreateOpts struct {
 	// Queue resource mode. The options are as follows:
 	// 0: indicates the shared resource mode.
 	// 1: indicates the exclusive resource mode.
-	ResourceMode int `json:"resource_mode,omitempty"`
+	ResourceMode int `json:"resource_mode"`
 
 	// Specifies the tag information of the queue to be created,
 	// including the JSON character string indicating whether the queue is Dual-AZ. Currently,
 	// only the value 2 is supported, indicating that two queues are created.
-	Labels map[string]string `json:"labels,omitempty"`
+	Labels []string `json:"labels,omitempty"`
 
 	// Indicates the queue feature. The options are as follows:
 	// basic: basic type

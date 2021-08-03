@@ -8,14 +8,14 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/logging"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/pathorcontents"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/huaweicloud/golangsdk"
 	huaweisdk "github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 const (
@@ -109,7 +109,7 @@ func (c *Config) LoadAndValidate() error {
 func generateTLSConfig(c *Config) (*tls.Config, error) {
 	config := &tls.Config{}
 	if c.CACertFile != "" {
-		caCert, _, err := pathorcontents.Read(c.CACertFile)
+		caCert, _, err := utils.PathOrContentsRead(c.CACertFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading CA Cert: %s", err)
 		}
@@ -124,11 +124,11 @@ func generateTLSConfig(c *Config) (*tls.Config, error) {
 	}
 
 	if c.ClientCertFile != "" && c.ClientKeyFile != "" {
-		clientCert, _, err := pathorcontents.Read(c.ClientCertFile)
+		clientCert, _, err := utils.PathOrContentsRead(c.ClientCertFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading Client Cert: %s", err)
 		}
-		clientKey, _, err := pathorcontents.Read(c.ClientKeyFile)
+		clientKey, _, err := utils.PathOrContentsRead(c.ClientKeyFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading Client Key: %s", err)
 		}
@@ -152,7 +152,7 @@ func genClient(c *Config, ao golangsdk.AuthOptionsProvider) (*golangsdk.Provider
 	}
 
 	// Set UserAgent
-	client.UserAgent.Prepend("terraform-provider-huaweicloud")
+	client.UserAgent.Prepend("terraform-provider-iac")
 
 	config, err := generateTLSConfig(c)
 	if err != nil {
@@ -461,7 +461,7 @@ func (c *Config) newServiceClientByEndpoint(client *golangsdk.ProviderClient, sr
 func (c *Config) getDomainID() (string, error) {
 	identityClient, err := c.IdentityV3Client(c.Region)
 	if err != nil {
-		return "", fmt.Errorf("Error creating HuaweiCloud identity client: %s", err)
+		return "", fmt.Errorf("Error creating IAM client: %s", err)
 	}
 	// ResourceBase: https://iam.{CLOUD}/v3/auth/
 	identityClient.ResourceBase += "auth/"
@@ -768,6 +768,10 @@ func (c *Config) ApiGatewayV1Client(region string) (*golangsdk.ServiceClient, er
 	return c.NewServiceClient("apig", region)
 }
 
+func (c *Config) ApigV2Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("apig_v2", region)
+}
+
 func (c *Config) BcsV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("bcs", region)
 }
@@ -839,4 +843,8 @@ func (c *Config) OrchestrationV1Client(region string) (*golangsdk.ServiceClient,
 
 func (c *Config) MlsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return c.NewServiceClient("mls", region)
+}
+
+func (c *Config) ScmV3Client(region string) (*golangsdk.ServiceClient, error) {
+	return c.NewServiceClient("scm", region)
 }
