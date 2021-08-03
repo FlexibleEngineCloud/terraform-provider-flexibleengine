@@ -68,7 +68,6 @@ func resourceWafPolicyV1() *schema.Resource {
 			"protection_status": {
 				Type:     schema.TypeList,
 				Computed: true,
-				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"basic_web_protection": {
