@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents"
 )
 
 var (
@@ -256,7 +257,7 @@ func TestAccProvider_clientCertString(t *testing.T) {
 }
 
 func envVarContents(varName string) (string, error) {
-	contents, _, err := PathOrContentsRead(os.Getenv(varName))
+	contents, _, err := pathorcontents.Read(os.Getenv(varName))
 	if err != nil {
 		return "", fmt.Errorf("Error reading %s: %s", varName, err)
 	}

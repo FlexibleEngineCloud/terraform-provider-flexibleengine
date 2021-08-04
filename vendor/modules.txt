@@ -132,8 +132,6 @@ github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/tfplugin6
 github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/toproto
 github.com/hashicorp/terraform-plugin-go/tfprotov6/server
 github.com/hashicorp/terraform-plugin-go/tftypes
-# github.com/hashicorp/terraform-plugin-sdk v1.16.0
-## explicit
 # github.com/hashicorp/terraform-plugin-sdk/v2 v2.7.0
 ## explicit
 github.com/hashicorp/terraform-plugin-sdk/v2/diag
@@ -302,10 +300,11 @@ github.com/huaweicloud/golangsdk/openstack/waf/v1/preciseprotection_rules
 github.com/huaweicloud/golangsdk/openstack/waf/v1/webtamperprotection_rules
 github.com/huaweicloud/golangsdk/openstack/waf/v1/whiteblackip_rules
 github.com/huaweicloud/golangsdk/pagination
-# github.com/huaweicloud/terraform-provider-huaweicloud v1.26.2-0.20210727030759-1832953fb0d0
+# github.com/huaweicloud/terraform-provider-huaweicloud v1.26.2-0.20210804093218-08f1b9ceebbf
 ## explicit
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config
-github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils
+github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv
+github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents
 # github.com/jen20/awspolicyequivalence v1.1.0
 ## explicit
 github.com/jen20/awspolicyequivalence
