@@ -94,7 +94,6 @@ func dataSourceCCEClusterV3() *schema.Resource {
 func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	cceClient, err := config.cceV3Client(GetRegion(d, config))
-
 	if err != nil {
 		return fmt.Errorf("Unable to create flexibleengine CCE client : %s", err)
 	}
@@ -124,11 +123,10 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	Cluster := refinedClusters[0]
-
 	log.Printf("[DEBUG] Retrieved Clusters using given filter %s: %+v", Cluster.Metadata.Id, Cluster)
 
 	d.SetId(Cluster.Metadata.Id)
-
+	d.Set("region", GetRegion(d, config))
 	d.Set("name", Cluster.Metadata.Name)
 	d.Set("flavor_id", Cluster.Spec.Flavor)
 	d.Set("description", Cluster.Spec.Description)
@@ -137,6 +135,7 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("billing_mode", Cluster.Spec.BillingMode)
 	d.Set("vpc_id", Cluster.Spec.HostNetwork.VpcId)
 	d.Set("subnet_id", Cluster.Spec.HostNetwork.SubnetId)
+	d.Set("security_group_id", Cluster.Spec.HostNetwork.SecurityGroup)
 	d.Set("highway_subnet_id", Cluster.Spec.HostNetwork.HighwaySubnet)
 	d.Set("container_network_cidr", Cluster.Spec.ContainerNetwork.Cidr)
 	d.Set("container_network_type", Cluster.Spec.ContainerNetwork.Mode)
@@ -144,8 +143,6 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("internal_endpoint", Cluster.Status.Endpoints[0].Internal)
 	d.Set("external_endpoint", Cluster.Status.Endpoints[0].External)
 	d.Set("external_apig_endpoint", Cluster.Status.Endpoints[0].ExternalOTC)
-	d.Set("security_group_id", Cluster.Spec.HostNetwork.SecurityGroup)
-	d.Set("region", GetRegion(d, config))
 
 	return nil
 }
