@@ -6,12 +6,13 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 )
 
 const defaultCloud string = "prod-cloud-ocb.orange-business.com"
 
 // This is a global MutexKV for use within this plugin.
-var osMutexKV = NewMutexKV()
+var osMutexKV = mutexkv.NewMutexKV()
 
 // Provider returns a schema.Provider for FlexibleEngine.
 func Provider() *schema.Provider {

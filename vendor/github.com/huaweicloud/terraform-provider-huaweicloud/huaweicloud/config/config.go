@@ -15,7 +15,7 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/domains"
 	"github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents"
 )
 
 const (
@@ -109,7 +109,7 @@ func (c *Config) LoadAndValidate() error {
 func generateTLSConfig(c *Config) (*tls.Config, error) {
 	config := &tls.Config{}
 	if c.CACertFile != "" {
-		caCert, _, err := utils.PathOrContentsRead(c.CACertFile)
+		caCert, _, err := pathorcontents.Read(c.CACertFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading CA Cert: %s", err)
 		}
@@ -124,11 +124,11 @@ func generateTLSConfig(c *Config) (*tls.Config, error) {
 	}
 
 	if c.ClientCertFile != "" && c.ClientKeyFile != "" {
-		clientCert, _, err := utils.PathOrContentsRead(c.ClientCertFile)
+		clientCert, _, err := pathorcontents.Read(c.ClientCertFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading Client Cert: %s", err)
 		}
-		clientKey, _, err := utils.PathOrContentsRead(c.ClientKeyFile)
+		clientKey, _, err := pathorcontents.Read(c.ClientKeyFile)
 		if err != nil {
 			return nil, fmt.Errorf("Error reading Client Key: %s", err)
 		}
