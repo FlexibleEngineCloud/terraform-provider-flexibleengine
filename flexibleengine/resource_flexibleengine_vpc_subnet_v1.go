@@ -246,9 +246,8 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 		updateOpts.EnableDHCP = true
 	}
 
-	vpc_id := d.Get("vpc_id").(string)
-
-	_, err = subnets.Update(subnetClient, vpc_id, d.Id(), updateOpts).Extract()
+	vpcID := d.Get("vpc_id").(string)
+	_, err = subnets.Update(subnetClient, vpcID, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine VPC Subnet: %s", err)
 	}
@@ -269,18 +268,17 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceVpcSubnetV1Delete(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
 	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
-	vpc_id := d.Get("vpc_id").(string)
 
+	vpcID := d.Get("vpc_id").(string)
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"ACTIVE"},
 		Target:     []string{"DELETED"},
-		Refresh:    waitForVpcSubnetDelete(subnetClient, vpc_id, d.Id()),
+		Refresh:    waitForVpcSubnetDelete(subnetClient, vpcID, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -319,7 +317,6 @@ func waitForVpcSubnetDelete(subnetClient *golangsdk.ServiceClient, vpcId string,
 	return func() (interface{}, string, error) {
 
 		r, err := subnets.Get(subnetClient, subnetId).Extract()
-
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[INFO] Successfully deleted FlexibleEngine subnet %s", subnetId)
@@ -328,12 +325,16 @@ func waitForVpcSubnetDelete(subnetClient *golangsdk.ServiceClient, vpcId string,
 			return r, "ACTIVE", err
 		}
 		err = subnets.Delete(subnetClient, vpcId, subnetId).ExtractErr()
-
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[INFO] Successfully deleted FlexibleEngine subnet %s", subnetId)
 				return r, "DELETED", nil
 			}
+			if _, ok := err.(golangsdk.ErrDefault400); ok {
+				log.Printf("[INFO] Successfully deleted FlexibleEngine subnet %s", subnetId)
+				return r, "DELETED", nil
+			}
+
 			if errCode, ok := err.(golangsdk.ErrUnexpectedResponseCode); ok {
 				if errCode.Actual == 409 {
 					return r, "ACTIVE", nil
