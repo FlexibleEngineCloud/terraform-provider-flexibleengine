@@ -99,9 +99,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - The status of the shared file system.
 
-* `share_type` - The storage service type assigned for the shared file system, such as high-performance
-    storage (composed of SSDs) and large-capacity storage (composed of SATA disks).
-
 * `volume_type` - The volume type.
 
 * `export_location` - The address for accessing the shared file system.
