@@ -19,9 +19,9 @@ func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 	rNameUpdate := rName + "-updated"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineVpcV1Destroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckFlexibleEngineVpcV1Destroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccVpcV1_basic(rName),
