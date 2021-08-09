@@ -49,7 +49,7 @@ func TestAccServiceEndpoints_Global(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -74,7 +74,7 @@ func TestAccServiceEndpoints_Management(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -111,7 +111,7 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	config := testProvider.Meta().(*Config)
@@ -188,7 +188,7 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	config := testProvider.Meta().(*Config)
@@ -256,7 +256,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	config := testProvider.Meta().(*Config)
@@ -339,7 +339,7 @@ func TestAccServiceEndpoints_Database(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -382,7 +382,7 @@ func TestAccServiceEndpoints_Security(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -416,7 +416,7 @@ func TestAccServiceEndpoints_Application(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -442,7 +442,7 @@ func TestAccServiceEndpoints_EnterpriseIntelligence(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
@@ -493,7 +493,7 @@ func TestAccServiceEndpoints_Others(t *testing.T) {
 	raw := make(map[string]interface{})
 	diags := testProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Detail)
+		t.Fatalf("Unexpected error when configure FlexibleEngine provider: %s", diags[0].Summary)
 	}
 
 	var expectedURL, actualURL string
