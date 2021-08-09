@@ -154,7 +154,7 @@ github.com/hashicorp/terraform-plugin-sdk/v2/plugin
 github.com/hashicorp/terraform-plugin-sdk/v2/terraform
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
 github.com/hashicorp/yamux
-# github.com/huaweicloud/golangsdk v0.0.0-20210722084309-4039dc70b08a
+# github.com/huaweicloud/golangsdk v0.0.0-20210809113416-56e12cef30ca
 ## explicit
 github.com/huaweicloud/golangsdk
 github.com/huaweicloud/golangsdk/internal
@@ -215,6 +215,7 @@ github.com/huaweicloud/golangsdk/openstack/ecs/v1/tags
 github.com/huaweicloud/golangsdk/openstack/identity/v2/tenants
 github.com/huaweicloud/golangsdk/openstack/identity/v2/tokens
 github.com/huaweicloud/golangsdk/openstack/identity/v3.0/policies
+github.com/huaweicloud/golangsdk/openstack/identity/v3.0/users
 github.com/huaweicloud/golangsdk/openstack/identity/v3/agency
 github.com/huaweicloud/golangsdk/openstack/identity/v3/catalog
 github.com/huaweicloud/golangsdk/openstack/identity/v3/domains

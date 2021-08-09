@@ -8,40 +8,50 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/users"
+	"github.com/huaweicloud/golangsdk/openstack/identity/v3.0/users"
 )
 
 func TestAccIdentityV3User_basic(t *testing.T) {
 	var user users.User
 	var userName = fmt.Sprintf("ACCPTTEST-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_identity_user_v3.user_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 			testAccPreCheckAdminOnly(t)
 		},
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckIdentityV3UserDestroy,
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckIdentityV3UserDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIdentityV3User_basic(userName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIdentityV3UserExists("flexibleengine_identity_user_v3.user_1", &user),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_user_v3.user_1", "name", userName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_user_v3.user_1", "enabled", "true"),
+					testAccCheckIdentityV3UserExists(resourceName, &user),
+					resource.TestCheckResourceAttr(resourceName, "name", userName),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "email", "foo123@orange-business.com"),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by terraform"),
+					resource.TestCheckResourceAttrSet(resourceName, "password_strength"),
 				),
 			},
 			{
 				Config: testAccIdentityV3User_update(userName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIdentityV3UserExists("flexibleengine_identity_user_v3.user_1", &user),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_user_v3.user_1", "name", userName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_identity_user_v3.user_1", "enabled", "false"),
+					testAccCheckIdentityV3UserExists(resourceName, &user),
+					resource.TestCheckResourceAttr(resourceName, "name", userName),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "email", "bar123@orange-business.com"),
+					resource.TestCheckResourceAttr(resourceName, "description", "updated by terraform"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+				},
 			},
 		},
 	})
@@ -49,7 +59,7 @@ func TestAccIdentityV3User_basic(t *testing.T) {
 
 func testAccCheckIdentityV3UserDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	identityClient, err := config.identityV3Client(OS_REGION_NAME)
+	iamClient, err := config.IAMV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -59,7 +69,7 @@ func testAccCheckIdentityV3UserDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := users.Get(identityClient, rs.Primary.ID).Extract()
+		_, err := users.Get(iamClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("User still exists")
 		}
@@ -80,12 +90,12 @@ func testAccCheckIdentityV3UserExists(n string, user *users.User) resource.TestC
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		identityClient, err := config.identityV3Client(OS_REGION_NAME)
+		iamClient, err := config.IAMV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 		}
 
-		found, err := users.Get(identityClient, rs.Primary.ID).Extract()
+		found, err := users.Get(iamClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -102,22 +112,24 @@ func testAccCheckIdentityV3UserExists(n string, user *users.User) resource.TestC
 
 func testAccIdentityV3User_basic(userName string) string {
 	return fmt.Sprintf(`
-    resource "flexibleengine_identity_user_v3" "user_1" {
-      name = "%s"
-      password = "password123@!"
-      enabled = true
-      description = "tested by terraform"
-    }  
-  `, userName)
+resource "flexibleengine_identity_user_v3" "user_1" {
+  name        = "%s"
+  password    = "password123@!"
+  enabled     = true
+  email       = "foo123@orange-business.com"
+  description = "created by terraform"
+}
+`, userName)
 }
 
 func testAccIdentityV3User_update(userName string) string {
 	return fmt.Sprintf(`
-    resource "flexibleengine_identity_user_v3" "user_1" {
-      name = "%s"
-      enabled = false
-      password = "password123@!"
-      description = "tested by terraform"
-    }
-  `, userName)
+resource "flexibleengine_identity_user_v3" "user_1" {
+  name        = "%s"
+  enabled     = false
+  password    = "password123@!"
+  email       = "bar123@orange-business.com"
+  description = "updated by terraform"
+}
+`, userName)
 }
