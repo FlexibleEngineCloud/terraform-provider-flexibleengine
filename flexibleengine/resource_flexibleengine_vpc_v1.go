@@ -1,10 +1,12 @@
 package flexibleengine
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/huaweicloud/golangsdk/openstack/common/tags"
 	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
@@ -15,12 +17,12 @@ import (
 
 func resourceVirtualPrivateCloudV1() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVirtualPrivateCloudV1Create,
-		Read:   resourceVirtualPrivateCloudV1Read,
-		Update: resourceVirtualPrivateCloudV1Update,
-		Delete: resourceVirtualPrivateCloudV1Delete,
+		CreateContext: resourceVirtualPrivateCloudV1Create,
+		ReadContext:   resourceVirtualPrivateCloudV1Read,
+		UpdateContext: resourceVirtualPrivateCloudV1Update,
+		DeleteContext: resourceVirtualPrivateCloudV1Delete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -60,11 +62,11 @@ func resourceVirtualPrivateCloudV1() *schema.Resource {
 	}
 }
 
-func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{}) error {
+func resourceVirtualPrivateCloudV1Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*Config)
 	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
 
 	createOpts := vpcs.CreateOpts{
@@ -74,7 +76,7 @@ func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{
 
 	n, err := vpcs.Create(vpcClient, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine VPC: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine VPC: %s", err)
 	}
 	d.SetId(n.ID)
 
@@ -91,7 +93,7 @@ func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{
 
 	_, stateErr := stateConf.WaitForState()
 	if stateErr != nil {
-		return fmt.Errorf(
+		return diag.Errorf(
 			"Error waiting for Vpc (%s) to become ACTIVE: %s",
 			n.ID, stateErr)
 	}
@@ -101,23 +103,23 @@ func resourceVirtualPrivateCloudV1Create(d *schema.ResourceData, meta interface{
 	if len(tagRaw) > 0 {
 		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+			return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
 		taglist := expandResourceTags(tagRaw)
 		if tagErr := tags.Create(vpcV2Client, "vpcs", n.ID, taglist).ExtractErr(); tagErr != nil {
-			return fmt.Errorf("Error setting tags of VPC %s: %s", n.ID, tagErr)
+			return diag.Errorf("Error setting tags of VPC %s: %s", n.ID, tagErr)
 		}
 	}
 
-	return resourceVirtualPrivateCloudV1Read(d, meta)
+	return resourceVirtualPrivateCloudV1Read(ctx, d, meta)
 
 }
 
-func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{}) error {
+func resourceVirtualPrivateCloudV1Read(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*Config)
 	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
 	}
 
 	n, err := vpcs.Get(vpcClient, d.Id()).Extract()
@@ -127,7 +129,7 @@ func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{})
 			return nil
 		}
 
-		return fmt.Errorf("Error retrieving FlexibleEngine Vpc: %s", err)
+		return diag.Errorf("Error retrieving FlexibleEngine Vpc: %s", err)
 	}
 
 	d.SetId(n.ID)
@@ -140,7 +142,7 @@ func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{})
 	// save tags
 	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
 	resourceTags, err := tags.Get(vpcV2Client, "vpcs", d.Id()).Extract()
 	if err == nil {
@@ -153,11 +155,11 @@ func resourceVirtualPrivateCloudV1Read(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-func resourceVirtualPrivateCloudV1Update(d *schema.ResourceData, meta interface{}) error {
+func resourceVirtualPrivateCloudV1Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*Config)
 	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine Vpc: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine Vpc: %s", err)
 	}
 
 	var updateOpts vpcs.UpdateOpts
@@ -171,31 +173,30 @@ func resourceVirtualPrivateCloudV1Update(d *schema.ResourceData, meta interface{
 
 	_, err = vpcs.Update(vpcClient, d.Id(), updateOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error updating FlexibleEngine Vpc: %s", err)
+		return diag.Errorf("Error updating FlexibleEngine Vpc: %s", err)
 	}
 
 	//update tags
 	if d.HasChange("tags") {
 		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
+			return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
 
 		tagErr := UpdateResourceTags(vpcV2Client, d, "vpcs", d.Id())
 		if tagErr != nil {
-			return fmt.Errorf("Error updating tags of VPC %s: %s", d.Id(), tagErr)
+			return diag.Errorf("Error updating tags of VPC %s: %s", d.Id(), tagErr)
 		}
 	}
 
-	return resourceVirtualPrivateCloudV1Read(d, meta)
+	return resourceVirtualPrivateCloudV1Read(ctx, d, meta)
 }
 
-func resourceVirtualPrivateCloudV1Delete(d *schema.ResourceData, meta interface{}) error {
-
+func resourceVirtualPrivateCloudV1Delete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*Config)
 	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine vpc: %s", err)
+		return diag.Errorf("Error creating FlexibleEngine vpc: %s", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
@@ -209,7 +210,7 @@ func resourceVirtualPrivateCloudV1Delete(d *schema.ResourceData, meta interface{
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting FlexibleEngine Vpc: %s", err)
+		return diag.Errorf("Error deleting FlexibleEngine Vpc: %s", err)
 	}
 
 	d.SetId("")

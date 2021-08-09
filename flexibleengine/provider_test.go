@@ -35,13 +35,31 @@ var (
 	OS_TENANT_NAME            = getTenantName()
 )
 
+// testAccProviders is a static map containing only the main provider instance.
+//
+// Deprecated: Terraform Plugin SDK version 2 uses TestCase.ProviderFactories
+// but supports this value in TestCase.Providers for backwards compatibility.
+// In the future Providers: testAccProviders will be changed to
+// ProviderFactories: testAccProviderFactories
 var testAccProviders map[string]*schema.Provider
+
+// testAccProviderFactories is a static map containing only the main provider instance
+var TestAccProviderFactories map[string]func() (*schema.Provider, error)
+
+// testAccProvider is the "main" provider instance
 var testAccProvider *schema.Provider
 
 func init() {
 	testAccProvider = Provider()
+
 	testAccProviders = map[string]*schema.Provider{
 		"flexibleengine": testAccProvider,
+	}
+
+	TestAccProviderFactories = map[string]func() (*schema.Provider, error){
+		"flexibleengine": func() (*schema.Provider, error) {
+			return testAccProvider, nil
+		},
 	}
 }
 
@@ -142,6 +160,10 @@ func TestProvider(t *testing.T) {
 	}
 }
 
+func TestProvider_impl(t *testing.T) {
+	var _ *schema.Provider = Provider()
+}
+
 // Steps for configuring FlexibleEngine with SSL validation are here:
 // https://github.com/hashicorp/terraform/pull/6279#issuecomment-219020144
 func TestAccProvider_caCertFile(t *testing.T) {
@@ -166,7 +188,7 @@ func TestAccProvider_caCertFile(t *testing.T) {
 
 	diags := p.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by file: %s", diags[0].Detail)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by file: %s", diags[0].Summary)
 	}
 }
 
@@ -190,7 +212,7 @@ func TestAccProvider_caCertString(t *testing.T) {
 
 	diags := p.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by string: %s", diags[0].Detail)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine CA by string: %s", diags[0].Summary)
 	}
 }
 
@@ -222,7 +244,7 @@ func TestAccProvider_clientCertFile(t *testing.T) {
 
 	diags := p.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by file: %s", diags[0].Detail)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by file: %s", diags[0].Summary)
 	}
 }
 
@@ -252,7 +274,7 @@ func TestAccProvider_clientCertString(t *testing.T) {
 
 	diags := p.Configure(context.Background(), terraform.NewResourceConfigRaw(raw))
 	if diags.HasError() {
-		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by contents: %s", diags[0].Detail)
+		t.Fatalf("Unexpected err when specifying FlexibleEngine Client keypair by contents: %s", diags[0].Summary)
 	}
 }
 
