@@ -35,13 +35,31 @@ var (
 	OS_TENANT_NAME            = getTenantName()
 )
 
+// testAccProviders is a static map containing only the main provider instance.
+//
+// Deprecated: Terraform Plugin SDK version 2 uses TestCase.ProviderFactories
+// but supports this value in TestCase.Providers for backwards compatibility.
+// In the future Providers: testAccProviders will be changed to
+// ProviderFactories: testAccProviderFactories
 var testAccProviders map[string]*schema.Provider
+
+// testAccProviderFactories is a static map containing only the main provider instance
+var TestAccProviderFactories map[string]func() (*schema.Provider, error)
+
+// testAccProvider is the "main" provider instance
 var testAccProvider *schema.Provider
 
 func init() {
 	testAccProvider = Provider()
+
 	testAccProviders = map[string]*schema.Provider{
 		"flexibleengine": testAccProvider,
+	}
+
+	TestAccProviderFactories = map[string]func() (*schema.Provider, error){
+		"flexibleengine": func() (*schema.Provider, error) {
+			return testAccProvider, nil
+		},
 	}
 }
 
@@ -140,6 +158,10 @@ func TestProvider(t *testing.T) {
 	if err := Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
+}
+
+func TestProvider_impl(t *testing.T) {
+	var _ *schema.Provider = Provider()
 }
 
 // Steps for configuring FlexibleEngine with SSL validation are here:
