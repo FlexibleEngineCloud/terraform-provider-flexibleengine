@@ -2,7 +2,7 @@
 subcategory: "Identity and Access Management (IAM)"
 ---
 
-# flexibleengine\_identity\_user_v3
+# flexibleengine_identity_user_v3
 
 Manages a User resource within FlexibleEngine IAM service.
 
@@ -16,7 +16,6 @@ resource "flexibleengine_identity_user_v3" "user_1" {
   name        = "user_1"
   description = "A user"
   password    = "password123!"
-
 }
 ```
 
@@ -24,28 +23,38 @@ resource "flexibleengine_identity_user_v3" "user_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the user. The user name consists of 5 to 32
-     characters. It can contain only uppercase letters, lowercase letters, 
-     digits, spaces, and special characters (-_) and cannot start with a digit.
+* `name` - (Required, String) Specifies the name of the user. The user name consists of
+    5 to 32 characters. It can contain only uppercase letters, lowercase letters,
+    digits, spaces, and special characters (-_) and cannot start with a digit.
 
-* `description` - (Optional) A description of the user.
+* `description` - (Optional, String) Specifies the description of the user.
 
-* `default_project_id` - (Optional) The default project this user belongs to.
+* `email` - (Optional, String) Specifies the email address with a maximum of 255 characters.
 
-* `domain_id` - (Optional) The domain this user belongs to.
+* `phone` - (Optional, String) Specifies the mobile number with a maximum of 32 digits.
+    This parameter must be used together with `country_code`.
 
-* `enabled` - (Optional) Whether the user is enabled or disabled. Valid
-    values are `true` and `false`.
+* `country_code` - (Optional, String) Specifies the country code. The country code of the Chinese mainland is 0086.
+    This parameter must be used together with `phone`.
 
-* `password` - (Optional) The password for the user. It must contain at least 
-     two of the following character types: uppercase letters, lowercase letters, 
-     digits, and special characters.
+* `password` - (Optional, String) Specifies the password for the user with 6 to 32 characters.
+    It must contain at least two of the following character types: uppercase letters, lowercase letters,
+    digits, and special characters.
+
+* `enabled` - (Optional, Bool) Specifies whether the user is enabled or disabled.
+    Valid values are `true` and `false`.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `domain_id` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
+
+* `password_strength` - Indicates the password strength.
+
+* `create_time` - The time when the IAM user was created.
+
+* `last_login` - The tiem when the IAM user last login.
 
 ## Import
 
@@ -53,4 +62,18 @@ Users can be imported using the `id`, e.g.
 
 ```
 $ terraform import flexibleengine_identity_user_v3.user_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+```
+
+But due to the security reason, `password` can not be imported, you can ignore it as below.
+
+```
+resource "flexibleengine_identity_user_v3" "user_1" {
+  ...
+
+  lifecycle {
+    ignore_changes = [
+      "password",
+    ]
+  }
+}
 ```

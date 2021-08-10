@@ -445,6 +445,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config.ClientKeyFile = d.Get("key").(string)
 	config.TerraformVersion = terraformVersion
 	config.Cloud = defaultCloud
+	config.RegionClient = true
 	config.RegionProjectIDMap = make(map[string]string)
 	config.RPLock = new(sync.Mutex)
 

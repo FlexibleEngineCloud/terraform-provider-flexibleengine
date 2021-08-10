@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/huaweicloud/golangsdk"
@@ -23,6 +24,17 @@ func CheckDeleted(d *schema.ResourceData, err error, msg string) error {
 	}
 
 	return fmt.Errorf("%s: %s", msg, err)
+}
+
+// CheckDeletedDiag checks the error to see if it's a 404 (Not Found) and, if so,
+// sets the resource ID to the empty string instead of throwing an error.
+func CheckDeletedDiag(d *schema.ResourceData, err error, msg string) diag.Diagnostics {
+	if _, ok := err.(golangsdk.ErrDefault404); ok {
+		d.SetId("")
+		return nil
+	}
+
+	return diag.Errorf("%s: %s", msg, err)
 }
 
 // GetRegion returns the region that was specified in the resource. If a
