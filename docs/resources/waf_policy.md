@@ -38,41 +38,41 @@ The following arguments are supported:
 
 * `domains` - (Optional, List) An array of domain IDs.
 
+* `protection_status` - (Optional, Object) Specifies the protection switches. The object structure is documented below.
+
+The `protection_status` block supports:
+
+* `basic_web_protection` - Specifies whether Basic Web Protection is enabled.
+
+* `general_check` - Specifies whether General Check in Basic Web Protection is enabled.
+
+* `crawler_engine` - Specifies whether the Search Engine switch in Basic Web Protection is enabled.
+
+* `crawler_scanner` - Specifies whether the Scanner switch in Basic Web Protection is enabled.
+
+* `crawler_script` - Specifies whether the Script Tool switch in Basic Web Protection is enabled.
+
+* `crawler_other` - Specifies whether detection of other crawlers in Basic Web Protection is enabled.
+
+* `webshell` - Specifies whether webshell detection in Basic Web Protection is enabled.
+
+* `cc_protection` - Specifies whether CC Attack Protection is enabled.
+
+* `precise_protection` - Specifies whether Precise Protection is enabled.
+
+* `blacklist` - Specifies whether Blacklist and Whitelist is enabled.
+
+* `data_masking` - Specifies whether Data Masking is enabled.
+
+* `false_alarm_masking` - Specifies whether False Alarm Masking is enabled.
+
+* `web_tamper_protection` - Specifies whether Web Tamper Protection is enabled.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The policy ID in UUID format.
-
-* `protection_status` - The protection switches. The object structure is documented below.
-
-The `protection_status` block supports:
-
-* `basic_web_protection` - Indicates whether Basic Web Protection is enabled.
-
-* `general_check` - Indicates whether General Check in Basic Web Protection is enabled.
-
-* `crawler_engine` - Indicates whether the Search Engine switch in Basic Web Protection is enabled.
-
-* `crawler_scanner` - Indicates whether the Scanner switch in Basic Web Protection is enabled.
-
-* `crawler_script` - Indicates whether the Script Tool switch in Basic Web Protection is enabled.
-
-* `crawler_other` - Indicates whether detection of other crawlers in Basic Web Protection is enabled.
-
-* `webshell` - Indicates whether webshell detection in Basic Web Protection is enabled.
-
-* `cc_protection` - Indicates whether CC Attack Protection is enabled.
-
-* `precise_protection` - Indicates whether Precise Protection is enabled.
-
-* `blacklist` - Indicates whether Blacklist and Whitelist is enabled.
-
-* `data_masking` - Indicates whether Data Masking is enabled.
-
-* `false_alarm_masking` - Indicates whether False Alarm Masking is enabled.
-
-* `web_tamper_protection` - Indicates whether Web Tamper Protection is enabled.
 
 ## Import
 
