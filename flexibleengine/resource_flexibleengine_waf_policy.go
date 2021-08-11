@@ -67,59 +67,74 @@ func resourceWafPolicyV1() *schema.Resource {
 
 			"protection_status": {
 				Type:     schema.TypeList,
+				Optional: true,
 				Computed: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"basic_web_protection": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"general_check": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"crawler_engine": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"crawler_scanner": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"crawler_script": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"crawler_other": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"webshell": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"cc_protection": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"precise_protection": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"blacklist": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"data_masking": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"false_alarm_masking": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 						"web_tamper_protection": {
 							Type:     schema.TypeBool,
+							Optional: true,
 							Computed: true,
 						},
 					},
@@ -127,6 +142,48 @@ func resourceWafPolicyV1() *schema.Resource {
 			},
 		},
 	}
+}
+
+func buildWafPolicyOptions(d *schema.ResourceData) *policies.Options {
+	optionsRaw := d.Get("protection_status").([]interface{})
+	if len(optionsRaw) == 0 {
+		return nil
+	}
+
+	rawMap := optionsRaw[0].(map[string]interface{})
+	webattack := rawMap["basic_web_protection"].(bool)
+	common := rawMap["general_check"].(bool)
+	crawlerEngine := rawMap["crawler_engine"].(bool)
+	crawlerScanner := rawMap["crawler_scanner"].(bool)
+	crawlerScript := rawMap["crawler_script"].(bool)
+	crawlerOther := rawMap["crawler_other"].(bool)
+	webshell := rawMap["webshell"].(bool)
+
+	cc := rawMap["cc_protection"].(bool)
+	custom := rawMap["precise_protection"].(bool)
+	whiteblackip := rawMap["blacklist"].(bool)
+	privacy := rawMap["data_masking"].(bool)
+	ignore := rawMap["false_alarm_masking"].(bool)
+	antitamper := rawMap["web_tamper_protection"].(bool)
+
+	options := &policies.Options{
+		WebAttack:      &webattack,
+		Common:         &common,
+		CrawlerEngine:  &crawlerEngine,
+		CrawlerScanner: &crawlerScanner,
+		CrawlerScript:  &crawlerScript,
+		CrawlerOther:   &crawlerOther,
+		WebShell:       &webshell,
+		Cc:             &cc,
+		Custom:         &custom,
+		WhiteblackIp:   &whiteblackip,
+		Privacy:        &privacy,
+		Ignore:         &ignore,
+		AntiTamper:     &antitamper,
+	}
+
+	log.Printf("[DEBUG] get WAF policy options: %#v", options)
+	return options
 }
 
 func resourceWafPolicyV1Create(d *schema.ResourceData, meta interface{}) error {
@@ -147,7 +204,36 @@ func resourceWafPolicyV1Create(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] WAF policy created: %#v", policy)
 	d.SetId(policy.Id)
 
-	return resourceWafPolicyV1Update(d, meta)
+	// Update the policy as POST API only supports Name argument
+	var updateOpts policies.UpdateOpts
+
+	if v, ok := d.GetOk("level"); ok && v.(int) != policy.Level {
+		updateOpts.Level = v.(int)
+	}
+
+	if v, ok := d.GetOk("protection_mode"); ok && v.(string) != policy.Action.Category {
+		updateOpts.Action = &policies.Action{
+			Category: v.(string),
+		}
+	}
+	if v, ok := d.GetOk("full_detection"); ok && v.(bool) != policy.FullDetection {
+		detectionMode := v.(bool)
+		updateOpts.FullDetection = &detectionMode
+	}
+
+	if _, ok := d.GetOk("protection_status"); ok {
+		updateOpts.Options = buildWafPolicyOptions(d)
+	}
+
+	if updateOpts != (policies.UpdateOpts{}) {
+		log.Printf("[DEBUG] updateOpts: %#v", updateOpts)
+		_, err = policies.Update(wafClient, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("error updating WAF policy: %s", err)
+		}
+	}
+
+	return resourceWafPolicyV1Read(d, meta)
 }
 
 func resourceWafPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
@@ -159,7 +245,7 @@ func resourceWafPolicyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	n, err := policies.Get(wafClient, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "WAF Policy")
+		return CheckDeleted(d, err, "WAF policy")
 	}
 
 	log.Printf("[DEBUG] fetching WAF policy %s: %#v", d.Id(), n)
@@ -202,7 +288,7 @@ func resourceWafPolicyV1Update(d *schema.ResourceData, meta interface{}) error {
 	var updateOpts policies.UpdateOpts
 	var changed bool
 
-	if d.HasChange("name") && !d.IsNewResource() {
+	if d.HasChange("name") {
 		changed = true
 		updateOpts.Name = d.Get("name").(string)
 	}
@@ -216,12 +302,16 @@ func resourceWafPolicyV1Update(d *schema.ResourceData, meta interface{}) error {
 		detectionMode := d.Get("full_detection").(bool)
 		updateOpts.FullDetection = &detectionMode
 	}
+	if d.HasChange("protection_status") {
+		changed = true
+		updateOpts.Options = buildWafPolicyOptions(d)
+	}
 
 	if changed {
 		log.Printf("[DEBUG] updateOpts: %#v", updateOpts)
 		_, err = policies.Update(wafClient, d.Id(), updateOpts).Extract()
 		if err != nil {
-			return fmt.Errorf("error updating WAF Policy: %s", err)
+			return fmt.Errorf("error updating WAF policy: %s", err)
 		}
 	}
 
@@ -261,13 +351,13 @@ func resourceWafPolicyV1Delete(d *schema.ResourceData, meta interface{}) error {
 				d.SetId("")
 				return nil
 			}
-			return fmt.Errorf("error unbinding WAF Policy domain: %s", err)
+			return fmt.Errorf("error unbinding WAF policy domain: %s", err)
 		}
 	}
 
 	err = policies.Delete(wafClient, d.Id()).ExtractErr()
 	if err != nil {
-		return fmt.Errorf("error deleting WAF Policy: %s", err)
+		return fmt.Errorf("error deleting WAF policy: %s", err)
 	}
 
 	d.SetId("")
