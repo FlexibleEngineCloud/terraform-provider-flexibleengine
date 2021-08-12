@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"math"
 	"regexp"
 	"time"
 
@@ -228,7 +229,9 @@ func resourceDliQueueUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 	if d.HasChange("cu_count") {
 		oldValue, newValue := d.GetChange("cu_count")
-		opt.CuCount = newValue.(int) - oldValue.(int)
+		cuChange := newValue.(int) - oldValue.(int)
+
+		opt.CuCount = int(math.Abs(float64(cuChange)))
 		opt.Action = buildScaleActionParam(oldValue.(int), newValue.(int))
 
 		log.Printf("[DEBUG]DLI queue Update Option: %#v", opt)
@@ -245,10 +248,9 @@ func resourceDliQueueUpdate(d *schema.ResourceData, meta interface{}) error {
 				queueDetail := getResult.Body.(*queues.Queue4Get)
 				return getResult, fmt.Sprintf("%d", queueDetail.CuCount), nil
 			},
-			Timeout:                   d.Timeout(schema.TimeoutUpdate),
-			Delay:                     30 * time.Second,
-			PollInterval:              20 * time.Second,
-			ContinuousTargetOccurence: 5,
+			Timeout:      d.Timeout(schema.TimeoutUpdate),
+			Delay:        30 * time.Second,
+			PollInterval: 20 * time.Second,
 		}
 		_, err = updateStateConf.WaitForState()
 		if err != nil {
