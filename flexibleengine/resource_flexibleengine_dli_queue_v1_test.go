@@ -23,32 +23,57 @@ func TestAccDliQueueV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDliQueueV1Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDliQueueV1_basic(rName),
+				Config: testAccDliQueueV1_basic(rName, 16),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDliQueueV1Exists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "queue_type", QUEUE_TYPE_SQL),
+					resource.TestCheckResourceAttr(resourceName, "cu_count", "16"),
+					resource.TestCheckResourceAttrSet(resourceName, "resource_mode"),
+					resource.TestCheckResourceAttrSet(resourceName, "create_time"),
 				),
+			},
+			{
+				Config: testAccDliQueueV1_basic(rName, 32),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDliQueueV1Exists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "queue_type", QUEUE_TYPE_SQL),
+					resource.TestCheckResourceAttr(resourceName, "cu_count", "32"),
+					resource.TestCheckResourceAttrSet(resourceName, "resource_mode"),
+					resource.TestCheckResourceAttrSet(resourceName, "create_time"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"tags",
+				},
 			},
 		},
 	})
 }
 
-func testAccDliQueueV1_basic(rName string) string {
+func testAccDliQueueV1_basic(rName string, cuCount int) string {
 	return fmt.Sprintf(`
 resource flexibleengine_dli_queue "test" {
-    name             =  "%s"
-    cu_count         =   16
-    resource_mode    =   0
-    tags             = {
-        k1    =    "1"
-    }
-}`, rName)
+  name          = "%s"
+  cu_count      = %d
+  
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}`, rName, cuCount)
 }
 
 func testAccCheckDliQueueV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	client, err := config.Config.DliV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("error creating dli client, err=%s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -70,7 +95,7 @@ func testAccCheckDliQueueV1Exists(resourceName string) resource.TestCheckFunc {
 		config := testAccProvider.Meta().(*Config)
 		client, err := config.Config.DliV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating sdk client, err=%s", err)
+			return fmt.Errorf("error creating dli client, err=%s", err)
 		}
 
 		rs, ok := s.RootModule().Resources[resourceName]
@@ -82,7 +107,7 @@ func testAccCheckDliQueueV1Exists(resourceName string) resource.TestCheckFunc {
 			if strings.Contains(err.Error(), "Error finding the resource by list api") {
 				return fmt.Errorf("flexibleengine_dli_queue is not exist")
 			}
-			return fmt.Errorf("Error checking flexibleengine_dli_queue.queue exist, err=%s", err)
+			return fmt.Errorf("error checking flexibleengine_dli_queue.queue exist, err=%s", err)
 		}
 		return nil
 	}

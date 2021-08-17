@@ -16,7 +16,8 @@ resource "flexibleengine_dli_queue" "queue" {
   name     = "terraform_dli_queue_test"
   cu_count = 16
   tags     = {
-    k1   =   "1"
+    foo = "bar"
+    key = "value"
   }
 }
 ```
@@ -25,8 +26,8 @@ resource "flexibleengine_dli_queue" "queue" {
 
 The following arguments are supported:
 
-* `cu_count` - (Required, Int, ForceNew) Minimum number of CUs that are bound to a queue. The value can be 16,
-  64, or 256. Changing this parameter will create a new resource.
+* `cu_count` - (Required, Int) Minimum number of CUs that are bound to a queue. Initial value can be `16`,
+  `64`, or `256`. When scale_out or scale_in, the number must be a multiple of 16
 
 * `name` - (Required, String, ForceNew) Name of a queue. Name of a newly created resource queue. 
     The name can contain only digits, letters, and underscores (_), 
@@ -53,5 +54,17 @@ The following arguments are supported:
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
+* `id` - Specifies a resource ID in UUID format.
 
 * `create_time` -  Time when a queue is created.
+
+## Timeouts
+This resource provides the following timeouts configuration options:
+- `update` - Default is 45 minute.
+
+## Import
+
+DLI queue can be imported by  `id`. For example,
+```
+terraform import flexibleengine_dli_queue.example  abc123
+```
