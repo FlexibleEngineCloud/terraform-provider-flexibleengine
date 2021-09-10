@@ -2,7 +2,7 @@
 subcategory: "Auto Scaling (AS)"
 ---
 
-# flexibleengine\_as\_group_v1
+# flexibleengine_as_group_v1
 
 Manages a V1 Autoscaling Group resource within flexibleengine.
 
@@ -114,12 +114,11 @@ The following arguments are supported:
     from 0 to 86400, and is 900 by default.
 
 * `lb_listener_id` - (Optional) The ELB listener IDs. The system supports up to
-    three ELB listeners, the IDs of which are separated using a comma (,).
+    six ELB listeners, the IDs of which are separated using a comma (,).
 
 * `lbaas_listeners` - (Optional) An array of one or more enhanced load balancer.
-    The system supports the binding of up to three load balancers. The field is
-    alternative to lb_listener_id.  The lbaas_listeners object structure is
-	documented below.
+    The system supports the binding of up to six load balancers. The field is
+    alternative to `lb_listener_id`.  The object structure is documented below.
 
 * `available_zones` - (Optional) The availability zones in which to create
     the instances in the autoscaling group.

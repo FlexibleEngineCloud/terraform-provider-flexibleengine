@@ -14,7 +14,7 @@ import (
 func TestAccASLifecycleHook_basic(t *testing.T) {
 	var hook lifecyclehooks.Hook
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
-	resourceGroupName := "flexibleengine_as_group_v1.hth_as_group"
+	resourceGroupName := "flexibleengine_as_group_v1.as_group"
 	resourceHookName := "flexibleengine_as_lifecycle_hook_v1.test"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -143,7 +143,7 @@ resource "flexibleengine_smn_topic_v2" "test" {
 resource "flexibleengine_smn_topic_v2" "update" {
   name = "%s-update"
 }
-`, testASV1Group_basic, rName, rName)
+`, testASV1Group_basic(rName), rName, rName)
 }
 
 func testASLifecycleHook_basic(rName string) string {
@@ -153,7 +153,7 @@ func testASLifecycleHook_basic(rName string) string {
 resource "flexibleengine_as_lifecycle_hook_v1" "test" {
   name                   = "%s"
   type                   = "ADD"
-  scaling_group_id       = flexibleengine_as_group_v1.hth_as_group.id
+  scaling_group_id       = flexibleengine_as_group_v1.as_group.id
   notification_topic_urn = flexibleengine_smn_topic_v2.test.topic_urn
   notification_message   = "This is a test message"
 }
@@ -167,7 +167,7 @@ func testASLifecycleHook_update(rName string) string {
 resource "flexibleengine_as_lifecycle_hook_v1" "test" {
   name                   = "%s"
   type                   = "REMOVE"
-  scaling_group_id       = flexibleengine_as_group_v1.hth_as_group.id
+  scaling_group_id       = flexibleengine_as_group_v1.as_group.id
   notification_topic_urn = flexibleengine_smn_topic_v2.update.topic_urn
   notification_message   = "This is a update message"
   default_result         = "CONTINUE"
