@@ -5,8 +5,8 @@ import (
 
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/bms/v2/keypairs"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/bms/v2/keypairs"
 )
 
 func dataSourceBMSKeyPairV2() *schema.Resource {

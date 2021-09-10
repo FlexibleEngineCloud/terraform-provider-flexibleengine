@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/protectedinstances"
+	"github.com/chnsz/golangsdk/openstack/sdrs/v1/protectedinstances"
 )
 
 func TestAccSdrsProtectedInstanceV1_basic(t *testing.T) {

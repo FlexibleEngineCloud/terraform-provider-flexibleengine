@@ -7,17 +7,17 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	bms "github.com/chnsz/golangsdk/openstack/bms/v2/servers"
+	"github.com/chnsz/golangsdk/openstack/bms/v2/tags"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/bootfromvolume"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/keypairs"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/secgroups"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/startstop"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/flavors"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	bms "github.com/huaweicloud/golangsdk/openstack/bms/v2/servers"
-	"github.com/huaweicloud/golangsdk/openstack/bms/v2/tags"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/bootfromvolume"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/keypairs"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/secgroups"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/startstop"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 )
 
 func resourceComputeBMSInstanceV2() *schema.Resource {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	rules "github.com/huaweicloud/golangsdk/openstack/waf/v1/falsealarmmasking_rules"
+	rules "github.com/chnsz/golangsdk/openstack/waf/v1/falsealarmmasking_rules"
 )
 
 func resourceWafRuleAlarmMasking() *schema.Resource {

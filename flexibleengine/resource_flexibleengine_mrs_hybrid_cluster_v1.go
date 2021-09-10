@@ -6,12 +6,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/chnsz/golangsdk/openstack/mrs/v1/cluster"
+	"github.com/chnsz/golangsdk/openstack/networking/v1/subnets"
+	"github.com/chnsz/golangsdk/openstack/networking/v1/vpcs"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk/openstack/mrs/v1/cluster"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v1/subnets"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v1/vpcs"
 )
 
 func resourceMRSHybridClusterV1() *schema.Resource {

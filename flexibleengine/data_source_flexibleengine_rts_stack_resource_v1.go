@@ -3,8 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 
+	"github.com/chnsz/golangsdk/openstack/rts/v1/stackresources"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/rts/v1/stackresources"
 )
 
 func dataSourceRTSStackResourcesV1() *schema.Resource {

@@ -8,13 +8,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/identity/v3/agency"
+	sdkprojects "github.com/chnsz/golangsdk/openstack/identity/v3/projects"
+	sdkroles "github.com/chnsz/golangsdk/openstack/identity/v3/roles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/agency"
-	sdkprojects "github.com/huaweicloud/golangsdk/openstack/identity/v3/projects"
-	sdkroles "github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
 )
 
 func resourceIdentityAgencyV3() *schema.Resource {

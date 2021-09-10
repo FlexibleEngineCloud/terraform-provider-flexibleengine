@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/rts/v1/softwareconfig"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/rts/v1/softwareconfig"
 )
 
 func resourceSoftwareConfigV1() *schema.Resource {

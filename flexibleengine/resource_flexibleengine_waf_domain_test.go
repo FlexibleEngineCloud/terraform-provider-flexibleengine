@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/waf/v1/domains"
+	"github.com/chnsz/golangsdk/openstack/waf/v1/domains"
 )
 
 func TestAccWafDomainV1_basic(t *testing.T) {

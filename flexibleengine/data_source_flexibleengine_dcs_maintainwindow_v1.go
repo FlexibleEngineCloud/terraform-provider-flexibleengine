@@ -5,8 +5,8 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/chnsz/golangsdk/openstack/dcs/v1/maintainwindows"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/maintainwindows"
 )
 
 func dataSourceDcsMaintainWindowV1() *schema.Resource {

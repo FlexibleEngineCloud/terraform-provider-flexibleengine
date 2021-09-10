@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/dcs/v1/availablezones"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones"
 )
 
 func dataSourceDcsAZV1() *schema.Resource {

@@ -3,12 +3,12 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/policies"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/chnsz/golangsdk/openstack/autoscaling/v1/policies"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceASPolicy() *schema.Resource {

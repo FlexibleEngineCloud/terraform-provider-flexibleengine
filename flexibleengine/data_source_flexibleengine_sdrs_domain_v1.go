@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/sdrs/v1/domains"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/domains"
 )
 
 func dataSourceSdrsDomainV1() *schema.Resource {

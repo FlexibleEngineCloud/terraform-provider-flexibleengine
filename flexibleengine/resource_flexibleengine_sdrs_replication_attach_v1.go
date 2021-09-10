@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/attachreplication"
-	"github.com/huaweicloud/golangsdk/openstack/sdrs/v1/protectedinstances"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/sdrs/v1/attachreplication"
+	"github.com/chnsz/golangsdk/openstack/sdrs/v1/protectedinstances"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

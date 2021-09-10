@@ -6,13 +6,13 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/blockstorage/extensions/volumeactions"
+	"github.com/chnsz/golangsdk/openstack/blockstorage/v2/volumes"
+	"github.com/chnsz/golangsdk/openstack/common/tags"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/volumeattach"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/extensions/volumeactions"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
-	"github.com/huaweicloud/golangsdk/openstack/common/tags"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/volumeattach"
 )
 
 func resourceBlockStorageVolumeV2() *schema.Resource {

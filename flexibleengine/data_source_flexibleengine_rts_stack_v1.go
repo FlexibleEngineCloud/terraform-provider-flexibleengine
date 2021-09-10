@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/rts/v1/stacks"
+	"github.com/chnsz/golangsdk/openstack/rts/v1/stacktemplates"
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/rts/v1/stacks"
-	"github.com/huaweicloud/golangsdk/openstack/rts/v1/stacktemplates"
 )
 
 func dataSourceRTSStackV1() *schema.Resource {

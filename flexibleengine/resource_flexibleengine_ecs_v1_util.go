@@ -5,11 +5,11 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/ecs/v1/auto_recovery"
+	"github.com/chnsz/golangsdk/openstack/ecs/v1/tags"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/auto_recovery"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/tags"
 )
 
 func resourceECSAutoRecoveryV1Read(d *schema.ResourceData, meta interface{}, instanceID string) (bool, error) {

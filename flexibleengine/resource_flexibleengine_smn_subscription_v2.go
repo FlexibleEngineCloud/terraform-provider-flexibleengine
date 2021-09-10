@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/huaweicloud/golangsdk/openstack/smn/v2/subscriptions"
+	"github.com/chnsz/golangsdk/openstack/smn/v2/subscriptions"
 )
 
 func resourceSubscription() *schema.Resource {

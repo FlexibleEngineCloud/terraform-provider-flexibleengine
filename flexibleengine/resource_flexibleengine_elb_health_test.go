@@ -6,9 +6,9 @@ import (
 
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas/healthcheck"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/healthcheck"
 )
 
 func TestAccELBHealth_basic(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/volumeattach"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/volumeattach"
 )
 
 func TestAccComputeV2VolumeAttach_basic(t *testing.T) {

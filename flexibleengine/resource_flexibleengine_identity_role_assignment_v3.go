@@ -5,10 +5,10 @@ import (
 	"log"
 	"strings"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/identity/v3/roles"
+	"github.com/chnsz/golangsdk/pagination"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
-	"github.com/huaweicloud/golangsdk/pagination"
 )
 
 func resourceIdentityRoleAssignmentV3() *schema.Resource {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/healthcheck"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas/healthcheck"
 )
 
 func resourceHealth() *schema.Resource {

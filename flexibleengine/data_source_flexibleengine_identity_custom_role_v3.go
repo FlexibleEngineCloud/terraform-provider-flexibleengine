@@ -6,8 +6,8 @@ import (
 	"log"
 	"strings"
 
+	"github.com/chnsz/golangsdk/openstack/identity/v3.0/policies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3.0/policies"
 )
 
 func dataSourceIdentityCustomRoleV3() *schema.Resource {

@@ -5,9 +5,9 @@ import (
 	"log"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/drs/v2/replicationconsistencygroups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/drs/v2/replicationconsistencygroups"
 )
 
 // TestAccDRSV2ReplicationConsistencyGroup_basic is basic acc test.

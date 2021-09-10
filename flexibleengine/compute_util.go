@@ -5,18 +5,18 @@ import (
 	"log"
 	"os"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/blockstorage/v2/volumes"
+	bms "github.com/chnsz/golangsdk/openstack/bms/v2/servers"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/flavors"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/images"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
+	"github.com/chnsz/golangsdk/openstack/ecs/v1/block_devices"
+	"github.com/chnsz/golangsdk/openstack/ecs/v1/cloudservers"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/networks"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
-	bms "github.com/huaweicloud/golangsdk/openstack/bms/v2/servers"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/flavors"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/images"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/block_devices"
-	"github.com/huaweicloud/golangsdk/openstack/ecs/v1/cloudservers"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/networks"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/ports"
 )
 
 func resourceComputeSecGroupsV2(d *schema.ResourceData) []string {

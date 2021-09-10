@@ -19,8 +19,8 @@ import (
 	"log"
 	"reflect"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
 )
 
 func resourceNatDnatRuleV2() *schema.Resource {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/identity/v3/roles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/roles"
 )
 
 func dataSourceIdentityRoleV3() *schema.Resource {

@@ -9,10 +9,10 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
 )
 
 // CheckDeleted checks the error to see if it's a 404 (Not Found) and, if so,

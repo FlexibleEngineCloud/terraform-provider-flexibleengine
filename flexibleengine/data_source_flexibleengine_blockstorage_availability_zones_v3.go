@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/availabilityzones"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/availabilityzones"
 )
 
 func dataSourceBlockStorageAvailabilityZonesV3() *schema.Resource {

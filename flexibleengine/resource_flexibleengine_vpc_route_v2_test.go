@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/routes"
 )
 
 func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {

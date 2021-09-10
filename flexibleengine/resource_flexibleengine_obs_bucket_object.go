@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/chnsz/golangsdk/openstack/obs"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk/openstack/obs"
 )
 
 func resourceObsBucketObject() *schema.Resource {

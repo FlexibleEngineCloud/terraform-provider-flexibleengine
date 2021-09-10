@@ -3,8 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 
+	"github.com/chnsz/golangsdk/openstack/networking/v2/routes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
 )
 
 func dataSourceVPCRouteIdsV2() *schema.Resource {

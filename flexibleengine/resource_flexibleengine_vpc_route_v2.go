@@ -5,11 +5,11 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk/openstack/networking/v2/routes"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/huaweicloud/golangsdk"
 )
 
 func resourceVPCRouteV2() *schema.Resource {

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	rules "github.com/huaweicloud/golangsdk/openstack/waf/v1/preciseprotection_rules"
+	rules "github.com/chnsz/golangsdk/openstack/waf/v1/preciseprotection_rules"
 )
 
 func resourceWafRulePreciseProtection() *schema.Resource {

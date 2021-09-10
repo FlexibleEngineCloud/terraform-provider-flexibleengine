@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/dns/v2/ptrrecords"
+	"github.com/chnsz/golangsdk/openstack/dns/v2/ptrrecords"
 )
 
 func randomPtrName() string {

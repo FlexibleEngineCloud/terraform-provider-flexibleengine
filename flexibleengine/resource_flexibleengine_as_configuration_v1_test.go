@@ -2,13 +2,13 @@ package flexibleengine
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/configurations"
-	"log"
+	"github.com/chnsz/golangsdk/openstack/autoscaling/v1/configurations"
 )
 
 func TestAccASV1Configuration_basic(t *testing.T) {

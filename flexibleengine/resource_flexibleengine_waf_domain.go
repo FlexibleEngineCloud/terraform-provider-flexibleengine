@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/chnsz/golangsdk/openstack/waf/v1/domains"
+	"github.com/chnsz/golangsdk/openstack/waf/v1/policies"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk/openstack/waf/v1/domains"
-	"github.com/huaweicloud/golangsdk/openstack/waf/v1/policies"
 )
 
 func resourceWafDomainV1() *schema.Resource {

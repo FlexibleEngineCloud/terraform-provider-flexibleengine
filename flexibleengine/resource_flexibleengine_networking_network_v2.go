@@ -11,9 +11,9 @@ import (
 
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/provider"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/networks"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/provider"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/networks"
 )
 
 func suppressBooleanDiffs(k, old, new string, d *schema.ResourceData) bool {

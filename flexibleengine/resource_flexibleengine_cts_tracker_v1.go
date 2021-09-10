@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/cts/v1/tracker"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/cts/v1/tracker"
 )
 
 func resourceCTSTrackerV1() *schema.Resource {
