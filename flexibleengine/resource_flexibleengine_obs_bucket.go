@@ -857,7 +857,7 @@ func setObsBucketMetadata(obsClient *obs.ObsClient, d *schema.ResourceData) erro
 		return getObsError("Error getting metadata of OBS bucket", bucket, err)
 	}
 
-	if output.AvailableZone == "3az" {
+	if output.AZRedundancy == "3az" {
 		d.Set("multi_az", true)
 	} else {
 		d.Set("multi_az", false)
