@@ -5,6 +5,7 @@ import (
 	"log"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -13,7 +14,8 @@ import (
 
 func TestAccASV1Group_basic(t *testing.T) {
 	var asGroup groups.Group
-	resourceName := "flexibleengine_as_group_v1.hth_as_group"
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_as_group_v1.as_group"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,7 +23,7 @@ func TestAccASV1Group_basic(t *testing.T) {
 		CheckDestroy: testAccCheckASV1GroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testASV1Group_basic,
+				Config: testASV1Group_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckASV1GroupExists(resourceName, &asGroup),
 					resource.TestCheckResourceAttr(resourceName, "lbaas_listeners.0.protocol_port", "8080"),
@@ -89,19 +91,20 @@ func testAccCheckASV1GroupExists(n string, group *groups.Group) resource.TestChe
 	}
 }
 
-var testASV1Group_basic = fmt.Sprintf(`
+func testASV1Group_base(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name        = "terraform"
+  name        = "sg-%s"
   description = "This is a terraform test security group"
 }
 
-resource "flexibleengine_compute_keypair_v2" "hth_key" {
-  name       = "hth_key"
+resource "flexibleengine_compute_keypair_v2" "test_key" {
+  name       = "key-%s"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLo1BCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAT9+OfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZquwhvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TAIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIFuu1p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB jrp-hp-pc"
 }
 
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name          = "loadbalancer_1"
+  name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
@@ -118,12 +121,18 @@ resource "flexibleengine_lb_pool_v2" "pool_1" {
   lb_method   = "ROUND_ROBIN"
   listener_id = flexibleengine_lb_listener_v2.listener_1.id
 }
+`, rName, rName, rName, OS_SUBNET_ID)
+}
 
-resource "flexibleengine_as_configuration_v1" "hth_as_config"{
-  scaling_configuration_name = "hth_as_config"
+func testASV1Group_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_as_configuration_v1" "test_as_config"{
+  scaling_configuration_name = "cfg-%s"
   instance_config {
 	image    = "%s"
-	key_name = flexibleengine_compute_keypair_v2.hth_key.id
+	key_name = flexibleengine_compute_keypair_v2.test_key.id
     disk {
       size        = 40
       volume_type = "SATA"
@@ -132,9 +141,9 @@ resource "flexibleengine_as_configuration_v1" "hth_as_config"{
   }
 }
 
-resource "flexibleengine_as_group_v1" "hth_as_group"{
-  scaling_group_name       = "hth_as_group"
-  scaling_configuration_id = flexibleengine_as_configuration_v1.hth_as_config.id
+resource "flexibleengine_as_group_v1" "as_group"{
+  scaling_group_name       = "as-%s"
+  scaling_configuration_id = flexibleengine_as_configuration_v1.test_as_config.id
   vpc_id                   = "%s"
 
   networks {
@@ -152,4 +161,5 @@ resource "flexibleengine_as_group_v1" "hth_as_group"{
     key = "value"
   }
 }
-`, OS_SUBNET_ID, OS_IMAGE_ID, OS_VPC_ID, OS_NETWORK_ID)
+`, testASV1Group_base(rName), rName, OS_IMAGE_ID, rName, OS_VPC_ID, OS_NETWORK_ID)
+}
