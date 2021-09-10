@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/l7policies"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/l7policies"
 )
 
 func TestAccLBV2L7Policy_basic(t *testing.T) {

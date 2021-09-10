@@ -7,11 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/volumeattach"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/security/groups"
-	"github.com/huaweicloud/golangsdk/pagination"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/volumeattach"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/security/groups"
+	"github.com/chnsz/golangsdk/pagination"
 )
 
 func TestAccComputeV2Instance_basic(t *testing.T) {

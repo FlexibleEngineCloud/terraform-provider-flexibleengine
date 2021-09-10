@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/csbs/v1/policies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/csbs/v1/policies"
 )
 
 func TestAccCSBSBackupPolicyV1_basic(t *testing.T) {

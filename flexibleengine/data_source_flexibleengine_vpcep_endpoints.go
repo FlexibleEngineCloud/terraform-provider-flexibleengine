@@ -3,8 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 
+	"github.com/chnsz/golangsdk/openstack/vpcep/v1/endpoints"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/vpcep/v1/endpoints"
 )
 
 func dataSourceVPCEPEndpoints() *schema.Resource {

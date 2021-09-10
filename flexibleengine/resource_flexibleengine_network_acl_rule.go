@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/fwaas_v2/policies"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/fwaas_v2/policies"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/fwaas_v2/rules"
 )
 
 func resourceNetworkACLRule() *schema.Resource {

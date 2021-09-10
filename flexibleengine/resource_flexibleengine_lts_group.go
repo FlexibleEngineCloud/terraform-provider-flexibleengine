@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
+	"github.com/chnsz/golangsdk/openstack/lts/v2/loggroups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/lts/v2/loggroups"
 )
 
 func resourceLTSGroupV2() *schema.Resource {

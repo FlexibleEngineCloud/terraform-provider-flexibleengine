@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/mls/v1/instances"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/mls/v1/instances"
 )
 
 func TestAccMLSV1Instance_basic(t *testing.T) {

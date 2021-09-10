@@ -3,7 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/routes"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/routes"
 
 	"log"
 

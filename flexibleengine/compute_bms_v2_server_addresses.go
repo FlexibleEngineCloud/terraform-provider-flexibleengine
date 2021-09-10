@@ -13,8 +13,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
 )
 
 // ServerNICS is a structured representation of a Gophercloud servers.Server

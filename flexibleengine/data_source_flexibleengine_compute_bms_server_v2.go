@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/bms/v2/servers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/bms/v2/servers"
 )
 
 func dataSourceBMSServersV2() *schema.Resource {

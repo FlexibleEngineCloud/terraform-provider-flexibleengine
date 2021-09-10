@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/waf/v1/policies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/waf/v1/policies"
 )
 
 func resourceWafPolicyV1() *schema.Resource {

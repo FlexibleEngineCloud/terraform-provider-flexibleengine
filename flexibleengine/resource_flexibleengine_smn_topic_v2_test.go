@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/smn/v2/topics"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/smn/v2/topics"
 )
 
 func TestAccSMNV2Topic_basic(t *testing.T) {

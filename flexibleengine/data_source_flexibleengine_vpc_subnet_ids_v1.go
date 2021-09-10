@@ -3,7 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v1/subnets"
+	"github.com/chnsz/golangsdk/openstack/networking/v1/subnets"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

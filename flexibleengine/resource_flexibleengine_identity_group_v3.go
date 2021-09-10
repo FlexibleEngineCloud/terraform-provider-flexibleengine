@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/identity/v3/groups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/groups"
 )
 
 func resourceIdentityGroupV3() *schema.Resource {

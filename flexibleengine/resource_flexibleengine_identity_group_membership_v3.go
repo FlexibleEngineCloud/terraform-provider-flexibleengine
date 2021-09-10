@@ -3,10 +3,10 @@ package flexibleengine
 import (
 	"fmt"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/identity/v3/users"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/users"
 )
 
 func resourceIdentityGroupMembershipV3() *schema.Resource {

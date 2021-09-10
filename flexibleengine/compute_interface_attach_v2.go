@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/attachinterfaces"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/attachinterfaces"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )

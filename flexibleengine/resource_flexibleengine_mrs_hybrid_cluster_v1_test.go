@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/mrs/v1/cluster"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/huaweicloud/golangsdk/openstack/mrs/v1/cluster"
 )
 
 func TestAccMRSV1HybridCluster_basic(t *testing.T) {

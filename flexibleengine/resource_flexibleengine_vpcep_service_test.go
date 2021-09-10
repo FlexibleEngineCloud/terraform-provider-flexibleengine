@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/vpcep/v1/services"
+	"github.com/chnsz/golangsdk/openstack/vpcep/v1/services"
 )
 
 func TestAccVPCEPServiceBasic(t *testing.T) {

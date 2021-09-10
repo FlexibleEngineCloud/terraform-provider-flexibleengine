@@ -7,9 +7,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas/backendmember"
 )
 
 func resourceBackend() *schema.Resource {

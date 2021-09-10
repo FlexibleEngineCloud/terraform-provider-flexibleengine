@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/identity/v3/agency"
+	"github.com/chnsz/golangsdk/openstack/identity/v3/agency"
 )
 
 func TestAccIdentityV3Agency_basic(t *testing.T) {

@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/cce/v3/nodepools"
+	"github.com/chnsz/golangsdk/openstack/cce/v3/nodes"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodepools"
-	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
 )
 
 func resourceCCENodePool() *schema.Resource {

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	rules "github.com/huaweicloud/golangsdk/openstack/waf/v1/datamasking_rules"
+	rules "github.com/chnsz/golangsdk/openstack/waf/v1/datamasking_rules"
 )
 
 func resourceWafRuleDataMasking() *schema.Resource {

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chnsz/golangsdk/openstack/waf/v1/certificates"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/huaweicloud/golangsdk/openstack/waf/v1/certificates"
 )
 
 func resourceWafCertificateV1() *schema.Resource {

@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/chnsz/golangsdk/openstack/rds/v1/instances"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 )
 
 func TestAccRDSV1Instance_basic(t *testing.T) {

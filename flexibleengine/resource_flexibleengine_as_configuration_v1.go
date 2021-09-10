@@ -1,17 +1,16 @@
 package flexibleengine
 
 import (
-	"fmt"
-	"log"
-
 	"crypto/sha1"
 	"encoding/hex"
+	"fmt"
+	"log"
 	"regexp"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/autoscaling/v1/configurations"
+	"github.com/chnsz/golangsdk/openstack/autoscaling/v1/groups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/configurations"
-	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/groups"
 )
 
 func resourceASConfiguration() *schema.Resource {

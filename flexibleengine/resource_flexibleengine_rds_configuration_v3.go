@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/rds/v3/configurations"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/rds/v3/configurations"
 )
 
 func resourceRdsConfigurationV3() *schema.Resource {

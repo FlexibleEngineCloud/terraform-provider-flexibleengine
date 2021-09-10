@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/blockstorage/v2/volumes"
 )
 
 func TestAccBlockStorageV2Volume_basic(t *testing.T) {

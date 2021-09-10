@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	rules "github.com/huaweicloud/golangsdk/openstack/waf/v1/falsealarmmasking_rules"
+	rules "github.com/chnsz/golangsdk/openstack/waf/v1/falsealarmmasking_rules"
 )
 
 func TestAccWafRuleAlarmMasking_basic(t *testing.T) {

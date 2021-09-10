@@ -5,11 +5,11 @@ import (
 	"log"
 	"strings"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/extensions/floatingips"
+	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
+	nfloatingips "github.com/chnsz/golangsdk/openstack/networking/v2/extensions/layer3/floatingips"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/extensions/floatingips"
-	"github.com/huaweicloud/golangsdk/openstack/compute/v2/servers"
-	nfloatingips "github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/layer3/floatingips"
 )
 
 func resourceComputeFloatingIPAssociateV2() *schema.Resource {

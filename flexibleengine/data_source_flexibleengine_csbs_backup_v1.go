@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chnsz/golangsdk/openstack/csbs/v1/backup"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk/openstack/csbs/v1/backup"
 )
 
 func dataSourceCSBSBackupV1() *schema.Resource {

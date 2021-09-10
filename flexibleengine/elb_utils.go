@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas"
 )
 
 func waitForELBJobSuccess(networkingClient *golangsdk.ServiceClient, j *elbaas.Job, timeout time.Duration) (*elbaas.JobInfo, error) {

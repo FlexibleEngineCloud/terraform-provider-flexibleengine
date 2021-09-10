@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/lbaas_v2/pools"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/pools"
 )
 
 func resourcePoolV2() *schema.Resource {

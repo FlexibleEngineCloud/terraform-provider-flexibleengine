@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/huaweicloud/golangsdk/openstack/dds/v3/flavors"
+	"github.com/chnsz/golangsdk/openstack/dds/v3/flavors"
 )
 
 func dataSourceDDSFlavorV3() *schema.Resource {

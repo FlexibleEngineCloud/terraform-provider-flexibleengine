@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/huaweicloud/golangsdk"
 )
 
 func dataSourceRdsFlavorV3() *schema.Resource {

@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	"github.com/huaweicloud/golangsdk/openstack/autoscaling/v1/lifecyclehooks"
+	"github.com/chnsz/golangsdk/openstack/autoscaling/v1/lifecyclehooks"
 )
 
 var hookTypeMap = map[string]string{

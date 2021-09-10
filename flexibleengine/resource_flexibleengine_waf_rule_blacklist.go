@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	rules "github.com/chnsz/golangsdk/openstack/waf/v1/whiteblackip_rules"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	rules "github.com/huaweicloud/golangsdk/openstack/waf/v1/whiteblackip_rules"
 )
 
 func resourceWafRuleBlackList() *schema.Resource {

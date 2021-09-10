@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/css/v1/snapshots"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/css/v1/snapshots"
 )
 
 func TestAccCssSnapshotV1_basic(t *testing.T) {

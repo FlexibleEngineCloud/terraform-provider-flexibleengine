@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/cce/v3/nodepools"
+	"github.com/chnsz/golangsdk/openstack/cce/v3/nodepools"
 )
 
 func TestAccCCENodePool_basic(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/huaweicloud/golangsdk/openstack/imageservice/v2/images"
+	"github.com/chnsz/golangsdk/openstack/imageservice/v2/images"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

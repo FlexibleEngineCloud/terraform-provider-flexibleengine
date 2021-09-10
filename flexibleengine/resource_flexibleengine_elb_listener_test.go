@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas/listeners"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/listeners"
 )
 
 func TestAccELBListener_basic(t *testing.T) {

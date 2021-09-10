@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/elbaas/loadbalancer_elbs"
-	"github.com/huaweicloud/golangsdk/openstack/networking/v2/extensions/security/groups"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/elbaas/loadbalancer_elbs"
+	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/security/groups"
 )
 
 func TestAccELBLoadBalancer_basic(t *testing.T) {

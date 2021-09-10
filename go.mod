@@ -4,12 +4,12 @@ go 1.14
 
 require (
 	github.com/aws/aws-sdk-go v1.25.3
+	github.com/chnsz/golangsdk v0.0.0-20210909114617-40599a869fe4
 	github.com/hashicorp/errwrap v1.0.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.7.0
-	github.com/huaweicloud/golangsdk v0.0.0-20210811022513-26588c1f3b5d
-	github.com/huaweicloud/terraform-provider-huaweicloud v1.26.2-0.20210804093218-08f1b9ceebbf
+	github.com/huaweicloud/terraform-provider-huaweicloud v1.28.1
 	github.com/jen20/awspolicyequivalence v1.1.0
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/mitchellh/go-homedir v1.1.0

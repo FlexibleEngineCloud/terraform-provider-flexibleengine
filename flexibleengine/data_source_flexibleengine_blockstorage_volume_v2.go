@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/huaweicloud/golangsdk/openstack/blockstorage/v2/volumes"
+	"github.com/chnsz/golangsdk/openstack/blockstorage/v2/volumes"
 )
 
 func dataSourceBlockStorageVolumeV2() *schema.Resource {

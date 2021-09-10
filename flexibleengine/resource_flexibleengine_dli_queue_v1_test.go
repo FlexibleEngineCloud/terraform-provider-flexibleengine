@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/huaweicloud/golangsdk/openstack/dli/v1/queues"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/huaweicloud/golangsdk"
+
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/dli/v1/queues"
 )
 
 func TestAccDliQueueV1_basic(t *testing.T) {
