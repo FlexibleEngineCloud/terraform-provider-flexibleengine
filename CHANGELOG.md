@@ -1,3 +1,16 @@
+## 1.24.0 (September 10, 2021)
+
+ENHANCEMENTS:
+* **provider:** Upgrade to terraform-plugin-sdk v2 [GH-587]
+* **config:** Add validation of domain name [GH-607]
+* `resource/flexibleengine_identity_user_v3`: Add email and phone fields into identity_user_v3 [GH-474]
+* `resource/flexibleengine_waf_policy`: Add ability to set/update protection_status block [GH-592]
+* `resource/flexibleengine_dli_queue`: Support to scale out/in dli queues [GH-600]
+
+BUG FIXES:
+* `resource/flexibleengine_as_group_v1`: Support up to six load balancers can be added to an AS group [GH-524]
+* `resource/flexibleengine_vpc_subnet_v1`: Fix subnet does not belong to the VPC error when deleting [GH-595]
+* `resource/flexibleengine_obs_bucket`: Use proxy URL from environment variables by default in obs client [GH-602]
 
 ## 1.23.0 (July 27, 2021)
 
