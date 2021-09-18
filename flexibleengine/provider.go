@@ -72,14 +72,17 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_USER_ID", ""),
-				Description: descriptions["user_name"],
+				Description: descriptions["user_id"],
 			},
 
 			"user_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_USERNAME", ""),
 				Description: descriptions["user_name"],
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"OS_USER_NAME",
+					"OS_USERNAME",
+				}, ""),
 			},
 
 			"password": {
