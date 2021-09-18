@@ -2,6 +2,7 @@ package flexibleengine
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/chnsz/golangsdk"
@@ -24,6 +25,14 @@ func dataSourceRdsFlavorV3() *schema.Resource {
 			"instance_mode": {
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"vcpus": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"memory": {
+				Type:     schema.TypeInt,
+				Optional: true,
 			},
 			"flavors": {
 				Type:     schema.TypeList,
@@ -71,18 +80,32 @@ func dataSourceRdsFlavorV3Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	mode := d.Get("instance_mode").(string)
+	cpu := d.Get("vcpus").(int)
+	mem := d.Get("memory").(int)
+
 	flavors := make([]interface{}, 0, len(r.([]interface{})))
 	for _, item := range r.([]interface{}) {
 		val := item.(map[string]interface{})
 
-		if mode == val["instance_mode"].(string) {
-			flavors = append(flavors, map[string]interface{}{
-				"vcpus":  val["vcpus"],
-				"memory": val["ram"],
-				"name":   val["spec_code"],
-				"mode":   val["instance_mode"],
-			})
+		vcpu, _ := strconv.Atoi(val["vcpus"].(string))
+		if cpu > 0 && vcpu != cpu {
+			continue
 		}
+
+		if mem > 0 && int(val["ram"].(float64)) != mem {
+			continue
+		}
+
+		if val["instance_mode"].(string) != mode {
+			continue
+		}
+
+		flavors = append(flavors, map[string]interface{}{
+			"vcpus":  val["vcpus"],
+			"memory": val["ram"],
+			"name":   val["spec_code"],
+			"mode":   val["instance_mode"],
+		})
 	}
 
 	d.SetId("flavors")
