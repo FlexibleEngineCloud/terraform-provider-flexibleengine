@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_listener\_v2
+# flexibleengine_lb_listener_v2
 
-Manages a V2 listener resource within FlexibleEngine.
+Manages an **enhanced** lb listener resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -110,10 +110,6 @@ The following arguments are supported:
 * `protocol_port` - (Required) The port on which to listen for client traffic.
     Changing this creates a new listener.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the listener.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new listener.
-
 * `loadbalancer_id` - (Required) The load balancer on which to provision this
     listener. Changing this creates a new listener.
 
@@ -124,6 +120,8 @@ The following arguments are supported:
     listener is associated. Changing this creates a new listener.
 
 * `description` - (Optional) Human-readable description for the listener.
+
+* `tags` - (Optional) The key/value pairs to associate with the listener.
 
 * `http2_enable` - (Optional, Bool) Specifies whether to use HTTP/2. The default value is false.
     This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
@@ -173,7 +171,9 @@ The following arguments are supported:
 * `admin_state_up` - (Optional) The administrative state of the listener.
     A valid value is true (UP) or false (DOWN).
 
-* `tags` - (Optional) The key/value pairs to associate with the listener.
+* `tenant_id` - (Optional) The UUID of the tenant who owns the listener.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new listener.
 
 ## Attributes Reference
 

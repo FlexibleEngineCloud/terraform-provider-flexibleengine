@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_l7policy\_v2
+# flexibleengine_lb_l7policy_v2
 
-Manages a Load Balancer L7 Policy resource within FlexibleEngine.
+Manages an **enhanced** load balancer L7 Policy resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -47,10 +47,6 @@ The following arguments are supported:
     `region` argument of the provider is used. Changing this creates a new
     L7 Policy.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the L7 Policy.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new L7 Policy.
-
 * `name` - (Optional) Human-readable name for the L7 Policy. Does not have
     to be unique.
 
@@ -62,15 +58,21 @@ The following arguments are supported:
 * `listener_id` - (Required) The Listener on which the L7 Policy will be associated with.
     Changing this creates a new L7 Policy.
 
-* `position` - (Optional) The position of this policy on the listener. Positions start at 1. Changing this creates a new L7 Policy.
+* `position` - (Optional) The position of this policy on the listener. Positions start at 1.
+    Changing this creates a new L7 Policy.
 
-* `redirect_pool_id` - (Optional) Requests matching this policy will be redirected to the
-    pool with this ID. Only valid if action is REDIRECT\_TO\_POOL.
+* `redirect_pool_id` - (Optional) Requests matching this policy will be redirected to
+    the pool with this ID. Only valid if action is REDIRECT\_TO\_POOL.
 
-* `redirect_listener_id` - (Optional) Requests matching this policy will be redirected to the listener with this ID. Only valid if action is REDIRECT\_TO\_LISTENER.
+* `redirect_listener_id` - (Optional) Requests matching this policy will be redirected to
+    the listener with this ID. Only valid if action is REDIRECT\_TO\_LISTENER.
 
 * `admin_state_up` - (Optional) The administrative state of the L7 Policy.
     This value can only be true (UP).
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the L7 Policy.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new L7 Policy.
 
 ## Attributes Reference
 
