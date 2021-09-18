@@ -6,8 +6,12 @@ subcategory: "Cloud Container Engine (CCE)"
 
 Provides a CCE addon resource within FlexibleEngine.
 
+-> **NOTE:** Currently, there is an ongoing certificate issue regarding the add-on management APIs.
+  Please set `insecure = true` in provider block to ignore SSL certificate verification.
+
 ## Example Usage
 
+### Basic Usage
 ```hcl
 variable "cluster_id" {}
 
@@ -15,6 +19,36 @@ resource "flexibleengine_cce_addon_v3" "addon_test" {
   cluster_id    = var.cluster_id
   template_name = "metrics-server"
   version       = "1.0.6"
+}
+```
+
+### Use basic_json, custom_json and flavor_json
+
+```hcl
+variable "cluster_id" {}
+variable "tenant_id" {}
+
+data "flexibleengine_cce_addon_template" "autoscaler" {
+  cluster_id = var.cluster_id
+  name       = "autoscaler"
+  version    = "1.19.6"
+}
+
+resource "flexibleengine_cce_addon_v3" "autoscaler" {
+  cluster_id = var.cluster_id
+  template_name = "autoscaler"
+  version    = "1.19.6"
+  values {
+    basic_json = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).basic)
+    custom_json = jsonencode(merge(
+      jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).parameters.custom,
+      {
+        cluster_id = var.cluster_id
+        tenant_id  = var.tenant_id
+      }
+    ))
+    flavor_json = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).parameters.flavor2)
+  }
 }
 ```
 
