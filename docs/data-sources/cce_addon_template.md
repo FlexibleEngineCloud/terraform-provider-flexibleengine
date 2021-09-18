@@ -26,7 +26,19 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) Specifies the ID of CCE cluster.
 
-* `name` - (Required, String) Specifies the add-on name.
+* `name` - (Required, String) Specifies the add-on name. The supported addons are as follows:
+
+  + **autoscaler**: AutoScaler is a component that automatically adjusts the size of a Kubernetes cluster so that all pods
+    have a place to run and there are no unneeded nodes. Latest version: 1.19.6.
+
+  + **coredns**: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS Services. Latest version: 1.17.7.
+
+  + **everest**: Everest is a cloud native container storage system based on CSI, used to support cloud storage services for Kubernetes.
+    Latest version: 1.2.9.
+
+  + **metrics-server**: Metrics Server is a cluster-level resource usage data aggregator. Latest version: 1.1.2.
+
+  + **gpu-beta**: A device plugin for nvidia.com/gpu resource on nvidia driver. Latest version: 1.2.2.
 
 * `version` - (Required, String) Specifies the add-on version.
 
