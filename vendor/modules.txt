@@ -76,9 +76,11 @@ github.com/chnsz/golangsdk/openstack/bms/v2/keypairs
 github.com/chnsz/golangsdk/openstack/bms/v2/nics
 github.com/chnsz/golangsdk/openstack/bms/v2/servers
 github.com/chnsz/golangsdk/openstack/bms/v2/tags
+github.com/chnsz/golangsdk/openstack/cce/v3/addons
 github.com/chnsz/golangsdk/openstack/cce/v3/clusters
 github.com/chnsz/golangsdk/openstack/cce/v3/nodepools
 github.com/chnsz/golangsdk/openstack/cce/v3/nodes
+github.com/chnsz/golangsdk/openstack/cce/v3/templates
 github.com/chnsz/golangsdk/openstack/cloudeyeservice/alarmrule
 github.com/chnsz/golangsdk/openstack/common/structs
 github.com/chnsz/golangsdk/openstack/common/tags
