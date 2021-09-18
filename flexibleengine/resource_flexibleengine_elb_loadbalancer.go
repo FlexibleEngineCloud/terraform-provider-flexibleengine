@@ -32,6 +32,18 @@ func resourceELoadBalancer() *schema.Resource {
 				ForceNew: true,
 			},
 
+			"vpc_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"type": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -42,26 +54,8 @@ func resourceELoadBalancer() *schema.Resource {
 				Optional: true,
 			},
 
-			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
 			"bandwidth": {
 				Type:     schema.TypeInt,
-				Optional: true,
-			},
-
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
 				Optional: true,
 			},
 
@@ -89,6 +83,12 @@ func resourceELoadBalancer() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
+			},
+
+			"admin_state_up": {
+				Type:     schema.TypeBool,
+				Default:  true,
+				Optional: true,
 			},
 
 			"tenantid": {
