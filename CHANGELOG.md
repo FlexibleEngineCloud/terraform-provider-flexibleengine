@@ -1,3 +1,16 @@
+## 1.24.1 (September 18, 2021)
+
+FEATURES:
+* **New Resurce:**
+  - `flexibleengine_cce_addon_v3` [GH-612]
+
+* **New Data Source:**
+  - `flexibleengine_cce_addon_template` [GH-612]
+  - `flexibleengine_compute_flavors_v2` [GH-615]
+
+ENHANCEMENTS:
+* `data/flexibleengine_rds_flavors_v3`: Add vcpus and memory arguments to get RDS flavors [GH-616]
+
 ## 1.24.0 (September 10, 2021)
 
 ENHANCEMENTS:
