@@ -97,7 +97,7 @@ The following arguments are supported:
   If omitted, the `OS_SECRET_KEY` environment variable is used.
 
 * `user_name` - (Optional) The User name to login with. If omitted, the
-  `OS_USERNAME` environment variable is used.
+  `OS_USER_NAME` environment variable is used.
 
 * `user_id` - (Optional) The User ID to login with. If omitted, the
   `OS_USER_ID` environment variable is used.
