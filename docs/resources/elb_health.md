@@ -2,50 +2,20 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_elb\_health
+# flexibleengine_elb_health
 
-Manages an elastic loadbalancer health resource within FlexibleEngine.
+Manages a **classic** lb health check resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_elb_loadbalancer" "elb" {
-  name = "elb"
-  type = "External"
-  description = "test elb"
-  vpc_id = "e346dc4a-d9a6-46f4-90df-10153626076e"
-  admin_state_up = 1
-  bandwidth = 5
-}
-
-resource "flexibleengine_elb_listener" "listener" {
-  name = "test-elb-listener"
-  description = "great listener"
-  protocol = "TCP"
-  backend_protocol = "TCP"
-  protocol_port = 12345
-  backend_port = 8080
-  lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.elb.id}"
-  timeouts {
-	create = "5m"
-	update = "5m"
-	delete = "5m"
-  }
-}
-
 resource "flexibleengine_elb_health" "healthcheck" {
-  listener_id = "${flexibleengine_elb_listener.listener.id}"
-  healthcheck_protocol = "TCP"
+  listener_id              = flexibleengine_elb_listener.listener.id
+  healthcheck_protocol     = "TCP"
   healthcheck_connect_port = 22
-  healthy_threshold = 5
-  healthcheck_timeout = 25
-  healthcheck_interval = 3
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  healthy_threshold        = 5
+  healthcheck_timeout      = 25
+  healthcheck_interval     = 3
 }
 ```
 
@@ -58,7 +28,7 @@ The following arguments are supported:
     creates a new elb health.
 
 * `listener_id` - (Required) Specifies the ID of the listener to which the health
-    check task belongs.
+    check belongs.
 
 * `healthcheck_protocol` - (Optional) Specifies the protocol used for the health
     check. The value can be HTTP or TCP (case-insensitive).
@@ -91,6 +61,7 @@ The following arguments are supported:
 
 The following attributes are exported:
 
+* `id` - Specifies the health check ID.
 * `region` - See Argument Reference above.
 * `listener_id` - See Argument Reference above.
 * `healthcheck_protocol` - See Argument Reference above.
@@ -100,4 +71,3 @@ The following attributes are exported:
 * `unhealthy_threshold` - See Argument Reference above.
 * `healthcheck_timeout` - See Argument Reference above.
 * `healthcheck_interval` - See Argument Reference above.
-* `id` - Specifies the health check task ID.

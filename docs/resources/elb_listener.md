@@ -2,36 +2,30 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_elb\_listener
+# flexibleengine_elb_listener
 
-Manages an elastic loadbalancer listener resource within FlexibleEngine.
+Manages a **classic** lb listener resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
 resource "flexibleengine_elb_loadbalancer" "elb" {
-  name = "elb"
-  type = "External"
+  name        = "elb"
   description = "test elb"
-  vpc_id = "e346dc4a-d9a6-46f4-90df-10153626076e"
-  admin_state_up = 1
-  bandwidth = 5
+  type        = "External"
+  vpc_id      = "e346dc4a-d9a6-46f4-90df-10153626076e"
+  bandwidth   = 5
 }
 
 resource "flexibleengine_elb_listener" "listener" {
-  name = "test-elb-listener"
-  description = "great listener"
-  protocol = "TCP"
+  loadbalancer_id  = flexibleengine_elb_loadbalancer.elb.id
+  name             = "test-elb-listener"
+  description      = "great listener"
+  protocol         = "TCP"
   backend_protocol = "TCP"
-  protocol_port = 12345
-  backend_port = 8080
-  lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.elb.id}"
-  timeouts {
-	create = "5m"
-	update = "5m"
-	delete = "5m"
-  }
+  protocol_port    = 12345
+  backend_port     = 8080
+  lb_algorithm     = "roundrobin"
 }
 ```
 
@@ -43,15 +37,12 @@ The following arguments are supported:
     omitted, the `region` argument of the provider is used. Changing this
     creates a new elb listener.
 
+* `loadbalancer_id` - (Required) Specifies the ID of the load balancer to which
+    the listener belongs.
+
 * `name` - (Required) Specifies the load balancer name. The name is a string
     of 1 to 64 characters that consist of letters, digits, underscores (_), and
     hyphens (-).
-
-* `description` - (Optional) Provides supplementary information about the listener.
-    The value is a string of 0 to 128 characters and cannot be <>.
-
-* `loadbalancer_id` - (Required) Specifies the ID of the load balancer to which
-    the listener belongs.
 
 * `protocol` - (Required) Specifies the listening protocol used for layer 4
     or 7. The value can be HTTP, TCP, HTTPS, or UDP.
@@ -68,6 +59,9 @@ The following arguments are supported:
 
 * `lb_algorithm` - (Required) Specifies the load balancing algorithm for the
     listener. The value can be roundrobin, leastconn, or source.
+
+* `description` - (Optional) Provides supplementary information about the listener.
+    The value is a string of 0 to 128 characters and cannot be <>.
 
 * `session_sticky` - (Optional) Specifies whether to enable sticky session.
     The value can be true or false. The Sticky session is enabled when the value
@@ -121,6 +115,7 @@ The following arguments are supported:
 
 The following attributes are exported:
 
+* `id` - Specifies the listener ID.
 * `region` - See Argument Reference above.
 * `name` - See Argument Reference above.
 * `description` - See Argument Reference above.
@@ -140,6 +135,5 @@ The following attributes are exported:
 * `udp_timeout` - See Argument Reference above.
 * `ssl_protocols` - See Argument Reference above.
 * `ssl_ciphers` - See Argument Reference above.
-* `id` - Specifies the listener ID.
 * `admin_state_up` - Specifies the status of the load balancer. Value range:
     false: The load balancer is disabled. true: The load balancer runs properly.

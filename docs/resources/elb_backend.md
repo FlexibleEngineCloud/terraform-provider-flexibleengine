@@ -2,42 +2,17 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_elb\_backend
+# flexibleengine_elb_backend
 
-Manages an elastic loadbalancer backend resource within FlexibleEngine.
+Manages a **classic** lb backend resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_elb_loadbalancer" "elb" {
-  name = "elb"
-  type = "External"
-  description = "test elb"
-  vpc_id = "e346dc4a-d9a6-46f4-90df-10153626076e"
-  admin_state_up = 1
-  bandwidth = 5
-}
-
-resource "flexibleengine_elb_listener" "listener" {
-  name = "test-elb-listener"
-  description = "great listener"
-  protocol = "TCP"
-  backend_protocol = "TCP"
-  protocol_port = 12345
-  backend_port = 8080
-  lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.elb.id}"
-  timeouts {
-	create = "5m"
-	update = "5m"
-	delete = "5m"
-  }
-}
-
 resource "flexibleengine_elb_backend" "backend" {
-  address = "192.168.0.211"
-  listener_id = "${flexibleengine_elb_listener.listener.id}"
-  server_id = "8f7a32f1-f66c-4d13-9b17-3a13f9f0bb8d"
+  listener_id = flexibleengine_elb_listener.listener.id
+  server_id   = "8f7a32f1-f66c-4d13-9b17-3a13f9f0bb8d"
+  address     = "192.168.0.211"
 }
 ```
 
@@ -55,11 +30,11 @@ The following arguments are supported:
 
 The following attributes are exported:
 
+* `id` - Specifies the backend member ID.
 * `listener_id` - See Argument Reference above.
 * `server_id` - See Argument Reference above.
 * `address` - See Argument Reference above.
 * `server_address` - Specifies the floating IP address assigned to the backend member.
-* `id` - Specifies the backend member ID.
 * `status` - Specifies the backend ECS status. The value is ACTIVE, PENDING,
     or ERROR.
 * `health_status` - Specifies the health check status. The value is NORMAL,
