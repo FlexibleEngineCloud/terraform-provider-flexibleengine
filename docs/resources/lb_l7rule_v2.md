@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_l7rule\_v2
+# flexibleengine_lb_l7rule_v2
 
-Manages a V2 L7 Rule resource within FlexibleEngine.
+Manages an **enhanced** load balancer L7 Rule resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -54,13 +54,10 @@ The following arguments are supported:
     `region` argument of the provider is used. Changing this creates a new
     L7 Rule.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the L7 Rule.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new L7 Rule.
-
 * `description` - (Optional) Human-readable description for the L7 Rule.
 
-* `type` - (Required) The L7 Rule type - can either be HOST\_NAME or PATH. Changing this creates a new L7 Rule.
+* `type` - (Required) The L7 Rule type - can either be HOST\_NAME or PATH.
+    Changing this creates a new L7 Rule.
 
 * `compare_type` - (Required) The comparison type for the L7 rule - can either be
     STARTS\_WITH, EQUAL_TO or REGEX
@@ -76,6 +73,10 @@ The following arguments are supported:
 
 * `admin_state_up` - (Optional) The administrative state of the L7 Rule.
     The value can only be true (UP).
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the L7 Rule.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new L7 Rule.
 
 ## Attributes Reference
 

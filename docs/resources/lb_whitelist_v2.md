@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_whitelist\_v2
+# flexibleengine_lb_whitelist_v2
 
-Manages an Enhanced LB whitelist resource within FlexibleEngine.
+Manages an **enhanced** load balancer whitelist resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -20,16 +20,17 @@ resource "flexibleengine_lb_whitelist_v2" "whitelist_1" {
 
 The following arguments are supported:
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the whitelist.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new whitelist.
-
-* `listener_id` - (Required) The Listener ID that the whitelist will be associated with. Changing this creates a new whitelist.
+* `listener_id` - (Required) The Listener ID that the whitelist will be associated with.
+  Changing this creates a new whitelist.
 
 * `enable_whitelist` - (Optional) Specify whether to enable access control.
 
 * `whitelist` - (Optional) Specifies the IP addresses in the whitelist. Use commas(,) to separate
 	the multiple IP addresses.
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the whitelist.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new whitelist.
 
 ## Attributes Reference
 

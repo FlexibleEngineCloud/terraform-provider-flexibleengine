@@ -54,39 +54,7 @@ func resourceLoadBalancerV2() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"vip_address": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
-			"vip_port_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
-				Optional: true,
-			},
-
-			"flavor": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"tags": tagsSchema(),
-			"loadbalancer_provider": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
@@ -99,6 +67,38 @@ func resourceLoadBalancerV2() *schema.Resource {
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set:      schema.HashString,
+			},
+
+			"tags": tagsSchema(),
+			"loadbalancer_provider": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
+
+			"flavor": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
+
+			"admin_state_up": {
+				Type:     schema.TypeBool,
+				Default:  true,
+				Optional: true,
+			},
+
+			"tenant_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
+
+			"vip_port_id": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}

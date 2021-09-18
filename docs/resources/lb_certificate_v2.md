@@ -2,17 +2,18 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_certificate\_v2
+# flexibleengine_lb_certificate_v2
 
-Manages a V2 certificate resource within FlexibleEngine.
+Manages an **enhanced** load balancer certificate resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "certificate_1"
+  name        = "certificate_1"
   description = "terraform test certificate"
-  domain = "www.elb.com"
+  domain      = "www.elb.com"
+
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -67,12 +68,6 @@ i34R7EQDtFeiSvBdeKRsPp8c0KT8H1B4lXNkkCQs2WX5p4lm99+ZtLD4glw8x6Ic
 i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+8Kg==
 -----END CERTIFICATE-----
 EOT
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
 }
 ```
 
@@ -88,13 +83,13 @@ The following arguments are supported:
 * `name` - (Optional) Human-readable name for the Certificate. Does not have
     to be unique.
 
-* `description` - (Optional) Human-readable description for the Certificate.
-
-* `domain` - (Optional) The domain of the Certificate.
-
 * `private_key` - (Required) The private encrypted key of the Certificate, PEM format.
 
 * `certificate` - (Required) The public encrypted key of the Certificate, PEM format.
+
+* `description` - (Optional) Human-readable description for the Certificate.
+
+* `domain` - (Optional) The domain of the Certificate.
 
 ## Attributes Reference
 

@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_loadbalancer\_v2
+# flexibleengine_lb_loadbalancer_v2
 
-Manages a V2 loadbalancer resource within FlexibleEngine.
+Manages an **enhanced** load balancer resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -36,20 +36,10 @@ The following arguments are supported:
 
 * `description` - (Optional) Human-readable description for the loadbalancer.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the loadbalancer.  Only administrative users can specify a tenant UUID
-    other than their own.  Changing this creates a new loadbalancer.
-
 * `vip_address` - (Optional) The ip address of the load balancer.
     Changing this creates a new loadbalancer.
 
-* `admin_state_up` - (Optional) The administrative state of the loadbalancer.
-    A valid value is true (UP) or false (DOWN).
-
 * `tags` - (Optional) The key/value pairs to associate with the loadbalancer.
-
-* `flavor` - (Optional) The UUID of a flavor. Currently, this is not supported.
-    Changing this creates a new loadbalancer.
 
 * `loadbalancer_provider` - (Optional) The name of the provider. Currently, only
     vlb is supported. Changing this creates a new loadbalancer.
@@ -57,6 +47,13 @@ The following arguments are supported:
 * `security_group_ids` - (Optional) A list of security group IDs to apply to the
     loadbalancer. The security groups must be specified by ID and not name (as
     opposed to how they are configured with the Compute Instance).
+
+* `admin_state_up` - (Optional) The administrative state of the loadbalancer.
+    A valid value is true (UP) or false (DOWN).
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the loadbalancer.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new loadbalancer.
 
 ## Attributes Reference
 
@@ -70,7 +67,6 @@ The following attributes are exported:
 * `vip_address` - See Argument Reference above.
 * `admin_state_up` - See Argument Reference above.
 * `tags` - See Argument Reference above.
-* `flavor` - See Argument Reference above.
 * `loadbalancer_provider` - See Argument Reference above.
 * `security_group_ids` - See Argument Reference above.
 * `vip_port_id` - The Port ID of the Load Balancer IP.

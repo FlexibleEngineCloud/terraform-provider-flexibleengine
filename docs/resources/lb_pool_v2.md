@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_pool\_v2
+# flexibleengine_lb_pool_v2
 
-Manages a V2 pool resource within FlexibleEngine.
+Manages an **enhanced** load balancer pool resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -29,10 +29,6 @@ The following arguments are supported:
     A Networking client is needed to create an . If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     pool.
-
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the pool.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new pool.
 
 * `name` - (Optional) Human-readable name for the pool.
 
@@ -61,6 +57,10 @@ The following arguments are supported:
 * `persistence` - Omit this field to prevent session persistence.  Indicates
     whether connections in the same session will be processed by the same Pool
     member or not. Changing this creates a new pool.
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the pool.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new pool.
 
 * `admin_state_up` - (Optional) The administrative state of the pool.
     A valid value is true (UP) or false (DOWN).

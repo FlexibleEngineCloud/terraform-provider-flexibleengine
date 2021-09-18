@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_member\_v2
+# flexibleengine_lb_member_v2
 
-Manages a V2 member resource within FlexibleEngine.
+Manages an **enhanced** load balancer member resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -33,10 +33,6 @@ The following arguments are supported:
 
 * `name` - (Optional) Human-readable name for the member.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the member.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new member.
-
 * `address` - (Required) The IP address of the member to receive traffic from
     the load balancer. Changing this creates a new member.
 
@@ -50,6 +46,10 @@ The following arguments are supported:
 
 * `admin_state_up` - (Optional) The administrative state of the member.
     A valid value is true (UP) or false (DOWN).
+
+* `tenant_id` - (Optional) The UUID of the tenant who owns the member.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new member.
 
 ## Attributes Reference
 

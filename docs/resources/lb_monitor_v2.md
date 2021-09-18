@@ -2,9 +2,9 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_monitor\_v2
+# flexibleengine_lb_monitor_v2
 
-Manages a V2 monitor resource within FlexibleEngine.
+Manages an **enhanced** load balancer monitor resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -31,10 +31,6 @@ The following arguments are supported:
 
 * `name` - (Optional) The Name of the Monitor.
 
-* `tenant_id` - (Optional) Required for admins. The UUID of the tenant who owns
-    the monitor.  Only administrative users can specify a tenant UUID
-    other than their own. Changing this creates a new monitor.
-
 * `type` - (Required) The type of probe, which is PING, TCP, HTTP, or HTTPS,
     that is sent by the load balancer to verify the member state. Changing this
     creates a new monitor.
@@ -60,11 +56,14 @@ The following arguments are supported:
     for a passing HTTP(S) monitor. You can either specify a single status like
     "200", or a range like "200-202".
 
+* `port` - (Optional) Specifies the health check port. The value ranges from 1 to 65536.
+
 * `admin_state_up` - (Optional) The administrative state of the monitor.
     A valid value is true (UP) or false (DOWN).
 
-* `port` - (Optional) Specifies the health check port. The value ranges from 1 to 65536.
-
+* `tenant_id` - (Optional) The UUID of the tenant who owns the monitor.
+    Only administrative users can specify a tenant UUID other than their own.
+    Changing this creates a new monitor.
 
 ## Attributes Reference
 
