@@ -117,6 +117,7 @@ github.com/chnsz/golangsdk/openstack/dws/cluster
 github.com/chnsz/golangsdk/openstack/ecs/v1/auto_recovery
 github.com/chnsz/golangsdk/openstack/ecs/v1/block_devices
 github.com/chnsz/golangsdk/openstack/ecs/v1/cloudservers
+github.com/chnsz/golangsdk/openstack/ecs/v1/flavors
 github.com/chnsz/golangsdk/openstack/ecs/v1/tags
 github.com/chnsz/golangsdk/openstack/identity/v2/tenants
 github.com/chnsz/golangsdk/openstack/identity/v2/tokens
@@ -306,6 +307,7 @@ github.com/hashicorp/yamux
 # github.com/huaweicloud/terraform-provider-huaweicloud v1.28.1
 ## explicit
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config
+github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/hashcode
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents
 # github.com/jen20/awspolicyequivalence v1.1.0

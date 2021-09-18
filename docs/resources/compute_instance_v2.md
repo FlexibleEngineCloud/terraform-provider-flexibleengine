@@ -14,7 +14,7 @@ Manages a V2 VM instance resource within FlexibleEngine.
 resource "flexibleengine_compute_instance_v2" "basic" {
   name            = "basic"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -40,7 +40,7 @@ resource "flexibleengine_blockstorage_volume_v2" "myvol" {
 resource "flexibleengine_compute_instance_v2" "myinstance" {
   name            = "myinstance"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -60,7 +60,7 @@ resource "flexibleengine_compute_volume_attach_v2" "attached" {
 ```hcl
 resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
   name            = "boot-from-volume"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -91,7 +91,7 @@ resource "flexibleengine_blockstorage_volume_v2" "myvol" {
 
 resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
   name            = "bootfromvolume"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -115,7 +115,7 @@ resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   image_id        = "<image-id>"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -148,7 +148,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
   image_id        = "<image-id>"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -180,7 +180,7 @@ resource "flexibleengine_networking_floatingip_v2" "myip" {
 resource "flexibleengine_compute_instance_v2" "multi-net" {
   name            = "multi-net"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -206,7 +206,7 @@ resource "flexibleengine_compute_floatingip_associate_v2" "myip" {
 resource "flexibleengine_compute_instance_v2" "multi-eph" {
   name            = "multi_eph"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
 
@@ -242,7 +242,7 @@ resource "flexibleengine_compute_instance_v2" "multi-eph" {
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "basic"
   image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = "3"
+  flavor_id       = "s3.large.2"
   key_pair        = "my_key_pair_name"
   security_groups = ["default"]
   user_data       = "#cloud-config\nhostname: instance_1.example.com\nfqdn: instance_1.example.com"
