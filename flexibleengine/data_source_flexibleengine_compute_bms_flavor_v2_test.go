@@ -16,9 +16,12 @@ func TestAccBMSV2FlavorDataSource_basic(t *testing.T) {
 			{
 				Config: testAccBMSV2FlavorDataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBMSV2FlavorDataSourceID("data.flexibleengine_compute_bms_flavors_v2.flavor"),
+					testAccCheckBMSV2FlavorDataSourceID("data.flexibleengine_compute_bms_flavors_v2.byName"),
+					testAccCheckBMSV2FlavorDataSourceID("data.flexibleengine_compute_bms_flavors_v2.byCPU"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_compute_bms_flavors_v2.flavor", "name", OS_BMS_FLAVOR_NAME),
+						"data.flexibleengine_compute_bms_flavors_v2.byName", "name", OS_BMS_FLAVOR_NAME),
+					resource.TestCheckResourceAttr(
+						"data.flexibleengine_compute_bms_flavors_v2.byCPU", "vcpus", "32"),
 				),
 			},
 		},
@@ -41,7 +44,11 @@ func testAccCheckBMSV2FlavorDataSourceID(n string) resource.TestCheckFunc {
 }
 
 var testAccBMSV2FlavorDataSource_basic = fmt.Sprintf(`
-data "flexibleengine_compute_bms_flavors_v2" "flavor" {
+data "flexibleengine_compute_bms_flavors_v2" "byName" {
   name = "%s"
+}
+
+data "flexibleengine_compute_bms_flavors_v2" "byCPU" {
+  vcpus = 32
 }
 `, OS_BMS_FLAVOR_NAME)
