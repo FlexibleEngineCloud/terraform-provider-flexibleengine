@@ -6,6 +6,7 @@ import (
 
 	"github.com/chnsz/golangsdk/openstack/bms/v2/flavors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func dataSourceBMSFlavorV2() *schema.Resource {
@@ -19,29 +20,31 @@ func dataSourceBMSFlavorV2() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"id": {
-				Type:     schema.TypeString,
-				Optional: true,
+			"vcpus": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validation.IntAtLeast(0),
 			},
 			"min_ram": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"ram": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"vcpus": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
 			"min_disk": {
 				Type:     schema.TypeInt,
 				Optional: true,
+			},
+
+			"ram": {
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"disk": {
 				Type:     schema.TypeInt,
@@ -86,28 +89,49 @@ func dataSourceBMSFlavorV2Read(d *schema.ResourceData, meta interface{}) error {
 		SortDir: d.Get("sort_dir").(string),
 	}
 	var flavor flavors.Flavor
-	refinedflavors, err := flavors.List(flavorClient, listOpts)
+	allFlavors, err := flavors.List(flavorClient, listOpts)
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve flavors: %s", err)
 	}
 
-	if len(refinedflavors) < 1 {
+	if len(allFlavors) < 1 {
 		return fmt.Errorf("Your query returned no results. " +
 			"Please change your search criteria and try again.")
-	} else {
-		flavor = refinedflavors[0]
 	}
 
-	log.Printf("[DEBUG] Single Flavor found: %s", flavor.ID)
+	vcpus := d.Get("vcpus").(int)
+	index := findBMSFlavorsByCPUs(allFlavors, vcpus)
+	if index == -1 {
+		return fmt.Errorf("Your query returned no results by %d vcpus. "+
+			"Please change your search criteria and try again.", vcpus)
+	}
+
+	flavor = allFlavors[index]
+	log.Printf("[DEBUG] Retrieve BMS flavor: %#v", flavor)
+
 	d.SetId(flavor.ID)
 	d.Set("name", flavor.Name)
+	d.Set("vcpus", flavor.VCPUs)
 	d.Set("disk", flavor.Disk)
 	d.Set("min_disk", flavor.MinDisk)
 	d.Set("min_ram", flavor.MinRAM)
 	d.Set("ram", flavor.RAM)
 	d.Set("rx_tx_factor", flavor.RxTxFactor)
 	d.Set("swap", flavor.Swap)
-	d.Set("vcpus", flavor.VCPUs)
 
 	return nil
+}
+
+func findBMSFlavorsByCPUs(all []flavors.Flavor, vcpus int) int {
+	if vcpus == 0 {
+		return 0
+	}
+
+	for i, item := range all {
+		if item.VCPUs == vcpus {
+			return i
+		}
+	}
+
+	return -1
 }
