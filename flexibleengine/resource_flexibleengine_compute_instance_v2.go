@@ -218,6 +218,16 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Optional: true,
 							ForceNew: true,
 						},
+						"disk_bus": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+						"device_type": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
 						"device_name": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -938,6 +948,8 @@ func resourceInstanceBlockDevicesV2(d *schema.ResourceData, bds []interface{}) (
 			GuestFormat:         bdM["guest_format"].(string),
 			VolumeType:          bdM["volume_type"].(string),
 			DeviceName:          bdM["device_name"].(string),
+			DeviceType:          bdM["device_type"].(string),
+			DiskBus:             bdM["disk_bus"].(string),
 		}
 
 		sourceType := bdM["source_type"].(string)

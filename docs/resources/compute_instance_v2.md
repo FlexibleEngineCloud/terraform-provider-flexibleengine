@@ -375,6 +375,9 @@ The `block_device` block supports:
     termination of the instance. Defaults to false. Changing this creates a
     new server.
 
+* `disk_bus` - (Optional) The low-level disk bus that will be used. Most common
+    thing is to leave this empty. Changing this creates a new server.
+
 The `scheduler_hints` block supports:
 
 * `group` - (Optional) A UUID of a Server Group. The instance will be placed
