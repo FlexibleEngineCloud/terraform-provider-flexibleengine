@@ -1,3 +1,9 @@
+## 1.24.2 (October 04, 2021)
+
+ENHANCEMENTS:
+* `data/flexibleengine_compute_bms_flavors_v2`: support to query an available BMS flavor by vcpus [GH-618]
+* `resource/flexibleengine_compute_instance_v2`: add device_type and disk_bus fields [GH-622]
+
 ## 1.24.1 (September 18, 2021)
 
 FEATURES:
