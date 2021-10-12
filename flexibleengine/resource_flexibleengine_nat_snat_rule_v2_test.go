@@ -4,38 +4,34 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/layer3/floatingips"
-	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/layer3/routers"
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/snatrules"
-	"github.com/chnsz/golangsdk/openstack/networking/v2/networks"
-	"github.com/chnsz/golangsdk/openstack/networking/v2/subnets"
 )
 
 func TestAccNatSnatRule_basic(t *testing.T) {
-	var fip floatingips.FloatingIP
-	var network networks.Network
-	var router routers.Router
-	var subnet subnets.Subnet
+	randSuffix := acctest.RandString(5)
+	resourceName := "flexibleengine_nat_snat_rule_v2.snat_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNatV2SnatRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNatV2SnatRule_basic,
+				Config: testAccNatV2SnatRule_basic(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
-					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
-					testAccCheckNetworkingV2RouterInterfaceExists("flexibleengine_networking_router_interface_v2.int_1"),
 					testAccCheckNatV2GatewayExists("flexibleengine_nat_gateway_v2.nat_1"),
-					testAccCheckNatV2SnatRuleExists("flexibleengine_nat_snat_rule_v2.snat_1"),
+					testAccCheckNatV2SnatRuleExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -92,43 +88,25 @@ func testAccCheckNatV2SnatRuleExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccNatV2SnatRule_basic = `
-resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  cidr = "192.168.199.0/24"
-  ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-}
-
-resource "flexibleengine_networking_router_interface_v2" "int_1" {
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-}
+func testAccNatV2SnatRule_basic(suffix string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_nat_gateway_v2" "nat_1" {
-  name   = "nat_1"
+  name        = "natgw-test-%s"
   description = "test for terraform"
-  spec = "1"
-  internal_network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
+  spec        = "1"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
+  subnet_id   = flexibleengine_vpc_subnet_v1.subnet_1.id
 }
 
 resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
-  nat_gateway_id = "${flexibleengine_nat_gateway_v2.nat_1.id}"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  floating_ip_id = "${flexibleengine_networking_floatingip_v2.fip_1.id}"
+  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
+  subnet_id      = flexibleengine_vpc_subnet_v1.subnet_1.id
+  floating_ip_id = flexibleengine_networking_floatingip_v2.fip_1.id
 }
-`
+`, testAccNatPreCondition(suffix), suffix)
+}

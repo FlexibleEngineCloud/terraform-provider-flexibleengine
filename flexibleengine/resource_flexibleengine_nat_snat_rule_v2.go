@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -18,6 +19,10 @@ func resourceNatSnatRuleV2() *schema.Resource {
 		Create: resourceNatSnatRuleV2Create,
 		Read:   resourceNatSnatRuleV2Read,
 		Delete: resourceNatSnatRuleV2Delete,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -36,15 +41,9 @@ func resourceNatSnatRuleV2() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"network_id": {
-				Type:          schema.TypeString,
-				ConflictsWith: []string{"cidr"},
-				Optional:      true,
-				ForceNew:      true,
-			},
-			"cidr": {
+			"floating_ip_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 			},
 			"source_type": {
@@ -53,10 +52,18 @@ func resourceNatSnatRuleV2() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 			},
-			"floating_ip_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+			"subnet_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ExactlyOneOf: []string{"cidr", "network_id"},
+			},
+			"cidr": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ExactlyOneOf: []string{"subnet_id", "network_id"},
 			},
 
 			"floating_ip_address": {
@@ -66,6 +73,14 @@ func resourceNatSnatRuleV2() *schema.Resource {
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+
+			// deprecated
+			"network_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "use subnet_id instead",
 			},
 		},
 	}
@@ -78,18 +93,23 @@ func resourceNatSnatRuleV2Create(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
 
+	var subnetID string
+	if v, ok := d.GetOk("subnet_id"); ok {
+		subnetID = v.(string)
+	} else {
+		subnetID = d.Get("network_id").(string)
+	}
+
 	sourceType := d.Get("source_type").(int)
-	if sourceType == 1 {
-		if _, ok := d.GetOk("network_id"); ok {
-			return fmt.Errorf("source_type and network_id is incompatible in the Direct Connect scenario (source_type=1)")
-		}
+	if sourceType == 1 && subnetID != "" {
+		return fmt.Errorf("source_type and subnet_id is incompatible in the Direct Connect scenario (source_type=1)")
 	}
 
 	createOpts := &snatrules.CreateOpts{
 		NatGatewayID: d.Get("nat_gateway_id").(string),
 		FloatingIPID: d.Get("floating_ip_id").(string),
-		NetworkID:    d.Get("network_id").(string),
 		Cidr:         d.Get("cidr").(string),
+		NetworkID:    subnetID,
 		SourceType:   sourceType,
 	}
 
@@ -131,14 +151,16 @@ func resourceNatSnatRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 		return CheckDeleted(d, err, "Snat Rule")
 	}
 
+	d.Set("region", GetRegion(d, config))
 	d.Set("nat_gateway_id", snatRule.NatGatewayID)
 	d.Set("floating_ip_id", snatRule.FloatingIPID)
 	d.Set("floating_ip_address", snatRule.FloatingIPAddress)
-	d.Set("source_type", snatRule.SourceType)
-	d.Set("network_id", snatRule.NetworkID)
+	d.Set("subnet_id", snatRule.NetworkID)
 	d.Set("cidr", snatRule.Cidr)
 	d.Set("status", snatRule.Status)
-	d.Set("region", GetRegion(d, config))
+
+	sourceType, _ := strconv.Atoi(snatRule.SourceType)
+	d.Set("source_type", sourceType)
 
 	return nil
 }
