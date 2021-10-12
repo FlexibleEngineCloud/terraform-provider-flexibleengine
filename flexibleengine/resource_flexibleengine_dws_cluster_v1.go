@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/chnsz/golangsdk"
-	"github.com/chnsz/golangsdk/openstack/dws/cluster"
+	"github.com/chnsz/golangsdk/openstack/dws/v1/cluster"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -212,7 +212,7 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 	}
 	log.Printf("[DEBUG] Create DWS-Cluster Options: %#v", opts)
 
-	c, err := cluster.Create(client, opts).Extract()
+	c, err := cluster.Create(client, opts)
 	if err != nil {
 		return fmt.Errorf("Error creating DWS-Cluster: %s", err)
 	}
@@ -221,7 +221,7 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{"AVAILABLE"},
 		Pending:    []string{"CREATING"},
-		Refresh:    getDWSCluster(client, c.ID),
+		Refresh:    getDWSCluster(client, c.Cluster.Id),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      5 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -229,10 +229,10 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 	_, err = stateConf.WaitForState()
 	if err != nil {
 		return fmt.Errorf("Error waiting for DWS cluster %s(%s) to become AVAILABLE, error=%s",
-			opts.Name, c.ID, err)
+			opts.Name, c.Cluster.Id, err)
 	}
 
-	d.SetId(c.ID)
+	d.SetId(c.Cluster.Id)
 
 	return resourceDWSClusterV1Read(d, meta)
 }
@@ -244,7 +244,7 @@ func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
 
-	r, err := cluster.Get(client, d.Id()).Extract()
+	r, err := cluster.Get(client, d.Id())
 	if err != nil {
 		return CheckDeleted(d, err, "DWS-Cluster")
 	}
@@ -310,14 +310,12 @@ func resourceDWSClusterV1Delete(d *schema.ResourceData, meta interface{}) error 
 
 func getDWSCluster(client *golangsdk.ServiceClient, clusterID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		r, err := cluster.Get(client, clusterID).Extract()
+		r, err := cluster.Get(client, clusterID)
 		if err != nil {
 			return nil, "", err
 		}
 		if r.FailedReasons != nil {
-			for k := range r.FailedReasons {
-				return nil, r.Status, fmt.Errorf(r.FailedReasons[k].ErrorMsg)
-			}
+			return nil, r.Status, fmt.Errorf(r.FailedReasons.ErrorMsg)
 		}
 		return r, r.Status, nil
 	}

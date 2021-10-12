@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/chnsz/golangsdk/openstack/dws/cluster"
+	"github.com/chnsz/golangsdk/openstack/dws/v1/cluster"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -40,7 +40,7 @@ func testDWSClusterDestroy(s *terraform.State) error {
 		}
 
 		id := rs.Primary.ID
-		_, err := cluster.Get(client, id).Extract()
+		_, err := cluster.Get(client, id)
 		if err == nil {
 			return fmt.Errorf("Cluster still exists")
 		}
@@ -67,12 +67,12 @@ func testDWSClusterExists(n string, ar *cluster.Cluster) resource.TestCheckFunc 
 		}
 
 		id := rs.Primary.ID
-		found, err := cluster.Get(client, id).Extract()
+		found, err := cluster.Get(client, id)
 		if err != nil {
 			return err
 		}
 
-		*ar = *found
+		ar = &found.Cluster
 
 		return nil
 	}
@@ -85,15 +85,15 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup" {
 }
 
 resource "flexibleengine_dws_cluster_v1" "cluster" {
-  "node_type" = "dws.d1.xlarge"
-  "number_of_node" = 3
-  "subnet_id" = "%s"
-  "vpc_id" = "%s"
-  "security_group_id" = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
-  "availability_zone" = "%s"
-  "name" = "terraform_dws_cluster_test"
-  "user_name" = "test_cluster_admin"
-  "user_pwd" = "cluster123@!"
+  node_type = "dws2.m6.4xlarge.8"
+  number_of_node = 3
+  subnet_id = "%s"
+  vpc_id = "%s"
+  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
+  availability_zone = "%s"
+  name = "terraform_dws_cluster_test"
+  user_name = "test_cluster_admin"
+  user_pwd = "cluster123@!"
 
   timeouts {
     create = "30m"
