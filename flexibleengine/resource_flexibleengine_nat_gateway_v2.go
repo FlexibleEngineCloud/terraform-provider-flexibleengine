@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/natgateways"
@@ -18,6 +19,10 @@ func resourceNatGatewayV2() *schema.Resource {
 		Read:   resourceNatGatewayV2Read,
 		Update: resourceNatGatewayV2Update,
 		Delete: resourceNatGatewayV2Delete,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -34,35 +39,57 @@ func resourceNatGatewayV2() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: false,
+			},
+			"spec": {
+				Type:     schema.TypeString,
+				Required: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"1", "2", "3", "4",
+				}, false),
+			},
+			"vpc_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ExactlyOneOf: []string{"router_id"},
+			},
+			"subnet_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ExactlyOneOf: []string{"internal_network_id"},
 			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
-				ForceNew: false,
 			},
-			"spec": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     false,
-				ValidateFunc: resourceNatGatewayV2ValidateSpec,
-			},
-			"tenant_id": {
+
+			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
-				ForceNew: true,
 			},
-			"router_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+
+			// deprecated
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "will be removed later",
 			},
 			"internal_network_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "use subnet_id instead",
+			},
+			"router_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "use vpc_id instead",
 			},
 		},
 	}
@@ -70,9 +97,21 @@ func resourceNatGatewayV2() *schema.Resource {
 
 func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := config.natV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
+	}
+
+	var vpcID, subnetID string
+	if v1, ok := d.GetOk("vpc_id"); ok {
+		vpcID = v1.(string)
+	} else {
+		vpcID = d.Get("router_id").(string)
+	}
+	if v2, ok := d.GetOk("subnet_id"); ok {
+		subnetID = v2.(string)
+	} else {
+		subnetID = d.Get("internal_network_id").(string)
 	}
 
 	createOpts := &natgateways.CreateOpts{
@@ -80,12 +119,12 @@ func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error 
 		Description:       d.Get("description").(string),
 		Spec:              d.Get("spec").(string),
 		TenantID:          d.Get("tenant_id").(string),
-		RouterID:          d.Get("router_id").(string),
-		InternalNetworkID: d.Get("internal_network_id").(string),
+		RouterID:          vpcID,
+		InternalNetworkID: subnetID,
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	natGateway, err := natgateways.Create(natV2Client, createOpts).Extract()
+	natGateway, err := natgateways.Create(natClient, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creatting Nat Gateway: %s", err)
 	}
@@ -94,7 +133,7 @@ func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error 
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{"ACTIVE"},
-		Refresh:    waitForNatGatewayActive(natV2Client, natGateway.ID),
+		Refresh:    waitForNatGatewayActive(natClient, natGateway.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      5 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -112,12 +151,12 @@ func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := config.natV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
 
-	natGateway, err := natgateways.Get(natV2Client, d.Id()).Extract()
+	natGateway, err := natgateways.Get(natClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "Nat Gateway")
 	}
@@ -125,10 +164,9 @@ func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", natGateway.Name)
 	d.Set("description", natGateway.Description)
 	d.Set("spec", natGateway.Spec)
-	d.Set("router_id", natGateway.RouterID)
-	d.Set("internal_network_id", natGateway.InternalNetworkID)
-	d.Set("tenant_id", natGateway.TenantID)
-
+	d.Set("vpc_id", natGateway.RouterID)
+	d.Set("subnet_id", natGateway.InternalNetworkID)
+	d.Set("status", natGateway.Status)
 	d.Set("region", GetRegion(d, config))
 
 	return nil
@@ -136,7 +174,7 @@ func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceNatGatewayV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := config.natV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -155,7 +193,7 @@ func resourceNatGatewayV2Update(d *schema.ResourceData, meta interface{}) error 
 
 	log.Printf("[DEBUG] Update Options: %#v", updateOpts)
 
-	_, err = natgateways.Update(natV2Client, d.Id(), updateOpts).Extract()
+	_, err = natgateways.Update(natClient, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error updating Nat Gateway: %s", err)
 	}
@@ -165,7 +203,7 @@ func resourceNatGatewayV2Update(d *schema.ResourceData, meta interface{}) error 
 
 func resourceNatGatewayV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := config.natV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -173,7 +211,7 @@ func resourceNatGatewayV2Delete(d *schema.ResourceData, meta interface{}) error 
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"ACTIVE"},
 		Target:     []string{"DELETED"},
-		Refresh:    waitForNatGatewayDelete(natV2Client, d.Id()),
+		Refresh:    waitForNatGatewayDelete(natClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -188,9 +226,9 @@ func resourceNatGatewayV2Delete(d *schema.ResourceData, meta interface{}) error 
 	return nil
 }
 
-func waitForNatGatewayActive(natV2Client *golangsdk.ServiceClient, nId string) resource.StateRefreshFunc {
+func waitForNatGatewayActive(client *golangsdk.ServiceClient, nId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		n, err := natgateways.Get(natV2Client, nId).Extract()
+		n, err := natgateways.Get(client, nId).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -204,11 +242,11 @@ func waitForNatGatewayActive(natV2Client *golangsdk.ServiceClient, nId string) r
 	}
 }
 
-func waitForNatGatewayDelete(natV2Client *golangsdk.ServiceClient, nId string) resource.StateRefreshFunc {
+func waitForNatGatewayDelete(client *golangsdk.ServiceClient, nId string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		log.Printf("[DEBUG] Attempting to delete FlexibleEngine Nat Gateway %s.\n", nId)
 
-		n, err := natgateways.Get(natV2Client, nId).Extract()
+		n, err := natgateways.Get(client, nId).Extract()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Nat gateway %s", nId)
@@ -217,7 +255,7 @@ func waitForNatGatewayDelete(natV2Client *golangsdk.ServiceClient, nId string) r
 			return n, "ACTIVE", err
 		}
 
-		err = natgateways.Delete(natV2Client, nId).ExtractErr()
+		err = natgateways.Delete(client, nId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Nat Gateway %s", nId)
@@ -229,17 +267,4 @@ func waitForNatGatewayDelete(natV2Client *golangsdk.ServiceClient, nId string) r
 		log.Printf("[DEBUG] FlexibleEngine Nat Gateway %s still active.\n", nId)
 		return n, "ACTIVE", nil
 	}
-}
-
-var Specs = [4]string{"1", "2", "3", "4"}
-
-func resourceNatGatewayV2ValidateSpec(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	for i := range Specs {
-		if value == Specs[i] {
-			return
-		}
-	}
-	errors = append(errors, fmt.Errorf("%q must be one of %v", k, Specs))
-	return
 }

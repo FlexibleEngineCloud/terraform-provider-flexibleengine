@@ -4,41 +4,43 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
-	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/layer3/routers"
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/natgateways"
-	"github.com/chnsz/golangsdk/openstack/networking/v2/networks"
-	"github.com/chnsz/golangsdk/openstack/networking/v2/subnets"
 )
 
 func TestAccNatGateway_basic(t *testing.T) {
-	var network networks.Network
-	var router routers.Router
-	var subnet subnets.Subnet
+	randSuffix := acctest.RandString(5)
+	resourceName := "flexibleengine_nat_gateway_v2.nat_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNatV2GatewayDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNatV2Gateway_basic,
+				Config: testAccNatV2Gateway_basic(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2RouterExists("flexibleengine_networking_router_v2.router_1", &router),
-					testAccCheckNetworkingV2RouterInterfaceExists("flexibleengine_networking_router_interface_v2.int_1"),
-					testAccCheckNatV2GatewayExists("flexibleengine_nat_gateway_v2.nat_1"),
+					testAccCheckNatV2GatewayExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("nat-gateway-basic-%s", randSuffix)),
+					resource.TestCheckResourceAttr(resourceName, "description", "test for terraform"),
+					resource.TestCheckResourceAttr(resourceName, "spec", "1"),
+					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
 			},
 			{
-				Config: testAccNatV2Gateway_update,
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccNatV2Gateway_update(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("flexibleengine_nat_gateway_v2.nat_1", "name", "nat_1_updated"),
-					resource.TestCheckResourceAttr("flexibleengine_nat_gateway_v2.nat_1", "description", "nat_1 updated"),
-					resource.TestCheckResourceAttr("flexibleengine_nat_gateway_v2.nat_1", "spec", "2"),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("nat-gateway-updated-%s", randSuffix)),
+					resource.TestCheckResourceAttr(resourceName, "description", "test for terraform updated"),
+					resource.TestCheckResourceAttr(resourceName, "spec", "2"),
 				),
 			},
 		},
@@ -96,66 +98,46 @@ func testAccCheckNatV2GatewayExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccNatV2Gateway_basic = `
-resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
-  admin_state_up = "true"
+func testAccNatPreCondition(suffix string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "nat-vpc-%s"
+  cidr = "172.16.0.0/16"
 }
 
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name       = "nat-sunnet-%s"
+  cidr       = "172.16.10.0/24"
+  gateway_ip = "172.16.10.1"
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+}
+`, suffix, suffix)
 }
 
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  cidr = "192.168.199.0/24"
-  ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-}
-
-resource "flexibleengine_networking_router_interface_v2" "int_1" {
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-}
+func testAccNatV2Gateway_basic(suffix string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_nat_gateway_v2" "nat_1" {
-  name   = "nat_1"
+  name        = "nat-gateway-basic-%s"
   description = "test for terraform"
-  spec = "1"
-  internal_network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
+  spec        = "1"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
+  subnet_id   = flexibleengine_vpc_subnet_v1.subnet_1.id
 }
-`
-
-const testAccNatV2Gateway_update = `
-resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
-  admin_state_up = "true"
+`, testAccNatPreCondition(suffix), suffix)
 }
 
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  cidr = "192.168.199.0/24"
-  ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-}
-
-resource "flexibleengine_networking_router_interface_v2" "int_1" {
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-}
+func testAccNatV2Gateway_update(suffix string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_nat_gateway_v2" "nat_1" {
-  name   = "nat_1_updated"
-  description = "nat_1 updated"
-  spec = "2"
-  internal_network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
+  name        = "nat-gateway-updated-%s"
+  description = "test for terraform updated"
+  spec        = "2"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
+  subnet_id   = flexibleengine_vpc_subnet_v1.subnet_1.id
 }
-`
+`, testAccNatPreCondition(suffix), suffix)
+}
