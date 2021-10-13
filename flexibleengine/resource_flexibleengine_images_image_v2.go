@@ -53,11 +53,6 @@ func resourceImagesImageV2() *schema.Resource {
 				ValidateFunc: resourceImagesImageV2ValidateContainerFormat,
 			},
 
-			"created_at": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
 			"disk_format": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -153,7 +148,11 @@ func resourceImagesImageV2() *schema.Resource {
 				Set:      schema.HashString,
 			},
 
-			"update_at": {
+			"created_at": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -267,8 +266,6 @@ func resourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("checksum", img.Checksum)
 	d.Set("size_bytes", img.SizeBytes)
 	d.Set("metadata", img.Metadata)
-	d.Set("created_at", img.CreatedAt)
-	d.Set("update_at", img.UpdatedAt)
 	d.Set("container_format", img.ContainerFormat)
 	d.Set("disk_format", img.DiskFormat)
 	d.Set("min_disk_gb", img.MinDiskGigabytes)
@@ -280,6 +277,9 @@ func resourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("tags", img.Tags)
 	d.Set("visibility", img.Visibility)
 	d.Set("region", GetRegion(d, config))
+
+	d.Set("created_at", img.CreatedAt.Format(time.RFC3339))
+	d.Set("updated_at", img.UpdatedAt.Format(time.RFC3339))
 
 	return nil
 }

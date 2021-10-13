@@ -65,8 +65,8 @@ func testAccCheckNetworkingSecGroupV2DataSourceID(n string) resource.TestCheckFu
 
 const testAccFlexibleEngineNetworkingSecGroupV2DataSource_group = `
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-        name        = "flexibleengine_acctest_secgroup"
-	description = "My neutron security group for flexibleengine acctest"
+  name        = "flexibleengine_acctest_secgroup"
+  description = "My neutron security group for flexibleengine acctest"
 }
 `
 
@@ -74,7 +74,7 @@ var testAccFlexibleEngineNetworkingSecGroupV2DataSource_basic = fmt.Sprintf(`
 %s
 
 data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-	name = "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"
+  name = flexibleengine_networking_secgroup_v2.secgroup_1.name
 }
 `, testAccFlexibleEngineNetworkingSecGroupV2DataSource_group)
 
@@ -82,6 +82,6 @@ var testAccFlexibleEngineNetworkingSecGroupV2DataSource_secGroupID = fmt.Sprintf
 %s
 
 data "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-	secgroup_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  secgroup_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
 }
 `, testAccFlexibleEngineNetworkingSecGroupV2DataSource_group)

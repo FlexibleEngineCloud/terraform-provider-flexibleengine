@@ -28,6 +28,10 @@ func dataSourceNetworkingSecGroupV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Optional: true,

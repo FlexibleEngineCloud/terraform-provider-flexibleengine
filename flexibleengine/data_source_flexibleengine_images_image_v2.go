@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"time"
 
 	"github.com/chnsz/golangsdk/openstack/imageservice/v2/images"
 
@@ -120,7 +121,10 @@ func dataSourceImagesImageV2() *schema.Resource {
 				Type:     schema.TypeMap,
 				Computed: true,
 			},
-
+			"created_at": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"updated_at": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -202,7 +206,6 @@ func dataSourceImagesImageV2Attributes(d *schema.ResourceData, image *images.Ima
 
 	d.SetId(image.ID)
 	d.Set("name", image.Name)
-	d.Set("tags", image.Tags)
 	d.Set("container_format", image.ContainerFormat)
 	d.Set("disk_format", image.DiskFormat)
 	d.Set("min_disk_gb", image.MinDiskGigabytes)
@@ -213,10 +216,10 @@ func dataSourceImagesImageV2Attributes(d *schema.ResourceData, image *images.Ima
 	d.Set("checksum", image.Checksum)
 	d.Set("size_bytes", image.SizeBytes)
 	d.Set("metadata", image.Metadata)
-	d.Set("created_at", image.CreatedAt)
-	d.Set("updated_at", image.UpdatedAt)
 	d.Set("file", image.File)
 	d.Set("schema", image.Schema)
+	d.Set("created_at", image.CreatedAt.Format(time.RFC3339))
+	d.Set("updated_at", image.UpdatedAt.Format(time.RFC3339))
 
 	return nil
 }

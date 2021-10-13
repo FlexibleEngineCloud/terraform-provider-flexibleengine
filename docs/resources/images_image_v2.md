@@ -72,7 +72,6 @@ The following attributes are exported:
 
 * `checksum` - The checksum of the data associated with the image.
 * `container_format` - See Argument Reference above.
-* `created_at` - The date the image was created.
 * `disk_format` - See Argument Reference above.
 * `file` - the trailing path after the glance
    endpoint that represent the location of the image
@@ -93,8 +92,9 @@ The following attributes are exported:
 * `status` - The status of the image. It can be "queued", "active"
    or "saving".
 * `tags` - See Argument Reference above.
-* `update_at` - The date the image was last updated.
 * `visibility` - See Argument Reference above.
+* `created_at` - The date the image was created.
+* `updated_at` - The date the image was last updated.
 
 ## Import
 
