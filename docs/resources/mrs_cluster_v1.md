@@ -2,7 +2,7 @@
 subcategory: "MapReduce Service (MRS)"
 ---
 
-# flexibleengine\_mrs\_cluster\_v1
+# flexibleengine_mrs_cluster_v1
 
 Manages resource cluster within FlexibleEngine MRS.
 
@@ -10,23 +10,22 @@ Manages resource cluster within FlexibleEngine MRS.
 
 ```hcl
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
-  region = "eu-west-0"
+  region            = "eu-west-0"
   available_zone_id = "eu-west-0a"
-  billing_type    = 12
-  cluster_name    = "mrs-cluster-test"
-  cluster_type    = 0
-  cluster_version = "MRS 2.0.1"
+  cluster_name      = "mrs-cluster-test"
+  cluster_type      = 0
+  cluster_version   = "MRS 2.0.1"
 
   master_node_num  = 2
   core_node_num    = 3
   master_node_size = "s3.2xlarge.4.linux.mrs"
   core_node_size   = "s3.xlarge.4.linux.mrs"
-  volume_type = "SATA"
-  volume_size = 100
-  vpc_id = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
-  subnet_id = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
+  volume_type      = "SATA"
+  volume_size      = 100
+  vpc_id           = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
+  subnet_id        = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
 
-  safe_mode = 0
+  safe_mode             = 0
   cluster_admin_secret  = "{{password_of_mrs_manager}}"
   node_public_cert_name = "KeyPair-ci"
 
@@ -49,10 +48,14 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
 
 The following arguments are supported:
 
-* `billing_type` - (Required) The value is 12, indicating on-demand payment.
-
-* `region` - (Required) Cluster region information. Obtain the value from
+* `region` - (Optional) Cluster region information. Obtain the value from
     Regions and Endpoints.
+
+* `available_zone_id` - (Required) ID or Name of an available zone. Obtain the value
+    from Regions and Endpoints.
+
+* `cluster_name` - (Required) Cluster name, which is globally unique and contains
+    only 1 to 64 letters, digits, hyphens (-), and underscores (_).
 
 * `master_node_num` - (Required) Number of Master nodes The value is 2.
 
@@ -95,12 +98,6 @@ The following arguments are supported:
 * `core_node_size` - (Required) Instance specification of a Core node Configuration
     method of this parameter is identical to that of master_node_size.
 
-* `available_zone_id` - (Required) ID of an available zone. Obtain the value
-    from Regions and Endpoints.
-
-* `cluster_name` - (Required) Cluster name, which is globally unique and contains
-    only 1 to 64 letters, digits, hyphens (-), and underscores (_).
-
 * `vpc_id` - (Required) ID of the VPC where the subnet locates Obtain the VPC
     ID from the management console as follows: Register an account and log in to
     the management console. Click Virtual Private Cloud and select Virtual Private
@@ -111,13 +108,6 @@ The following arguments are supported:
     console as follows: Register an account and log in to the management console.
     Click Virtual Private Cloud and select Virtual Private Cloud from the left list.
     On the Virtual Private Cloud page, obtain the subnet ID from the list.
-
-* `cluster_version` - (Optional) Version of the clusters. Currently, MRS 1.3.0, MRS 1.5.0,
-    MRS 1.6.3, MRS 1.8.9, and MRS 2.0.1 are supported. The latest version of MRS is used by default.
-   Currently, the latest version is MRS 2.0.1.
-
-* `cluster_type` - (Optional) Type of clusters. 0: analysis cluster; 1: streaming cluster.
-   The default value is 0.
 
 * `volume_type` - (Required) Type of disks SATA and SSD are supported. SATA:
     common I/O SSD: super high-speed I/O
@@ -136,62 +126,50 @@ The following arguments are supported:
 * `node_public_cert_name` - (Required) Name of a key pair You can use a key
     to log in to the Master node in the cluster.
 
-* `safe_mode` - (Required) MRS cluster running mode 0: common mode The value
-    indicates that the Kerberos authentication is disabled. Users can use all functions
-    provided by the cluster. 1: safe mode The value indicates that the Kerberos
-    authentication is enabled. Common users cannot use the file management or job
-    management functions of an MRS cluster and cannot view cluster resource usage
-    or the job records of Hadoop and Spark. To use these functions, the users must
-    obtain the relevant permissions from the MRS Manager administrator. The request
-    has the cluster_admin_secret parameter only when safe_mode is set to 1.
+* `safe_mode` - (Required) MRS cluster running mode.
+    + **0**: common mode The value indicates that the Kerberos authentication is disabled.
+      Users can use all functions provided by the cluster.
+    + **1**: safe mode The value indicates that the Kerberos authentication is enabled.
+      Common users cannot use the file management and job management functions of an MRS cluster or
+      view cluster resource usage and the job records of Hadoop and Spark. To use these functions,
+      the users must obtain the relevant permissions from the MRS Manager administrator.
 
-* `cluster_admin_secret` - (Optional) Indicates the password of the MRS Manager
-    administrator. The password for MRS 1.5.0: Must contain 6 to 32 characters.
-    Must contain at least two types of the following: Lowercase letters Uppercase
-    letters Digits Special characters of `~!@#$%^&*()-_=+\|[{}];:'",<.>/? Spaces
-    Must be different from the username. Must be different from the username written
-    in reverse order. The password for MRS 1.3.0: Must contain 8 to 64 characters.
-    Must contain at least four types of the following: Lowercase letters Uppercase
-    letters Digits Special characters of `~!@#$%^&*()-_=+\|[{}];:'",<.>/? Spaces
-    Must be different from the username. Must be different from the username written
-    in reverse order. This parameter needs to be configured only when safe_mode
-    is set to 1.
+* `cluster_admin_secret` - (Required) Indicates the password of the MRS Manager
+    administrator.
+    + Must contain 8 to 32 characters.
+    + Must contain at least three of the following: Lowercase letters, Uppercase letters,
+      Digits and Special characters: `~!@#$%^&*()-_=+\|[{}];:'",<.>/? and space
+    + Cannot be the username or the username spelled backwards.
+
+* `cluster_version` - (Optional) Version of the clusters. Possible values are as follows:
+    MRS 1.8.9, MRS 2.0.1, MRS 2.1.0 and MRS 3.1.0-LTS.1. The latest version of MRS is used by default.
+
+* `cluster_type` - (Optional) Type of clusters. 0: analysis cluster; 1: streaming cluster.
+   The default value is 0.
 
 * `log_collection` - (Optional) Indicates whether logs are collected when cluster
     installation fails. 0: not collected 1: collected The default value is 0. If
     log_collection is set to 1, OBS buckets will be created to collect the MRS logs.
     These buckets will be charged.
 
-* `component_list` - (Required) Service component list.
+* `component_list` - (Required) Service component list. The object structure is documented below.
 
-* `add_jobs` - (Optional) You can submit a job when you create a cluster to
-    save time and use MRS easily. Only one job can be added.
-
+* `add_jobs` - (Optional) You can submit a job when you create a cluster to save time and use MRS easily.
+    Only one job can be added. The object structure is documented below.
 
 The `component_list` block supports:
 
-* `component_name` - (Required) Component name Currently, Hadoop, Spark, HBase,
-    Hive, Hue, Loader, Flume, Kafka and Storm are supported. Loader and Flume are
-    not supported by MRS 1.3.0.
-* `componentId` - Component ID Component IDs supported by MRS 1.5.0 include:
-    MRS 1.5.0_001: Hadoop MRS 1.5.0_002: Spark MRS 1.5.0_003: HBase MRS 1.5.0_004:
-    Hive MRS 1.5.0_005: Hue MRS 1.5.0_006: Kafka MRS 1.5.0_007: Storm MRS 1.5.0_008:
-    Loader MRS 1.5.0_009: Flume Component IDs supported by MRS 1.3.0 include: MRS
-    1.3.0_001: Hadoop MRS 1.3.0_002: Spark MRS 1.3.0_003: HBase MRS 1.3.0_004: Hive
-    MRS 1.3.0_005: Hue MRS 1.3.0_006: Kafka MRS 1.3.0_007: Storm For example, the
-    component ID of Hadoop is MRS 1.5.0_001, or MRS 1.3.0_001.
-* `componentName` - Component name Currently, Hadoop, Spark, HBase, Hive, Hue,
-    Loader, Flume, Kafka and Storm are supported. Loader and Flume are not supported
-    by MRS 1.3.0.
-* `componentVersion` - Component version MRS 1.5.0 supports the following component
-    version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark: 2.1.0
-    HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Loader: 2.0.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2 Flume: 1.6.0 MRS 1.3.0 supports the following
-    component version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark:
-    1.5.1 HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2
-* `componentDesc` - Component description
-
+* `component_name` - (Required) the Component name.
+    + MRS 3.1.0-LTS.1 supports the following components:
+      - The analysis cluster contains the following components: Hadoop, Spark2x, HBase, Hive, Hue, HetuEngine,
+        Loader, Flink, Oozie, ZooKeeper, Ranger, and Tez.
+      - The streaming cluster contains the following components: Kafka, Flume, ZooKeeper, and Ranger.
+    + MRS 2.0.1 supports the following components:
+      - The analysis cluster contains the following components: Presto, Hadoop, Spark, HBase, Hive, Hue, Loader, and Tez
+      - The streaming cluster contains the following components: Kafka, Storm, and Flume.
+    + MRS 1.8.9 supports the following components:
+      - The analysis cluster contains the following components: Presto, Hadoop, Spark, HBase, Opentsdb, Hive, Hue, Loader, and Flink
+      - The streaming cluster contains the following components: Kafka, KafkaManager, Storm, and Flume.
 
 The `add_jobs` block supports:
 * `job_type` - (Required) Job type 1: MapReduce 2: Spark 3: Hive Script 4: HiveQL
@@ -248,29 +226,9 @@ The `add_jobs` block supports:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `billing_type` - See Argument Reference above.
-* `data_center` - See Argument Reference above.
-* `master_node_num` - See Argument Reference above.
-* `master_node_size` - See Argument Reference above.
-* `core_node_num` - See Argument Reference above.
-* `core_node_size` - See Argument Reference above.
-* `available_zone_id` - See Argument Reference above.
-* `cluster_name` - See Argument Reference above.
-* `vpc_id` - See Argument Reference above.
-* `subnet_id` - See Argument Reference above.
-* `cluster_version` - See Argument Reference above.
-* `cluster_type` - See Argument Reference above.
-* `volume_type` - See Argument Reference above.
-* `volume_size` - See Argument Reference above.
-* `node_public_cert_name` - See Argument Reference above.
-* `safe_mode` - See Argument Reference above.
-* `cluster_admin_secret` - See Argument Reference above.
-* `log_collection` - See Argument Reference above.
-* `component_list` - See Argument Reference below.
-* `add_jobs` - See Argument Reference above.
-* `order_id` - Order ID for creating clusters.
+* `id` - The resource ID in UUID format.
 * `cluster_id` - Cluster ID.
 * `available_zone_name` - Name of an availability zone.
 * `instance_id` - Instance ID.
@@ -286,36 +244,24 @@ The following attributes are exported:
 * `core_node_spec_id` - Specification ID of a Core node.
 * `master_node_product_id` - Product ID of a Master node.
 * `core_node_product_id` - Product ID of a Core node.
-* `duration` - Cluster subscription duration.
 * `vnc` - URI address for remote login of the elastic cloud server.
 * `fee` - Cluster creation fee, which is automatically calculated.
 * `deployment_id` - Deployment ID of a cluster.
-* `cluster_state` - Cluster status Valid values include: existing history starting
-    running terminated failed abnormal terminating rebooting shutdown frozen scaling-out
-    scaling-in scaling-error.
+* `cluster_state` - Cluster status. Valid values include: starting, running, terminated, failed, abnormal,
+    terminating, frozen, scaling-out and scaling-in.
+* `order_id` - Order ID for creating clusters.
 * `tenant_id` - Project ID.
 * `create_at` - Cluster creation time.
 * `update_at` - Cluster update time.
-* `error_info` - Error information.
+* `duration` - Cluster subscription duration.
 * `charging_start_time` - Time when charging starts.
 * `remark` - Remarks of a cluster.
+* `error_info` - Error information.
+* `component_list` - See Argument Reference below.
 
 The component_list attributes:
-* `component_name` - (Required) Component name Currently, Hadoop, Spark, HBase,
-    Hive, Hue, Loader, Flume, Kafka and Storm are supported. Loader and Flume are
-    not supported by MRS 1.3.0.
-* `component_id` - Component ID Component IDs supported by MRS 1.5.0 include:
-    MRS 1.5.0_001: Hadoop MRS 1.5.0_002: Spark MRS 1.5.0_003: HBase MRS 1.5.0_004:
-    Hive MRS 1.5.0_005: Hue MRS 1.5.0_006: Kafka MRS 1.5.0_007: Storm MRS 1.5.0_008:
-    Loader MRS 1.5.0_009: Flume Component IDs supported by MRS 1.3.0 include: MRS
-    1.3.0_001: Hadoop MRS 1.3.0_002: Spark MRS 1.3.0_003: HBase MRS 1.3.0_004: Hive
-    MRS 1.3.0_005: Hue MRS 1.3.0_006: Kafka MRS 1.3.0_007: Storm For example, the
-    component ID of Hadoop is MRS 1.5.0_001, or MRS 1.3.0_001.
-* `component_version` - Component version MRS 1.5.0 supports the following component
-    version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark: 2.1.0
-    HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Loader: 2.0.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2 Flume: 1.6.0 MRS 1.3.0 supports the following
-    component version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark:
-    1.5.1 HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2
-* `component_desc` - Component description
+* `component_id` - Component ID. For example, component_id of Hadoop is MRS 3.1.0-LTS.1_001, MRS 2.1.0_001,
+    MRS 2.0.1_001, and MRS 1.8.9_001.
+* `component_name` - Component name.
+* `component_version` - Component version.
+* `component_desc` - Component description.

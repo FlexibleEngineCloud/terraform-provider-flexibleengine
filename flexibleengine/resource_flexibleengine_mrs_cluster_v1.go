@@ -36,11 +36,6 @@ func resourceMRSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 
-			"billing_type": {
-				Type:     schema.TypeInt,
-				Required: true,
-				ForceNew: true,
-			},
 			"master_node_num": {
 				Type:     schema.TypeInt,
 				Required: true,
@@ -82,6 +77,12 @@ func resourceMRSClusterV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"billing_type": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: true,
+				Default:  12,
+			},
 			"cluster_version": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -118,10 +119,10 @@ func resourceMRSClusterV1() *schema.Resource {
 				ForceNew: true,
 			},
 			"cluster_admin_secret": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
+				ForceNew:  true,
 			},
 			"log_collection": {
 				Type:     schema.TypeInt,
@@ -296,10 +297,6 @@ func resourceMRSClusterV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"duration": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"vnc": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -337,6 +334,10 @@ func resourceMRSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 			"charging_start_time": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"duration": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -506,7 +507,14 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("cluster_id", clusterGet.Clusterid)
 	d.Set("available_zone_name", clusterGet.Azname)
 	d.Set("available_zone_id", clusterGet.Azid)
+	d.Set("cluster_name", clusterGet.Clustername)
 	d.Set("cluster_version", clusterGet.Clusterversion)
+	d.Set("cluster_type", clusterGet.ClusterType)
+	d.Set("cluster_state", clusterGet.Clusterstate)
+	d.Set("volume_type", clusterGet.MasterDataVolumeType)
+	d.Set("volume_size", clusterGet.MasterDataVolumeSize)
+	d.Set("vpc_id", clusterGet.Vpcid)
+	d.Set("subnet_id", clusterGet.Subnetid)
 
 	masterNodeNum, err := strconv.Atoi(clusterGet.Masternodenum)
 	if err != nil {
@@ -518,9 +526,7 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("master_node_num", masterNodeNum)
 	d.Set("core_node_num", coreNodeNum)
-	d.Set("cluster_name", clusterGet.Clustername)
 	d.Set("core_node_size", clusterGet.Corenodesize)
-	d.Set("volume_size", clusterGet.Volumesize)
 	d.Set("node_public_cert_name", clusterGet.Nodepubliccertname)
 	d.Set("safe_mode", clusterGet.Safemode)
 	d.Set("master_node_size", clusterGet.Masternodesize)
@@ -541,7 +547,6 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("vnc", clusterGet.Vnc)
 	d.Set("fee", clusterGet.Fee)
 	d.Set("deployment_id", clusterGet.Deploymentid)
-	d.Set("cluster_state", clusterGet.Clusterstate)
 	d.Set("error_info", clusterGet.Errorinfo)
 	d.Set("remark", clusterGet.Remark)
 	d.Set("tenant_id", clusterGet.Tenantid)
@@ -564,10 +569,9 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	chargingStartTimeTm := time.Unix(chargingStartTime, 0)
 
-	d.Set("update_at", updateAtTm)
-	d.Set("create_at", createAtTm)
-	d.Set("charging_start_time", chargingStartTimeTm)
-	d.Set("component_list", clusterGet.Duration)
+	d.Set("update_at", updateAtTm.Format(RFC3339ZNoTNoZ))
+	d.Set("create_at", createAtTm.Format(RFC3339ZNoTNoZ))
+	d.Set("charging_start_time", chargingStartTimeTm.Format(RFC3339ZNoTNoZ))
 
 	components := make([]map[string]interface{}, len(clusterGet.Componentlist))
 	for i, attachment := range clusterGet.Componentlist {

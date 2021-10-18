@@ -2,52 +2,53 @@
 subcategory: "MapReduce Service (MRS)"
 ---
 
-# flexibleengine\_mrs\_hybrid\_cluster\_v1
+# flexibleengine_mrs_hybrid_cluster_v1
 
 Manages resource cluster within FlexibleEngine MRS.
 
 ## Example Usage:  Creating a MRS hybrid cluster
 
 ```hcl
-resource "flexibleengine_vpc_v1" "vpc_2" {
-  name = "terraform_provider_vpc2"
-  cidr= "192.168.0.0/16"
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "terraform_provider_vpc"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "flexibleengine_subnet"
-  cidr = "192.168.0.0/16"
+  name       = "flexibleengine_subnet"
+  cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
-  vpc_id = flexibleengine_vpc_v1.vpc_2.id
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
 }
 resource "flexibleengine_mrs_hybrid_cluster_v1" "cluster1" {
   available_zone  = "eu-west-0a"
   cluster_name    = "mrs-hybrid-cluster-acc"
   cluster_version = "MRS 2.0.1"
-  cluster_admin_secret  = "Cluster@123"
+  component_list  = ["Hadoop", "Storm", "Spark", "Hive"]
+  vpc_id          = flexibleengine_vpc_v1.vpc_1.id
+  subnet_id       = flexibleengine_vpc_subnet_v1.subnet_1.id
+  cluster_admin_secret = "Cluster@123"
   master_node_key_pair = "KeyPair-ci"
-  vpc_id = flexibleengine_vpc_v1.vpc_2.id
-  subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.id
-  component_list = ["Hadoop", "Storm", "Spark", "Hive"]
+
   master_nodes {
-    node_number = 1
-    flavor = "s3.2xlarge.4.linux.mrs"
-    data_volume_type = "SATA"
-    data_volume_size = 100
+    node_number       = 1
+    flavor            = "s3.2xlarge.4.linux.mrs"
+    data_volume_type  = "SATA"
+    data_volume_size  = 100
     data_volume_count = 1
   }
   analysis_core_nodes {
-    node_number = 1
-    flavor = "s3.xlarge.4.linux.mrs"
-    data_volume_type = "SATA"
-    data_volume_size = 100
+    node_number       = 1
+    flavor            = "s3.xlarge.4.linux.mrs"
+    data_volume_type  = "SATA"
+    data_volume_size  = 100
     data_volume_count = 1
   }
   streaming_core_nodes {
-    node_number = 1
-    flavor = "s3.xlarge.4.linux.mrs"
-    data_volume_type = "SATA"
-    data_volume_size = 100
+    node_number       = 1
+    flavor            = "s3.xlarge.4.linux.mrs"
+    data_volume_type  = "SATA"
+    data_volume_size  = 100
     data_volume_count = 1
   }
 }
@@ -66,9 +67,8 @@ The following arguments are supported:
 * `cluster_name` - (Required) Cluster name, which is globally unique and contains
     only 1 to 64 letters, digits, hyphens (-), and underscores (_).
 
-* `cluster_version` - (Required) Version of the clusters. Currently, MRS 1.6.3, MRS 1.8.9, 
-    and MRS 2.0.1 are supported. The latest version of MRS is used by default.
-    Currently, the latest version is MRS 2.0.1.
+* `cluster_version` - (Required) Version of the clusters. Possible values are as follows:
+    MRS 1.8.9, MRS 2.0.1, MRS 2.1.0 and MRS 3.1.0-LTS.1.
 
 * `vpc_id` - (Required) Specifies the id of the VPC.
 
@@ -170,25 +170,9 @@ The `master_nodes`, `analysis_core_nodes`, `streaming_core_nodes`, `analysis_tas
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `available_zone` - See Argument Reference above.
-* `cluster_name` - See Argument Reference above.
-* `cluster_version` - See Argument Reference above.  
-* `safe_mode` - See Argument Reference above.
-* `cluster_admin_secret` - See Argument Reference above.
-* `master_node_key_pair` - See Argument Reference above.
-* `vpc_id` - See Argument Reference above.
-* `subnet_id` - See Argument Reference above.
-* `security_group_id` - See Argument Reference above.
-* `log_collection` - See Argument Reference above.
-* `master_nodes` - See Argument Reference above.
-* `analysis_core_nodes` - See Argument Reference above.
-* `streaming_core_nodes` - See Argument Reference above.
-* `analysis_task_nodes` - See Argument Reference above.
-* `streaming_task_nodes` - See Argument Reference above.
-* `component_list` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
 * `billing_type` - The value is Metered, indicating on-demand payment.
 * `total_node_number` - Total node number.
 * `master_node_ip` - IP address of a Master node.
@@ -202,21 +186,10 @@ The following attributes are exported:
 * `update_at` - Cluster update time.
 * `charging_start_time` - Time when charging starts.
 
-The components attributes:
+The `components` attributes:
 
-* `component_name` - Component name
-* `component_id` - Component ID Component IDs supported by MRS 1.5.0 include:
-    MRS 1.5.0_001: Hadoop MRS 1.5.0_002: Spark MRS 1.5.0_003: HBase MRS 1.5.0_004:
-    Hive MRS 1.5.0_005: Hue MRS 1.5.0_006: Kafka MRS 1.5.0_007: Storm MRS 1.5.0_008:
-    Loader MRS 1.5.0_009: Flume Component IDs supported by MRS 1.3.0 include: MRS
-    1.3.0_001: Hadoop MRS 1.3.0_002: Spark MRS 1.3.0_003: HBase MRS 1.3.0_004: Hive
-    MRS 1.3.0_005: Hue MRS 1.3.0_006: Kafka MRS 1.3.0_007: Storm For example, the
-    component ID of Hadoop is MRS 1.5.0_001, or MRS 1.3.0_001.
-* `component_version` - Component version MRS 1.5.0 supports the following component
-    version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark: 2.1.0
-    HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Loader: 2.0.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2 Flume: 1.6.0 MRS 1.3.0 supports the following
-    component version: Component version of an analysis cluster: Hadoop: 2.7.2 Spark:
-    1.5.1 HBase: 1.0.2 Hive: 1.2.1 Hue: 3.11.0 Component version of a streaming
-    cluster: Kafka: 0.10.0.0 Storm: 1.0.2
-* `component_desc` - Component description
+* `component_id` - Component ID. For example, component_id of Hadoop is MRS 3.1.0-LTS.1_001, MRS 2.1.0_001,
+    MRS 2.0.1_001, and MRS 1.8.9_001.
+* `component_name` - Component name.
+* `component_version` - Component version.
+* `component_desc` - Component description.

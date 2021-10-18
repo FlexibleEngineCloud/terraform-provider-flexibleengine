@@ -93,23 +93,25 @@ func testAccCheckMRSV1ClusterExists(n string, clusterGet *cluster.Cluster) resou
 
 var TestAccMRSV1ClusterConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
-  cluster_name = "mrs-cluster-acc"
-  region = "%s"
-  billing_type = 12
-  master_node_num = 2
-  core_node_num = 3
-  master_node_size = "s1.4xlarge.linux.mrs"
-  core_node_size = "s1.xlarge.linux.mrs"
+  region            = "%s"
   available_zone_id = "%s"
-  vpc_id = "%s"
-  subnet_id = "%s"
-  cluster_version = "MRS 1.5.0"
+  cluster_name      = "mrs-cluster-acc"
+  cluster_version   = "MRS 2.0.1"
+  cluster_type      = 0
+  master_node_num   = 2
+  core_node_num     = 3
+  master_node_size  = "s3.2xlarge.4.linux.mrs"
+  core_node_size    = "s3.xlarge.4.linux.mrs"
+
+  node_public_cert_name = "KeyPair-ci"
+  safe_mode             = 1
+  cluster_admin_secret  = "MapReduce@123"
+
   volume_type = "SATA"
   volume_size = 100
-  safe_mode = 0
-  cluster_type = 0
-  node_public_cert_name = "KeyPair-ci"
-  cluster_admin_secret = ""
+  vpc_id      = "%s"
+  subnet_id   = "%s"
+
   component_list {
       component_name = "Hadoop"
   }
