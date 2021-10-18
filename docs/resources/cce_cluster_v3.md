@@ -75,6 +75,8 @@ The following arguments are supported:
 
 * `container_network_cidr` - (Optional) Container network segment. Changing this parameter will create a new cluster resource.
 
+* `service_network_cidr` - (Optional) Service network segment. Changing this parameter will create a new cluster resource.
+
 * `authentication_mode` - (Optional) Authentication mode of the cluster, possible values are x509 and rbac. Defaults to *rbac*.
     Changing this parameter will create a new cluster resource.
 
