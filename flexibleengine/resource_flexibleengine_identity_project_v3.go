@@ -59,7 +59,7 @@ func resourceIdentityProjectV3Create(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 	identityClient, err := config.identityV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenStack identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
 	createOpts := projects.CreateOpts{
@@ -72,11 +72,10 @@ func resourceIdentityProjectV3Create(d *schema.ResourceData, meta interface{}) e
 	project, err := projects.Create(identityClient, createOpts).Extract()
 
 	if err != nil {
-		return fmt.Errorf("Error creating project")
+		return fmt.Errorf("Error creating project: %s", err)
 	}
 
 	d.SetId(project.ID)
-	log.Printf("[INFO] Project ID: %s", project.ID)
 
 	return resourceIdentityProjectV3Read(d, meta)
 }
@@ -110,20 +109,20 @@ func resourceIdentityProjectV3Update(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 	identityClient, err := config.identityV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OpenStack identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
 	var hasChange bool
 	var updateOpts projects.UpdateOpts
 
+	if d.HasChange("name") {
+		hasChange = true
+		updateOpts.Name = d.Get("name").(string)
+	}
+
 	if d.HasChange("description") {
 		hasChange = true
 		updateOpts.Description = d.Get("description").(string)
-	}
-
-	if d.HasChange("name") {
-		hasChange = true
-		updateOpts.Description = d.Get("name").(string)
 	}
 
 	if hasChange {
@@ -146,7 +145,7 @@ func resourceIdentityProjectV3Delete(d *schema.ResourceData, meta interface{}) e
 	// config := meta.(*Config)
 	// identityClient, err := config.identityV3Client(GetRegion(d, config))
 	// if err != nil {
-	// 	return fmt.Errorf("Error creating OpenStack identity client: %s", err)
+	// 	return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	// }
 
 	// err = projects.Delete(identityClient, d.Id()).ExtractErr()
