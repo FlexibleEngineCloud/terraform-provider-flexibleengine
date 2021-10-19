@@ -32,17 +32,17 @@ func resourceMRSJobV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"cluster_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
 			"job_type": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
 			"job_name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"cluster_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
