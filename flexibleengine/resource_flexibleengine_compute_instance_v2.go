@@ -20,6 +20,7 @@ import (
 	"github.com/chnsz/golangsdk/openstack/ecs/v1/cloudservers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceComputeInstanceV2() *schema.Resource {
@@ -221,12 +222,13 @@ func resourceComputeInstanceV2() *schema.Resource {
 						"disk_bus": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								"virtio", "scsi", "ide",
+							}, false),
 						},
 						"device_type": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: true,
 						},
 						"device_name": {
 							Type:     schema.TypeString,
