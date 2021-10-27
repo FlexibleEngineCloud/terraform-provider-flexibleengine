@@ -195,6 +195,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_v1":                             dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":                      dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":                  dataSourceVpcSubnetIdsV1(),
+			"flexibleengine_vpc_eip_v1":                         dataSourceVpcEipV1(),
 			"flexibleengine_vpc_route_v2":                       dataSourceVPCRouteV2(),
 			"flexibleengine_vpc_route_ids_v2":                   dataSourceVPCRouteIdsV2(),
 			"flexibleengine_vpc_peering_connection_v2":          dataSourceVpcPeeringConnectionV2(),
