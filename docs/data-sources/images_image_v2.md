@@ -45,7 +45,6 @@ data "flexibleengine_images_image_v2" "ubuntu" {
 are exported:
 
 * `checksum` - The checksum of the data associated with the image.
-* `created_at` - The date the image was created.
 * `container_format`: The format of the image's container.
 * `disk_format`: The format of the image's disk.
 * `file` - The URL for uploading and downloading the image file.
@@ -57,5 +56,5 @@ are exported:
 * `schema` - The path to the JSON-schema that represent
    the image or image
 * `size_bytes` - The size of the image (in bytes).
-* `tags` - See Argument Reference above.
-* `update_at` - The date the image was last updated.
+* `created_at` - The date the image was created.
+* `updated_at` - The date the image was last updated.

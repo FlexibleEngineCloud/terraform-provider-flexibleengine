@@ -24,8 +24,8 @@ func resourceMRSHybridClusterV1() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(30 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -302,12 +302,12 @@ func resourceHybridClusterV1Create(d *schema.ResourceData, meta interface{}) err
 
 	d.SetId(clusterCreate.ClusterID)
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"starting"},
-		Target:     []string{"running"},
-		Refresh:    ClusterStateRefreshFunc(client, clusterCreate.ClusterID),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      120 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"starting"},
+		Target:       []string{"running"},
+		Refresh:      ClusterStateRefreshFunc(client, clusterCreate.ClusterID),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        600 * time.Second,
+		PollInterval: 20 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()
@@ -434,12 +434,12 @@ func resourceHybridClusterV1Delete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Waiting for Cluster (%s) to be terminated", rId)
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"running", "terminating"},
-		Target:     []string{"terminated"},
-		Refresh:    ClusterStateRefreshFunc(client, rId),
-		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"running", "terminating"},
+		Target:       []string{"terminated"},
+		Refresh:      ClusterStateRefreshFunc(client, rId),
+		Timeout:      d.Timeout(schema.TimeoutDelete),
+		Delay:        40 * time.Second,
+		PollInterval: 10 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()

@@ -108,6 +108,12 @@ func resourceCCEClusterV3() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"service_network_cidr": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
 			"authentication_mode": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -291,6 +297,7 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 			Mode: d.Get("container_network_type").(string),
 			Cidr: d.Get("container_network_cidr").(string),
 		},
+		KubernetesSvcIPRange: d.Get("service_network_cidr").(string),
 		Authentication: clusters.AuthenticationSpec{
 			Mode:                d.Get("authentication_mode").(string),
 			AuthenticatingProxy: authenticatingProxy,
@@ -368,6 +375,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("highway_subnet_id", n.Spec.HostNetwork.HighwaySubnet)
 	d.Set("container_network_type", n.Spec.ContainerNetwork.Mode)
 	d.Set("container_network_cidr", n.Spec.ContainerNetwork.Cidr)
+	d.Set("service_network_cidr", n.Spec.KubernetesSvcIPRange)
 	d.Set("internal_endpoint", n.Status.Endpoints[0].Internal)
 	d.Set("external_endpoint", n.Status.Endpoints[0].External)
 	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)

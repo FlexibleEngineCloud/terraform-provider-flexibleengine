@@ -30,6 +30,7 @@ func TestAccVpcV1EIP_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.name", rName),
 					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.share_type", "PER"),
 					resource.TestCheckResourceAttr(resourceName, "bandwidth.0.charge_mode", "traffic"),
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
 				),
 			},
 			{

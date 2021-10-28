@@ -195,9 +195,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_v1":                             dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":                      dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":                  dataSourceVpcSubnetIdsV1(),
+			"flexibleengine_vpc_eip_v1":                         dataSourceVpcEipV1(),
 			"flexibleengine_vpc_route_v2":                       dataSourceVPCRouteV2(),
 			"flexibleengine_vpc_route_ids_v2":                   dataSourceVPCRouteIdsV2(),
 			"flexibleengine_vpc_peering_connection_v2":          dataSourceVpcPeeringConnectionV2(),
+			"flexibleengine_nat_gateway_v2":                     dataSourceNatGatewayV2(),
 			"flexibleengine_sfs_file_system_v2":                 dataSourceSFSFileSystemV2(),
 			"flexibleengine_compute_bms_flavors_v2":             dataSourceBMSFlavorV2(),
 			"flexibleengine_compute_bms_nic_v2":                 dataSourceBMSNicV2(),
@@ -219,7 +221,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cce_cluster_v3":                     dataSourceCCEClusterV3(),
 			"flexibleengine_cce_addon_template":                 dataSourceCCEAddonTemplate(),
 			"flexibleengine_dns_zone_v2":                        dataSourceDNSZoneV2(),
-			"flexibleengine_dds_flavor_v3":                      dataSourceDDSFlavorV3(),
+			"flexibleengine_dds_flavors_v3":                     dataSourceDDSFlavorsV3(),
 			"flexibleengine_lb_certificate_v2":                  dataSourceCertificateV2(),
 			"flexibleengine_lb_loadbalancer_v2":                 dataSourceELBV2Loadbalancer(),
 			"flexibleengine_sdrs_domain_v1":                     dataSourceSdrsDomainV1(),
@@ -230,6 +232,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 
 			// Deprecated data source
+			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
 			"flexibleengine_rds_flavors_v1": dataSourceRdsFlavorV1(),
 		},
 
@@ -263,6 +266,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_mrs_hybrid_cluster_v1":              resourceMRSHybridClusterV1(),
 			"flexibleengine_mrs_cluster_v1":                     resourceMRSClusterV1(),
 			"flexibleengine_mrs_job_v1":                         resourceMRSJobV1(),
+			"flexibleengine_mrs_job_v2":                         resourceMRSJobV2(),
 			"flexibleengine_mls_instance_v1":                    resourceMlsInstanceV1(),
 			"flexibleengine_network_acl":                        resourceNetworkACL(),
 			"flexibleengine_network_acl_rule":                   resourceNetworkACLRule(),
