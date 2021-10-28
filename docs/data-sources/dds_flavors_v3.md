@@ -2,54 +2,43 @@
 subcategory: "Document Database Service (DDS)"
 ---
 
-# flexibleengine\_dds\_flavors\_v3
+# flexibleengine_dds_flavors_v3
 
-Use this data source to get the ID of an available FlexibleEngine dds flavor.
+Use this data source to get the details of available DDS flavors.
 
 ## Example Usage
 
 ```hcl
 data "flexibleengine_dds_flavors_v3" "flavor" {
-    region = "eu-west-0"
-    engine_name = "DDS-Community"
+  engine_name = "DDS-Community"
+  vcpus       = 8
+  memory      = 32
 }
 ```
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V3 dds client.
+* `engine_name` - (Optional, String) Specifies the engine name of the dds, the default value is
+  "DDS-Community".
 
-* `engine_name` - (Optional) The engine name of the dds, now only DDS-Community is supported.
+* `type` - (Optional, String) Specifies the type of the dds falvor. "mongos", "shard", "config",
+  "replica" and "single" are supported.
 
-* `speccode` - (Optional) The spec code of a dds flavor.
+* `vcpus` - (Optional, String) Specifies the vcpus of the dds flavor.
 
-## Available value for attributes
-
-engine_name | type | vcpus | ram | speccode
----- | --- | ---
-DDS-Community | mongos | 1 | 4 | dds.mongodb.s3.medium.4.mongos
-DDS-Community | mongos | 2 | 8 | dds.mongodb.s3.large.4.mongos
-DDS-Community | mongos | 4 | 16 | dds.mongodb.s3.xlarge.4.mongos
-DDS-Community | mongos | 8 | 32 | dds.mongodb.s3.2xlarge.4.mongos
-DDS-Community | mongos | 16 | 64 | dds.mongodb.s3.4xlarge.4.mongos
-DDS-Community | shard | 1 | 4 | dds.mongodb.s3.medium.4.shard
-DDS-Community | shard | 2 | 8 | dds.mongodb.s3.large.4.shard
-DDS-Community | shard | 4 | 16 | dds.mongodb.s3.xlarge.4.shard
-DDS-Community | shard | 8 | 32 | dds.mongodb.s3.2xlarge.4.shard
-DDS-Community | shard | 16 | 64 | dds.mongodb.s3.4xlarge.4.shard
-DDS-Community | config | 2 | 4 | dds.mongodb.s3.large.2.config
-DDS-Community | replica | 1 | 4 | dds.mongodb.s3.medium.4.repset
-DDS-Community | replica | 2 | 8 | dds.mongodb.s3.large.4.repset
-DDS-Community | replica | 4 | 16 | dds.mongodb.s3.xlarge.4.repset
-DDS-Community | replica | 8 | 32 | dds.mongodb.s3.2xlarge.4.repset
-DDS-Community | replica | 16 | 64 | dds.mongodb.s3.4xlarge.4.repset
-
+* `memory` - (Optional, String) Specifies the ram of the dds flavor in GB.
 
 ## Attributes Reference
 
-* `region` - See Argument Reference above.
-* `engine_name` - See Argument Reference above.
-* `speccode` - See Argument Reference above.
-* `type` - The type of the dds flavor.
-* `vcpus` - The vcpus of the dds flavor.
-* `ram` - The ram of the dds flavor.
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - Specifies a data source ID.
+
+* `flavors` - Indicates the flavors information. Structure is documented below.
+
+The `flavors` block contains:
+
+* `spec_code` - The name of the dds flavor.
+* `type` - See `type` above.
+* `vcpus` - See `vcpus` above.
+* `memory` - See `memory` above.
