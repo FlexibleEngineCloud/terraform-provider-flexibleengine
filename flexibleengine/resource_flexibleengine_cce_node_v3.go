@@ -94,14 +94,17 @@ func resourceCCENodeV3() *schema.Resource {
 						"size": {
 							Type:     schema.TypeInt,
 							Required: true,
+							ForceNew: true,
 						},
 						"volumetype": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 						"extend_params": {
 							Type:     schema.TypeMap,
 							Optional: true,
+							ForceNew: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
@@ -115,14 +118,17 @@ func resourceCCENodeV3() *schema.Resource {
 						"size": {
 							Type:     schema.TypeInt,
 							Required: true,
+							ForceNew: true,
 						},
 						"volumetype": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 						"extend_params": {
 							Type:     schema.TypeMap,
 							Optional: true,
+							ForceNew: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
 					}},
@@ -136,14 +142,17 @@ func resourceCCENodeV3() *schema.Resource {
 						"key": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 						"value": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 						"effect": {
 							Type:     schema.TypeString,
 							Required: true,
+							ForceNew: true,
 						},
 					}},
 			},

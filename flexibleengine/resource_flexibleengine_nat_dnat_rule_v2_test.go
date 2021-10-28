@@ -21,83 +21,60 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/chnsz/golangsdk"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccNatDnat_basic(t *testing.T) {
-	resource.Test(t, resource.TestCase{
+	randSuffix := acctest.RandString(5)
+	resourceName := "flexibleengine_nat_dnat_rule_v2.dnat"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNatDnatDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNatDnat_basic(),
+				Config: testAccNatV2DnatRule_basic(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNatDnatExists(),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "tcp"),
+					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func testAccNatDnat_basic() string {
-	return fmt.Sprintf(`
-resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
-  admin_state_up = "true"
-}
+func TestAccNatDnat_protocol(t *testing.T) {
+	randSuffix := acctest.RandString(5)
+	resourceName := "flexibleengine_nat_dnat_rule_v2.dnat"
 
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  cidr = "192.168.199.0/24"
-  ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-}
-
-resource "flexibleengine_networking_router_interface_v2" "int_1" {
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-}
-
-resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-}
-
-resource "flexibleengine_nat_gateway_v2" "nat_dnat" {
-  name   = "nat_dnat"
-  description = "test for terraform"
-  spec = "1"
-  internal_network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
-}
-
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  security_groups = ["default"]
-  availability_zone = "%s"
-  metadata = {
-    foo = "bar"
-  }
-  network {
-    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
-  }
- depends_on = ["flexibleengine_networking_router_interface_v2.int_1"]
-}
-
-resource "flexibleengine_nat_dnat_rule_v2" "dnat" {
-  floating_ip_id = "${flexibleengine_networking_floatingip_v2.fip_1.id}"
-  nat_gateway_id = "${flexibleengine_nat_gateway_v2.nat_dnat.id}"
-  private_ip = "${flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4}"
-  internal_service_port = 993
-  protocol = "tcp"
-  external_service_port = 242
-  depends_on = ["flexibleengine_compute_instance_v2.instance_1"]
-}
-	`, OS_AVAILABILITY_ZONE)
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckNatDnatDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNatV2DnatRule_protocol(randSuffix),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNatDnatExists(),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "any"),
+					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
 }
 
 func testAccCheckNatDnatDestroy(s *terraform.State) error {
@@ -159,4 +136,75 @@ func testAccCheckNatDnatExists() resource.TestCheckFunc {
 		}
 		return nil
 	}
+}
+
+func testAccNatV2DnatRule_base(suffix string) string {
+	return fmt.Sprintf(`
+data "flexibleengine_compute_availability_zones_v2" "test" {}
+
+data "flexibleengine_compute_flavors_v2" "test" {
+  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  performance_type  = "normal"
+  cpu_core          = 2
+  memory_size       = 4
+}
+
+data "flexibleengine_images_image_v2" "test" {
+  name        = "OBS Ubuntu 18.04"
+  most_recent = true
+}
+
+resource "flexibleengine_networking_floatingip_v2" "fip_1" {
+}
+
+resource "flexibleengine_compute_instance_v2" "instance_1" {
+  name              = "instance-acc-test-%s"
+  image_id          = data.flexibleengine_images_image_v2.test.id
+  flavor_id         = data.flexibleengine_compute_flavors_v2.test.flavors[0]
+  security_groups   = ["default"]
+  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+
+  network {
+    uuid = flexibleengine_vpc_subnet_v1.subnet_1.id
+  }
+
+  tags = {
+    foo = "bar"
+  }
+}
+`, suffix)
+}
+
+func testAccNatV2DnatRule_basic(suffix string) string {
+	return fmt.Sprintf(`
+%s
+
+%s
+
+resource "flexibleengine_nat_dnat_rule_v2" "dnat" {
+  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
+  floating_ip_id = flexibleengine_networking_floatingip_v2.fip_1.id
+  private_ip     = flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4
+  protocol       = "tcp"
+  internal_service_port = 80
+  external_service_port = 8080
+}
+`, testAccNatV2Gateway_basic(suffix), testAccNatV2DnatRule_base(suffix))
+}
+
+func testAccNatV2DnatRule_protocol(suffix string) string {
+	return fmt.Sprintf(`
+%s
+
+%s
+
+resource "flexibleengine_nat_dnat_rule_v2" "dnat" {
+  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
+  floating_ip_id = flexibleengine_networking_floatingip_v2.fip_1.id
+  private_ip     = flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4
+  protocol       = "any"
+  internal_service_port = 0
+  external_service_port = 0
+}
+`, testAccNatV2Gateway_basic(suffix), testAccNatV2DnatRule_base(suffix))
 }

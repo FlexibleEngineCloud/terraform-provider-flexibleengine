@@ -24,8 +24,8 @@ func resourceMRSClusterV1() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(30 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -36,11 +36,6 @@ func resourceMRSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 
-			"billing_type": {
-				Type:     schema.TypeInt,
-				Required: true,
-				ForceNew: true,
-			},
 			"master_node_num": {
 				Type:     schema.TypeInt,
 				Required: true,
@@ -82,6 +77,12 @@ func resourceMRSClusterV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"billing_type": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: true,
+				Default:  12,
+			},
 			"cluster_version": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -118,10 +119,10 @@ func resourceMRSClusterV1() *schema.Resource {
 				ForceNew: true,
 			},
 			"cluster_admin_secret": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
+				ForceNew:  true,
 			},
 			"log_collection": {
 				Type:     schema.TypeInt,
@@ -296,10 +297,6 @@ func resourceMRSClusterV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"duration": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"vnc": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -337,6 +334,10 @@ func resourceMRSClusterV1() *schema.Resource {
 				Computed: true,
 			},
 			"charging_start_time": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"duration": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -415,11 +416,12 @@ func ClusterStateRefreshFunc(client *golangsdk.ServiceClient, clusterID string) 
 
 func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.MrsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	client, err := config.MrsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine MRS client: %s", err)
 	}
-	vpcClient, err := config.networkingV1Client(GetRegion(d, config))
+	vpcClient, err := config.networkingV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
 	}
@@ -436,20 +438,20 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	createOpts := &cluster.CreateOpts{
+		DataCenter:         region,
 		BillingType:        d.Get("billing_type").(int),
-		DataCenter:         d.Get("region").(string),
 		MasterNodeNum:      d.Get("master_node_num").(int),
 		MasterNodeSize:     d.Get("master_node_size").(string),
 		CoreNodeNum:        d.Get("core_node_num").(int),
 		CoreNodeSize:       d.Get("core_node_size").(string),
 		AvailableZoneID:    d.Get("available_zone_id").(string),
 		ClusterName:        d.Get("cluster_name").(string),
-		Vpc:                vpc.Name,
-		VpcID:              d.Get("vpc_id").(string),
-		SubnetID:           d.Get("subnet_id").(string),
-		SubnetName:         subnet.Name,
 		ClusterVersion:     d.Get("cluster_version").(string),
 		ClusterType:        d.Get("cluster_type").(int),
+		VpcID:              d.Get("vpc_id").(string),
+		SubnetID:           d.Get("subnet_id").(string),
+		Vpc:                vpc.Name,
+		SubnetName:         subnet.Name,
 		VolumeType:         d.Get("volume_type").(string),
 		VolumeSize:         d.Get("volume_size").(int),
 		LoginMode:          1,
@@ -470,12 +472,12 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(clusterCreate.ClusterID)
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"starting"},
-		Target:     []string{"running"},
-		Refresh:    ClusterStateRefreshFunc(client, clusterCreate.ClusterID),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"starting"},
+		Target:       []string{"running"},
+		Refresh:      ClusterStateRefreshFunc(client, clusterCreate.ClusterID),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        600 * time.Second,
+		PollInterval: 20 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()
@@ -490,7 +492,8 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.MrsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	client, err := config.MrsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine MRS client: %s", err)
 	}
@@ -499,14 +502,22 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return CheckDeleted(d, err, "Cluster")
 	}
+
 	log.Printf("[DEBUG] Retrieved Cluster %s: %#v", d.Id(), clusterGet)
 	d.SetId(clusterGet.Clusterid)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 	d.Set("order_id", clusterGet.Orderid)
 	d.Set("cluster_id", clusterGet.Clusterid)
 	d.Set("available_zone_name", clusterGet.Azname)
 	d.Set("available_zone_id", clusterGet.Azid)
+	d.Set("cluster_name", clusterGet.Clustername)
 	d.Set("cluster_version", clusterGet.Clusterversion)
+	d.Set("cluster_type", clusterGet.ClusterType)
+	d.Set("cluster_state", clusterGet.Clusterstate)
+	d.Set("volume_type", clusterGet.MasterDataVolumeType)
+	d.Set("volume_size", clusterGet.MasterDataVolumeSize)
+	d.Set("vpc_id", clusterGet.Vpcid)
+	d.Set("subnet_id", clusterGet.Subnetid)
 
 	masterNodeNum, err := strconv.Atoi(clusterGet.Masternodenum)
 	if err != nil {
@@ -518,9 +529,7 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("master_node_num", masterNodeNum)
 	d.Set("core_node_num", coreNodeNum)
-	d.Set("cluster_name", clusterGet.Clustername)
 	d.Set("core_node_size", clusterGet.Corenodesize)
-	d.Set("volume_size", clusterGet.Volumesize)
 	d.Set("node_public_cert_name", clusterGet.Nodepubliccertname)
 	d.Set("safe_mode", clusterGet.Safemode)
 	d.Set("master_node_size", clusterGet.Masternodesize)
@@ -541,7 +550,6 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("vnc", clusterGet.Vnc)
 	d.Set("fee", clusterGet.Fee)
 	d.Set("deployment_id", clusterGet.Deploymentid)
-	d.Set("cluster_state", clusterGet.Clusterstate)
 	d.Set("error_info", clusterGet.Errorinfo)
 	d.Set("remark", clusterGet.Remark)
 	d.Set("tenant_id", clusterGet.Tenantid)
@@ -564,10 +572,9 @@ func resourceClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	chargingStartTimeTm := time.Unix(chargingStartTime, 0)
 
-	d.Set("update_at", updateAtTm)
-	d.Set("create_at", createAtTm)
-	d.Set("charging_start_time", chargingStartTimeTm)
-	d.Set("component_list", clusterGet.Duration)
+	d.Set("update_at", updateAtTm.Format(RFC3339ZNoTNoZ))
+	d.Set("create_at", createAtTm.Format(RFC3339ZNoTNoZ))
+	d.Set("charging_start_time", chargingStartTimeTm.Format(RFC3339ZNoTNoZ))
 
 	components := make([]map[string]interface{}, len(clusterGet.Componentlist))
 	for i, attachment := range clusterGet.Componentlist {
@@ -615,12 +622,12 @@ func resourceClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Waiting for Cluster (%s) to be terminated", rId)
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"running", "terminating"},
-		Target:     []string{"terminated"},
-		Refresh:    ClusterStateRefreshFunc(client, rId),
-		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"running", "terminating"},
+		Target:       []string{"terminated"},
+		Refresh:      ClusterStateRefreshFunc(client, rId),
+		Timeout:      d.Timeout(schema.TimeoutDelete),
+		Delay:        40 * time.Second,
+		PollInterval: 10 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()

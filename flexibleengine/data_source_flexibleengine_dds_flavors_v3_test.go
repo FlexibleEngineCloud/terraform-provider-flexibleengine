@@ -8,24 +8,25 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccDDSFlavorV3DataSource_basic(t *testing.T) {
+func TestAccDDSFlavorsV3DataSource_basic(t *testing.T) {
+	resourceName := "data.flexibleengine_dds_flavors_v3.flavor"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDDSFlavorV3DataSource_basic,
+				Config: testAccDDSFlavorsV3DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSZoneV2DataSourceID("data.flexibleengine_dds_flavor_v3.flavor"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_dds_flavor_v3.flavor", "engine_name", "DDS-Community"),
+					testAccCheckDDSFlavorsV3DataSourceID(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "engine_name", "DDS-Community"),
+					resource.TestCheckResourceAttrSet(resourceName, "flavors.#"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckDDSFlavorV3DataSourceID(n string) resource.TestCheckFunc {
+func testAccCheckDDSFlavorsV3DataSourceID(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -40,9 +41,9 @@ func testAccCheckDDSFlavorV3DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-var testAccDDSFlavorV3DataSource_basic = `
-data "flexibleengine_dds_flavor_v3" "flavor" {
-    region = "eu-west-0"
-	engine_name = "DDS-Community"
+var testAccDDSFlavorsV3DataSource_basic = `
+data "flexibleengine_dds_flavors_v3" "flavor" {
+  vcpus  = 8
+  memory = 32
 }
 `

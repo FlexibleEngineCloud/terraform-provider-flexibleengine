@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"time"
 
 	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -34,7 +35,19 @@ func resourceNatDnatRuleV2() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"nat_gateway_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
 			"floating_ip_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"protocol": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -46,43 +59,34 @@ func resourceNatDnatRuleV2() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"nat_gateway_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
-			"port_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"private_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"protocol": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
 			"external_service_port": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
 
+			"port_id": {
+				Type:         schema.TypeString,
+				ExactlyOneOf: []string{"port_id", "private_ip"},
+				Optional:     true,
+				ForceNew:     true,
+			},
+
+			"private_ip": {
+				Type:         schema.TypeString,
+				ExactlyOneOf: []string{"port_id", "private_ip"},
+				Optional:     true,
+				ForceNew:     true,
+			},
+
 			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-
+			"floating_ip_address": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -135,25 +139,13 @@ func resourceNatDnatRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return err
 	}
-	e, err = isEmptyValue(reflect.ValueOf(internalServicePortProp))
-	if err != nil {
-		return err
-	}
-	if !e {
-		params["internal_service_port"] = internalServicePortProp
-	}
+	params["internal_service_port"] = internalServicePortProp
 
 	externalServicePortProp, err := navigateValue(opts, []string{"external_service_port"}, nil)
 	if err != nil {
 		return err
 	}
-	e, err = isEmptyValue(reflect.ValueOf(externalServicePortProp))
-	if err != nil {
-		return err
-	}
-	if !e {
-		params["external_service_port"] = externalServicePortProp
-	}
+	params["external_service_port"] = externalServicePortProp
 
 	natGatewayIDProp, err := navigateValue(opts, []string{"nat_gateway_id"}, nil)
 	if err != nil {
@@ -227,6 +219,9 @@ func resourceNatDnatRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id.(string))
 
+	// wait for a while to become ACTIVE
+	time.Sleep(3 * time.Second) //lintignore:R018
+
 	return resourceNatDnatRuleRead(d, meta)
 }
 
@@ -280,6 +275,14 @@ func resourceNatDnatRuleRead(d *schema.ResourceData, meta interface{}) error {
 		if err = d.Set("floating_ip_id", floatingIPIDProp); err != nil {
 			return fmt.Errorf("Error setting Dnat:floating_ip_id, err: %s", err)
 		}
+	}
+
+	floatingIPAddrProp, err := navigateValue(res, []string{"read", "dnat_rule", "floating_ip_address"}, nil)
+	if err != nil {
+		return fmt.Errorf("Error reading Dnat:floating_ip_address, err: %s", err)
+	}
+	if err = d.Set("floating_ip_address", floatingIPAddrProp); err != nil {
+		return fmt.Errorf("Error setting Dnat:floating_ip_address, err: %s", err)
 	}
 
 	internalServicePortProp, ok := opts["internal_service_port"]
@@ -415,5 +418,7 @@ func resourceNatDnatRuleDelete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error deleting Dnat %q: %s", d.Id(), r.Err)
 	}
 
+	// wait for a while to become DELETED
+	time.Sleep(3 * time.Second) //lintignore:R018
 	return nil
 }

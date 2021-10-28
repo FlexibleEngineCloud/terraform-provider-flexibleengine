@@ -13,7 +13,7 @@ Manages a V2 SNAT rule resource within FlexibleEngine.
 resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
   nat_gateway_id = var.natgw_id
   floating_ip_id = var.publicip_id
-  network_id     = var.network_id
+  subnet_id      = var.subent_id
 }
 ```
 
@@ -41,7 +41,7 @@ The following arguments are supported:
 * `floating_ip_id` - (Required) ID of the floating ip this snat rule connets to.
     Changing this creates a new snat rule.
 
-* `network_id` - (Optional) ID of the network this snat rule connects to.
+* `subnet_id` - (Optional) ID of the subnet this snat rule connects to.
     This parameter and `cidr` are alternative. Changing this creates a new snat rule.
 
 * `cidr` - (Optional) Specifies CIDR, which can be in the format of a network segment or a host IP address.
@@ -54,13 +54,23 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `nat_gateway_id` - See Argument Reference above.
-* `network_id` - See Argument Reference above.
-* `cidr` - See Argument Reference above.
-* `source_type` - See Argument Reference above.
-* `floating_ip_id` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
 * `floating_ip_address` - The actual floating IP address.
-* `status` -  The status of the SNAT rule.
+* `status` - The status of the snat rule.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `delete` - Default is 10 minute.
+
+## Import
+
+SNAT rules can be imported using the following format:
+
+```
+$ terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
+```

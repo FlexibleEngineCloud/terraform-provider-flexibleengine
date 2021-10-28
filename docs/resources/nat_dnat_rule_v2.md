@@ -40,36 +40,35 @@ resource "flexibleengine_nat_dnat_rule_v2" "dnat_2" {
 
 The following arguments are supported:
 
-* `nat_gateway_id` - (Required) ID of the nat gateway this dnat rule belongs to.
-   Changing this creates a new dnat rule.
-
-* `floating_ip_id` - (Required) Specifies the ID of the floating IP address.
-  Changing this creates a new resource.
-
-* `internal_service_port` - (Required) Specifies port used by ECSs or BMSs
-  to provide services for external systems. Changing this creates a new resource.
-
-* `external_service_port` - (Required) Specifies port used by ECSs or
-  BMSs to provide services for external systems.
+* `nat_gateway_id` - (Required) Specifies the ID of the nat gateway this dnat rule belongs to.
   Changing this creates a new dnat rule.
 
-* `port_id` - (Optional) Specifies the port ID of an ECS or a BMS.
-  This parameter and `private_ip` are alternative. Changing this creates a
-  new dnat rule.
-
-* `private_ip` - (Optional) Specifies the private IP address of a
-  user, for example, the IP address of a VPC for dedicated connection.
-  This parameter and `port_id` are alternative.
+* `floating_ip_id` - (Required) Specifies the ID of the floating IP address.
   Changing this creates a new dnat rule.
 
 * `protocol` - (Required) Specifies the protocol type. Currently,
-  TCP, UDP, and ANY are supported. The protocol number of TCP, UDP,
-  and ANY is 6, 17, and 0, respectively.
-  Changing this creates a new dnat rule.
+  TCP, UDP, and ANY are supported. Changing this creates a new dnat rule.
+
+* `internal_service_port` - (Required) Specifies the port used by ECSs or BMSs to provide services
+  that are accessible from external systems. Changing this creates a new dnat rule.
+
+* `external_service_port` - (Required) Specifies the port for providing services
+  that are accessible from external systems. Changing this creates a new dnat rule.
+
+* `port_id` - (Optional) Specifies the port ID of an ECS or a BMS. This parameter is
+  mandatory in VPC scenario. Changing this creates a new dnat rule.
+
+* `private_ip` - (Optional) Specifies the private IP address of a user, for example,
+  the IP address of a VPC for dedicated connection. This parameter is mandatory in
+  Direct Connect scenario. Changing this creates a new dnat rule.
 
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
+
+* `id` - The resource ID in UUID format.
+
+* `floating_ip_address` - The actual floating IP address.
 
 * `created_at` - DNAT rule creation time.
 

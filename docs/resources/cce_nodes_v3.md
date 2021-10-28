@@ -114,6 +114,7 @@ If the `eip_ids` parameter is configured, you do not need to configure the `eip_
   * `extend_params` - (Optional) Disk expansion parameters in key/value pair format.
 
 **taints** **- (Optional)** You can add taints to created nodes to configure anti-affinity.
+  Changing this parameter will create a new resource.
   Each taint contains the following parameters:
 
   * `key` - (Required) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits, hyphens (-),
