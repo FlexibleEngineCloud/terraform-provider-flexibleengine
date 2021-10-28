@@ -13,14 +13,14 @@ import (
 
 func TestAccIdentityProjectV3_basic(t *testing.T) {
 	var project projects.Project
-	var projectName = fmt.Sprintf("eu-west-1_ACCPTTEST-%s", acctest.RandString(5))
+	var projectName = fmt.Sprintf("eu-west-0-ACCPTTEST-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
-		// CheckDestroy: testAccCheckIdentityProjectV3Destroy,
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckIdentityProjectV3Destroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIdentityProjectV3_basic(projectName),
