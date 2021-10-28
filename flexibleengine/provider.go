@@ -221,7 +221,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cce_cluster_v3":                     dataSourceCCEClusterV3(),
 			"flexibleengine_cce_addon_template":                 dataSourceCCEAddonTemplate(),
 			"flexibleengine_dns_zone_v2":                        dataSourceDNSZoneV2(),
-			"flexibleengine_dds_flavor_v3":                      dataSourceDDSFlavorV3(),
+			"flexibleengine_dds_flavors_v3":                     dataSourceDDSFlavorsV3(),
 			"flexibleengine_lb_certificate_v2":                  dataSourceCertificateV2(),
 			"flexibleengine_lb_loadbalancer_v2":                 dataSourceELBV2Loadbalancer(),
 			"flexibleengine_sdrs_domain_v1":                     dataSourceSdrsDomainV1(),
@@ -232,6 +232,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 
 			// Deprecated data source
+			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
 			"flexibleengine_rds_flavors_v1": dataSourceRdsFlavorV1(),
 		},
 
