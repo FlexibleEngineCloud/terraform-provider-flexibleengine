@@ -1,3 +1,15 @@
+## 1.25.0 (October 28, 2021)
+
+FEATURES:
+* **New Resurce:**
+  - `flexibleengine_identity_project_v3"` [GH-625]
+  - `flexibleengine_mrs_job_v2` [GH-640]
+
+* **New Data Source:**
+  - `flexibleengine_nat_gateway_v2` [GH-629]
+  - `flexibleengine_vpc_eip_v1` [GH-642]
+  - `flexibleengine_dds_flavors_v3` [643]
+
 ## 1.24.2 (October 04, 2021)
 
 ENHANCEMENTS:
