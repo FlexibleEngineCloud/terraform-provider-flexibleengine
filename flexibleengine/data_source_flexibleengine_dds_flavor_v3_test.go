@@ -16,7 +16,7 @@ func TestAccDDSFlavorV3DataSource_basic(t *testing.T) {
 			{
 				Config: testAccDDSFlavorV3DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSZoneV2DataSourceID("data.flexibleengine_dds_flavor_v3.flavor"),
+					testAccCheckDDSFlavorV3DataSourceID("data.flexibleengine_dds_flavor_v3.flavor"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_dds_flavor_v3.flavor", "engine_name", "DDS-Community"),
 				),

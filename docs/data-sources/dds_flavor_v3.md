@@ -2,16 +2,17 @@
 subcategory: "Document Database Service (DDS)"
 ---
 
-# flexibleengine\_dds\_flavors\_v3
+# flexibleengine_dds_flavor_v3
 
-Use this data source to get the ID of an available FlexibleEngine dds flavor.
+Use this data source to get the ID of an available FlexibleEngine DDS flavor.
+If you want to get multiple flavors, please use `flexibleengine_dds_flavors_v3`.
 
 ## Example Usage
 
 ```hcl
-data "flexibleengine_dds_flavors_v3" "flavor" {
-    region = "eu-west-0"
-    engine_name = "DDS-Community"
+data "flexibleengine_dds_flavor_v3" "flavor" {
+  region      = "eu-west-0"
+  engine_name = "DDS-Community"
 }
 ```
 
