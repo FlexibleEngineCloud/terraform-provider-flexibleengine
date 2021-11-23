@@ -12,6 +12,7 @@ import (
 
 func TestAccAntiDdosV1_basic(t *testing.T) {
 	var antiddos antiddos.GetResponse
+	resourceName := "flexibleengine_antiddos_v1.antiddos_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,48 +22,21 @@ func TestAccAntiDdosV1_basic(t *testing.T) {
 			{
 				Config: testAccAntiDdosV1_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAntiDdosV1Exists("flexibleengine_antiddos_v1.antiddos_1", &antiddos),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "enable_l7", "true"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "traffic_pos_id", "1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "http_request_pos_id", "2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "cleaning_access_pos_id", "1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "app_type_id", "0"),
+					testAccCheckAntiDdosV1Exists(resourceName, &antiddos),
+					resource.TestCheckResourceAttr(resourceName, "enable_l7", "true"),
+					resource.TestCheckResourceAttr(resourceName, "traffic_pos_id", "1"),
+					resource.TestCheckResourceAttr(resourceName, "http_request_pos_id", "2"),
+					resource.TestCheckResourceAttr(resourceName, "cleaning_access_pos_id", "1"),
+					resource.TestCheckResourceAttr(resourceName, "app_type_id", "0"),
 				),
 			},
 			{
 				Config: testAccAntiDdosV1_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "traffic_pos_id", "2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "http_request_pos_id", "1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "cleaning_access_pos_id", "2"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_antiddos_v1.antiddos_1", "app_type_id", "1"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccAntiDdosV1_timeout(t *testing.T) {
-	var antiddos antiddos.GetResponse
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckAntiDdosV1Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccAntiDdosV1_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAntiDdosV1Exists("flexibleengine_antiddos_v1.antiddos_1", &antiddos),
+					resource.TestCheckResourceAttr(resourceName, "traffic_pos_id", "2"),
+					resource.TestCheckResourceAttr(resourceName, "http_request_pos_id", "1"),
+					resource.TestCheckResourceAttr(resourceName, "cleaning_access_pos_id", "2"),
+					resource.TestCheckResourceAttr(resourceName, "app_type_id", "1"),
 				),
 			},
 		},
@@ -124,20 +98,20 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
     type = "5_bgp"
   }
   bandwidth {
-    name = "test"
-    size = 8
-    share_type = "PER"
+    name        = "test"
+    size        = 8
+    share_type  = "PER"
     charge_mode = "traffic"
   }
 }
 
 resource "flexibleengine_antiddos_v1" "antiddos_1" {
-  floating_ip_id = "${flexibleengine_vpc_eip_v1.eip_1.id}"
-  enable_l7 = true
-  traffic_pos_id = 1
-  http_request_pos_id = 2
+  floating_ip_id         = flexibleengine_vpc_eip_v1.eip_1.id
+  enable_l7              = true
+  traffic_pos_id         = 1
+  http_request_pos_id    = 2
   cleaning_access_pos_id = 1
-  app_type_id = 0
+  app_type_id            = 0
 }
 `
 const testAccAntiDdosV1_update = `
@@ -146,47 +120,19 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
     type = "5_bgp"
   }
   bandwidth {
-    name = "test"
-    size = 8
-    share_type = "PER"
+    name        = "test"
+    size        = 8
+    share_type  = "PER"
     charge_mode = "traffic"
   }
 }
 
 resource "flexibleengine_antiddos_v1" "antiddos_1" {
-  floating_ip_id = "${flexibleengine_vpc_eip_v1.eip_1.id}"
-  enable_l7 = true
-  traffic_pos_id = 2
-  http_request_pos_id = 1
+  floating_ip_id         = flexibleengine_vpc_eip_v1.eip_1.id
+  enable_l7              = true
+  traffic_pos_id         = 2
+  http_request_pos_id    = 1
   cleaning_access_pos_id = 2
-  app_type_id = 1
-}
-`
-
-const testAccAntiDdosV1_timeout = `
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
-  publicip {
-    type = "5_bgp"
-  }
-  bandwidth {
-    name = "test"
-    size = 8
-    share_type = "PER"
-    charge_mode = "traffic"
-  }
-}
-
-resource "flexibleengine_antiddos_v1" "antiddos_1" {
-  floating_ip_id = "${flexibleengine_vpc_eip_v1.eip_1.id}"
-  enable_l7 = true
-  traffic_pos_id = 1
-  http_request_pos_id = 2
-  cleaning_access_pos_id = 1
-  app_type_id = 0
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
+  app_type_id            = 1
 }
 `
