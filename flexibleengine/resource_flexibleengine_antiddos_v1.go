@@ -35,6 +35,10 @@ func resourceAntiDdosV1() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
+			"floating_ip_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"enable_l7": {
 				Type:     schema.TypeBool,
 				Required: true,
@@ -58,10 +62,6 @@ func resourceAntiDdosV1() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAntiDdosAppTypeID,
-			},
-			"floating_ip_id": {
-				Type:     schema.TypeString,
-				Required: true,
 			},
 		},
 	}
@@ -98,8 +98,8 @@ func resourceAntiDdosV1Create(d *schema.ResourceData, meta interface{}) error {
 		Target:     []string{"normal"},
 		Refresh:    waitForAntiDdosActive(antiddosClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      3 * time.Minute,
-		MinTimeout: 3 * time.Second,
+		Delay:      2 * time.Minute,
+		MinTimeout: 10 * time.Second,
 	}
 
 	_, stateErr := stateConf.WaitForState()
@@ -122,12 +122,7 @@ func resourceAntiDdosV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	n, err := antiddos.Get(antiddosClient, d.Id()).Extract()
 	if err != nil {
-		if _, ok := err.(golangsdk.ErrDefault403); ok {
-			d.SetId("")
-			return nil
-		}
-
-		return fmt.Errorf("Error retrieving AntiDdos: %s", err)
+		return CheckDeleted(d, err, "Error retrieving AntiDdos")
 	}
 
 	d.Set("floating_ip_id", d.Id())
@@ -166,8 +161,8 @@ func resourceAntiDdosV1Update(d *schema.ResourceData, meta interface{}) error {
 		Target:     []string{"normal"},
 		Refresh:    waitForAntiDdosActive(antiddosClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutUpdate),
-		Delay:      3 * time.Minute,
-		MinTimeout: 3 * time.Second,
+		Delay:      2 * time.Minute,
+		MinTimeout: 10 * time.Second,
 	}
 
 	_, stateErr := stateConf.WaitForState()
@@ -193,7 +188,7 @@ func resourceAntiDdosV1Delete(d *schema.ResourceData, meta interface{}) error {
 		Refresh:    waitForAntiDdosDelete(antiddosClient, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutDelete),
 		Delay:      5 * time.Second,
-		MinTimeout: 3 * time.Second,
+		MinTimeout: 10 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()
