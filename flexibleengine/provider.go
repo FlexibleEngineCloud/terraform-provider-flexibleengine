@@ -184,6 +184,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_blockstorage_volume_v2":             dataSourceBlockStorageVolumeV2(),
 			"flexibleengine_compute_availability_zones_v2":      dataSourceComputeAvailabilityZonesV2(),
 			"flexibleengine_compute_instance_v2":                dataSourceComputeInstance(),
+			"flexibleengine_compute_instances":                  dataSourceComputeInstances(),
 			"flexibleengine_compute_flavors_v2":                 dataSourceEcsFlavors(),
 			"flexibleengine_images_image_v2":                    dataSourceImagesImageV2(),
 			"flexibleengine_networking_network_v2":              dataSourceNetworkingNetworkV2(),

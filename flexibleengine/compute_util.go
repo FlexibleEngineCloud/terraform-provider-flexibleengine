@@ -315,7 +315,7 @@ func flattenInstanceVolumeAttached(
 		log.Printf("[DEBUG] Retrieved volume %s: %#v", b.ID, volumeInfo)
 
 		// retrieve volume `pci_address`
-		va, err := block_devices.Get(ecsClient, d.Id(), b.ID).Extract()
+		va, err := block_devices.Get(ecsClient, server.ID, b.ID).Extract()
 		if err != nil {
 			return nil, "", err
 		}
