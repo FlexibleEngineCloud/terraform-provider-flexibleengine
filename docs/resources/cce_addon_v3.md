@@ -22,7 +22,7 @@ resource "flexibleengine_cce_addon_v3" "addon_test" {
 }
 ```
 
-### Use basic_json, custom_json and flavor_json
+### Usage with basic, custom and flavor parameters
 
 ```hcl
 variable "cluster_id" {}
@@ -39,15 +39,15 @@ resource "flexibleengine_cce_addon_v3" "autoscaler" {
   template_name = "autoscaler"
   version    = "1.19.6"
   values {
-    basic_json = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).basic)
-    custom_json = jsonencode(merge(
+    basic  = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).basic)
+    custom = jsonencode(merge(
       jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).parameters.custom,
       {
         cluster_id = var.cluster_id
         tenant_id  = var.tenant_id
       }
     ))
-    flavor_json = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).parameters.flavor2)
+    flavor = jsonencode(jsondecode(data.flexibleengine_cce_addon_template.autoscaler.spec).parameters.flavor2)
   }
 }
 ```
@@ -68,13 +68,13 @@ The following arguments are supported:
 
 * The `values` block supports:
 
-* `basic` - (Required, String, ForceNew) The basic parameters in json string fomart.
+* `basic` - (Required, String, ForceNew) The basic parameters in json string format.
   Changing this will create a new resource.
 
-* `custom` - (Optional, String, ForceNew) The custom parameters in json string fomart.
+* `custom` - (Optional, String, ForceNew) The custom parameters in json string format.
   Changing this will create a new resource.
 
-* `flavor` - (Optional, String, ForceNew) The flavor parameters in json string fomart.
+* `flavor` - (Optional, String, ForceNew) The flavor parameters in json string format.
   Changing this will create a new resource.
 
 ## Attributes Reference
