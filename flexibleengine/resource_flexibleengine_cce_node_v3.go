@@ -445,11 +445,11 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 
 	clusterid := d.Get("cluster_id").(string)
 	stateCluster := &resource.StateChangeConf{
-		Target:     []string{"Available"},
-		Refresh:    waitForClusterAvailable(nodeClient, clusterid),
-		Timeout:    15 * time.Minute,
-		Delay:      15 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Target:       []string{"Available"},
+		Refresh:      waitForClusterAvailable(nodeClient, clusterid),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: 5 * time.Second,
 	}
 	_, err = stateCluster.WaitForState()
 
@@ -459,7 +459,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		if _, ok := err.(golangsdk.ErrDefault403); ok {
 			retryNode, err := recursiveCreate(nodeClient, createOpts, clusterid, 403)
 			if err == "fail" {
-				return fmt.Errorf("Error creating flexibleengine Node")
+				return fmt.Errorf("Error creating flexibleengine Node: %s", err)
 			}
 			s = retryNode
 		} else {
@@ -467,37 +467,21 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	job, err := nodes.GetJobDetails(nodeClient, s.Status.JobID).ExtractJob()
+	nodeID, err := getResourceIDFromJob(nodeClient, s.Status.JobID, "CreateNode", "CreateNodeVM",
+		d.Timeout(schema.TimeoutCreate))
 	if err != nil {
-		return fmt.Errorf("Error fetching flexibleengine Job Details: %s", err)
+		return err
 	}
-	jobResorceId := job.Spec.SubJobs[0].Metadata.ID
+	d.SetId(nodeID)
 
-	subjob, err := nodes.GetJobDetails(nodeClient, jobResorceId).ExtractJob()
-	if err != nil {
-		return fmt.Errorf("Error fetching flexibleengine Job Details: %s", err)
-	}
-
-	var nodeid string
-	for _, s := range subjob.Spec.SubJobs {
-		if s.Spec.Type == "CreateNodeVM" {
-			nodeid = s.Spec.ResourceID
-			break
-		}
-	}
-	if nodeid == "" {
-		return fmt.Errorf("Error fetching CreateNodeVM Job resource id")
-	}
-
-	d.SetId(nodeid)
 	log.Printf("[DEBUG] Waiting for CCE Node (%s) to become available", s.Metadata.Name)
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"Build", "Installing"},
-		Target:     []string{"Active"},
-		Refresh:    waitForCceNodeActive(nodeClient, clusterid, nodeid),
-		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      5 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"Build", "Installing"},
+		Target:       []string{"Active"},
+		Refresh:      waitForCceNodeActive(nodeClient, clusterid, nodeID),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        5 * time.Second,
+		PollInterval: 5 * time.Second,
 	}
 	_, err = stateConf.WaitForState()
 	if err != nil {
@@ -634,12 +618,12 @@ func resourceCCENodeV3Delete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error deleting flexibleengine CCE Cluster: %s", err)
 	}
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"Deleting"},
-		Target:     []string{"Deleted"},
-		Refresh:    waitForCceNodeDelete(nodeClient, clusterid, d.Id()),
-		Timeout:    d.Timeout(schema.TimeoutDelete),
-		Delay:      5 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Pending:      []string{"Deleting"},
+		Target:       []string{"Deleted"},
+		Refresh:      waitForCceNodeDelete(nodeClient, clusterid, d.Id()),
+		Timeout:      d.Timeout(schema.TimeoutDelete),
+		Delay:        60 * time.Second,
+		PollInterval: 15 * time.Second,
 	}
 
 	_, err = stateConf.WaitForState()
@@ -697,11 +681,11 @@ func waitForClusterAvailable(cceClient *golangsdk.ServiceClient, clusterId strin
 func recursiveCreate(cceClient *golangsdk.ServiceClient, opts nodes.CreateOptsBuilder, ClusterID string, errCode int) (*nodes.Nodes, string) {
 	if errCode == 403 {
 		stateCluster := &resource.StateChangeConf{
-			Target:     []string{"Available"},
-			Refresh:    waitForClusterAvailable(cceClient, ClusterID),
-			Timeout:    15 * time.Minute,
-			Delay:      15 * time.Second,
-			MinTimeout: 3 * time.Second,
+			Target:       []string{"Available"},
+			Refresh:      waitForClusterAvailable(cceClient, ClusterID),
+			Timeout:      15 * time.Minute,
+			Delay:        5 * time.Second,
+			PollInterval: 5 * time.Second,
 		}
 		_, stateErr := stateCluster.WaitForState()
 		if stateErr != nil {
@@ -709,13 +693,11 @@ func recursiveCreate(cceClient *golangsdk.ServiceClient, opts nodes.CreateOptsBu
 		}
 		s, err := nodes.Create(cceClient, ClusterID, opts).Extract()
 		if err != nil {
-			if _, ok := err.(golangsdk.ErrDefault403); ok {
-				return recursiveCreate(cceClient, opts, ClusterID, 403)
-			}
 			return s, "fail"
 		}
 		return s, "success"
 	}
+
 	return nil, "fail"
 }
 
@@ -815,4 +797,73 @@ func resourceCCENodeV3Import(d *schema.ResourceData, meta interface{}) ([]*schem
 	d.Set("cluster_id", clusterID)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func waitForJobStatus(cceClient *golangsdk.ServiceClient, jobID string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		job, err := nodes.GetJobDetails(cceClient, jobID).ExtractJob()
+		if err != nil {
+			return nil, "", err
+		}
+
+		return job, job.Status.Phase, nil
+	}
+}
+
+func getResourceIDFromJob(client *golangsdk.ServiceClient, jobID, jobType, subJobType string,
+	timeout time.Duration) (string, error) {
+
+	stateJob := &resource.StateChangeConf{
+		Pending:      []string{"Initializing", "Running"},
+		Target:       []string{"Success"},
+		Refresh:      waitForJobStatus(client, jobID),
+		Timeout:      timeout,
+		Delay:        120 * time.Second,
+		PollInterval: 20 * time.Second,
+	}
+
+	v, err := stateJob.WaitForState()
+	if err != nil {
+		if job, ok := v.(*nodes.Job); ok {
+			return "", fmt.Errorf("Error waiting for job (%s) to become success: %s, reason: %s",
+				jobID, err, job.Status.Reason)
+		}
+
+		return "", fmt.Errorf("Error waiting for job (%s) to become success: %s", jobID, err)
+	}
+
+	job := v.(*nodes.Job)
+	if len(job.Spec.SubJobs) == 0 {
+		return "", fmt.Errorf("Error fetching sub jobs from %s", jobID)
+	}
+
+	var subJobID string
+	var refreshJob bool
+	for _, s := range job.Spec.SubJobs {
+		// postPaid: should get details of sub job ID
+		if s.Spec.Type == jobType {
+			subJobID = s.Metadata.ID
+			refreshJob = true
+			break
+		}
+	}
+
+	if refreshJob {
+		job, err = nodes.GetJobDetails(client, subJobID).ExtractJob()
+		if err != nil {
+			return "", fmt.Errorf("Error fetching sub Job %s: %s", subJobID, err)
+		}
+	}
+
+	var nodeid string
+	for _, s := range job.Spec.SubJobs {
+		if s.Spec.Type == subJobType {
+			nodeid = s.Spec.ResourceID
+			break
+		}
+	}
+	if nodeid == "" {
+		return "", fmt.Errorf("Error fetching %s Job resource id", subJobType)
+	}
+	return nodeid, nil
 }
