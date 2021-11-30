@@ -1,3 +1,13 @@
+## 1.25.1 (November 30, 2021)
+
+FEATURES:
+* **New Data Source:**
+  - `flexibleengine_compute_instances` [GH-646]
+
+BUG FIXES:
+* `resource/flexibleengine_antiddos_v1`: throw an error when got a 403 response [GH-648]
+* `resource/flexibleengine_cce_node_v3`: extend delay interval to get node ID [GH-653]
+
 ## 1.25.0 (October 28, 2021)
 
 FEATURES:
