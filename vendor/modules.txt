@@ -311,6 +311,7 @@ github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/hashcode
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv
 github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents
+github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils
 # github.com/jen20/awspolicyequivalence v1.1.0
 ## explicit
 github.com/jen20/awspolicyequivalence
