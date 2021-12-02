@@ -2,45 +2,38 @@
 subcategory: "Distributed Cache Service (DCS)"
 ---
 
-# flexibleengine\_dcs\_product_v1
+# flexibleengine_dcs_product_v1
 
 Use this data source to get the ID of an available Flexibleengine dcs product.
 
 ## Example Usage
 
 ```hcl
-
 data "flexibleengine_dcs_product_v1" "product1" {
-  engine = "kafka"
-  version = "1.1.0"
-  instance_type = "cluster"
-  partition_num = 300
-  storage = 600
-  storage_spec_code = "dcs.physical.storage.high"
+  engine = "redis"
+}
+
+data "flexibleengine_dcs_product_v1" "product2" {
+  spec_code = "redis.cluster.xu1.large.r1.8"
 }
 ```
 
 ## Argument Reference
 
-* `engine` - (Required) Indicates the name of a message engine.
+* `engine` - (Optional, String) The engine of the cache instance. Valid values are *redis* and *memcached*.
+  Default value is *redis*.
 
-* `version` - (Optional) Indicates the version of a message engine.
+* `engine_version` - (Optional, String) The version of a cache engine.
+  It is valid when the engine is *redis*, the value can be `3.0`or `4.0;5.0`.
 
-* `instance_type` - (Required) Indicates an instance type. Options: "single" and "cluster"
+* `spec_code` - (Optional, String) Specifies the DCS instance specification code. You can log in to the DCS console,
+  click *Buy DCS Instance*, and find the corresponding instance specification.
 
-* `vm_specification` - (Optional) Indicates VM specifications.
-
-* `storage` - (Optional) Indicates the message storage space.
-
-* `bandwidth` - (Optional) Indicates the baseline bandwidth of a Kafka instance.
-
-* `partition_num` - (Optional) Indicates the maximum number of topics that can be created for a Kafka instance.
-
-* `storage_spec_code` - (Optional) Indicates an I/O specification.
-
-* `io_type` - (Optional) Indicates an I/O type.
-
-* `node_num` - (Optional) Indicates the number of nodes in a cluster.
+* `cache_mode` - (Optional, String) The mode of a cache engine. The valid values are as follows:
+  + `single` - Single-node.
+  + `ha` - Master/Standby.
+  + `cluster` - Redis Cluster.
+  + `proxy` - Proxy Cluster.
 
 
 ## Attributes Reference
@@ -49,11 +42,6 @@ data "flexibleengine_dcs_product_v1" "product1" {
 are exported:
 
 * `engine` - See Argument Reference above.
-* `version` - See Argument Reference above.
-* `instance_type` - See Argument Reference above.
-* `vm_specification` - See Argument Reference above.
-* `bandwidth` - See Argument Reference above.
-* `partition_num` - See Argument Reference above.
-* `storage_spec_code` - See Argument Reference above.
-* `io_type` - See Argument Reference above.
-* `node_num` - See Argument Reference above.
+* `engine_version` - See Argument Reference above.
+* `spec_code` - See Argument Reference above.
+* `cache_mode` - See Argument Reference above.

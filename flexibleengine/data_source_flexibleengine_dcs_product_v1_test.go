@@ -9,6 +9,8 @@ import (
 )
 
 func TestAccDcsProductV1DataSource_basic(t *testing.T) {
+	dataSourceName := "data.flexibleengine_dcs_product_v1.product1"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -16,9 +18,8 @@ func TestAccDcsProductV1DataSource_basic(t *testing.T) {
 			{
 				Config: testAccDcsProductV1DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDcsProductV1DataSourceID("data.flexibleengine_dcs_product_v1.product1"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_dcs_product_v1.product1", "spec_code", "dcs.single_node"),
+					testAccCheckDcsProductV1DataSourceID(dataSourceName),
+					resource.TestCheckResourceAttr(dataSourceName, "spec_code", "dcs.single_node"),
 				),
 			},
 		},
@@ -42,6 +43,6 @@ func testAccCheckDcsProductV1DataSourceID(n string) resource.TestCheckFunc {
 
 var testAccDcsProductV1DataSource_basic = fmt.Sprintf(`
 data "flexibleengine_dcs_product_v1" "product1" {
-spec_code = "dcs.single_node"
+  spec_code = "dcs.single_node"
 }
 `)

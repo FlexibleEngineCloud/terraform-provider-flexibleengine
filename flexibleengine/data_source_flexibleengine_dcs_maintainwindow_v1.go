@@ -14,6 +14,11 @@ func dataSourceDcsMaintainWindowV1() *schema.Resource {
 		Read: dataSourceDcsMaintainWindowV1Read,
 
 		Schema: map[string]*schema.Schema{
+			"default": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 			"seq": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -29,11 +34,6 @@ func dataSourceDcsMaintainWindowV1() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"default": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Computed: true,
-			},
 		},
 	}
 }
@@ -45,6 +45,15 @@ func dataSourceDcsMaintainWindowV1Read(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error creating dcs key client: %s", err)
 	}
 
+	seq := d.Get("seq").(int)
+	begin := d.Get("begin").(string)
+	end := d.Get("end").(string)
+
+	df := d.Get("default").(bool)
+	if seq == 0 && begin == "" && end == "" {
+		df = true
+	}
+
 	v, err := maintainwindows.Get(dcsV1Client).Extract()
 	if err != nil {
 		return err
@@ -53,21 +62,16 @@ func dataSourceDcsMaintainWindowV1Read(d *schema.ResourceData, meta interface{})
 	maintainWindows := v.MaintainWindows
 	var filteredMVs []maintainwindows.MaintainWindow
 	for _, mv := range maintainWindows {
-		seq := d.Get("seq").(int)
 		if seq != 0 && mv.ID != seq {
 			continue
 		}
-
-		begin := d.Get("begin").(string)
 		if begin != "" && mv.Begin != begin {
 			continue
 		}
-		end := d.Get("end").(string)
 		if end != "" && mv.End != end {
 			continue
 		}
 
-		df := d.Get("default").(bool)
 		if mv.Default != df {
 			continue
 		}

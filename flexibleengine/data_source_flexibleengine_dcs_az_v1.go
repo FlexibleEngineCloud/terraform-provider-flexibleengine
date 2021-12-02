@@ -11,6 +11,8 @@ import (
 func dataSourceDcsAZV1() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceDcsAZV1Read,
+		DeprecationMessage: "this data source is deprecated. " +
+			"You can use the availability zone code directly, e.g. eu-west-0b.",
 
 		Schema: map[string]*schema.Schema{
 			"name": {

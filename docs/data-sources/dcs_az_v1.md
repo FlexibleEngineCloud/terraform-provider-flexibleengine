@@ -1,10 +1,12 @@
 ---
-subcategory: "Distributed Cache Service (DCS)"
+subcategory: "Deprecated"
 ---
 
-# flexibleengine\_dcs\_az_v1
+# flexibleengine_dcs_az_v1
 
 Use this data source to get the ID of an available Flexibleengine dcs az.
+
+!> **Warning:** It has been deprecated, you can use the availability zone code directly, e.g. eu-west-0b.
 
 ## Example Usage
 
@@ -19,11 +21,11 @@ data "flexibleengine_dcs_az_v1" "az1" {
 
 ## Argument Reference
 
-* `name` - (Required) Indicates the name of an AZ.
+* `name` - (Optional) Indicates the name of an AZ.
 
 * `code` - (Optional) Indicates the code of an AZ.
 
-* `port` - (Required) Indicates the port number of an AZ.
+* `port` - (Optional) Indicates the port number of an AZ.
 
 
 ## Attributes Reference

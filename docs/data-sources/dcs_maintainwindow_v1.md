@@ -2,29 +2,29 @@
 subcategory: "Distributed Cache Service (DCS)"
 ---
 
-# flexibleengine\_dcs\_maintainwindow_v1
+# flexibleengine_dcs_maintainwindow_v1
 
-Use this data source to get the ID of an available Flexibleengine dcs maintainwindow.
+Use this data source to get the ID of an available Flexibleengine DCS maintainwindow.
 
 ## Example Usage
 
 ```hcl
 
 data "flexibleengine_dcs_maintainwindow_v1" "maintainwindow1" {
-seq = 1
+  default = true
 }
 
 ```
 
 ## Argument Reference
 
-* `seq` - (Required) Indicates the sequential number of a maintenance time window.
+* `default` - (Optional) Specifies whether a maintenance time window is set to the default time segment.
 
-* `begin` - (Optional) Indicates the time at which a maintenance time window starts.
+* `seq` - (Optional) Specifies the sequential number of a maintenance time window.
 
-* `end` - (Required) Indicates the time at which a maintenance time window ends.
+* `begin` - (Optional) Specifies the time at which a maintenance time window starts.
 
-* `default` - (Required) Indicates whether a maintenance time window is set to the default time segment.
+* `end` - (Optional) Specifies the time at which a maintenance time window ends.
 
 ## Attributes Reference
 
