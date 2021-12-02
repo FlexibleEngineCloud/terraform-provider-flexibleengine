@@ -250,6 +250,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dns_recordset_v2":                   resourceDNSRecordSetV2(),
 			"flexibleengine_dns_zone_v2":                        resourceDNSZoneV2(),
 			"flexibleengine_dcs_instance_v1":                    resourceDcsInstanceV1(),
+			"flexibleengine_dis_stream":                         resourceDisStreamV2(),
 			"flexibleengine_fw_firewall_group_v2":               resourceFWFirewallGroupV2(),
 			"flexibleengine_fw_policy_v2":                       resourceFWPolicyV2(),
 			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
