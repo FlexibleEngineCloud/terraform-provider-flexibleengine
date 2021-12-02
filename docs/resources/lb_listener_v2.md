@@ -104,20 +104,20 @@ The following arguments are supported:
     If omitted, the `region` argument of the provider is used.
     Changing this creates a new listener.
 
+* `loadbalancer_id` - (Required) The load balancer on which to provision this
+    listener. Changing this creates a new listener.
+
 * `protocol` - (Required) The protocol - can either be TCP, UDP, HTTP or TERMINATED_HTTPS.
     Changing this creates a new listener.
 
 * `protocol_port` - (Required) The port on which to listen for client traffic.
     Changing this creates a new listener.
 
-* `loadbalancer_id` - (Required) The load balancer on which to provision this
-    listener. Changing this creates a new listener.
+* `default_pool_id` - (Optional) The ID of the default pool with which the
+    listener is associated. Changing this creates a new listener.
 
 * `name` - (Optional) Human-readable name for the listener. Does not have
     to be unique.
-
-* `default_pool_id` - (Optional) The ID of the default pool with which the
-    listener is associated. Changing this creates a new listener.
 
 * `description` - (Optional) Human-readable description for the listener.
 
@@ -168,13 +168,6 @@ The following arguments are supported:
   </tr>
 </table>
 
-* `admin_state_up` - (Optional) The administrative state of the listener.
-    A valid value is true (UP) or false (DOWN).
-
-* `tenant_id` - (Optional) The UUID of the tenant who owns the listener.
-    Only administrative users can specify a tenant UUID other than their own.
-    Changing this creates a new listener.
-
 ## Attributes Reference
 
 The following attributes are exported:
@@ -182,7 +175,6 @@ The following attributes are exported:
 * `id` - The unique ID for the listener.
 * `protocol` - See Argument Reference above.
 * `protocol_port` - See Argument Reference above.
-* `tenant_id` - See Argument Reference above.
 * `name` - See Argument Reference above.
 * `default_port_id` - See Argument Reference above.
 * `description` - See Argument Reference above.
@@ -190,5 +182,4 @@ The following attributes are exported:
 * `default_tls_container_ref` - See Argument Reference above.
 * `sni_container_refs` - See Argument Reference above.
 * `tls_ciphers_policy` - See Argument Reference above.
-* `admin_state_up` - See Argument Reference above.
 * `tags` - See Argument Reference above.

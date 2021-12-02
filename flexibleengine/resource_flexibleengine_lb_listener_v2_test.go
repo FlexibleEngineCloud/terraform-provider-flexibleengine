@@ -141,7 +141,6 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   name            = "listener_1_updated"
   protocol        = "HTTP"
   protocol_port   = 8080
-  admin_state_up  = "true"
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 
   tags = {

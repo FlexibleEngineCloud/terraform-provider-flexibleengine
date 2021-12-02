@@ -34,6 +34,11 @@ func resourceListenerV2() *schema.Resource {
 				ForceNew: true,
 			},
 
+			"loadbalancer_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
 			"protocol": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -42,30 +47,10 @@ func resourceListenerV2() *schema.Resource {
 					"TCP", "UDP", "HTTP", "TERMINATED_HTTPS",
 				}, false),
 			},
-
 			"protocol_port": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
-			},
-
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
-			"loadbalancer_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
-			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
 			},
 
 			"default_pool_id": {
@@ -75,17 +60,16 @@ func resourceListenerV2() *schema.Resource {
 				ForceNew: true,
 			},
 
+			"name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-
-			/*"connection_limit": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			}, */
 
 			"http2_enable": {
 				Type:     schema.TypeBool,
@@ -109,14 +93,20 @@ func resourceListenerV2() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
-				Optional: true,
-				ForceNew: true,
-			},
 			"tags": tagsSchema(),
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "tenant_id is deprecated",
+			},
+			"admin_state_up": {
+				Type:       schema.TypeBool,
+				Default:    true,
+				Optional:   true,
+				Deprecated: "admin_state_up is deprecated",
+			},
 		},
 	}
 }
@@ -128,7 +118,6 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	adminStateUp := d.Get("admin_state_up").(bool)
 	http2Enable := d.Get("http2_enable").(bool)
 	var sniContainerRefs []string
 	if raw, ok := d.GetOk("sni_container_refs"); ok {
@@ -139,7 +128,6 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	createOpts := listeners.CreateOpts{
 		Protocol:               listeners.Protocol(d.Get("protocol").(string)),
 		ProtocolPort:           d.Get("protocol_port").(int),
-		TenantID:               d.Get("tenant_id").(string),
 		LoadbalancerID:         d.Get("loadbalancer_id").(string),
 		Name:                   d.Get("name").(string),
 		DefaultPoolID:          d.Get("default_pool_id").(string),
@@ -148,13 +136,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 		SniContainerRefs:       sniContainerRefs,
 		TlsCiphersPolicy:       d.Get("tls_ciphers_policy").(string),
 		Http2Enable:            &http2Enable,
-		AdminStateUp:           &adminStateUp,
 	}
-
-	/*if v, ok := d.GetOk("connection_limit"); ok {
-		connectionLimit := v.(int)
-		createOpts.ConnLimit = &connectionLimit
-	} */
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 
@@ -221,13 +203,10 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(listener.ID)
 	d.Set("name", listener.Name)
 	d.Set("protocol", listener.Protocol)
-	d.Set("tenant_id", listener.TenantID)
 	d.Set("description", listener.Description)
 	d.Set("protocol_port", listener.ProtocolPort)
-	d.Set("admin_state_up", listener.AdminStateUp)
 	d.Set("http2_enable", listener.Http2Enable)
 	d.Set("default_pool_id", listener.DefaultPoolID)
-	//d.Set("connection_limit", listener.ConnLimit)
 	if err := d.Set("sni_container_refs", listener.SniContainerRefs); err != nil {
 		return fmt.Errorf("[DEBUG] Error saving sni_container_refs to state for FlexibleEngine listener (%s): %s", d.Id(), err)
 	}
@@ -264,10 +243,6 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	if d.HasChange("description") {
 		updateOpts.Description = d.Get("description").(string)
 	}
-	/*if d.HasChange("connection_limit") {
-		connLimit := d.Get("connection_limit").(int)
-		updateOpts.ConnLimit = &connLimit
-	} */
 	if d.HasChange("default_tls_container_ref") {
 		updateOpts.DefaultTlsContainerRef = d.Get("default_tls_container_ref").(string)
 	}
@@ -282,10 +257,6 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 	if d.HasChange("tls_ciphers_policy") {
 		updateOpts.TlsCiphersPolicy = d.Get("tls_ciphers_policy").(string)
-	}
-	if d.HasChange("admin_state_up") {
-		asu := d.Get("admin_state_up").(bool)
-		updateOpts.AdminStateUp = &asu
 	}
 	if d.HasChange("http2_enable") {
 		http2 := d.Get("http2_enable").(bool)
