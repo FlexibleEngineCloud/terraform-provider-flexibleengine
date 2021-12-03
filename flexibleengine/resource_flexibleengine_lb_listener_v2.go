@@ -113,9 +113,9 @@ func resourceListenerV2() *schema.Resource {
 
 func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	http2Enable := d.Get("http2_enable").(bool)
@@ -143,7 +143,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	// Wait for LoadBalancer to become active before continuing
 	lbID := createOpts.LoadbalancerID
 	timeout := d.Timeout(schema.TimeoutCreate)
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(lbClient, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Attempting to create listener")
 	var listener *listeners.Listener
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		listener, err = listeners.Create(networkingClient, createOpts).Extract()
+		listener, err = listeners.Create(lbClient, createOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -162,7 +162,7 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Wait for LoadBalancer to become active again before continuing
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(lbClient, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
@@ -172,13 +172,8 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 	//set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		elbClient, err := config.elbV2Client(GetRegion(d, config))
-		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-		}
-
 		taglist := expandResourceTags(tagRaw)
-		if tagErr := tags.Create(elbClient, "listeners", listener.ID, taglist).ExtractErr(); tagErr != nil {
+		if tagErr := tags.Create(lbClient, "listeners", listener.ID, taglist).ExtractErr(); tagErr != nil {
 			return fmt.Errorf("Error setting tags of elb listener %s: %s", listener.ID, tagErr)
 		}
 	}
@@ -188,12 +183,13 @@ func resourceListenerV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	lbClient, err := config.ElbV2Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	listener, err := listeners.Get(networkingClient, d.Id()).Extract()
+	listener, err := listeners.Get(lbClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "listener")
 	}
@@ -201,6 +197,7 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Retrieved listener %s: %#v", d.Id(), listener)
 
 	d.SetId(listener.ID)
+	d.Set("region", region)
 	d.Set("name", listener.Name)
 	d.Set("protocol", listener.Protocol)
 	d.Set("description", listener.Description)
@@ -212,14 +209,9 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("tls_ciphers_policy", listener.TlsCiphersPolicy)
 	d.Set("default_tls_container_ref", listener.DefaultTlsContainerRef)
-	d.Set("region", GetRegion(d, config))
 
 	// fetch tags
-	elbClient, err := config.elbV2Client(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-	}
-	if resourceTags, err := tags.Get(elbClient, "listeners", d.Id()).Extract(); err == nil {
+	if resourceTags, err := tags.Get(lbClient, "listeners", d.Id()).Extract(); err == nil {
 		tagmap := tagsToMap(resourceTags.Tags)
 		d.Set("tags", tagmap)
 	} else {
@@ -231,9 +223,9 @@ func resourceListenerV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	elbV2Client, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var updateOpts listeners.UpdateOpts
@@ -266,14 +258,14 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	// Wait for LoadBalancer to become active before continuing
 	lbID := d.Get("loadbalancer_id").(string)
 	timeout := d.Timeout(schema.TimeoutUpdate)
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(elbV2Client, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Updating listener %s with options: %#v", d.Id(), updateOpts)
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err = listeners.Update(networkingClient, d.Id(), updateOpts).Extract()
+		_, err = listeners.Update(elbV2Client, d.Id(), updateOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -285,19 +277,14 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Wait for LoadBalancer to become active again before continuing
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(elbV2Client, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
 
 	// update tags
 	if d.HasChange("tags") {
-		elbClient, err := config.elbV2Client(GetRegion(d, config))
-		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-		}
-
-		tagErr := UpdateResourceTags(elbClient, d, "listeners", d.Id())
+		tagErr := UpdateResourceTags(elbV2Client, d, "listeners", d.Id())
 		if tagErr != nil {
 			return fmt.Errorf("Error updating tags of elb listener:%s, err:%s", d.Id(), tagErr)
 		}
@@ -309,22 +296,22 @@ func resourceListenerV2Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceListenerV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	elbV2Client, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	// Wait for LoadBalancer to become active before continuing
 	lbID := d.Get("loadbalancer_id").(string)
 	timeout := d.Timeout(schema.TimeoutDelete)
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(elbV2Client, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Deleting listener %s", d.Id())
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err = listeners.Delete(networkingClient, d.Id()).ExtractErr()
+		err = listeners.Delete(elbV2Client, d.Id()).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -336,13 +323,13 @@ func resourceListenerV2Delete(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Wait for LoadBalancer to become active again before continuing
-	err = waitForLBV2LoadBalancer(networkingClient, lbID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(elbV2Client, lbID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
 
 	// Wait for Listener to delete
-	err = waitForLBV2Listener(networkingClient, d.Id(), "DELETED", nil, timeout)
+	err = waitForLBV2Listener(elbV2Client, d.Id(), "DELETED", nil, timeout)
 	if err != nil {
 		return err
 	}
