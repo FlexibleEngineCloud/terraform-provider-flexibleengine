@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/listeners"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -12,6 +13,7 @@ import (
 func TestAccLBV2Listener_basic(t *testing.T) {
 	var listener listeners.Listener
 	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,18 +21,21 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 		CheckDestroy: testAccCheckLBV2ListenerDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccLBV2ListenerConfig_basic,
+				Config: testAccLBV2ListenerConfig_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2ListenerExists(resourceName, &listener),
-					resource.TestCheckResourceAttr(resourceName, "name", "listener_1"),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "HTTP"),
+					resource.TestCheckResourceAttr(resourceName, "http2_enable", "false"),
+					resource.TestCheckResourceAttr(resourceName, "transparent_client_ip_enable", "true"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
 			{
-				Config: TestAccLBV2ListenerConfig_update,
+				Config: testAccLBV2ListenerConfig_update(rName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", "listener_1_updated"),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s_updated", rName)),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
@@ -42,6 +47,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 func TestAccLBV2Listener_withCert(t *testing.T) {
 	var listener listeners.Listener
 	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -49,10 +55,37 @@ func TestAccLBV2Listener_withCert(t *testing.T) {
 		CheckDestroy: testAccCheckLBV2ListenerDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccLBV2ListenerConfig_cert,
+				Config: testAccLBV2ListenerConfig_cert(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2ListenerExists(resourceName, &listener),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "TERMINATED_HTTPS"),
 					resource.TestCheckResourceAttr(resourceName, "http2_enable", "true"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccLBV2Listener_v3(t *testing.T) {
+	var listener listeners.Listener
+	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckLBV2ListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccLBV2ListenerConfig_v3(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckLBV2ListenerExists(resourceName, &listener),
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "TCP"),
+					resource.TestCheckResourceAttr(resourceName, "http2_enable", "false"),
+					resource.TestCheckResourceAttr(resourceName, "transparent_client_ip_enable", "true"),
+					resource.TestCheckResourceAttr(resourceName, "idle_timeout", "500"),
 				),
 			},
 		},
@@ -61,7 +94,7 @@ func TestAccLBV2Listener_withCert(t *testing.T) {
 
 func testAccCheckLBV2ListenerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	elbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -71,7 +104,7 @@ func testAccCheckLBV2ListenerDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := listeners.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := listeners.Get(elbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Listener still exists: %s", rs.Primary.ID)
 		}
@@ -92,12 +125,12 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		elbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
 
-		found, err := listeners.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := listeners.Get(elbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -112,14 +145,15 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 	}
 }
 
-var TestAccLBV2ListenerConfig_basic = fmt.Sprintf(`
+func testAccLBV2ListenerConfig_basic(name string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name          = "loadbalancer_1"
+  name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name            = "listener_1"
+  name            = "listener-%s"
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
@@ -129,19 +163,20 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
     owner = "terraform"
   }
 }
-`, OS_SUBNET_ID)
+`, name, OS_SUBNET_ID, name)
+}
 
-var TestAccLBV2ListenerConfig_update = fmt.Sprintf(`
+func testAccLBV2ListenerConfig_update(name string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name          = "loadbalancer_1"
+  name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name            = "listener_1_updated"
+  name            = "listener-%s_updated"
   protocol        = "HTTP"
   protocol_port   = 8080
-  admin_state_up  = "true"
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 
   tags = {
@@ -149,16 +184,18 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
     owner = "terraform_update"
   }
 }
-`, OS_SUBNET_ID)
+`, name, OS_SUBNET_ID, name)
+}
 
-var TestAccLBV2ListenerConfig_cert = fmt.Sprintf(`
+func testAccLBV2ListenerConfig_cert(name string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name          = "loadbalancer_cert"
+  name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name        = "cert"
+  name        = "cert-%s"
   domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
@@ -217,11 +254,35 @@ EOT
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name                      = "listener_cert"
+  name                      = "listener-%s"
   protocol                  = "TERMINATED_HTTPS"
   protocol_port             = 8080
   http2_enable              = true
   loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
   default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
 }
-`, OS_SUBNET_ID)
+`, name, OS_SUBNET_ID, name, name)
+}
+
+func testAccLBV2ListenerConfig_v3(name string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+  name          = "lb-%s"
+  vip_subnet_id = "%s"
+}
+
+resource "flexibleengine_lb_listener_v2" "listener_1" {
+  name            = "listener-%s"
+  protocol        = "TCP"
+  protocol_port   = 443
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  idle_timeout    = 500
+  transparent_client_ip_enable = true
+
+  tags = {
+    key   = "value"
+    owner = "terraform"
+  }
+}
+`, name, OS_SUBNET_ID, name)
+}
