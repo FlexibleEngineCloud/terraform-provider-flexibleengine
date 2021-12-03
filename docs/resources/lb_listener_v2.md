@@ -126,6 +126,23 @@ The following arguments are supported:
 * `http2_enable` - (Optional, Bool) Specifies whether to use HTTP/2. The default value is false.
     This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
 
+* `transparent_client_ip_enable` - (Optional, Bool) Specifies whether to pass source IP addresses of the clients to backend servers.
+  + For TCP and UDP listeners, the value can be true or false, and the default value is false.
+  + For HTTP and HTTPS listeners, the value can only be true.
+
+* `idle_timeout` - (Optional, Int) Specifies the idle timeout duration, in seconds.
+  + For TCP listeners, the value ranges from 10 to 4000, and the default value is 300.
+  + For HTTP and HTTPS listeners, the value ranges from 1 to 300, and the default value is 60.
+  + For UDP listeners, this parameter does not take effect.
+
+* `request_timeout` - (Optional, Int) Specifies the timeout duration for waiting for a request from a client,
+  in seconds. This parameter is available only for HTTP and HTTPS listeners. The value ranges from 1 to 300,
+  and the default value is 60.
+
+* `response_timeout` - (Optional, Int) Specifies the timeout duration for waiting for a request from a backend
+  server, in seconds. This parameter is available only for HTTP and HTTPS listeners. The value ranges from 1 to 300,
+  and the default value is 60.
+
 * `default_tls_container_ref` - (Optional) A reference to a Barbican Secrets
     container which stores TLS information. This is required if the protocol
     is `TERMINATED_HTTPS`. See

@@ -119,6 +119,7 @@ github.com/chnsz/golangsdk/openstack/ecs/v1/block_devices
 github.com/chnsz/golangsdk/openstack/ecs/v1/cloudservers
 github.com/chnsz/golangsdk/openstack/ecs/v1/flavors
 github.com/chnsz/golangsdk/openstack/ecs/v1/tags
+github.com/chnsz/golangsdk/openstack/elb/v3/listeners
 github.com/chnsz/golangsdk/openstack/identity/v2/tenants
 github.com/chnsz/golangsdk/openstack/identity/v2/tokens
 github.com/chnsz/golangsdk/openstack/identity/v3.0/policies
