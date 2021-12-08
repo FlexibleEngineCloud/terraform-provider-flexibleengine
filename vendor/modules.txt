@@ -107,6 +107,7 @@ github.com/chnsz/golangsdk/openstack/dcs/v1/maintainwindows
 github.com/chnsz/golangsdk/openstack/dcs/v1/products
 github.com/chnsz/golangsdk/openstack/dds/v3/flavors
 github.com/chnsz/golangsdk/openstack/dds/v3/instances
+github.com/chnsz/golangsdk/openstack/dis/v2/streams
 github.com/chnsz/golangsdk/openstack/dli/v1/queues
 github.com/chnsz/golangsdk/openstack/dns/v2/ptrrecords
 github.com/chnsz/golangsdk/openstack/dns/v2/recordsets
