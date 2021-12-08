@@ -63,8 +63,8 @@ func dataSourceVpcEipRead(_ context.Context, d *schema.ResourceData, meta interf
 	}
 
 	listOpts := &eips.ListOpts{
-		PortId:   d.Get("port_id").(string),
-		PublicIp: d.Get("public_ip").(string),
+		PortId:   []string{d.Get("port_id").(string)},
+		PublicIp: []string{d.Get("public_ip").(string)},
 	}
 
 	pages, err := eips.List(networkingClient, listOpts).AllPages()
