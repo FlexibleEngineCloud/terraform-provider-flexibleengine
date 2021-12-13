@@ -16,12 +16,18 @@ func resourceDisStreamV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDisStreamCreate,
 		Read:   resourceDisStreamRead,
-		Update: resourceDisStreamUpdate,
 		Delete: resourceDisStreamDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+
 		Schema: map[string]*schema.Schema{
+			"region": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -29,26 +35,55 @@ func resourceDisStreamV2() *schema.Resource {
 				ValidateFunc: validation.StringMatch(regexpStreamName,
 					"1 to 64 in length, only letters, digits, hyphens (-), and underscores (_) are allowed."),
 			},
-			"type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				Default:      streams.StreamTypeCommon,
-				ValidateFunc: validation.StringInSlice([]string{streams.StreamTypeCommon, streams.StreamTypeAdvanced}, false),
-			},
 			"partition_count": {
 				Type:     schema.TypeInt,
 				Required: true,
 				ForceNew: true,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Default:  streams.StreamTypeCommon,
+				ValidateFunc: validation.StringInSlice([]string{
+					streams.StreamTypeCommon, streams.StreamTypeAdvanced,
+				}, false),
+			},
 			"data_duration": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				ForceNew: true,
 				Default:  24,
 			},
-			"data_schema": {
+
+			// Attributes
+			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
+			},
+			"partitions": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"hash_range": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"sequence_number_range": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"status": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -70,7 +105,6 @@ func resourceDisStreamCreate(d *schema.ResourceData, meta interface{}) error {
 		StreamType:     d.Get("type").(string),
 		PartitionCount: d.Get("partition_count").(int),
 		DataDuration:   d.Get("data_duration").(int),
-		DataSchema:     d.Get("data_schema").(string),
 	}
 
 	log.Printf("[DEBUG] Create dis stream using parameters: %+v", createOpts)
@@ -100,15 +134,18 @@ func resourceDisStreamRead(d *schema.ResourceData, meta interface{}) error {
 	getOpts := streams.GetOpts{}
 	streamDetail, err := streams.Get(disClient, streamName, getOpts)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error query DisStream %q:%s", d.Id(), err)
 	}
 
-	if streamDetail != nil {
-		d.Set("name", streamDetail.StreamName)
-		// d.Set("type", streamDetail.StreamType)
-		// d.Set("partition_count", streamDetail.WritablePartitionCount) // TODO: Check that this match the actual partition_count (there is no partition_count attr)
-		d.Set("data_duration", streamDetail.RetentionPeriod)
-		d.Set("data_schema", streamDetail.DataSchema)
+	d.Set("name", streamDetail.StreamName)
+	d.Set("data_duration", streamDetail.RetentionPeriod)
+	d.Set("status", streamDetail.Status)
+	if !streamDetail.HasMorePartitions {
+		d.Set("partition_count", len(streamDetail.Partitions))
+	}
+
+	if err := d.Set("partitions", flattenDisPartitions(streamDetail.Partitions)); err != nil {
+		return fmt.Errorf("Error setting partitions field: %s", err)
 	}
 
 	return nil
@@ -134,6 +171,17 @@ func resourceDisStreamDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceDisStreamUpdate(d *schema.ResourceData, meta interface{}) error {
-	return resourceDisStreamRead(d, meta)
+func flattenDisPartitions(partitions []streams.Partition) []map[string]interface{} {
+	result := make([]map[string]interface{}, len(partitions))
+
+	for i, item := range partitions {
+		result[i] = map[string]interface{}{
+			"id":                    item.PartitionId,
+			"status":                item.Status,
+			"hash_range":            item.HashRange,
+			"sequence_number_range": item.SequenceNumberRange,
+		}
+	}
+
+	return result
 }
