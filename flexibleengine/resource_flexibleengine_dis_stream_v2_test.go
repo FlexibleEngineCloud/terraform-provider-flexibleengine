@@ -25,10 +25,18 @@ func TestAccDisStreamV2_basic(t *testing.T) {
 					testAccCheckDisStreamV2Exists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "name", streamName),
 					resource.TestCheckResourceAttr(resourceName, "type", streams.StreamTypeCommon),
-					resource.TestCheckResourceAttr(resourceName, "partition_count", "3"),
 					resource.TestCheckResourceAttr(resourceName, "data_duration", "24"),
-					// resource.TestCheckResourceAttr(resourceName, "data_schema"),
+					resource.TestCheckResourceAttr(resourceName, "partition_count", "3"),
+					resource.TestCheckResourceAttr(resourceName, "partitions.#", "3"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"type",
+				},
 			},
 		},
 	})
