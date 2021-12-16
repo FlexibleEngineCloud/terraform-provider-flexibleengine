@@ -267,6 +267,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_l7rule_v2":                       resourceL7RuleV2(),
 			"flexibleengine_mrs_hybrid_cluster_v1":              resourceMRSHybridClusterV1(),
 			"flexibleengine_mrs_cluster_v1":                     resourceMRSClusterV1(),
+			"flexibleengine_mrs_cluster_v2":                     resourceMRSClusterV2(),
 			"flexibleengine_mrs_job_v1":                         resourceMRSJobV1(),
 			"flexibleengine_mrs_job_v2":                         resourceMRSJobV2(),
 			"flexibleengine_mls_instance_v1":                    resourceMlsInstanceV1(),
