@@ -2,8 +2,10 @@ package flexibleengine
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -12,6 +14,9 @@ import (
 
 func TestAccComputeV2Keypair_basic(t *testing.T) {
 	var keypair keypairs.KeyPair
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_compute_keypair_v2.import"
+	publicKey, _, _ := acctest.RandSSHKeyPair("Generated-by-AccTest")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -19,9 +24,35 @@ func TestAccComputeV2Keypair_basic(t *testing.T) {
 		CheckDestroy: testAccCheckComputeV2KeypairDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeV2Keypair_basic,
+				Config: testAccComputeV2Keypair_import(rName, publicKey),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2KeypairExists("flexibleengine_compute_keypair_v2.flexibleengine_acctest_kp", &keypair),
+					testAccCheckComputeV2KeypairExists(resourceName, &keypair),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccComputeV2Keypair_create(t *testing.T) {
+	var keypair keypairs.KeyPair
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_compute_keypair_v2.test"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeV2KeypairDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeV2Keypair_create(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeV2KeypairExists(resourceName, &keypair),
+					resource.TestCheckResourceAttrSet(resourceName, "private_key_path"),
 				),
 			},
 		},
@@ -43,6 +74,13 @@ func testAccCheckComputeV2KeypairDestroy(s *terraform.State) error {
 		_, err := keypairs.Get(computeClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Keypair still exists")
+		}
+
+		privateKey := rs.Primary.Attributes["private_key_path"]
+		if privateKey != "" {
+			if _, err := os.Stat(privateKey); err == nil {
+				return fmt.Errorf("private key file still exists")
+			}
 		}
 	}
 
@@ -75,15 +113,32 @@ func testAccCheckComputeV2KeypairExists(n string, kp *keypairs.KeyPair) resource
 			return fmt.Errorf("Keypair not found")
 		}
 
+		privateKey := rs.Primary.Attributes["private_key_path"]
+		if privateKey != "" {
+			if _, err := os.Stat(privateKey); err != nil {
+				return fmt.Errorf("private key file not found: %s", err)
+			}
+		}
+
 		*kp = *found
 
 		return nil
 	}
 }
 
-const testAccComputeV2Keypair_basic = `
-resource "flexibleengine_compute_keypair_v2" "flexibleengine_acctest_kp" {
-  name = "flexibleengine_acctest_kp"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLo1BCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAT9+OfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZquwhvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TAIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIFuu1p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB jrp-hp-pc"
+func testAccComputeV2Keypair_import(rName, keypair string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_compute_keypair_v2" "import" {
+  name       = "%s"
+  public_key = "%s"
 }
-`
+`, rName, keypair)
+}
+
+func testAccComputeV2Keypair_create(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_compute_keypair_v2" "test" {
+  name = "%s"
+}
+`, rName)
+}
