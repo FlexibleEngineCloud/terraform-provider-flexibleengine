@@ -425,11 +425,14 @@ func (c *Config) bmsClient(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
-func (c *Config) dnsV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewDNSV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
+// dnsV2Client is a global client for DNS service, the endpoint is https://dns.{cloud}/v2/
+func (c *Config) dnsV2Client(_ string) (*golangsdk.ServiceClient, error) {
+	sc := new(golangsdk.ServiceClient)
+	sc.ProviderClient = c.HwClient
+	sc.Endpoint = fmt.Sprintf("https://dns.%s", defaultCloud)
+	sc.ResourceBase = fmt.Sprintf("%s/v2/", sc.Endpoint)
+
+	return sc, nil
 }
 
 func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, error) {
