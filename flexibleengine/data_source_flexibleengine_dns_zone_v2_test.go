@@ -11,24 +11,22 @@ import (
 
 var zoneName = fmt.Sprintf("acpttest%s.com.", acctest.RandString(5))
 
-func TestAccFlexibleEngineDNSZoneV2DataSource_basic(t *testing.T) {
+func TestAccDNSZoneV2DataSource_basic(t *testing.T) {
+	resourceName := "data.flexibleengine_dns_zone_v2.z1"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFlexibleEngineDNSZoneV2DataSource_zone,
+				Config: testAccDNSZoneV2DataSource_zone,
 			},
 			{
-				Config: testAccFlexibleEngineDNSZoneV2DataSource_basic,
+				Config: testAccDNSZoneV2DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDNSZoneV2DataSourceID("data.flexibleengine_dns_zone_v2.z1"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_dns_zone_v2.z1", "name", zoneName),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_dns_zone_v2.z1", "zone_type", "public"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_dns_zone_v2.z1", "ttl", "7200"),
+					testAccCheckDNSZoneV2DataSourceID(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
+					resource.TestCheckResourceAttr(resourceName, "zone_type", "public"),
+					resource.TestCheckResourceAttr(resourceName, "ttl", "7200"),
 				),
 			},
 		},
@@ -50,18 +48,19 @@ func testAccCheckDNSZoneV2DataSourceID(n string) resource.TestCheckFunc {
 	}
 }
 
-var testAccFlexibleEngineDNSZoneV2DataSource_zone = fmt.Sprintf(`
+var testAccDNSZoneV2DataSource_zone = fmt.Sprintf(`
 resource "flexibleengine_dns_zone_v2" "z1" {
-  name = "%s"
+  name        = "%s"
   description = "dns data source test"
-  email = "terraform-dns-zone-v2-test-name@example.com"
-  zone_type = "public"
-  ttl = 7200
+  email       = "terraform-dns-zone-v2-test-name@example.com"
+  zone_type   = "public"
+  ttl         = 7200
 }`, zoneName)
 
-var testAccFlexibleEngineDNSZoneV2DataSource_basic = fmt.Sprintf(`
+var testAccDNSZoneV2DataSource_basic = fmt.Sprintf(`
 %s
+
 data "flexibleengine_dns_zone_v2" "z1" {
-	name = "${flexibleengine_dns_zone_v2.z1.name}"
+  name = flexibleengine_dns_zone_v2.z1.name
 }
-`, testAccFlexibleEngineDNSZoneV2DataSource_zone)
+`, testAccDNSZoneV2DataSource_zone)
