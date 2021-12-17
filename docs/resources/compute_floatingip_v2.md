@@ -2,12 +2,12 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_floatingip_v2
+# flexibleengine_compute_floatingip_v2
 
 Manages a V2 floating IP resource within FlexibleEngine Nova (compute)
 that can be used for compute instances.
-These are similar to Neutron (networking) floating IP resources,
-but only networking floating IPs can be used with load balancers.
+
+!> **Warning:** It will be deprecated, using `flexibleengine_vpc_eip_v1` instead.
 
 ## Example Usage
 

@@ -2,12 +2,12 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_floatingip_v2
+# flexibleengine_networking_floatingip_v2
 
-Manages a V2 floating IP resource within FlexibleEngine Neutron (networking)
-that can be used for load balancers.
-These are similar to Nova (compute) floating IP resources,
-but only compute floating IPs can be used with compute instances.
+Manages a V2 floating IP resource within FlexibleEngine.
+
+!> **Warning:** It will be deprecated, using `flexibleengine_vpc_eip_v1` instead.
+
 
 ## Example Usage
 
