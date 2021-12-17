@@ -30,8 +30,9 @@ resource "flexibleengine_fw_rule_v2" "rule_2" {
 resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "my-policy"
 
-  rules = ["${flexibleengine_fw_rule_v2.rule_1.id}",
-    "${flexibleengine_fw_rule_v2.rule_2.id}",
+  rules = [
+    flexibleengine_fw_rule_v2.rule_1.id,
+    flexibleengine_fw_rule_v2.rule_2.id,
   ]
 }
 ```

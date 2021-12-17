@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_subnet_v2
+# flexibleengine_networking_subnet_v2
 
 Manages a V2 Neutron subnet resource within FlexibleEngine.
 
@@ -15,7 +15,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 }
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr       = "192.168.199.0/24"
 }
 ```

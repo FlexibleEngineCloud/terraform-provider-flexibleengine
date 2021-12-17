@@ -51,7 +51,7 @@ resource "flexibleengine_mls_instance_v1" "instance" {
 	}
   }
   mrs_cluster {
-    id = "${flexibleengine_mrs_cluster_v1.cluster1.id}"
+    id = flexibleengine_mrs_cluster_v1.cluster1.id
   }
 }
 ```

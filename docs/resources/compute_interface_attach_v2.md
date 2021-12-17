@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_interface\_attach_v2
+# flexibleengine_compute_interface_attach_v2
 
 Attaches a Network Interface (a Port) to an Instance using the FlexibleEngine
 Compute (Nova) v2 API.
@@ -23,8 +23,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  network_id  = "${flexibleengine_networking_port_v2.network_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  network_id  = flexibleengine_networking_port_v2.network_1.id
 }
 
 ```
@@ -43,8 +43,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  network_id  = "${flexibleengine_networking_port_v2.network_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  network_id  = flexibleengine_networking_port_v2.network_1.id
   fixed_ip    = "10.0.10.10"
 }
 
@@ -61,7 +61,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_port_v2" "port_1" {
   name           = "port_1"
-  network_id     = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id     = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 }
 
@@ -72,8 +72,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  port_id     = "${flexibleengine_networking_port_v2.port_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id     = flexibleengine_networking_port_v2.port_1.id
 }
 
 ```
@@ -88,8 +88,8 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_port_v2" "ports" {
   count          = 2
-  name           = "${format("port-%02d", count.index + 1)}"
-  network_id     = "${flexibleengine_networking_network_v2.network_1.id}"
+  name           = format("port-%02d", count.index + 1)
+  network_id     = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 }
 
@@ -100,8 +100,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
 resource "flexibleengine_compute_interface_attach_v2" "attachments" {
   count          = 2
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  port_id     = "${flexibleengine_networking_port_v2.ports.*.id[count.index]}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id     = flexibleengine_networking_port_v2.ports.*.id[count.index]
 }
 ```
 
@@ -120,8 +120,8 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_port_v2" "ports" {
   count          = 2
-  name           = "${format("port-%02d", count.index + 1)}"
-  network_id     = "${flexibleengine_networking_network_v2.network_1.id}"
+  name           = format("port-%02d", count.index + 1)
+  network_id     = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 }
 
@@ -131,13 +131,13 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  port_id     = "${flexibleengine_networking_port_v2.ports.*.id[0]}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id     = flexibleengine_networking_port_v2.ports.*.id[0]
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_2" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  port_id     = "${flexibleengine_networking_port_v2.ports.*.id[1]}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id     = flexibleengine_networking_port_v2.ports.*.id[1]
 }
 ```
 

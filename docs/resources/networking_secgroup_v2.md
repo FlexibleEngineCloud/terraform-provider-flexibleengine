@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_secgroup_v2
+# flexibleengine_networking_secgroup_v2
 
 Manages a V2 neutron security group resource within FlexibleEngine.
 Unlike Nova security groups, neutron separates the group from the rules
@@ -59,13 +59,13 @@ separate security group rules such as the following:
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v4" {
   direction = "egress"
   ethertype = "IPv4"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
 }
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v6" {
   direction = "egress"
   ethertype = "IPv6"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup.id}"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
 }
 ```
 

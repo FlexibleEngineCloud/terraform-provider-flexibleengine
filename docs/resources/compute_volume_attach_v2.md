@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_volume_attach_v2
+# flexibleengine_compute_volume_attach_v2
 
 Attaches a Block Storage Volume to an Instance using the FlexibleEngine
 Compute (Nova) v2 API.
@@ -23,8 +23,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id   = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
 }
 ```
 
@@ -33,7 +33,7 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
 ```hcl
 resource "flexibleengine_blockstorage_volume_v2" "volumes" {
   count = 2
-  name  = "${format("vol-%02d", count.index + 1)}"
+  name  = format("vol-%02d", count.index + 1)
   size  = 1
 }
 
@@ -44,12 +44,12 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 
 resource "flexibleengine_compute_volume_attach_v2" "attachments" {
   count       = 2
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id   = "${element(flexibleengine_blockstorage_volume_v2.volumes.*.id, count.index)}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  volume_id   = element(flexibleengine_blockstorage_volume_v2.volumes.*.id, count.index)
 }
 
 output "volume devices" {
-  value = "${flexibleengine_compute_volume_attach_v2.attachments.*.device}"
+  value = flexibleengine_compute_volume_attach_v2.attachments.*.device
 }
 ```
 

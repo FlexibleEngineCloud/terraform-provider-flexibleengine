@@ -12,8 +12,8 @@ Allows you to collect, store, and query cloud resource operation records.
  variable "bucket_name" { }
  
  resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
-   bucket_name      = "${var.bucket_name}"
-   file_prefix_name      = "yO8Q"
+  bucket_name      = var.bucket_name
+  file_prefix_name = "yO8Q"
  }
 
  ```

@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_network_v2
+# flexibleengine_networking_network_v2
 
 Manages a V2 Neutron network resource within FlexibleEngine.
 
@@ -16,7 +16,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name       = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr       = "192.168.199.0/24"
   ip_version = 4
 }
@@ -35,22 +35,22 @@ resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
 
 resource "flexibleengine_networking_port_v2" "port_1" {
   name               = "port_1"
-  network_id         = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id         = flexibleengine_networking_network_v2.network_1.id
   admin_state_up     = "true"
-  security_group_ids = ["${flexibleengine_compute_secgroup_v2.secgroup_1.id}"]
+  security_group_ids = [flexibleengine_compute_secgroup_v2.secgroup_1.id]
 
   fixed_ip {
-    "subnet_id"  = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    "subnet_id"  = flexibleengine_networking_subnet_v2.subnet_1.id
     "ip_address" = "192.168.199.10"
   }
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
-  security_groups = ["${flexibleengine_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = [flexibleengine_compute_secgroup_v2.secgroup_1.name]
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_1.id}"
+    port = flexibleengine_networking_port_v2.port_1.id
   }
 }
 ```

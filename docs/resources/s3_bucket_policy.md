@@ -16,8 +16,8 @@ resource "flexibleengine_s3_bucket" "b" {
 }
 
 resource "flexibleengine_s3_bucket_policy" "b" {
-  bucket = "${flexibleengine_s3_bucket.b.id}"
-  policy =<<POLICY
+  bucket = flexibleengine_s3_bucket.b.id
+  policy = <<POLICY
 {
   "Version": "2012-10-17",
   "Id": "MYBUCKETPOLICY",

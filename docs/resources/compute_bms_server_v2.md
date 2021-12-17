@@ -18,19 +18,19 @@ variable "network_id" {}
 variable "availability_zone" {}
 
 resource "flexibleengine_compute_bms_server_v2" "basic" {
-  name            = "basic"
-  image_id        = "${var.image_id}"
-  flavor_id       = "${var.flavor_id}"
-  key_pair        = "${var.keypair_name}"
-  security_groups = ["default"]
-  availability_zone = "${var.availability_zone}"
+  name              = "basic"
+  image_id          = var.image_id
+  flavor_id         = var.flavor_id
+  key_pair          = var.keypair_name
+  security_groups   = ["default"]
+  availability_zone = var.availability_zone
 
   metadata = {
     this = "that"
   }
 
   network {
-    uuid = "${var.network_id}"
+    uuid = var.network_id
   }
 }
 ```

@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_secgroup\_rule_v2
+# flexibleengine_networking_secgroup_rule_v2
 
 Manages a V2 neutron security group rule resource within FlexibleEngine.
 Unlike Nova security groups, neutron separates the group from the rules
@@ -23,7 +23,7 @@ resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   port_range_min    = 22
   port_range_max    = 22
   remote_ip_prefix  = "0.0.0.0/0"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
 }
 ```
 

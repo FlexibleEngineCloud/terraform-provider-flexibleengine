@@ -15,13 +15,13 @@ Provides an FlexibleEngine Stack.
  variable "image_id" { }
  
 resource "flexibleengine_rts_stack_v1" "mystack" {
-  name = "${var.name}"
+  name             = var.name
   disable_rollback = true
-  timeout_mins=60
+  timeout_mins     =60
   parameters = {
-      "network_id" = "${var.network_id}"
-      "instance_type" = "${var.instance_type}"
-      "image_id" = "${var.image_id}"
+      "network_id"    = var.network_id
+      "instance_type" = var.instance_type
+      "image_id"      = var.image_id
     }
   template_body = <<STACK
   {

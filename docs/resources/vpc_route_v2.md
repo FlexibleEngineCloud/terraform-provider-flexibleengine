@@ -10,10 +10,10 @@ Provides a resource to create a route.
 
  ```hcl
 resource "flexibleengine_vpc_route_v2" "vpc_route" {
-  type  = "peering"
-  nexthop  = "${var.nexthop}"
+  type        = "peering"
+  nexthop     = var.nexthop
   destination = "192.168.0.0/16"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
  }
 ```
 

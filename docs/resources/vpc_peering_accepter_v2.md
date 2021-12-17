@@ -17,51 +17,51 @@ connection into management.
  ```hcl
  provider "flexibleengine"  {
     alias = "main"
-    user_name   = "${var.username}"
-    domain_name = "${var.domain_name}"
-    password    = "${var.password}"
-    auth_url    = "${var.auth_url}"
-    region      = "${var.region}"
-    tenant_id   = "${var.tenant_id}"
+    user_name   = var.username
+    domain_name = var.domain_name
+    password    = var.password
+    auth_url    = var.auth_url
+    region      = var.region
+    tenant_id   = var.tenant_id
 }
 
 provider "flexibleengine"  {
     alias = "peer"
-    user_name = "${var.peer_username}"
-    domain_name = "${var.peer_domain_name}"
-    password    = "${var.peer_password}"
-    auth_url    = "${var.peer_auth_url}"
-    region      = "${var.peer_region}"
-    tenant_id   = "${var.peer_tenant_id}"
+    user_name   = var.peer_username
+    domain_name = var.peer_domain_name
+    password    = var.peer_password
+    auth_url    = var.peer_auth_url
+    region      = var.peer_region
+    tenant_id   = var.peer_tenant_id
 }
 
 resource "flexibleengine_vpc_v1" "vpc_main" {
     provider = "flexibleengine.main"
-    name = "${var.vpc_name}"
-    cidr = "${var.vpc_cidr}"
+    name = var.vpc_name
+    cidr = var.vpc_cidr
 }
 
 resource "flexibleengine_vpc_v1" "vpc_peer" {
     provider = "flexibleengine.peer"
-    name = "${var.peer_vpc_name}"
-    cidr = "${var.peer_vpc_cidr}"
+    name = var.peer_vpc_name
+    cidr = var.peer_vpc_cidr
 }
 
 # Requester's side of the connection.
 resource "flexibleengine_vpc_peering_connection_v2" "peering" {
     provider = "flexibleengine.main"
-    name = "${var.peer_name}"
-    vpc_id = "${flexibleengine_vpc_v1.vpc_main.id}"
-    peer_vpc_id = "${flexibleengine_vpc_v1.vpc_peer.id}"
-    peer_tenant_id =  "${var.tenant_id}"
+
+    name           = var.peer_name
+    vpc_id         = flexibleengine_vpc_v1.vpc_main.id
+    peer_vpc_id    = flexibleengine_vpc_v1.vpc_peer.id
+    peer_tenant_id =  var.tenant_id
 }
 
 # Accepter's side of the connection.
 resource "flexibleengine_vpc_peering_connection_accepter_v2" "peer" {
     provider = "flexibleengine.peer"
-    vpc_peering_connection_id = "${flexibleengine_vpc_peering_connection_v2.peering.id}"
+    vpc_peering_connection_id = flexibleengine_vpc_peering_connection_v2.peering.id
     accept = true
-  
 }
  ```
 

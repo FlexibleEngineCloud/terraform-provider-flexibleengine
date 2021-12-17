@@ -14,15 +14,15 @@ Provides an FlexibleEngine Backup Policy of Resources.
  variable "resource_name" { }
  
  resource "flexibleengine_csbs_backup_policy_v1" "backup_policy_v1" {
-   name  = "${var.name}"
+   name  = var.name
    resource {
-     id = "${var.id}"
+     id   = var.id
      type = "OS::Nova::Server"
-     name = "${var.resource_name}"
+     name = var.resource_name
    }
    scheduled_operation {
-     enabled = true
-     operation_type = "backup"
+     enabled         = true
+     operation_type  = "backup"
      trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
    }
  }
