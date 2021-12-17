@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Elastic IP (EIP)"
 ---
 
 # flexibleengine_vpc_eip_v1
@@ -40,8 +40,8 @@ resource "flexibleengine_vpc_eip_v1" "eip_with_tags" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the eip. If omitted,
-    the `region` argument of the provider is used. Changing this creates a new eip.
+* `region` - (Optional) The region in which to create the EIP. If omitted,
+    the `region` argument of the provider is used. Changing this creates a new EIP.
 
 * `publicip` - (Required) The elastic IP address object.
 
@@ -52,13 +52,13 @@ The following arguments are supported:
 The `publicip` block supports:
 
 * `type` - (Required) The value must be a type supported by the system. Only `5_bgp` supported now.
-    Changing this creates a new eip.
+    Changing this creates a new EIP.
 
 * `ip_address` - (Optional) The value must be a valid IP address in the available IP address segment.
-    Changing this creates a new eip.
+    Changing this creates a new EIP.
 
-* `port_id` - (Optional) The port id which this eip will associate with. If the value
-    is "" or this not specified, the eip will be in unbind state.
+* `port_id` - (Optional) The port id which this EIP will associate with. If the value
+    is not specified, the EIP will be in unbind state.
 
 
 The `bandwidth` block supports:
@@ -70,18 +70,18 @@ The `bandwidth` block supports:
 
 * `share_type` - (Required) Specifies the bandwidth type.
     The value is *PER*, indicating that the bandwidth is dedicated.
-    Changing this creates a new eip.
+    Changing this creates a new EIP.
 
 * `charge_mode` - (Optional) Specifies whether the bandwidth is billed by traffic or by bandwidth size.
-    Only *traffic* supported now. Changing this creates a new eip.
+    Only *traffic* supported now. Changing this creates a new EIP.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in UUID format.
-* `address` - The IP address of the eip.
-* `status` - The status of eip.
+* `address` - The IP address of the EIP.
+* `status` - The status of EIP.
 
 ## Import
 
