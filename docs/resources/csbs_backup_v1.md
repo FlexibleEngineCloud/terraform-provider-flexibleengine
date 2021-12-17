@@ -13,8 +13,8 @@ Provides an FlexibleEngine Backup of Resources.
  variable "resource_id" { }
  
  resource "flexibleengine_csbs_backup_v1" "backup_v1" {
-   backup_name = "${var.backup_name}"
-   resource_id = "${var.resource_id}"
+   backup_name   = var.backup_name
+   resource_id   = var.resource_id
    resource_type = "OS::Nova::Server"
  }
 

@@ -14,8 +14,8 @@ variable "backup_name" {}
 variable "volume_id" {}
  
 resource "flexibleengine_vbs_backup_v2" "mybackup" {
-  volume_id = "${var.volume_id}"
-  name = "${var.backup_name}"
+  volume_id = var.volume_id
+  name      = var.backup_name
 }
  ```
 

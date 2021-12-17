@@ -12,7 +12,7 @@ Provides an RTS software config resource.
 variable "config_name" {}
  
 resource "flexibleengine_rts_software_config_v1" "myconfig" {
-  name = "${var.config_name}"
+  name = var.config_name
 }
  ```
 

@@ -2,7 +2,7 @@
 subcategory: "Data Replication Service (DRS)"
 ---
 
-# flexibleengine\_drs\_replicationconsistencygroup\_v2
+# flexibleengine_drs_replicationconsistencygroup_v2
 
 Manages a V2 replicationconsistencygroup resource within FlexibleEngine.
 
@@ -22,16 +22,19 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_2" {
 }
 
 resource "flexibleengine_drs_replication_v2" "replication_1" {
-  name = "replication_1"
-  description = "The description of replication_1"
-  volume_ids = ["${flexibleengine_blockstorage_volume_v2.volume_1.id}", "${flexibleengine_blockstorage_volume_v2.volume_2.id}"]
+  name             = "replication_1"
+  description      = "The description of replication_1"
   priority_station = "eu-west-0a"
+  volume_ids       = [
+    flexibleengine_blockstorage_volume_v2.volume_1.id,
+    flexibleengine_blockstorage_volume_v2.volume_2.id,
+  ]
 }
 
 resource "flexibleengine_drs_replicationconsistencygroup_v2" "replicationconsistencygroup_1" {
-  name = "replicationconsistencygroup_1"
-  description = "The description of replicationconsistencygroup_1"
-  replication_ids = ["${flexibleengine_drs_replication_v2.replication_1.id}"]
+  name             = "replicationconsistencygroup_1"
+  description      = "The description of replicationconsistencygroup_1"
+  replication_ids  = [flexibleengine_drs_replication_v2.replication_1.id]
   priority_station = "eu-west-0a"
 }
 ```

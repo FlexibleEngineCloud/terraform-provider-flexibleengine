@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_vip_v2
+# flexibleengine_networking_vip_v2
 
 Manages a V2 vip resource within FlexibleEngine.
 
@@ -10,30 +10,30 @@ Manages a V2 vip resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
+  name           = "network_1"
   admin_state_up = "true"
 }
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  name = "subnet_1"
-  cidr = "192.168.199.0/24"
+  name       = "subnet_1"
+  cidr       = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  router_id = flexibleengine_networking_router_v2.router_1.id
+  subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name             = "router_1"
   external_gateway = "0a2228f2-7f8a-45f1-8e09-9039e1d09975"
 }
 
 resource "flexibleengine_networking_vip_v2" "vip_1" {
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
+  subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
 }
 ```
 

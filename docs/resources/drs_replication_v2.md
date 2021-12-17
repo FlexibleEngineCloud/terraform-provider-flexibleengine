@@ -2,7 +2,7 @@
 subcategory: "Data Replication Service (DRS)"
 ---
 
-# flexibleengine\_drs\_replication\_v2
+# flexibleengine_drs_replication_v2
 
 Manages a V2 replication resource within FlexibleEngine.
 
@@ -11,21 +11,24 @@ Manages a V2 replication resource within FlexibleEngine.
 ```hcl
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   name = "volume_1"
-  size = 1
+  size = 10
   availability_zone = "eu-west-0a"
 }
 
 resource "flexibleengine_blockstorage_volume_v2" "volume_2" {
   name = "volume_2"
-  size = 1
+  size = 10
   availability_zone = "eu-west-0b"
 }
 
 resource "flexibleengine_drs_replication_v2" "replication_1" {
-  name = "replication_1"
-  description = "The description of replication_1"
-  volume_ids = ["${flexibleengine_blockstorage_volume_v2.volume_1.id}", "${flexibleengine_blockstorage_volume_v2.volume_2.id}"]
+  name             = "replication_1"
+  description      = "The description of replication_1"
   priority_station = "eu-west-0a"
+  volume_ids       = [
+    flexibleengine_blockstorage_volume_v2.volume_1.id,
+    flexibleengine_blockstorage_volume_v2.volume_2.id,
+  ]
 }
 ```
 

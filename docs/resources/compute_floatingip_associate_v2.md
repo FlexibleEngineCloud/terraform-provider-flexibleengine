@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_floatingip_associate_v2
+# flexibleengine_compute_floatingip_associate_v2
 
 Associate a floating IP to an instance. This can be used instead of the
 `floating_ip` options in `flexibleengine_compute_instance_v2`.
@@ -33,8 +33,8 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_vpc_eip_v1.eip_1.publicip.0.ip_address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  floating_ip = flexibleengine_vpc_eip_v1.eip_1.publicip.0.ip_address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 ```
 
@@ -54,8 +54,8 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 ```
 
@@ -83,9 +83,9 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  fixed_ip    = "${flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  fixed_ip    = flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4
 }
 ```
 

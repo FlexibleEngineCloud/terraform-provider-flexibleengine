@@ -23,7 +23,7 @@ resource "flexibleengine_s3_bucket" "b" {
 resource "flexibleengine_s3_bucket" "b" {
   bucket = "s3-website-test.hashicorp.com"
   acl    = "public-read"
-  policy = "${file("policy.json")}"
+  policy = file("policy.json")
 
   website {
     index_document = "index.html"
@@ -86,7 +86,7 @@ resource "flexibleengine_s3_bucket" "b" {
   acl    = "private"
 
   logging {
-    target_bucket = "${flexibleengine_s3_bucket.log_bucket.id}"
+    target_bucket = flexibleengine_s3_bucket.log_bucket.id
     target_prefix = "log/"
   }
 }
