@@ -4,7 +4,9 @@ subcategory: "MapReduce Service (MRS)"
 
 # flexibleengine_mrs_cluster_v1
 
-Manages resource cluster within FlexibleEngine MRS.
+Manages a MRS cluster resource within FlexibleEngine.
+
+!> **Warning:** It will be deprecated, using `flexibleengine_mrs_cluster_v2` instead.
 
 ## Example Usage:  Creating a MRS cluster
 

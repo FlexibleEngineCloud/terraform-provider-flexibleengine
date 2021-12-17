@@ -1,5 +1,5 @@
 ---
-subcategory: "MRS Service (MRS)"
+subcategory: "MapReduce Service (MRS)"
 ---
 
 # flexibleengine_mrs_job_v2
