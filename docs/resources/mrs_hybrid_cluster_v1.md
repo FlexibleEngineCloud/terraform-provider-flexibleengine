@@ -4,9 +4,11 @@ subcategory: "MapReduce Service (MRS)"
 
 # flexibleengine_mrs_hybrid_cluster_v1
 
-Manages resource cluster within FlexibleEngine MRS.
+Manages a MRS hybrid cluster resource cluster within FlexibleEngine.
 
-## Example Usage:  Creating a MRS hybrid cluster
+!> **Warning:** It will be deprecated, using `flexibleengine_mrs_cluster_v2` instead.
+
+## Example Usage:
 
 ```hcl
 resource "flexibleengine_vpc_v1" "vpc_1" {
