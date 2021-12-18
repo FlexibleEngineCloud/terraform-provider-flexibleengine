@@ -1,3 +1,23 @@
+## 1.26.0 (December 18, 2021)
+
+FEATURES:
+* **New Resource:**
+  - `flexibleengine_identity_provider` [GH-553]
+  - `flexibleengine_identity_provider_conversion` [GH-553]
+  - `flexibleengine_dis_stream` [GH-620]
+  - `flexibleengine_mrs_cluster_v2` [GH-659]
+
+ENHANCEMENTS:
+* `resource/flexibleengine_lb_listener_v2` - support to obtain client IP address [GH-609]
+* `resource/flexibleengine_compute_keypair_v2` - support `private_key_path` for keypair [GH-665]
+* `data/flexibleengine_dcs_product_v1` - support to filter by `cache_mode` [GH-655]
+
+BUG FIXES:
+* update endpoint of dnsV2Client [GH-664]
+
+DEPRECATED:
+* data/flexibleengine_dcs_az_v1 [GH-655]
+
 ## 1.25.1 (November 30, 2021)
 
 FEATURES:
