@@ -231,6 +231,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_public_services":              dataSourceVPCEPPublicServices(),
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 
+			"flexibleengine_dms_maintainwindow": DataSourceDmsMaintainWindow(),
+
 			// Deprecated data source
 			"flexibleengine_dcs_az_v1":      dataSourceDcsAZV1(),
 			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
