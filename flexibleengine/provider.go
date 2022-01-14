@@ -216,6 +216,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cts_tracker_v1":                     dataSourceCTSTrackerV1(),
 			"flexibleengine_dcs_maintainwindow_v1":              dataSourceDcsMaintainWindowV1(),
 			"flexibleengine_dcs_product_v1":                     dataSourceDcsProductV1(),
+			"flexibleengine_dms_product":                        dataSourceDmsProduct(),
 			"flexibleengine_cce_node_v3":                        dataSourceCceNodesV3(),
 			"flexibleengine_cce_node_ids_v3":                    dataSourceCceNodeIdsV3(),
 			"flexibleengine_cce_cluster_v3":                     dataSourceCCEClusterV3(),
