@@ -58,7 +58,7 @@ github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d
 github.com/bgentry/go-netrc/netrc
-# github.com/chnsz/golangsdk v0.0.0-20220114013618-10830a8b3d42
+# github.com/chnsz/golangsdk v0.0.0-20220117032841-13639b2647ae
 ## explicit
 github.com/chnsz/golangsdk
 github.com/chnsz/golangsdk/internal
@@ -110,6 +110,7 @@ github.com/chnsz/golangsdk/openstack/dds/v3/instances
 github.com/chnsz/golangsdk/openstack/dis/v2/streams
 github.com/chnsz/golangsdk/openstack/dli/v1/queues
 github.com/chnsz/golangsdk/openstack/dms/v1/instances
+github.com/chnsz/golangsdk/openstack/dms/v1/topics
 github.com/chnsz/golangsdk/openstack/dms/v2/products
 github.com/chnsz/golangsdk/openstack/dns/v2/ptrrecords
 github.com/chnsz/golangsdk/openstack/dns/v2/recordsets
