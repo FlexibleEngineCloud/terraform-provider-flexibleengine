@@ -227,18 +227,6 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	var updateOpts loadbalancers.UpdateOpts
-	if d.HasChange("name") {
-		updateOpts.Name = d.Get("name").(string)
-	}
-	if d.HasChange("description") {
-		updateOpts.Description = d.Get("description").(string)
-	}
-	if d.HasChange("admin_state_up") {
-		asu := d.Get("admin_state_up").(bool)
-		updateOpts.AdminStateUp = &asu
-	}
-
 	// Wait for LoadBalancer to become active before continuing
 	timeout := d.Timeout(schema.TimeoutUpdate)
 	err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "ACTIVE", nil, timeout)
@@ -246,19 +234,33 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	log.Printf("[DEBUG] Updating loadbalancer %s with options: %#v", d.Id(), updateOpts)
-	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err = loadbalancers.Update(networkingClient, d.Id(), updateOpts).Extract()
-		if err != nil {
-			return checkForRetryableError(err)
+	if d.HasChanges("name", "description", "admin_state_up") {
+		var updateOpts loadbalancers.UpdateOpts
+		if d.HasChange("name") {
+			updateOpts.Name = d.Get("name").(string)
 		}
-		return nil
-	})
+		if d.HasChange("description") {
+			updateOpts.Description = d.Get("description").(string)
+		}
+		if d.HasChange("admin_state_up") {
+			asu := d.Get("admin_state_up").(bool)
+			updateOpts.AdminStateUp = &asu
+		}
 
-	// Wait for LoadBalancer to become active before continuing
-	err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "ACTIVE", nil, timeout)
-	if err != nil {
-		return err
+		log.Printf("[DEBUG] Updating loadbalancer %s with options: %#v", d.Id(), updateOpts)
+		err = resource.Retry(timeout, func() *resource.RetryError {
+			_, err = loadbalancers.Update(networkingClient, d.Id(), updateOpts).Extract()
+			if err != nil {
+				return checkForRetryableError(err)
+			}
+			return nil
+		})
+
+		// Wait for LoadBalancer to become active before continuing
+		err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "ACTIVE", nil, timeout)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Security Groups get updated separately

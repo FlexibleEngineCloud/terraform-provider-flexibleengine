@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"time"
 
 	"github.com/hashicorp/go-multierror"
@@ -337,23 +338,26 @@ func resourceListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateOpts.MemberTimeout = golangsdk.IntToPointer(d.Get("response_timeout").(int))
 	}
 
-	log.Printf("[DEBUG] Updating listener %s with options: %#v", d.Id(), updateOpts)
-	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err = listeners_v3.Update(v3Client, d.Id(), updateOpts).Extract()
+	if !reflect.DeepEqual(updateOpts, listeners_v3.UpdateOpts{}) {
+		log.Printf("[DEBUG] Updating listener %s with options: %#v", d.Id(), updateOpts)
+
+		err = resource.Retry(timeout, func() *resource.RetryError {
+			_, err = listeners_v3.Update(v3Client, d.Id(), updateOpts).Extract()
+			if err != nil {
+				return checkForRetryableError(err)
+			}
+			return nil
+		})
+
 		if err != nil {
-			return checkForRetryableError(err)
+			return fmt.Errorf("Error updating listener %s: %s", d.Id(), err)
 		}
-		return nil
-	})
 
-	if err != nil {
-		return fmt.Errorf("Error updating listener %s: %s", d.Id(), err)
-	}
-
-	// Wait for LoadBalancer to become active again before continuing
-	err = waitForLBV2LoadBalancer(lbClient, lbID, "ACTIVE", nil, timeout)
-	if err != nil {
-		return err
+		// Wait for LoadBalancer to become active again before continuing
+		err = waitForLBV2LoadBalancer(lbClient, lbID, "ACTIVE", nil, timeout)
+		if err != nil {
+			return err
+		}
 	}
 
 	// update tags

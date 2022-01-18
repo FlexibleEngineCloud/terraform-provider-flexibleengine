@@ -28,6 +28,12 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "protocol", "HTTP"),
 					resource.TestCheckResourceAttr(resourceName, "http2_enable", "false"),
 					resource.TestCheckResourceAttr(resourceName, "transparent_client_ip_enable", "true"),
+				),
+			},
+			{
+				Config: testAccLBV2ListenerConfig_tags(rName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
@@ -146,6 +152,22 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 }
 
 func testAccLBV2ListenerConfig_basic(name string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+  name          = "lb-%s"
+  vip_subnet_id = "%s"
+}
+
+resource "flexibleengine_lb_listener_v2" "listener_1" {
+  name            = "listener-%s"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+}
+`, name, OS_SUBNET_ID, name)
+}
+
+func testAccLBV2ListenerConfig_tags(name string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name          = "lb-%s"
