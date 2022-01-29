@@ -302,6 +302,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_s3_bucket_object":                   resourceS3BucketObject(),
 			"flexibleengine_obs_bucket":                         resourceObsBucket(),
 			"flexibleengine_obs_bucket_object":                  resourceObsBucketObject(),
+			"flexibleengine_obs_bucket_replication":             resourceObsBucketReplication(),
 			"flexibleengine_elb_loadbalancer":                   resourceELoadBalancer(),
 			"flexibleengine_elb_listener":                       resourceEListener(),
 			"flexibleengine_elb_backend":                        resourceBackend(),

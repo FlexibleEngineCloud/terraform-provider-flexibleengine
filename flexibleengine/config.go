@@ -394,6 +394,24 @@ func (c *Config) newObjectStorageClient(region string) (*obs.ObsClient, error) {
 	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint)
 }
 
+func (c *Config) objectStorageClientWithSignature(region string) (*obs.ObsClient, error) {
+	if c.AccessKey == "" || c.SecretKey == "" {
+		return nil, fmt.Errorf("missing credentials for OBS, need access_key and secret_key values for provider")
+	}
+
+	// init log
+	if logging.IsDebugOrHigher() {
+		var logfile = "./.obs-sdk.log"
+		// maxLogSize:10M, backups:10
+		if err := obs.InitLog(logfile, 1024*1024*10, 10, obs.LEVEL_DEBUG, false); err != nil {
+			log.Printf("[WARN] initial obs sdk log failed: %s", err)
+		}
+	}
+
+	obsEndpoint := getObsEndpoint(c, region)
+	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint, obs.WithSignature("OBS"))
+}
+
 func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewBlockStorageV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
