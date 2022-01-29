@@ -1,3 +1,17 @@
+## 1.27.0 (January 29, 2022)
+
+FEATURES:
+* **New Resource:**
+  - `flexibleengine_dms_kafka_instance` [GH-682]
+  - `flexibleengine_dms_kafka_topic` [GH-683]
+  - `flexibleengine_obs_bucket_replication` [GH-688]
+
+* **New Data Source:**
+  - `flexibleengine_dms_product` [GH-681]
+
+BUG FIXES:
+* `resource/flexibleengine_lb_listener_v2`: avoid to request empty body when only update tags [GH-680]
+
 ## 1.26.0 (December 18, 2021)
 
 FEATURES:
