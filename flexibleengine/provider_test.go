@@ -32,6 +32,7 @@ var (
 	OS_MRS_ENVIRONMENT        = os.Getenv("OS_MRS_ENVIRONMENT")
 	OS_SDRS_ENVIRONMENT       = os.Getenv("OS_SDRS_ENVIRONMENT")
 	OS_DELEGATED_DOMAIN_NAME  = os.Getenv("OS_DELEGATED_DOMAIN_NAME")
+	OS_DESTINATION_BUCKET     = os.Getenv("OS_DESTINATION_BUCKET")
 	OS_TENANT_NAME            = getTenantName()
 )
 
@@ -151,6 +152,23 @@ func testAccPreCheckS3(t *testing.T) {
 
 	if OS_ACCESS_KEY == "" || OS_SECRET_KEY == "" {
 		t.Skip("OS_ACCESS_KEY and OS_SECRET_KEY must be set for OBS/S3 acceptance tests")
+	}
+}
+
+func testAccPreCheckOBSReplication(t *testing.T) {
+	testAccPreCheckRequiredEnvVars(t)
+
+	if OS_ACCESS_KEY == "" || OS_SECRET_KEY == "" {
+		t.Skip("OS_ACCESS_KEY and OS_SECRET_KEY must be set for OBS replication acceptance tests")
+	}
+
+	if OS_DESTINATION_BUCKET == "" {
+		t.Skip("OS_DESTINATION_BUCKET must be set for OBS replication acceptance tests")
+	}
+
+	v := os.Getenv("OS_ADMIN")
+	if v != "admin" {
+		t.Skip("Skipping test because it requires the admin user to create IAM agency")
 	}
 }
 
