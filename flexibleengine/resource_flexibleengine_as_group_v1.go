@@ -563,7 +563,7 @@ func resourceASGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
-	d.Partial(true)
+
 	if d.HasChange("min_instance_number") || d.HasChange("max_instance_number") || d.HasChange("desire_instance_number") || d.HasChange("lbaas_listeners") {
 		minNum := d.Get("min_instance_number").(int)
 		maxNum := d.Get("max_instance_number").(int)
@@ -614,7 +614,6 @@ func resourceASGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	d.Partial(false)
 	return resourceASGroupRead(d, meta)
 }
 
