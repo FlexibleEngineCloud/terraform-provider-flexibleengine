@@ -192,8 +192,6 @@ func resourceImagesImageV2Create(d *schema.ResourceData, meta interface{}) error
 		createOpts.Tags = resourceImagesImageV2BuildTags(tags)
 	}
 
-	d.Partial(true)
-
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	newImg, err := images.Create(imageClient, createOpts).Extract()
 	if err != nil {
@@ -239,8 +237,6 @@ func resourceImagesImageV2Create(d *schema.ResourceData, meta interface{}) error
 	if _, err = stateConf.WaitForState(); err != nil {
 		return fmt.Errorf("Error waiting for Image: %s", err)
 	}
-
-	d.Partial(false)
 
 	return resourceImagesImageV2Read(d, meta)
 }
