@@ -39,6 +39,7 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 				Config: testAccFlexibleEngineVpcSubnetV1_update(rNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", rNameUpdate),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_enable", "true"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
 				),
 			},

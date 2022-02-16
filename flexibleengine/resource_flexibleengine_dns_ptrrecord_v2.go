@@ -166,7 +166,7 @@ func resourceDNSPtrRecordV2Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	if d.HasChange("name") || d.HasChange("description") || d.HasChange("ttl") {
+	if d.HasChanges("name", "description", "ttl") {
 		updateOpts := ptrrecords.CreateOpts{
 			PtrName:     d.Get("name").(string),
 			Description: d.Get("description").(string),

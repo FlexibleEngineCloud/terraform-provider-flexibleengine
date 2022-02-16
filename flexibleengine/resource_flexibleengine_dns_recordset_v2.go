@@ -216,24 +216,6 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 
-	var updateOpts recordsets.UpdateOpts
-	if d.HasChange("ttl") {
-		updateOpts.TTL = d.Get("ttl").(int)
-	}
-
-	if d.HasChange("records") {
-		recordsraw := d.Get("records").(*schema.Set).List()
-		records := make([]string, len(recordsraw))
-		for i, recordraw := range recordsraw {
-			records[i] = recordraw.(string)
-		}
-		updateOpts.Records = records
-	}
-
-	if d.HasChange("description") {
-		updateOpts.Description = d.Get("description").(string)
-	}
-
 	// Obtain relevant info from parsing the ID
 	zoneID, recordsetID, err := parseDNSV2RecordSetId(d.Id())
 	if err != nil {
@@ -245,28 +227,47 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error retrieving DNS zone %s: %s", zoneID, err)
 	}
 
-	log.Printf("[DEBUG] Updating  record set %s with options: %#v", recordsetID, updateOpts)
+	if d.HasChanges("description", "ttl", "records") {
+		var updateOpts recordsets.UpdateOpts
+		if d.HasChange("ttl") {
+			updateOpts.TTL = d.Get("ttl").(int)
+		}
 
-	_, err = recordsets.Update(dnsClient, zoneID, recordsetID, updateOpts).Extract()
-	if err != nil {
-		return fmt.Errorf("Error updating FlexibleEngine DNS  record set: %s", err)
-	}
+		if d.HasChange("records") {
+			recordsraw := d.Get("records").(*schema.Set).List()
+			records := make([]string, len(recordsraw))
+			for i, recordraw := range recordsraw {
+				records[i] = recordraw.(string)
+			}
+			updateOpts.Records = records
+		}
 
-	log.Printf("[DEBUG] Waiting for DNS record set (%s) to update", recordsetID)
-	stateConf := &resource.StateChangeConf{
-		Target:     []string{"ACTIVE"},
-		Pending:    []string{"PENDING"},
-		Refresh:    waitForDNSRecordSet(dnsClient, zoneID, recordsetID),
-		Timeout:    d.Timeout(schema.TimeoutUpdate),
-		Delay:      5 * time.Second,
-		MinTimeout: 3 * time.Second,
-	}
+		if d.HasChange("description") {
+			updateOpts.Description = d.Get("description").(string)
+		}
 
-	_, err = stateConf.WaitForState()
-	if err != nil {
-		return fmt.Errorf(
-			"Error waiting for record set (%s) to become ACTIVE for updation: %s",
-			recordsetID, err)
+		log.Printf("[DEBUG] Updating  record set %s with options: %#v", recordsetID, updateOpts)
+		_, err = recordsets.Update(dnsClient, zoneID, recordsetID, updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("Error updating FlexibleEngine DNS  record set: %s", err)
+		}
+
+		log.Printf("[DEBUG] Waiting for DNS record set (%s) to update", recordsetID)
+		stateConf := &resource.StateChangeConf{
+			Target:     []string{"ACTIVE"},
+			Pending:    []string{"PENDING"},
+			Refresh:    waitForDNSRecordSet(dnsClient, zoneID, recordsetID),
+			Timeout:    d.Timeout(schema.TimeoutUpdate),
+			Delay:      5 * time.Second,
+			MinTimeout: 3 * time.Second,
+		}
+
+		_, err = stateConf.WaitForState()
+		if err != nil {
+			return fmt.Errorf(
+				"Error waiting for record set (%s) to become ACTIVE for updation: %s",
+				recordsetID, err)
+		}
 	}
 
 	// update tags

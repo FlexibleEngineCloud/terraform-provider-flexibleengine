@@ -667,12 +667,10 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
 
-	var updateOpts servers.UpdateOpts
 	if d.HasChange("name") {
-		updateOpts.Name = d.Get("name").(string)
-	}
-
-	if updateOpts != (servers.UpdateOpts{}) {
+		updateOpts := servers.UpdateOpts{
+			Name: d.Get("name").(string),
+		}
 		_, err := servers.Update(computeClient, d.Id(), updateOpts).Extract()
 		if err != nil {
 			return fmt.Errorf("Error updating FlexibleEngine server: %s", err)

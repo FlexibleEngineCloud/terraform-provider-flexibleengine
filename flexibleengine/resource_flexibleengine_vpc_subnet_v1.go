@@ -224,32 +224,30 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	var updateOpts subnets.UpdateOpts
+	if d.HasChanges("name", "dhcp_enable", "primary_dns", "secondary_dns", "dns_list") {
+		updateOpts := subnets.UpdateOpts{
+			// name is mandatory while updating subnet
+			Name: d.Get("name").(string),
+			// always setting dhcp in updateOpts as the field defauts to be false in golangsdk
+			EnableDHCP: d.Get("dhcp_enable").(bool),
+		}
 
-	//as name is mandatory while updating subnet
-	updateOpts.Name = d.Get("name").(string)
+		if d.HasChange("primary_dns") {
+			updateOpts.PRIMARY_DNS = d.Get("primary_dns").(string)
+		}
+		if d.HasChange("secondary_dns") {
+			updateOpts.SECONDARY_DNS = d.Get("secondary_dns").(string)
+		}
+		if d.HasChange("dns_list") {
+			dnsList := resourceSubnetDNSListV1(d)
+			updateOpts.DnsList = &dnsList
+		}
 
-	if d.HasChange("primary_dns") {
-		updateOpts.PRIMARY_DNS = d.Get("primary_dns").(string)
-	}
-	if d.HasChange("secondary_dns") {
-		updateOpts.SECONDARY_DNS = d.Get("secondary_dns").(string)
-	}
-	if d.HasChange("dns_list") {
-		dnsList := resourceSubnetDNSListV1(d)
-		updateOpts.DnsList = &dnsList
-	}
-	if d.HasChange("dhcp_enable") {
-		updateOpts.EnableDHCP = d.Get("dhcp_enable").(bool)
-
-	} else if d.Get("dhcp_enable").(bool) { //maintaining dhcp to be true if it was true earlier as default update option for dhcp bool is always going to be false in golangsdk
-		updateOpts.EnableDHCP = true
-	}
-
-	vpcID := d.Get("vpc_id").(string)
-	_, err = subnets.Update(subnetClient, vpcID, d.Id(), updateOpts).Extract()
-	if err != nil {
-		return fmt.Errorf("Error updating FlexibleEngine VPC Subnet: %s", err)
+		vpcID := d.Get("vpc_id").(string)
+		_, err = subnets.Update(subnetClient, vpcID, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("Error updating FlexibleEngine VPC Subnet: %s", err)
+		}
 	}
 
 	//update tags
