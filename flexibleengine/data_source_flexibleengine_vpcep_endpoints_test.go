@@ -15,8 +15,6 @@ func TestAccVPCEPEndpointsDataSourceBasic(t *testing.T) {
 	endpointByEndpointIdResourceName := "data.flexibleengine_vpcep_endpoints.by_endpoint_id"
 	endpointByVpcIdResourceName := "data.flexibleengine_vpcep_endpoints.by_vpc_id"
 
-	fmt.Sprintf(testAccVPCEPEndpointsDataSourceBasic(rName))
-
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
