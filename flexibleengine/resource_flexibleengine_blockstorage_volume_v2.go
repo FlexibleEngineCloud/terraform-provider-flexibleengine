@@ -263,13 +263,20 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
 
-	updateOpts := volumes.UpdateOpts{
-		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
-	}
+	if d.HasChanges("name", "description", "metadata") {
+		updateOpts := volumes.UpdateOpts{
+			Name:        d.Get("name").(string),
+			Description: d.Get("description").(string),
+		}
 
-	if d.HasChange("metadata") {
-		updateOpts.Metadata = resourceVolumeMetadataV2(d)
+		if d.HasChange("metadata") {
+			updateOpts.Metadata = resourceVolumeMetadataV2(d)
+		}
+
+		_, err = volumes.Update(blockStorageClient, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return fmt.Errorf("Error updating FlexibleEngine volume: %s", err)
+		}
 	}
 
 	if d.HasChange("size") {
@@ -296,11 +303,6 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 			return fmt.Errorf(
 				"Error waiting for flexibleengine_blockstorage_volume_v2 %s to become ready: %s", d.Id(), err)
 		}
-	}
-
-	_, err = volumes.Update(blockStorageClient, d.Id(), updateOpts).Extract()
-	if err != nil {
-		return fmt.Errorf("Error updating FlexibleEngine volume: %s", err)
 	}
 
 	// update tags

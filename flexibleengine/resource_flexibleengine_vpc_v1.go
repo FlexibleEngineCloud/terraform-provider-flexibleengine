@@ -162,18 +162,16 @@ func resourceVirtualPrivateCloudV1Update(ctx context.Context, d *schema.Resource
 		return diag.Errorf("Error creating FlexibleEngine Vpc: %s", err)
 	}
 
-	var updateOpts vpcs.UpdateOpts
+	if d.HasChanges("name", "cidr") {
+		updateOpts := vpcs.UpdateOpts{
+			Name: d.Get("name").(string),
+			CIDR: d.Get("cidr").(string),
+		}
 
-	if d.HasChange("name") {
-		updateOpts.Name = d.Get("name").(string)
-	}
-	if d.HasChange("cidr") {
-		updateOpts.CIDR = d.Get("cidr").(string)
-	}
-
-	_, err = vpcs.Update(vpcClient, d.Id(), updateOpts).Extract()
-	if err != nil {
-		return diag.Errorf("Error updating FlexibleEngine Vpc: %s", err)
+		_, err = vpcs.Update(vpcClient, d.Id(), updateOpts).Extract()
+		if err != nil {
+			return diag.Errorf("Error updating FlexibleEngine Vpc: %s", err)
+		}
 	}
 
 	//update tags
