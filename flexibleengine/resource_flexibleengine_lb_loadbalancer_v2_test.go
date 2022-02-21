@@ -27,6 +27,7 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2LoadBalancerExists(resourceName, &lb),
 					resource.TestCheckResourceAttr(resourceName, "name", "loadbalancer_1"),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by acceptance test"),
 					resource.TestMatchResourceAttr(resourceName, "vip_port_id", regexp.MustCompile("^[a-f0-9-]+")),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
@@ -41,6 +42,7 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 				Config: testAccLBV2LoadBalancerConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", "loadbalancer_1_updated"),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
@@ -186,6 +188,7 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 var testAccLBV2LoadBalancerConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name          = "loadbalancer_1"
+  description   = "created by acceptance test"
   vip_subnet_id = "%s"
 
   tags = {

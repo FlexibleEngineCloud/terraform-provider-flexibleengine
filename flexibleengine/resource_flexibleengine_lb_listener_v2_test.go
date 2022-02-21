@@ -25,6 +25,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2ListenerExists(resourceName, &listener),
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by acceptance test"),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "HTTP"),
 					resource.TestCheckResourceAttr(resourceName, "http2_enable", "false"),
 					resource.TestCheckResourceAttr(resourceName, "transparent_client_ip_enable", "true"),
@@ -34,6 +35,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 				Config: testAccLBV2ListenerConfig_tags(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s", rName)),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
@@ -42,6 +44,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 				Config: testAccLBV2ListenerConfig_update(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", fmt.Sprintf("listener-%s_updated", rName)),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by acceptance test updated"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
@@ -160,6 +163,7 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
   name            = "listener-%s"
+  description     = "created by acceptance test"
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
@@ -197,6 +201,7 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
   name            = "listener-%s_updated"
+  description     = "created by acceptance test updated"
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id

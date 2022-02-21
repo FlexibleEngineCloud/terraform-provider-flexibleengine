@@ -240,7 +240,8 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 			updateOpts.Name = d.Get("name").(string)
 		}
 		if d.HasChange("description") {
-			updateOpts.Description = d.Get("description").(string)
+			desc := d.Get("description").(string)
+			updateOpts.Description = &desc
 		}
 		if d.HasChange("admin_state_up") {
 			asu := d.Get("admin_state_up").(bool)
