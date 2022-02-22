@@ -302,7 +302,8 @@ func resourceListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 		updateOpts.Name = d.Get("name").(string)
 	}
 	if d.HasChange("description") {
-		updateOpts.Description = d.Get("description").(string)
+		desc := d.Get("description").(string)
+		updateOpts.Description = &desc
 	}
 	if d.HasChange("sni_container_refs") {
 		var sniContainerRefs []string
