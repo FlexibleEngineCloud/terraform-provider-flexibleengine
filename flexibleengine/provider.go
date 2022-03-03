@@ -7,7 +7,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 )
 
@@ -167,16 +166,6 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_KEY", ""),
 				Description: descriptions["key"],
-			},
-
-			"endpoint_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", nil),
-				Deprecated:  "endpoint_type is deprecated",
-				ValidateFunc: validation.StringInSlice([]string{
-					"public", "publicURL", "admin", "adminURL", "internal", "internalURL",
-				}, false),
 			},
 		},
 
@@ -418,8 +407,6 @@ func init() {
 
 		"cacert_file": "A Custom CA certificate.",
 
-		"endpoint_type": "The catalog endpoint type to use.",
-
 		"cert": "A client certificate to authenticate with.",
 
 		"key": "A client private key to authenticate with.",
@@ -427,9 +414,7 @@ func init() {
 }
 
 func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	config := Config{
-		EndpointType: d.Get("endpoint_type").(string),
-	}
+	config := Config{}
 
 	region := d.Get("region").(string)
 	config.Region = region
