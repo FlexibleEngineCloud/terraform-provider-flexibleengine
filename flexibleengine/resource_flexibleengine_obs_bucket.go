@@ -228,6 +228,7 @@ func resourceObsBucket() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 			},
 			"encryption": {
 				Type:     schema.TypeBool,
@@ -255,7 +256,8 @@ func resourceObsBucket() *schema.Resource {
 
 func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.newObjectStorageClient(GetRegion(d, config))
+	region := GetRegion(d, config)
+	obsClient, err := config.newObjectStorageClient(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -268,7 +270,7 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 		ACL:          obs.AclType(acl),
 		StorageClass: obs.ParseStringToStorageClassType(class),
 	}
-	opts.Location = d.Get("region").(string)
+	opts.Location = region
 	if _, ok := d.GetOk("multi_az"); ok {
 		opts.AvailableZone = "3az"
 	}
