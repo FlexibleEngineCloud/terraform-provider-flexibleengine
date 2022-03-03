@@ -7,7 +7,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 )
 
@@ -124,6 +123,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: descriptions["security_token"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_SECURITY_TOKEN", nil),
 			},
 
 			"auth_url": {
@@ -166,16 +166,6 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("OS_KEY", ""),
 				Description: descriptions["key"],
-			},
-
-			"endpoint_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OS_ENDPOINT_TYPE", nil),
-				Deprecated:  "endpoint_type is deprecated",
-				ValidateFunc: validation.StringInSlice([]string{
-					"public", "publicURL", "admin", "adminURL", "internal", "internalURL",
-				}, false),
 			},
 		},
 
@@ -383,11 +373,9 @@ var descriptions map[string]string
 
 func init() {
 	descriptions = map[string]string{
-		"access_key": "The access key for API operations. You can retrieve this\n" +
-			"from the 'My Credential' section of the console.",
+		"access_key": "The access key of the FlexibleEngine cloud to use.",
 
-		"secret_key": "The secret key for API operations. You can retrieve this\n" +
-			"from the 'My Credential' section of the console.",
+		"secret_key": "The secret key of the FlexibleEngine cloud to use.",
 
 		"auth_url": "The Identity authentication URL.",
 
@@ -419,8 +407,6 @@ func init() {
 
 		"cacert_file": "A Custom CA certificate.",
 
-		"endpoint_type": "The catalog endpoint type to use.",
-
 		"cert": "A client certificate to authenticate with.",
 
 		"key": "A client private key to authenticate with.",
@@ -428,10 +414,7 @@ func init() {
 }
 
 func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	config := Config{
-		EndpointType:  d.Get("endpoint_type").(string),
-		SecurityToken: d.Get("security_token").(string),
-	}
+	config := Config{}
 
 	region := d.Get("region").(string)
 	config.Region = region
@@ -456,6 +439,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config.Password = d.Get("password").(string)
 	config.AccessKey = d.Get("access_key").(string)
 	config.SecretKey = d.Get("secret_key").(string)
+	config.SecurityToken = d.Get("security_token").(string)
 	config.Token = d.Get("token").(string)
 
 	config.MaxRetries = d.Get("max_retries").(int)

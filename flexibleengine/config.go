@@ -28,10 +28,7 @@ import (
 
 type Config struct {
 	huaweiconfig.Config
-
-	EndpointType  string
-	SecurityToken string
-	s3sess        *session.Session
+	s3sess *session.Session
 }
 
 func (c *Config) LoadAndValidate() error {
@@ -674,12 +671,6 @@ func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient
 }
 
 func (c *Config) getHwEndpointType() golangsdk.Availability {
-	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
-		return golangsdk.AvailabilityInternal
-	}
-	if c.EndpointType == "admin" || c.EndpointType == "adminURL" {
-		return golangsdk.AvailabilityAdmin
-	}
 	return golangsdk.AvailabilityPublic
 }
 
