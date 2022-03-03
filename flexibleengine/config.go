@@ -29,9 +29,8 @@ import (
 type Config struct {
 	huaweiconfig.Config
 
-	EndpointType  string
-	SecurityToken string
-	s3sess        *session.Session
+	EndpointType string
+	s3sess       *session.Session
 }
 
 func (c *Config) LoadAndValidate() error {
