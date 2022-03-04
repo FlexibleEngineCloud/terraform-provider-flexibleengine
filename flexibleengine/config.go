@@ -18,7 +18,6 @@ import (
 	"github.com/chnsz/golangsdk"
 	huaweisdk "github.com/chnsz/golangsdk/openstack"
 	"github.com/chnsz/golangsdk/openstack/identity/v3/domains"
-	"github.com/chnsz/golangsdk/openstack/obs"
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
@@ -371,42 +370,6 @@ func (c *Config) computeS3conn(region string) (*s3.S3, error) {
 	s3conn := s3.New(awsS3Sess)
 
 	return s3conn, nil
-}
-
-func (c *Config) newObjectStorageClient(region string) (*obs.ObsClient, error) {
-	if c.AccessKey == "" || c.SecretKey == "" {
-		return nil, fmt.Errorf("missing credentials for OBS, need access_key and secret_key values for provider")
-	}
-
-	// init log
-	if logging.IsDebugOrHigher() {
-		var logfile = "./.obs-sdk.log"
-		// maxLogSize:10M, backups:10
-		if err := obs.InitLog(logfile, 1024*1024*10, 10, obs.LEVEL_DEBUG, false); err != nil {
-			log.Printf("[WARN] initial obs sdk log failed: %s", err)
-		}
-	}
-
-	obsEndpoint := getObsEndpoint(c, region)
-	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint)
-}
-
-func (c *Config) objectStorageClientWithSignature(region string) (*obs.ObsClient, error) {
-	if c.AccessKey == "" || c.SecretKey == "" {
-		return nil, fmt.Errorf("missing credentials for OBS, need access_key and secret_key values for provider")
-	}
-
-	// init log
-	if logging.IsDebugOrHigher() {
-		var logfile = "./.obs-sdk.log"
-		// maxLogSize:10M, backups:10
-		if err := obs.InitLog(logfile, 1024*1024*10, 10, obs.LEVEL_DEBUG, false); err != nil {
-			log.Printf("[WARN] initial obs sdk log failed: %s", err)
-		}
-	}
-
-	obsEndpoint := getObsEndpoint(c, region)
-	return obs.New(c.AccessKey, c.SecretKey, obsEndpoint, obs.WithSignature("OBS"))
 }
 
 func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {

@@ -13,7 +13,7 @@ func TestAccObsBucket_basic(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -56,7 +56,7 @@ func TestAccObsBucket_multiAZ(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckS3(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -79,7 +79,7 @@ func TestAccObsBucket_tags(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckS3(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -103,7 +103,7 @@ func TestAccObsBucket_versioning(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -133,7 +133,7 @@ func TestAccObsBucket_logging(t *testing.T) {
 	target_bucket := fmt.Sprintf("tf-test-log-bucket-%d", rInt)
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -153,7 +153,7 @@ func TestAccObsBucket_lifecycle(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -192,7 +192,7 @@ func TestAccObsBucket_website(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -215,7 +215,7 @@ func TestAccObsBucket_cors(t *testing.T) {
 	rInt := acctest.RandInt()
 	resourceName := "flexibleengine_obs_bucket.bucket"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketDestroy,
@@ -242,7 +242,7 @@ func TestAccObsBucket_cors(t *testing.T) {
 
 func testAccCheckObsBucketDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	obsClient, err := config.newObjectStorageClient(OS_REGION_NAME)
+	obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -272,7 +272,7 @@ func testAccCheckObsBucketExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		obsClient, err := config.newObjectStorageClient(OS_REGION_NAME)
+		obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 		}
@@ -293,7 +293,7 @@ func testAccCheckObsBucketLogging(name, target, prefix string) resource.TestChec
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		obsClient, err := config.newObjectStorageClient(OS_REGION_NAME)
+		obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 		}

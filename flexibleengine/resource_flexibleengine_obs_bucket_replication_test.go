@@ -13,7 +13,7 @@ func TestAccObsBucketReplication_basic(t *testing.T) {
 	rName := acctest.RandString(4)
 	resourceName := "flexibleengine_obs_bucket_replication.replica"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckOBSReplication(t)
 		},
@@ -53,7 +53,7 @@ func TestAccObsBucketReplication_basic(t *testing.T) {
 
 func testAccCheckObsBucketReplicationDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	obsClient, err := config.objectStorageClientWithSignature(OS_REGION_NAME)
+	obsClient, err := config.ObjectStorageClientWithSignature(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -83,7 +83,7 @@ func testAccCheckObsBucketReplicationExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		obsClient, err := config.objectStorageClientWithSignature(OS_REGION_NAME)
+		obsClient, err := config.ObjectStorageClientWithSignature(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 		}
