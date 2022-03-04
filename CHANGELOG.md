@@ -1,3 +1,11 @@
+## 1.27.1 (March 4, 2022)
+
+BUG FIXES:
+
+* Be able to remove a description of ELB loadbalancer and listener [GH-692]
+* Do not update other fields when only tags was changed [GH-693]
+* `resource/flexibleengine_obs_bucket`: update obs Location when region is not specified [GH-705]
+
 ## 1.27.0 (January 29, 2022)
 
 FEATURES:
