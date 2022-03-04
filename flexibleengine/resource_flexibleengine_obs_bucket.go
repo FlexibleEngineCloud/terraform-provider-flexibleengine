@@ -228,6 +228,7 @@ func resourceObsBucket() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 			},
 			"encryption": {
 				Type:     schema.TypeBool,
@@ -255,7 +256,8 @@ func resourceObsBucket() *schema.Resource {
 
 func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.newObjectStorageClient(GetRegion(d, config))
+	region := GetRegion(d, config)
+	obsClient, err := config.ObjectStorageClient(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -268,7 +270,7 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 		ACL:          obs.AclType(acl),
 		StorageClass: obs.ParseStringToStorageClassType(class),
 	}
-	opts.Location = d.Get("region").(string)
+	opts.Location = region
 	if _, ok := d.GetOk("multi_az"); ok {
 		opts.AvailableZone = "3az"
 	}
@@ -286,7 +288,7 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.newObjectStorageClient(GetRegion(d, config))
+	obsClient, err := config.ObjectStorageClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -346,7 +348,7 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
-	obsClient, err := config.newObjectStorageClient(region)
+	obsClient, err := config.ObjectStorageClient(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -415,7 +417,7 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceObsBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.newObjectStorageClient(GetRegion(d, config))
+	obsClient, err := config.ObjectStorageClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}

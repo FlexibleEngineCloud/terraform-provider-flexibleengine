@@ -68,7 +68,7 @@ func resourceObsBucketReplication() *schema.Resource {
 
 func resourceObsBucketReplicationCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.objectStorageClientWithSignature(GetRegion(d, config))
+	obsClient, err := config.ObjectStorageClientWithSignature(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -137,7 +137,7 @@ func resourceObsBucketReplicationCreate(d *schema.ResourceData, meta interface{}
 
 func resourceObsBucketReplicationRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.objectStorageClientWithSignature(GetRegion(d, config))
+	obsClient, err := config.ObjectStorageClientWithSignature(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -203,7 +203,7 @@ func setObsBucketReplicationConfiguration(obsClient *obs.ObsClient, d *schema.Re
 
 func resourceObsBucketReplicationDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	obsClient, err := config.objectStorageClientWithSignature(GetRegion(d, config))
+	obsClient, err := config.ObjectStorageClientWithSignature(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}

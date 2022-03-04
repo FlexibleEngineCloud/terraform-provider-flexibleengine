@@ -26,7 +26,7 @@ func TestAccObsBucketObject_source(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketObjectDestroy,
@@ -58,7 +58,7 @@ func TestAccObsBucketObject_source(t *testing.T) {
 func TestAccObsBucketObject_content(t *testing.T) {
 	rInt := acctest.RandInt()
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckS3(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckObsBucketObjectDestroy,
@@ -80,7 +80,7 @@ func TestAccObsBucketObject_content(t *testing.T) {
 
 func testAccCheckObsBucketObjectDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	obsClient, err := config.newObjectStorageClient(OS_REGION_NAME)
+	obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 	}
@@ -131,7 +131,7 @@ func testAccCheckObsBucketObjectExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		obsClient, err := config.newObjectStorageClient(OS_REGION_NAME)
+		obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
 		}
