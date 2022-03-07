@@ -423,13 +423,6 @@ func (c *Config) drsV2Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
-func (c *Config) sfsV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewSharedFileSystemV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 // sfsV1Client used to sfs-turbo resource
 func (c *Config) sfsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	sc, err := huaweisdk.NewSharedFileSystemV2(c.HwClient, golangsdk.EndpointOpts{

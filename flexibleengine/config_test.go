@@ -206,9 +206,9 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "blockStorage v2")
 
-	// test for	sfsV2Client
+	// test for SfsV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.sfsV2Client(OS_REGION_NAME)
+	serviceClient, err = config.SfsV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine sfsV2 v2 client: %s", err)
 	}

@@ -120,7 +120,7 @@ func dataSourceSFSFileSystemV2() *schema.Resource {
 
 func dataSourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sfsClient, err := config.sfsV2Client(GetRegion(d, config))
+	sfsClient, err := config.SfsV2Client(GetRegion(d, config))
 
 	listOpts := shares.ListOpts{
 		ID:     d.Get("id").(string),
