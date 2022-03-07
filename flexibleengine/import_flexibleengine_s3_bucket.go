@@ -18,7 +18,7 @@ func resourceS3BucketImportState(
 	results[0] = d
 
 	config := meta.(*Config)
-	conn, err := config.computeS3conn(GetRegion(d, config))
+	conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}

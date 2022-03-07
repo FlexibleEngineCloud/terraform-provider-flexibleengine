@@ -1,109 +1,20 @@
 package flexibleengine
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	awsCredentials "github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/defaults"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/iam"
-	"github.com/aws/aws-sdk-go/service/sts"
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cleanhttp"
-	"github.com/hashicorp/go-multierror"
 )
 
-func GetAccountInfo(iamconn *iam.IAM, stsconn *sts.STS, authProviderName string) (string, string, error) {
-	var errors error
-	// If we have creds from instance profile, we can use metadata API
-	if authProviderName == ec2rolecreds.ProviderName {
-		log.Println("[DEBUG] Trying to get account ID via AWS Metadata API")
-
-		cfg := &aws.Config{}
-		setOptionalEndpoint(cfg)
-		sess, err := session.NewSession(cfg)
-		if err != nil {
-			return "", "", errwrap.Wrapf("Error creating AWS session: {{err}}", err)
-		}
-
-		metadataClient := ec2metadata.New(sess)
-		info, err := metadataClient.IAMInfo()
-		if err == nil {
-			return parseAccountInfoFromArn(info.InstanceProfileArn)
-		}
-		log.Printf("[DEBUG] Failed to get account info from metadata service: %s", err)
-		errors = multierror.Append(errors, err)
-		// We can end up here if there's an issue with the instance metadata service
-		// or if we're getting credentials from AdRoll's Hologram (in which case IAMInfo will
-		// error out). In any event, if we can't get account info here, we should try
-		// the other methods available.
-		// If we have creds from something that looks like an IAM instance profile, but
-		// we were unable to retrieve account info from the instance profile, it's probably
-		// a safe assumption that we're not an IAM user
-	} else {
-		// Creds aren't from an IAM instance profile, so try try iam:GetUser
-		log.Println("[DEBUG] Trying to get account ID via iam:GetUser")
-		outUser, err := iamconn.GetUser(nil)
-		if err == nil {
-			return parseAccountInfoFromArn(*outUser.User.Arn)
-		}
-		errors = multierror.Append(errors, err)
-		awsErr, ok := err.(awserr.Error)
-		// AccessDenied and ValidationError can be raised
-		// if credentials belong to federated profile, so we ignore these
-		if !ok || (awsErr.Code() != "AccessDenied" && awsErr.Code() != "ValidationError" && awsErr.Code() != "InvalidClientTokenId") {
-			return "", "", fmt.Errorf("Failed getting account ID via 'iam:GetUser': %s", err)
-		}
-		log.Printf("[DEBUG] Getting account ID via iam:GetUser failed: %s", err)
-	}
-
-	// Then try STS GetCallerIdentity
-	log.Println("[DEBUG] Trying to get account ID via sts:GetCallerIdentity")
-	outCallerIdentity, err := stsconn.GetCallerIdentity(&sts.GetCallerIdentityInput{})
-	if err == nil {
-		return parseAccountInfoFromArn(*outCallerIdentity.Arn)
-	}
-	log.Printf("[DEBUG] Getting account ID via sts:GetCallerIdentity failed: %s", err)
-	errors = multierror.Append(errors, err)
-
-	// Then try IAM ListRoles
-	log.Println("[DEBUG] Trying to get account ID via iam:ListRoles")
-	outRoles, err := iamconn.ListRoles(&iam.ListRolesInput{
-		MaxItems: aws.Int64(int64(1)),
-	})
-	if err != nil {
-		log.Printf("[DEBUG] Failed to get account ID via iam:ListRoles: %s", err)
-		errors = multierror.Append(errors, err)
-		return "", "", fmt.Errorf("Failed getting account ID via all available methods. Errors: %s", errors)
-	}
-
-	if len(outRoles.Roles) < 1 {
-		err = fmt.Errorf("Failed to get account ID via iam:ListRoles: No roles available")
-		log.Printf("[DEBUG] %s", err)
-		errors = multierror.Append(errors, err)
-		return "", "", fmt.Errorf("Failed getting account ID via all available methods. Errors: %s", errors)
-	}
-
-	return parseAccountInfoFromArn(*outRoles.Roles[0].Arn)
-}
-
-func parseAccountInfoFromArn(arn string) (string, string, error) {
-	parts := strings.Split(arn, ":")
-	if len(parts) < 5 {
-		return "", "", fmt.Errorf("Unable to parse ID from invalid ARN: %q", arn)
-	}
-	return parts[1], parts[4], nil
-}
-
-// This function is responsible for reading credentials from the
+// GetCredentials is responsible for reading credentials from the
 // environment in the case that they're not explicitly specified
 // in the Terraform configuration.
 func GetCredentials(c *Config) (*awsCredentials.Credentials, error) {

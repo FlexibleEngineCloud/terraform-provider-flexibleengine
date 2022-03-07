@@ -6,13 +6,12 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -360,7 +359,7 @@ func TestAccS3Bucket_Cors(t *testing.T) {
 			}
 
 			config := testAccProvider.Meta().(*Config)
-			conn, err := config.computeS3conn(OS_REGION_NAME)
+			conn, err := computeS3conn(config, OS_REGION_NAME)
 			if err != nil {
 				return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 			}
@@ -599,7 +598,7 @@ func testAccCheckS3BucketExistsWithProviders(n string, providers *[]*schema.Prov
 			}
 
 			config := testAccProvider.Meta().(*Config)
-			conn, err := config.computeS3conn(OS_REGION_NAME)
+			conn, err := computeS3conn(config, OS_REGION_NAME)
 			if err != nil {
 				return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 			}
@@ -629,7 +628,7 @@ func testAccCheckS3DestroyBucket(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -648,7 +647,7 @@ func testAccCheckS3BucketPolicy(n string, policy string) resource.TestCheckFunc 
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -699,7 +698,7 @@ func testAccCheckS3BucketWebsite(n string, indexDoc string, errorDoc string, red
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -759,7 +758,7 @@ func testAccCheckS3BucketWebsiteRoutingRules(n string, routingRules []*s3.Routin
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -787,7 +786,7 @@ func testAccCheckS3BucketVersioning(n string, versioningStatus string) resource.
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -818,7 +817,7 @@ func testAccCheckS3BucketCors(n string, corsRules []*s3.CORSRule) resource.TestC
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
@@ -843,7 +842,7 @@ func testAccCheckS3BucketLogging(n, b, p string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[n]
 		config := testAccProvider.Meta().(*Config)
-		conn, err := config.computeS3conn(OS_REGION_NAME)
+		conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}
