@@ -216,11 +216,11 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "sfsV2 v2")
 
-	// test for sfsV1Client
+	// test for SfsV1Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.sfsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.SfsV1Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine sfsV1 v1 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine sfs turbo client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://sfs-turbo.%s.%s/v1/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
