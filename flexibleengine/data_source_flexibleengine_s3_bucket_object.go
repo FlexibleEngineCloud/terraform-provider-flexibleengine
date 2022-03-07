@@ -101,7 +101,7 @@ func dataSourceS3BucketObject() *schema.Resource {
 
 func dataSourceS3BucketObjectRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	conn, err := config.computeS3conn(GetRegion(d, config))
+	conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}

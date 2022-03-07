@@ -113,7 +113,7 @@ func resourceS3BucketObject() *schema.Resource {
 
 func resourceS3BucketObjectPut(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -192,7 +192,7 @@ func resourceS3BucketObjectPut(d *schema.ResourceData, meta interface{}) error {
 
 func resourceS3BucketObjectRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -233,7 +233,7 @@ func resourceS3BucketObjectRead(d *schema.ResourceData, meta interface{}) error 
 
 func resourceS3BucketObjectDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}

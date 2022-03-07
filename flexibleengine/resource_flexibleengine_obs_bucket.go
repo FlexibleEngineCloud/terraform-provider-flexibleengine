@@ -1190,6 +1190,10 @@ func deleteAllBucketObjects(obsClient *obs.ObsClient, bucket string) error {
 	return nil
 }
 
+func bucketDomainName(bucket, region string) string {
+	return fmt.Sprintf("%s.oss.%s.prod-cloud-ocb.orange-business.com", bucket, region)
+}
+
 func getObsError(action string, bucket string, err error) error {
 	if obsError, ok := err.(obs.ObsError); ok {
 		return fmt.Errorf("%s %s: %s,\n Reason: %s", action, bucket, obsError.Code, obsError.Message)

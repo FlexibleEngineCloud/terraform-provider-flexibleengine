@@ -19,7 +19,7 @@ func TestAccDataSourceS3BucketObject_basic(t *testing.T) {
 	var rObj s3.GetObjectOutput
 	var dsObj s3.GetObjectOutput
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                  func() { testAccPreCheck(t) },
 		Providers:                 testAccProviders,
 		PreventPostDestroyRefresh: true,
@@ -53,7 +53,7 @@ func TestAccDataSourceS3BucketObject_readableBody(t *testing.T) {
 	var rObj s3.GetObjectOutput
 	var dsObj s3.GetObjectOutput
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                  func() { testAccPreCheck(t) },
 		Providers:                 testAccProviders,
 		PreventPostDestroyRefresh: true,
@@ -87,7 +87,7 @@ func TestAccDataSourceS3BucketObject_allParams(t *testing.T) {
 	var rObj s3.GetObjectOutput
 	var dsObj s3.GetObjectOutput
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                  func() { testAccPreCheck(t) },
 		Providers:                 testAccProviders,
 		PreventPostDestroyRefresh: true,
@@ -138,7 +138,7 @@ func testAccCheckS3ObjectDataSourceExists(n string, obj *s3.GetObjectOutput) res
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		s3conn, err := config.computeS3conn(OS_REGION_NAME)
+		s3conn, err := computeS3conn(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 		}

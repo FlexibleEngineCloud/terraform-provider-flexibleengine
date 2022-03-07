@@ -280,7 +280,7 @@ func resourceS3Bucket() *schema.Resource {
 
 func resourceS3BucketCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -346,7 +346,7 @@ func resourceS3BucketCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceS3BucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -397,7 +397,7 @@ func resourceS3BucketUpdate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceS3BucketRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -424,7 +424,7 @@ func resourceS3BucketRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("bucket", d.Id())
 	}
 
-	domainName := bucketDomainName(d.Get("bucket").(string), GetRegion(d, config))
+	domainName := s3BucketDomainName(d.Get("bucket").(string), GetRegion(d, config))
 	d.Set("bucket_domain_name", domainName)
 
 	// Read the policy
@@ -768,7 +768,7 @@ func resourceS3BucketRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceS3BucketDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	s3conn, err := config.computeS3conn(GetRegion(d, config))
+	s3conn, err := computeS3conn(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine s3 client: %s", err)
 	}
@@ -1083,7 +1083,7 @@ func websiteEndpoint(s3conn *s3.S3, d *schema.ResourceData) (*S3Website, error) 
 	return WebsiteEndpoint(bucket, region), nil
 }
 
-func bucketDomainName(bucket, region string) string {
+func s3BucketDomainName(bucket, region string) string {
 	return fmt.Sprintf("%s.oss.%s.prod-cloud-ocb.orange-business.com", bucket, region)
 }
 
