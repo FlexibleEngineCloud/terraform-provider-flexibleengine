@@ -292,13 +292,6 @@ func (c *Config) getDomainID() (string, error) {
 	return all[0].ID, nil
 }
 
-func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewBlockStorageV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 // client for ecs v1
 func (c *Config) computeV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewComputeV1(c.HwClient, golangsdk.EndpointOpts{

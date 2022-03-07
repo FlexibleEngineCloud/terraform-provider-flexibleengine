@@ -104,7 +104,7 @@ func resourceVolumeIDsFromSchema(d *schema.ResourceData) []string {
 // resourceShutdownInstance shutdowns the ecs the volume is attached to in disaster recovery environment
 func resourceShutdownInstance(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}

@@ -34,7 +34,7 @@ func dataSourceBlockStorageVolumeV2() *schema.Resource {
 
 func dataSourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 
 	listOpts := volumes.ListOpts{
 		Name:   d.Get("name").(string),

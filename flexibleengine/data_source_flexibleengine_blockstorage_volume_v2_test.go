@@ -45,12 +45,12 @@ func testAccDataSourceBlockStorageVolumeV2Check(n string) resource.TestCheckFunc
 
 const testAccDataSourceBlockStorageVolumeV2Config = `
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_ds"
+  name        = "volume_ds"
   description = "first test volume"
-  size = 1
+  size        = 1
 }
 
 data "flexibleengine_blockstorage_volume_v2" "volume_ds" {
-  name = "${flexibleengine_blockstorage_volume_v2.volume_1.name}"
+  name = flexibleengine_blockstorage_volume_v2.volume_1.name
 }
 `

@@ -138,7 +138,7 @@ func resourceContainerMetadataV2(d *schema.ResourceData) map[string]string {
 
 func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
@@ -203,7 +203,7 @@ func resourceBlockStorageVolumeV2Create(d *schema.ResourceData, meta interface{}
 
 func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
@@ -258,7 +258,7 @@ func resourceBlockStorageVolumeV2Read(d *schema.ResourceData, meta interface{}) 
 
 func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
@@ -318,7 +318,7 @@ func resourceBlockStorageVolumeV2Update(d *schema.ResourceData, meta interface{}
 
 func resourceBlockStorageVolumeV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}

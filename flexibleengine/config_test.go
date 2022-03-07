@@ -196,9 +196,9 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	var serviceClient *golangsdk.ServiceClient
 	var err error
 
-	// test for blockStorageV2Client
+	// test for BlockStorageV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.blockStorageV2Client(OS_REGION_NAME)
+	serviceClient, err = config.BlockStorageV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine blockStorage v2 client: %s", err)
 	}
