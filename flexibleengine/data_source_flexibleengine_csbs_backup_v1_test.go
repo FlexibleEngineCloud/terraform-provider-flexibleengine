@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccCSBSBackupV1DataSource_basic(t *testing.T) {
+	dataName := "data.flexibleengine_csbs_backup_v1.csbs"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -16,9 +17,9 @@ func TestAccCSBSBackupV1DataSource_basic(t *testing.T) {
 			{
 				Config: testAccCSBSBackupV1DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCSBSBackupV1DataSourceID("data.flexibleengine_csbs_backup_v1.csbs"),
-					resource.TestCheckResourceAttr("data.flexibleengine_csbs_backup_v1.csbs", "backup_name", "csbs-test"),
-					resource.TestCheckResourceAttr("data.flexibleengine_csbs_backup_v1.csbs", "resource_name", "instance_1"),
+					testAccCheckCSBSBackupV1DataSourceID(dataName),
+					resource.TestCheckResourceAttr(dataName, "backup_name", "csbs-test"),
+					resource.TestCheckResourceAttr(dataName, "resource_name", "instance_1"),
 				),
 			},
 		},
@@ -42,11 +43,11 @@ func testAccCheckCSBSBackupV1DataSourceID(n string) resource.TestCheckFunc {
 
 var testAccCSBSBackupV1DataSource_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  image_id = "%s"
-  security_groups = ["default"]
+  name              = "instance_1"
+  image_id          = "%s"
+  security_groups   = ["default"]
   availability_zone = "%s"
-  flavor_id = "%s"
+  flavor_id         = "%s"
   metadata = {
     foo = "bar"
   }
@@ -55,12 +56,13 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 resource "flexibleengine_csbs_backup_v1" "csbs" {
-  backup_name      = "csbs-test"
-  description      = "test-code"
-  resource_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  backup_name   = "csbs-test"
+  description   = "test-code"
+  resource_id   = flexibleengine_compute_instance_v2.instance_1.id
   resource_type = "OS::Nova::Server"
 }
+
 data "flexibleengine_csbs_backup_v1" "csbs" {
-  id = "${flexibleengine_csbs_backup_v1.csbs.id}"
+  id = flexibleengine_csbs_backup_v1.csbs.id
 }
 `, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_FLAVOR_ID, OS_NETWORK_ID)
