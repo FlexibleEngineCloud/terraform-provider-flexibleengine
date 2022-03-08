@@ -13,7 +13,7 @@ import (
 func TestAccVBSBackupV2_basic(t *testing.T) {
 	var config backups.Backup
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckVBSBackupV2Destroy,
@@ -34,27 +34,9 @@ func TestAccVBSBackupV2_basic(t *testing.T) {
 	})
 }
 
-func TestAccVBSBackupV2_timeout(t *testing.T) {
-	var config backups.Backup
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckVBSBackupV2Destroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccVBSBackupV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVBSBackupV2Exists("flexibleengine_vbs_backup_v2.backup_1", &config),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckVBSBackupV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
+	vbsClient, err := config.VbsV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating vbs client: %s", err)
 	}
@@ -85,7 +67,7 @@ func testAccCheckVBSBackupV2Exists(n string, configs *backups.Backup) resource.T
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
+		vbsClient, err := config.VbsV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine vbs client: %s", err)
 		}
@@ -107,35 +89,15 @@ func testAccCheckVBSBackupV2Exists(n string, configs *backups.Backup) resource.T
 
 const testAccVBSBackupV2_basic = `
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_123"
+  name        = "volume_123"
   description = "first test volume"
-  size = 40
-  cascade = true
+  size        = 40
+  cascade     = true
 }
 
 resource "flexibleengine_vbs_backup_v2" "backup_1" {
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-  name = "vbs-backup"
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
+  name        = "vbs-backup"
   description = "Backup_Demo"
-}
-`
-
-const testAccVBSBackupV2_timeout = `
-resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_123"
-  description = "first test volume"
-  size = 40
-  cascade = true
-}
-
-resource "flexibleengine_vbs_backup_v2" "backup_1" {
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-  name = "vbs-backup"
-  description = "Backup_Demo"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `

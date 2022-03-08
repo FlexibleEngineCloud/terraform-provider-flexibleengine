@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccVBSBackupPolicyV2DataSource_basic(t *testing.T) {
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -42,14 +42,14 @@ func testAccCheckVBSBackupPolicyV2DataSource(n string) resource.TestCheckFunc {
 
 var testAccVBSBackupPolicyV2DataSource_basic = `
 resource "flexibleengine_vbs_backup_policy_v2" "vbs_1" {
-  name = "policy_001"
-  start_time  = "12:00"
-  status  = "ON"
+  name                = "policy_001"
+  start_time          = "12:00"
+  status              = "ON"
   retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1     
+  rentention_num      = 2
+  frequency           = 1
 }
 data "flexibleengine_vbs_backup_policy_v2" "policies" {
-  id = "${flexibleengine_vbs_backup_policy_v2.vbs_1.id}"
+  id = flexibleengine_vbs_backup_policy_v2.vbs_1.id
 }
 `

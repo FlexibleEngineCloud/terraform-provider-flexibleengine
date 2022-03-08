@@ -81,11 +81,13 @@ func resourceVBSBackupV2() *schema.Resource {
 
 func resourceVBSBackupV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vbsClient, err := config.vbsV2Client(GetRegion(d, config))
-
+	vbsClient, err := config.VbsV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating vbs client: %s", err)
 	}
+
+	// for job APIs: update the endpoint of vbsClient
+	vbsClient.Endpoint = vbsClient.ResourceBase
 
 	createOpts := backups.CreateOpts{
 		Name:        d.Get("name").(string),
@@ -95,7 +97,6 @@ func resourceVBSBackupV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	n, err := backups.Create(vbsClient, createOpts).ExtractJobResponse()
-
 	if err != nil {
 		return fmt.Errorf("Error creating VBS Backup: %s", err)
 	}
@@ -105,30 +106,24 @@ func resourceVBSBackupV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	entity, err := backups.GetJobEntity(vbsClient, n.JobID, "backup_id")
-
 	if id, ok := entity.(string); ok {
 		d.SetId(id)
 		return resourceVBSBackupV2Read(d, meta)
 	}
 
-	return fmt.Errorf("Unexpected conversion error in creating VBS backup.")
+	return fmt.Errorf("Unexpected conversion error in creating VBS backup")
 }
 
 func resourceVBSBackupV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vbsClient, err := config.vbsV2Client(GetRegion(d, config))
+	vbsClient, err := config.VbsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating  Vbs client: %s", err)
+		return fmt.Errorf("Error creating vbs client: %s", err)
 	}
 
 	n, err := backups.Get(vbsClient, d.Id()).Extract()
 	if err != nil {
-		if _, ok := err.(golangsdk.ErrDefault404); ok {
-			d.SetId("")
-			return nil
-		}
-
-		return fmt.Errorf("Error retrieving VBS Backup: %s", err)
+		return CheckDeleted(d, err, "VBS Backup")
 	}
 
 	d.Set("name", n.Name)
@@ -146,11 +141,10 @@ func resourceVBSBackupV2Read(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceVBSBackupV2Delete(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
-	vbsClient, err := config.vbsV2Client(GetRegion(d, config))
+	vbsClient, err := config.VbsV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating vbs: %s", err)
+		return fmt.Errorf("Error creating vbs client: %s", err)
 	}
 
 	stateConf := &resource.StateChangeConf{

@@ -299,7 +299,7 @@ func flattenInstanceVolumeAttached(
 
 	config := meta.(*Config)
 	ecsClient, err := config.computeV1Client(GetRegion(d, config))
-	blockStorageClient, err := config.blockStorageV2Client(GetRegion(d, config))
+	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return nil, "", fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}

@@ -135,7 +135,7 @@ func resourceSFSFileSystemV2() *schema.Resource {
 
 func resourceSFSFileSystemV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sfsClient, err := config.sfsV2Client(GetRegion(d, config))
+	sfsClient, err := config.SfsV2Client(GetRegion(d, config))
 
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine File Share Client: %s", err)
@@ -205,7 +205,7 @@ func resourceSFSFileSystemV2Create(d *schema.ResourceData, meta interface{}) err
 func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error {
 
 	config := meta.(*Config)
-	sfsClient, err := config.sfsV2Client(GetRegion(d, config))
+	sfsClient, err := config.SfsV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine File Share: %s", err)
 	}
@@ -295,7 +295,7 @@ func resourceSFSFileSystemV2Read(d *schema.ResourceData, meta interface{}) error
 
 func resourceSFSFileSystemV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sfsClient, err := config.sfsV2Client(GetRegion(d, config))
+	sfsClient, err := config.SfsV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error updating Flexibleengine Share File: %s", err)
 	}
@@ -381,7 +381,7 @@ func resourceSFSFileSystemV2Update(d *schema.ResourceData, meta interface{}) err
 
 func resourceSFSFileSystemV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sfsClient, err := config.sfsV2Client(GetRegion(d, config))
+	sfsClient, err := config.SfsV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine Shared File: %s", err)
 	}

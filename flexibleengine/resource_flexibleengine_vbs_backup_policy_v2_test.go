@@ -13,7 +13,7 @@ import (
 func TestAccVBSBackupPolicyV2_basic(t *testing.T) {
 	var policy policies.Policy
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckRequiredEnvVars(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccVBSBackupPolicyV2Destroy,
@@ -68,7 +68,7 @@ func TestAccVBSBackupPolicyV2_rentention_day(t *testing.T) {
 
 func testAccVBSBackupPolicyV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
+	vbsClient, err := config.VbsV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine vbs client: %s", err)
 	}
@@ -99,7 +99,7 @@ func testAccVBSBackupPolicyV2Exists(n string, policy *policies.Policy) resource.
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		vbsClient, err := config.vbsV2Client(OS_REGION_NAME)
+		vbsClient, err := config.VbsV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating flexibleengine vbs client: %s", err)
 		}
@@ -121,31 +121,31 @@ func testAccVBSBackupPolicyV2Exists(n string, policy *policies.Policy) resource.
 
 var testAccVBSBackupPolicyV2_basic = fmt.Sprintf(`
 resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_001"
-  start_time  = "12:00"
-  status  = "ON"
+  name                = "policy_001"
+  start_time          = "12:00"
+  status              = "ON"
   retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1
+  rentention_num      = 2
+  frequency           = 1
 }
 `)
 
 var testAccVBSBackupPolicyV2_update = fmt.Sprintf(`
 resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_001_update"
-  start_time  = "12:00"
-  status  = "ON"
+  name                = "policy_001_update"
+  start_time          = "12:00"
+  status              = "ON"
   retain_first_backup = "N"
-  rentention_num = 2
-  frequency = 1
+  rentention_num      = 2
+  frequency           = 1
 }
 `)
 
 var testAccVBSBackupPolicyV2_rentention_day = fmt.Sprintf(`
 resource "flexibleengine_vbs_backup_policy_v2" "vbs" {
-  name = "policy_002"
-  start_time  = "00:00,12:00"
+  name                = "policy_002"
+  start_time          = "00:00,12:00"
   retain_first_backup = "N"
-  rentention_day = 30
-  week_frequency = ["MON","WED","SAT"]
+  rentention_day      = 30
+  week_frequency      = ["MON","WED","SAT"]
 }`)

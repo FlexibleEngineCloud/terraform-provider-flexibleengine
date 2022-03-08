@@ -98,27 +98,9 @@ func TestAccBlockStorageV2Volume_image(t *testing.T) {
 	})
 }
 
-func TestAccBlockStorageV2Volume_timeout(t *testing.T) {
-	var volume volumes.Volume
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckBlockStorageV2VolumeDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccBlockStorageV2Volume_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckBlockStorageV2VolumeExists("flexibleengine_blockstorage_volume_v2.volume_1", &volume),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckBlockStorageV2VolumeDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	blockStorageClient, err := config.blockStorageV2Client(OS_REGION_NAME)
+	blockStorageClient, err := config.BlockStorageV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}
@@ -149,7 +131,7 @@ func testAccCheckBlockStorageV2VolumeExists(n string, volume *volumes.Volume) re
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		blockStorageClient, err := config.blockStorageV2Client(OS_REGION_NAME)
+		blockStorageClient, err := config.BlockStorageV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 		}
@@ -172,7 +154,7 @@ func testAccCheckBlockStorageV2VolumeExists(n string, volume *volumes.Volume) re
 func testAccCheckBlockStorageV2VolumeDoesNotExist(t *testing.T, n string, volume *volumes.Volume) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		blockStorageClient, err := config.blockStorageV2Client(OS_REGION_NAME)
+		blockStorageClient, err := config.BlockStorageV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 		}
@@ -231,8 +213,8 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.basic.id}"
-  volume_id   = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.basic.id
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
 }
 `, OS_NETWORK_ID)
 
@@ -252,8 +234,8 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.basic.id}"
-  volume_id   = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.basic.id
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
 }
 `, OS_NETWORK_ID)
 
@@ -264,16 +246,3 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
   image_id = "%s"
 }
 `, OS_IMAGE_ID)
-
-const testAccBlockStorageV2Volume_timeout = `
-resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  description = "first test volume"
-  size = 1
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
-}
-`

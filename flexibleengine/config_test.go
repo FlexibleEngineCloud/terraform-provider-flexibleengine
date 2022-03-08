@@ -196,9 +196,9 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	var serviceClient *golangsdk.ServiceClient
 	var err error
 
-	// test for blockStorageV2Client
+	// test for BlockStorageV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.blockStorageV2Client(OS_REGION_NAME)
+	serviceClient, err = config.BlockStorageV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine blockStorage v2 client: %s", err)
 	}
@@ -206,9 +206,9 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "blockStorage v2")
 
-	// test for	sfsV2Client
+	// test for SfsV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.sfsV2Client(OS_REGION_NAME)
+	serviceClient, err = config.SfsV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine sfsV2 v2 client: %s", err)
 	}
@@ -216,31 +216,31 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "sfsV2 v2")
 
-	// test for sfsV1Client
+	// test for SfsV1Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.sfsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.SfsV1Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine sfsV1 v1 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine sfs turbo client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://sfs-turbo.%s.%s/v1/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "sfs turbo")
 
-	// test for csbsV1Client
+	// test for CsbsV1Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.csbsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.CsbsV1Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine csbsV1 v1 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine csbs v1 client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://csbs.%s.%s/v1/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "csbs v1")
 
-	// test for vbsV2Client
+	// test for VbsV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.vbsV2Client(OS_REGION_NAME)
+	serviceClient, err = config.VbsV2Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine vbsV2 v2 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine vbs v2 client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://vbs.%s.%s/v2/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()

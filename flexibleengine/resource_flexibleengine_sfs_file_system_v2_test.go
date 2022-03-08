@@ -74,7 +74,7 @@ func TestAccSFSFileSystemV2_without_rule(t *testing.T) {
 
 func testAccCheckSFSFileSystemV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	sfsClient, err := config.sfsV2Client(OS_REGION_NAME)
+	sfsClient, err := config.SfsV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine sfs client: %s", err)
 	}
@@ -105,7 +105,7 @@ func testAccCheckSFSFileSystemV2Exists(n string, share *shares.Share) resource.T
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		sfsClient, err := config.sfsV2Client(OS_REGION_NAME)
+		sfsClient, err := config.SfsV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating Flexibleengine sfs client: %s", err)
 		}

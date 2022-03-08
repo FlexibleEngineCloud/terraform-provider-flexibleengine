@@ -292,13 +292,6 @@ func (c *Config) getDomainID() (string, error) {
 	return all[0].ID, nil
 }
 
-func (c *Config) blockStorageV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewBlockStorageV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 // client for ecs v1
 func (c *Config) computeV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewComputeV1(c.HwClient, golangsdk.EndpointOpts{
@@ -430,28 +423,6 @@ func (c *Config) drsV2Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
-func (c *Config) sfsV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewSharedFileSystemV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-// sfsV1Client used to sfs-turbo resource
-func (c *Config) sfsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	sc, err := huaweisdk.NewSharedFileSystemV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-
-	if err == nil {
-		sc.Endpoint = strings.Replace(sc.Endpoint, "sfs", "sfs-turbo", 1)
-		sc.Endpoint = strings.Replace(sc.Endpoint, "/v2/", "/v1/", 1)
-		sc.ResourceBase = sc.Endpoint
-	}
-	return sc, err
-}
-
 func (c *Config) orchestrationV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewOrchestrationV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -461,20 +432,6 @@ func (c *Config) orchestrationV1Client(region string) (*golangsdk.ServiceClient,
 
 func (c *Config) dwsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewDWSClient(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) csbsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewCSBSService(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) vbsV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewVBSV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})

@@ -16,7 +16,7 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 	resourceName := "flexibleengine_sfs_turbo.sfs-turbo1"
 	var turbo shares.Turbo
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSFSTurboDestroy,
@@ -55,7 +55,7 @@ func TestAccSFSTurbo_crypt(t *testing.T) {
 	resourceName := "flexibleengine_sfs_turbo.sfs-turbo1"
 	var turbo shares.Turbo
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSFSTurboDestroy,
@@ -78,7 +78,7 @@ func TestAccSFSTurbo_crypt(t *testing.T) {
 
 func testAccCheckSFSTurboDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	sfsClient, err := config.sfsV1Client(OS_REGION_NAME)
+	sfsClient, err := config.SfsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine sfs turbo client: %s", err)
 	}
@@ -109,7 +109,7 @@ func testAccCheckSFSTurboExists(n string, share *shares.Turbo) resource.TestChec
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		sfsClient, err := config.sfsV1Client(OS_REGION_NAME)
+		sfsClient, err := config.SfsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine sfs turbo client: %s", err)
 		}
