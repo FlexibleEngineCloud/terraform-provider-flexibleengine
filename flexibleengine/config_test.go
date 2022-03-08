@@ -425,9 +425,9 @@ func TestAccServiceEndpoints_Application(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of DCS v1 service
-	serviceClient, err = config.dcsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.DcsV1Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine dcs v1 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine DCS v1 client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://dcs.%s.%s/v1.0/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()

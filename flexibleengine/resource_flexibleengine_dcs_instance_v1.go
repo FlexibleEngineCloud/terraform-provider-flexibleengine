@@ -129,11 +129,11 @@ func resourceDcsInstanceV1() *schema.Resource {
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
 			},
-			"order_id": {
+			"vpc_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"vpc_name": {
+			"subnet_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -141,7 +141,7 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"subnet_name": {
+			"ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -153,23 +153,19 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"used_memory": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
 			"internal_version": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"max_memory": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"user_id": {
-				Type:     schema.TypeString,
+			"used_memory": {
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"ip": {
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -236,7 +232,7 @@ func getDcsProductId(client *golangsdk.ServiceClient, instanceType string) (stri
 
 func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
+	dcsV1Client, err := config.DcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
@@ -317,7 +313,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
+	dcsV1Client, err := config.DcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
@@ -334,6 +330,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("engine_version", v.EngineVersion)
 	d.Set("used_memory", v.UsedMemory)
 	d.Set("max_memory", v.MaxMemory)
+	d.Set("ip", v.IP)
 	d.Set("port", v.Port)
 	d.Set("status", v.Status)
 	d.Set("description", v.Description)
@@ -342,18 +339,13 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("vpc_id", v.VPCID)
 	d.Set("network_id", v.SubnetID)
 	d.Set("vpc_name", v.VPCName)
-	d.Set("created_at", v.CreatedAt)
 	d.Set("product_id", v.ProductID)
 	d.Set("security_group_id", v.SecurityGroupID)
 	d.Set("security_group_name", v.SecurityGroupName)
 	d.Set("subnet_name", v.SubnetName)
-	d.Set("user_id", v.UserID)
-	d.Set("user_name", v.UserName)
-	d.Set("order_id", v.OrderID)
 	d.Set("maintain_begin", v.MaintainBegin)
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
-	d.Set("ip", v.IP)
 
 	// set capacity by Capacity and CapacityMinor
 	var capacity float64 = float64(v.Capacity)
@@ -369,7 +361,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 
 func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
+	dcsV1Client, err := config.DcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error updating FlexibleEngine dcs instance client: %s", err)
 	}
@@ -409,7 +401,7 @@ func resourceDcsInstancesV1Update(d *schema.ResourceData, meta interface{}) erro
 
 func resourceDcsInstancesV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	dcsV1Client, err := config.dcsV1Client(GetRegion(d, config))
+	dcsV1Client, err := config.DcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}

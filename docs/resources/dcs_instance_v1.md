@@ -194,39 +194,20 @@ Changing this creates a new instance.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `engine` - See Argument Reference above.
-* `engine_version` - See Argument Reference above.
-* `capacity` - See Argument Reference above.
-* `access_user` - See Argument Reference above.
-* `password` - See Argument Reference above.
-* `vpc_id` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
+* `status` - Status of the Cache instance.
 * `vpc_name` - Indicates the name of a vpc.
-* `security_group_id` - See Argument Reference above.
-* `security_group_name` - Indicates the name of a security group.
 * `subnet_name` - Indicates the name of a subnet.
-* `available_zones` - See Argument Reference above.
-* `product_id` - See Argument Reference above.
-* `maintain_begin` - See Argument Reference above.
-* `maintain_end` - See Argument Reference above.
-* `save_days` - See Argument Reference above.
-* `backup_type` - See Argument Reference above.
-* `begin_at` - See Argument Reference above.
-* `period_type` - See Argument Reference above.
-* `backup_at` - See Argument Reference above.
-* `order_id` - An order ID is generated only in the monthly or yearly billing mode.
-    In other billing modes, no value is returned for this parameter.
+* `security_group_name` - Indicates the name of a security group.
+* `ip` - Cache node's IP address in tenant's VPC.
 * `port` - Port of the cache node.
 * `resource_spec_code` - Resource specifications.
     dcs.single_node: indicates a DCS instance in single-node mode.
     dcs.master_standby: indicates a DCS instance in master/standby mode.
     dcs.cluster: indicates a DCS instance in cluster mode.
-* `used_memory` - Size of the used memory. Unit: MB.
 * `internal_version` - Internal DCS version.
 * `max_memory` - Overall memory size. Unit: MB.
+* `used_memory` - Size of the used memory. Unit: MB.
 * `user_id` - Indicates a user ID.
-* `ip` - Cache node's IP address in tenant's VPC.
