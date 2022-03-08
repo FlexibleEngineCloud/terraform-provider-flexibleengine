@@ -366,7 +366,7 @@ func TestAccServiceEndpoints_Database(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "RDS v3")
 
 	// test the endpoint of DDS v3 service
-	serviceClient, err = config.ddsV3Client(OS_REGION_NAME)
+	serviceClient, err = config.DdsV3Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine DDS v3 client: %s", err)
 	}

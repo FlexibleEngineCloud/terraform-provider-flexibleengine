@@ -37,7 +37,7 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 
 func testAccCheckDDSV3InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.ddsV3Client(OS_REGION_NAME)
+	client, err := config.DdsV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s", err)
 	}
@@ -79,7 +79,7 @@ func testAccCheckDDSV3InstanceExists(n string, instance *instances.Instance) res
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.ddsV3Client(OS_REGION_NAME)
+		client, err := config.DdsV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine DDS client: %s ", err)
 		}

@@ -305,7 +305,7 @@ func DdsInstanceStateRefreshFunc(client *golangsdk.ServiceClient, instanceID str
 
 func resourceDdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.ddsV3Client(GetRegion(d, config))
+	client, err := config.DdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s ", err)
 	}
@@ -368,7 +368,7 @@ func resourceDdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 
 func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.ddsV3Client(GetRegion(d, config))
+	client, err := config.DdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s", err)
 	}
@@ -461,7 +461,7 @@ func resourceDdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceDdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.ddsV3Client(GetRegion(d, config))
+	client, err := config.DdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s ", err)
 	}
@@ -478,7 +478,7 @@ func resourceDdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error
 
 func resourceDdsInstanceV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.ddsV3Client(GetRegion(d, config))
+	client, err := config.DdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s ", err)
 	}

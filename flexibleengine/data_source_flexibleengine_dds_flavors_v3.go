@@ -74,7 +74,7 @@ func dataSourceDDSFlavorsV3() *schema.Resource {
 func dataSourceDDSFlavorsV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
-	ddsClient, err := config.ddsV3Client(region)
+	ddsClient, err := config.DdsV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DDS client: %s", err)
 	}
