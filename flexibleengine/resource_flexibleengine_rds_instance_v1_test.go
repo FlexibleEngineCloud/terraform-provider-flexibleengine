@@ -52,7 +52,7 @@ func TestAccRDSV1Instance_PostgreSQL(t *testing.T) {
 
 func testAccCheckRDSV1InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	rdsClient, err := config.rdsV1Client(OS_REGION_NAME)
+	rdsClient, err := config.RdsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds: %s", err)
 	}
@@ -83,7 +83,7 @@ func testAccCheckRDSV1InstanceExists(n string, instance *instances.Instance) res
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		rdsClient, err := config.rdsV1Client(OS_REGION_NAME)
+		rdsClient, err := config.RdsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine rds client: %s ", err)
 		}

@@ -37,7 +37,7 @@ func TestAccRdsFlavorV1DataSource_speccode(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingNetworkV2DataSourceID("data.flexibleengine_rds_flavors_v1.flavor"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_rds_flavors_v1.flavor", "speccode", "rds.mysql.s1.medium"),
+						"data.flexibleengine_rds_flavors_v1.flavor", "speccode", "rds.mysql.s3.medium.4"),
 				),
 			},
 		},
@@ -60,20 +60,16 @@ func testAccCheckRdsFlavorV1DataSourceID(n string) resource.TestCheckFunc {
 }
 
 var testAccRdsFlavorV1DataSource_basic = `
-
 data "flexibleengine_rds_flavors_v1" "flavor" {
-    region = "eu-west-0"
-	datastore_name = "MySQL"
-    datastore_version = "5.6.30"
+  datastore_name    = "MySQL"
+  datastore_version = "5.6.30"
 }
 `
 
 var testAccRdsFlavorV1DataSource_speccode = `
-
 data "flexibleengine_rds_flavors_v1" "flavor" {
-    region = "eu-west-0"
-	datastore_name = "MySQL"
-    datastore_version = "5.6.30"
-    speccode = "rds.mysql.s1.medium"
+  datastore_name    = "MySQL"
+  datastore_version = "5.6.30"
+  speccode          = "rds.mysql.s3.medium.4"
 }
 `

@@ -16,7 +16,7 @@ func TestAccRdsInstanceV3_basic(t *testing.T) {
 	resourceType := "flexibleengine_rds_instance_v3"
 	resourceName := "flexibleengine_rds_instance_v3.instance"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRdsInstanceV3Destroy(resourceType),

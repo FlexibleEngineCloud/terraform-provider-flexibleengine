@@ -348,16 +348,16 @@ func TestAccServiceEndpoints_Database(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of RDS v1 service
-	serviceClient, err = config.rdsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.RdsV1Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine rds v1 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine RDS v1 client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://rds.%s.%s/rds/v1/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "RDS v1")
 
 	// test the endpoint of RDS v3 service
-	serviceClient, err = config.rdsV3Client(OS_REGION_NAME)
+	serviceClient, err = config.RdsV3Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine RDS v3 client: %s", err)
 	}

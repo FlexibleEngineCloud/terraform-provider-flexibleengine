@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/chnsz/golangsdk"
@@ -123,12 +122,10 @@ func getDatastore(d *schema.ResourceData) configurations.DataStore {
 
 func resourceRdsConfigurationV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
-	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
+	rdsClient, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS Client: %s", err)
 	}
-	rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
 
 	createOpts := configurations.CreateOpts{
 		Name:        d.Get("name").(string),
@@ -150,15 +147,13 @@ func resourceRdsConfigurationV3Create(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceRdsConfigurationV3Read(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
-	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
+	rdsClient, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
-	rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
-	n, err := configurations.Get(rdsClient, d.Id()).Extract()
 
+	n, err := configurations.Get(rdsClient, d.Id()).Extract()
 	if err != nil {
 		if _, ok := err.(golangsdk.ErrDefault404); ok {
 			d.SetId("")
@@ -197,13 +192,12 @@ func resourceRdsConfigurationV3Read(d *schema.ResourceData, meta interface{}) er
 
 func resourceRdsConfigurationV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
+	rdsClient, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS Client: %s", err)
 	}
-	rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
-	var updateOpts configurations.UpdateOpts
 
+	var updateOpts configurations.UpdateOpts
 	if d.HasChange("name") {
 		updateOpts.Name = d.Get("name").(string)
 	}
@@ -224,11 +218,10 @@ func resourceRdsConfigurationV3Update(d *schema.ResourceData, meta interface{}) 
 
 func resourceRdsConfigurationV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
+	rdsClient, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
-	rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
 
 	err = configurations.Delete(rdsClient, d.Id()).ExtractErr()
 	if err != nil {

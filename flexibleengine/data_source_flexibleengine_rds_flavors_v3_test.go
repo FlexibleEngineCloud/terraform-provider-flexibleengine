@@ -39,10 +39,9 @@ func testAccCheckRdsFlavorV3DataSourceID(n string) resource.TestCheckFunc {
 }
 
 var testAccRdsFlavorV3DataSource_basic = `
-
 data "flexibleengine_rds_flavors_v3" "flavor" {
-  db_type = "PostgreSQL"
-  db_version = "9.5"
+  db_type       = "PostgreSQL"
+  db_version    = "9.5"
   instance_mode = "ha"
 }
 `

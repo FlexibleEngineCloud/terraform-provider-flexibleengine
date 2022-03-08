@@ -14,7 +14,7 @@ func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
 	resourceName := "flexibleengine_rds_read_replica_v3.replica_instance"
 	resourceType := "flexibleengine_rds_read_replica_v3"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRdsInstanceV3Destroy(resourceType),
