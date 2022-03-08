@@ -236,11 +236,11 @@ func TestAccServiceEndpoints_Storage(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "csbs v1")
 
-	// test for vbsV2Client
+	// test for VbsV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.vbsV2Client(OS_REGION_NAME)
+	serviceClient, err = config.VbsV2Client(OS_REGION_NAME)
 	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine vbsV2 v2 client: %s", err)
+		t.Fatalf("Error creating FlexibleEngine vbs v2 client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://vbs.%s.%s/v2/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()

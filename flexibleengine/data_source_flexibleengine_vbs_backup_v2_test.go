@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccVBSBackupV2DataSource_basic(t *testing.T) {
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -42,19 +42,19 @@ func testAccCheckVBSBackupV2DataSourceID(n string) resource.TestCheckFunc {
 
 var testAccVBSBackupV2DataSource_basic = `
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_123"
+  name        = "volume_123"
   description = "first test volume"
-  size = 40
-  cascade = true
+  size        = 40
+  cascade     = true
 }
 
 resource "flexibleengine_vbs_backup_v2" "backup_1" {
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-  name = "vbs-backup"
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
+  name        = "vbs-backup"
   description = "Backup_Demo"
 }
 
 data "flexibleengine_vbs_backup_v2" "backups" {
-  id = "${flexibleengine_vbs_backup_v2.backup_1.id}"
+  id = flexibleengine_vbs_backup_v2.backup_1.id
 }
 `

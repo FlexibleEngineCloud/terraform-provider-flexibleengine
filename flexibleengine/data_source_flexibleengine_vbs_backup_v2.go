@@ -65,7 +65,7 @@ func dataSourceVBSBackupV2() *schema.Resource {
 
 func dataSourceVBSBackupV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vbsClient, err := config.vbsV2Client(GetRegion(d, config))
+	vbsClient, err := config.VbsV2Client(GetRegion(d, config))
 
 	listBackupOpts := backups.ListOpts{
 		Id:         d.Get("id").(string),
