@@ -20,7 +20,7 @@ func TestAccMRSV1Cluster_basic(t *testing.T) {
 		CheckDestroy: testAccCheckMRSV1ClusterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccMRSV1ClusterConfig_basic,
+				Config: testAccMRSV1ClusterConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMRSV1ClusterExists("flexibleengine_mrs_cluster_v1.cluster1", &clusterGet),
 					resource.TestCheckResourceAttr(
@@ -91,7 +91,7 @@ func testAccCheckMRSV1ClusterExists(n string, clusterGet *cluster.Cluster) resou
 	}
 }
 
-var TestAccMRSV1ClusterConfig_basic = fmt.Sprintf(`
+var testAccMRSV1ClusterConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   region            = "%s"
   available_zone_id = "%s"
