@@ -323,7 +323,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "dns")
 
 	// test the endpoint of VPC endpoint
-	serviceClient, err = config.vpcepV1Client(OS_REGION_NAME)
+	serviceClient, err = config.VPCEPClient(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}

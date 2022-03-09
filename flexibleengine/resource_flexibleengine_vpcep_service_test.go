@@ -92,7 +92,7 @@ func TestAccVPCEPServicePermission(t *testing.T) {
 
 func testAccCheckVPCEPServiceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	vpcepClient, err := config.vpcepV1Client(OS_REGION_NAME)
+	vpcepClient, err := config.VPCEPClient(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating VPC endpoint client: %s", err)
 	}
@@ -123,7 +123,7 @@ func testAccCheckVPCEPServiceExists(n string, service *services.Service) resourc
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		vpcepClient, err := config.vpcepV1Client(OS_REGION_NAME)
+		vpcepClient, err := config.VPCEPClient(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating VPC endpoint client: %s", err)
 		}
