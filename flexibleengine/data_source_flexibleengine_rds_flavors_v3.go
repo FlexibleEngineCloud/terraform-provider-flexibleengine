@@ -3,7 +3,6 @@ package flexibleengine
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -64,12 +63,10 @@ func dataSourceRdsFlavorV3() *schema.Resource {
 
 func dataSourceRdsFlavorV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
-	client, err := config.rdsV1Client(GetRegion(d, config))
+	client, err := config.RdsV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
 	}
-	client.Endpoint = strings.Replace(client.Endpoint, "/rds/v1/", "/v3/", 1)
 
 	link := fmt.Sprintf("flavors/%s?version_name=%s", d.Get("db_type").(string), d.Get("db_version").(string))
 	url := client.ServiceURL(link)

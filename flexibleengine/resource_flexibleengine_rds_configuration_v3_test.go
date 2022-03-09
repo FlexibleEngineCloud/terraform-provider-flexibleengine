@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,7 +13,7 @@ import (
 func TestAccRdsConfigurationV3_basic(t *testing.T) {
 	var config configurations.Configuration
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRdsConfigV3Destroy,
@@ -45,11 +44,10 @@ func TestAccRdsConfigurationV3_basic(t *testing.T) {
 
 func testAccCheckRdsConfigV3Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	rdsClient, err := config.rdsV1Client(OS_REGION_NAME)
+	rdsClient, err := config.RdsV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
-	rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "flexibleengine_rds_parametergroup_v3" {
@@ -77,11 +75,10 @@ func testAccCheckRdsConfigV3Exists(n string, configuration *configurations.Confi
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		rdsClient, err := config.rdsV1Client(OS_REGION_NAME)
+		rdsClient, err := config.RdsV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 		}
-		rdsClient.Endpoint = strings.Replace(rdsClient.Endpoint, "/rds/v1/", "/v3/", 1)
 
 		found, err := configurations.Get(rdsClient, rs.Primary.ID).Extract()
 		if err != nil {

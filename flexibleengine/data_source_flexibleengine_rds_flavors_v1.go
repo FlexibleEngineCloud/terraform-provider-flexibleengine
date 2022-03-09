@@ -56,11 +56,8 @@ func dataSourceRdsFlavorV1() *schema.Resource {
 
 func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config.OsClient %+v ", config.HwClient)
-	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read config %+v ", config)
-	log.Printf("[DEBUG] dataSourcedataSourceRdsFlavorV1Read d %+v ", d)
-
-	rdsClient, err := config.rdsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	rdsClient, err := config.RdsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
 	}
@@ -84,7 +81,7 @@ func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{
 	}
 	log.Printf("[DEBUG] Received datastore Id: %s", datastoreId)
 
-	flavorsList, err := flavors.List(rdsClient, datastoreId, d.Get("region").(string)).Extract()
+	flavorsList, err := flavors.List(rdsClient, datastoreId, region).Extract()
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve flavors: %s", err)
 	}
@@ -112,7 +109,7 @@ func dataSourcedataSourceRdsFlavorV1Read(d *schema.ResourceData, meta interface{
 	d.Set("name", rdsFlavor.Name)
 	d.Set("ram", rdsFlavor.Ram)
 	d.Set("speccode", rdsFlavor.SpecCode)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	return nil
 }

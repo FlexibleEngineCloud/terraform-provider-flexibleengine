@@ -13,7 +13,8 @@ import (
 
 func TestAccDcsInstancesV1_basic(t *testing.T) {
 	var instance instances.Instance
-	var instanceName = fmt.Sprintf("dcs_instance_%s", acctest.RandString(5))
+	var randName = fmt.Sprintf("acc_test_%s", acctest.RandString(5))
+	resourceName := "flexibleengine_dcs_instance_v1.instance_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,13 +22,11 @@ func TestAccDcsInstancesV1_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDcsV1InstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDcsV1Instance_basic(instanceName),
+				Config: testAccDcsV1Instance_basic(randName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDcsV1InstanceExists("flexibleengine_dcs_instance_v1.instance_1", instance),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dcs_instance_v1.instance_1", "name", instanceName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_dcs_instance_v1.instance_1", "engine", "Redis"),
+					testAccCheckDcsV1InstanceExists(resourceName, instance),
+					resource.TestCheckResourceAttr(resourceName, "name", randName),
+					resource.TestCheckResourceAttr(resourceName, "engine", "Redis"),
 				),
 			},
 		},
@@ -36,7 +35,7 @@ func TestAccDcsInstancesV1_basic(t *testing.T) {
 
 func testAccCheckDcsV1InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	dcsClient, err := config.dcsV1Client(OS_REGION_NAME)
+	dcsClient, err := config.DcsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine instance client: %s", err)
 	}
@@ -48,7 +47,7 @@ func testAccCheckDcsV1InstanceDestroy(s *terraform.State) error {
 
 		_, err := instances.Get(dcsClient, rs.Primary.ID).Extract()
 		if err == nil {
-			return fmt.Errorf("The Dcs instance still exists.")
+			return fmt.Errorf("The Dcs instance still exists")
 		}
 	}
 	return nil
@@ -66,7 +65,7 @@ func testAccCheckDcsV1InstanceExists(n string, instance instances.Instance) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		dcsClient, err := config.dcsV1Client(OS_REGION_NAME)
+		dcsClient, err := config.DcsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating Flexibleengine instance client: %s", err)
 		}
@@ -84,20 +83,20 @@ func testAccCheckDcsV1InstanceExists(n string, instance instances.Instance) reso
 	}
 }
 
-func testAccDcsV1Instance_basic(instanceName string) string {
+func testAccDcsV1Instance_basic(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name        = "secgroup_1"
+  name        = "%s"
   description = "secgroup_1"
 }
 
 resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = "terraform_vpc1"
+  name = "%s"
   cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name       = "terraform_subnet"
+  name       = "%s"
   cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
   vpc_id     = flexibleengine_vpc_v1.vpc_1.id
@@ -121,5 +120,5 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   period_type = "weekly"
   backup_at   = [1]
 }
-	`, instanceName)
+`, rName, rName, rName, rName)
 }

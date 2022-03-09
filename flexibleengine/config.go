@@ -451,13 +451,6 @@ func (c *Config) ctsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
-func (c *Config) dcsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewDCSServiceV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) cceV3Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewCCEV3(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -467,27 +460,6 @@ func (c *Config) cceV3Client(region string) (*golangsdk.ServiceClient, error) {
 
 func (c *Config) kmsKeyV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewKMSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) rdsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewRDSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) rdsV3Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewRDSV3(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) ddsV3Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewDDSV3(c.HwClient, golangsdk.EndpointOpts{
 		Region:       region,
 		Availability: c.getHwEndpointType(),
 	})
