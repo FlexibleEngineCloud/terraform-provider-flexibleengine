@@ -364,13 +364,6 @@ func (c *Config) elbV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return sc, err
 }
 
-func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewAutoScalingService(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewSMNV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),

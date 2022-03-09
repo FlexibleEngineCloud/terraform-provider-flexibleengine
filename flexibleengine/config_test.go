@@ -148,9 +148,9 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "bms v2.1")
 
-	// test for autoscalingV1Client
+	// test for AutoscalingV1Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.autoscalingV1Client(OS_REGION_NAME)
+	serviceClient, err = config.AutoscalingV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine autoscaling v1 client: %s", err)
 	}
