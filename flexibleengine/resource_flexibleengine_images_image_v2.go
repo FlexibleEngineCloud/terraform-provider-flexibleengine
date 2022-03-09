@@ -170,9 +170,9 @@ func resourceImagesImageV2() *schema.Resource {
 
 func resourceImagesImageV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	imageClient, err := config.imageV2Client(GetRegion(d, config))
+	imageClient, err := config.ImageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud image client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	protected := d.Get("protected").(bool)
@@ -243,9 +243,10 @@ func resourceImagesImageV2Create(d *schema.ResourceData, meta interface{}) error
 
 func resourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	imageClient, err := config.imageV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	imageClient, err := config.ImageV2Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud image client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	img, err := images.Get(imageClient, d.Id()).Extract()
@@ -272,7 +273,7 @@ func resourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("size_bytes", img.SizeBytes)
 	d.Set("tags", img.Tags)
 	d.Set("visibility", img.Visibility)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	d.Set("created_at", img.CreatedAt.Format(time.RFC3339))
 	d.Set("updated_at", img.UpdatedAt.Format(time.RFC3339))
@@ -282,9 +283,9 @@ func resourceImagesImageV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceImagesImageV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	imageClient, err := config.imageV2Client(GetRegion(d, config))
+	imageClient, err := config.ImageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud image client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	updateOpts := make(images.UpdateOpts, 0)
@@ -320,9 +321,9 @@ func resourceImagesImageV2Update(d *schema.ResourceData, meta interface{}) error
 
 func resourceImagesImageV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	imageClient, err := config.imageV2Client(GetRegion(d, config))
+	imageClient, err := config.ImageV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating OrangeCloud image client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting Image %s", d.Id())
@@ -481,7 +482,7 @@ func resourceImagesImageV2RefreshFunc(client *golangsdk.ServiceClient, id string
 		if err != nil {
 			return nil, "", err
 		}
-		log.Printf("[DEBUG] OrangeCloud image status is: %s", img.Status)
+		log.Printf("[DEBUG] FlexibleEngine image status is: %s", img.Status)
 
 		// Huawei provider doesn't have this set initially.
 		/*
