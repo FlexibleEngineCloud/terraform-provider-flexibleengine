@@ -181,7 +181,7 @@ func getPolicyAction(rawPolicyAction map[string]interface{}) policies.ActionOpts
 
 func resourceASPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
+	asClient, err := config.AutoscalingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
@@ -222,7 +222,7 @@ func resourceASPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceASPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
+	asClient, err := config.AutoscalingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
@@ -264,7 +264,7 @@ func resourceASPolicyRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceASPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
+	asClient, err := config.AutoscalingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}
@@ -302,7 +302,7 @@ func resourceASPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceASPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	asClient, err := config.autoscalingV1Client(GetRegion(d, config))
+	asClient, err := config.AutoscalingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine autoscaling client: %s", err)
 	}

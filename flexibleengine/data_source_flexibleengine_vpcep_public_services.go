@@ -60,7 +60,7 @@ func dataSourceVPCEPPublicServices() *schema.Resource {
 func dataSourceVpcepPublicRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
-	vpcepClient, err := config.vpcepV1Client(region)
+	vpcepClient, err := config.VPCEPClient(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}

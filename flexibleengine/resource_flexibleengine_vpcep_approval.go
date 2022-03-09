@@ -81,7 +81,7 @@ func resourceVPCEndpointApproval() *schema.Resource {
 
 func resourceVPCEndpointApprovalCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vpcepClient, err := config.vpcepV1Client(GetRegion(d, config))
+	vpcepClient, err := config.VPCEPClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}
@@ -108,7 +108,7 @@ func resourceVPCEndpointApprovalCreate(d *schema.ResourceData, meta interface{})
 
 func resourceVPCEndpointApprovalRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vpcepClient, err := config.vpcepV1Client(GetRegion(d, config))
+	vpcepClient, err := config.VPCEPClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}
@@ -123,7 +123,7 @@ func resourceVPCEndpointApprovalRead(d *schema.ResourceData, meta interface{}) e
 
 func resourceVPCEndpointApprovalUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vpcepClient, err := config.vpcepV1Client(GetRegion(d, config))
+	vpcepClient, err := config.VPCEPClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}
@@ -151,7 +151,7 @@ func resourceVPCEndpointApprovalUpdate(d *schema.ResourceData, meta interface{})
 
 func resourceVPCEndpointApprovalDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	vpcepClient, err := config.vpcepV1Client(GetRegion(d, config))
+	vpcepClient, err := config.VPCEPClient(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}

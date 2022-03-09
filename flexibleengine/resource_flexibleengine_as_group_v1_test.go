@@ -38,7 +38,7 @@ func TestAccASV1Group_basic(t *testing.T) {
 
 func testAccCheckASV1GroupDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
+	asClient, err := config.AutoscalingV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine autoscaling client: %s", err)
 	}
@@ -71,7 +71,7 @@ func testAccCheckASV1GroupExists(n string, group *groups.Group) resource.TestChe
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		asClient, err := config.autoscalingV1Client(OS_REGION_NAME)
+		asClient, err := config.AutoscalingV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating flexibleengine autoscaling client: %s", err)
 		}
@@ -128,10 +128,14 @@ func testASV1Group_basic(rName string) string {
 	return fmt.Sprintf(`
 %s
 
+data "flexibleengine_images_image_v2" "ubuntu" {
+  name = "OBS Ubuntu 18.04"
+}
+
 resource "flexibleengine_as_configuration_v1" "test_as_config"{
   scaling_configuration_name = "cfg-%s"
   instance_config {
-	image    = "%s"
+	image    = data.flexibleengine_images_image_v2.ubuntu.id
 	key_name = flexibleengine_compute_keypair_v2.test_key.id
     disk {
       size        = 40
@@ -161,5 +165,5 @@ resource "flexibleengine_as_group_v1" "as_group"{
     key = "value"
   }
 }
-`, testASV1Group_base(rName), rName, OS_IMAGE_ID, rName, OS_VPC_ID, OS_NETWORK_ID)
+`, testASV1Group_base(rName), rName, rName, OS_VPC_ID, OS_NETWORK_ID)
 }

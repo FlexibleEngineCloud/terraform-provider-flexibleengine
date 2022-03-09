@@ -333,13 +333,6 @@ func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, erro
 	})
 }
 
-func (c *Config) imageV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewImageServiceV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) networkingV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNetworkV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -369,23 +362,6 @@ func (c *Config) elbV2Client(region string) (*golangsdk.ServiceClient, error) {
 	}
 
 	return sc, err
-}
-
-func (c *Config) vpcepV1Client(region string) (*golangsdk.ServiceClient, error) {
-	sc, err := c.sdkClient(region, "network")
-	if err == nil {
-		sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "vpcep", 1)
-		sc.ResourceBase = sc.Endpoint + fmt.Sprintf("v1/%s/", c.HwClient.ProjectID)
-	}
-
-	return sc, err
-}
-
-func (c *Config) autoscalingV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewAutoScalingService(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
 }
 
 func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {

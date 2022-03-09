@@ -148,9 +148,9 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "bms v2.1")
 
-	// test for autoscalingV1Client
+	// test for AutoscalingV1Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.autoscalingV1Client(OS_REGION_NAME)
+	serviceClient, err = config.AutoscalingV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine autoscaling v1 client: %s", err)
 	}
@@ -158,9 +158,9 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "autoscaling v1")
 
-	// test for imageV2Client
+	// test for ImageV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.imageV2Client(OS_REGION_NAME)
+	serviceClient, err = config.ImageV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine image v2 client: %s", err)
 	}
@@ -323,7 +323,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "dns")
 
 	// test the endpoint of VPC endpoint
-	serviceClient, err = config.vpcepV1Client(OS_REGION_NAME)
+	serviceClient, err = config.VPCEPClient(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine VPC endpoint client: %s", err)
 	}
