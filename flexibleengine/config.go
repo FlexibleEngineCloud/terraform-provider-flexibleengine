@@ -388,13 +388,6 @@ func (c *Config) cceV3Client(region string) (*golangsdk.ServiceClient, error) {
 	})
 }
 
-func (c *Config) kmsKeyV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewKMSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) sdrsV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewSDRSV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       region,

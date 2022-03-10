@@ -400,7 +400,7 @@ func TestAccServiceEndpoints_Security(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "anti-ddos")
 
 	// test the endpoint of KMS service
-	serviceClient, err = config.kmsKeyV1Client(OS_REGION_NAME)
+	serviceClient, err = config.KmsKeyV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine KMS client: %s", err)
 	}

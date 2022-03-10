@@ -43,8 +43,7 @@ func dataSourceKmsDataKeyV1() *schema.Resource {
 
 func dataSourceKmsDataKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
-	KmsDataKeyV1Client, err := config.kmsKeyV1Client(GetRegion(d, config))
+	kmsClient, err := config.KmsKeyV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms key client: %s", err)
 	}
@@ -55,7 +54,7 @@ func dataSourceKmsDataKeyV1Read(d *schema.ResourceData, meta interface{}) error 
 		DatakeyLength:     d.Get("datakey_length").(string),
 	}
 	log.Printf("[DEBUG] KMS get data key for key: %s", d.Get("key_id").(string))
-	v, err := keys.DataEncryptGet(KmsDataKeyV1Client, req).ExtractDataKey()
+	v, err := keys.DataEncryptGet(kmsClient, req).ExtractDataKey()
 	if err != nil {
 		return err
 	}

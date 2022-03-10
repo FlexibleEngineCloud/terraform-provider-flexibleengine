@@ -50,7 +50,7 @@ func TestAccKmsKeyV1_basic(t *testing.T) {
 
 func testAccCheckKmsV1KeyDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	kmsClient, err := config.kmsKeyV1Client(OS_REGION_NAME)
+	kmsClient, err := config.KmsKeyV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms client: %s", err)
 	}
@@ -82,7 +82,7 @@ func testAccCheckKmsV1KeyExists(n string, key *keys.Key) resource.TestCheckFunc 
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		kmsClient, err := config.kmsKeyV1Client(OS_REGION_NAME)
+		kmsClient, err := config.KmsKeyV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine kms client: %s", err)
 		}
