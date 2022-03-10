@@ -37,9 +37,9 @@ func TestAccLBV2Certificate_basic(t *testing.T) {
 
 func testAccCheckLBV2CertificateDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -47,7 +47,7 @@ func testAccCheckLBV2CertificateDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := certificates.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := certificates.Get(lbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Certificate still exists: %s", rs.Primary.ID)
 		}
@@ -69,12 +69,12 @@ func testAccCheckLBV2CertificateExists(
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
-		found, err := certificates.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := certificates.Get(lbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -91,9 +91,9 @@ func testAccCheckLBV2CertificateExists(
 
 const testAccLBV2CertificateConfig_basic = `
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "certificate_1"
+  name        = "certificate_1"
   description = "terraform test certificate"
-  domain = "www.elb.com"
+  domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -148,20 +148,14 @@ i34R7EQDtFeiSvBdeKRsPp8c0KT8H1B4lXNkkCQs2WX5p4lm99+ZtLD4glw8x6Ic
 i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+8Kg==
 -----END CERTIFICATE-----
 EOT
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
 }
 `
 
 const testAccLBV2CertificateConfig_update = `
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "certificate_1_updated"
+  name        = "certificate_1_updated"
   description = "terraform test certificate"
-  domain = "www.elb.com"
+  domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -216,11 +210,5 @@ i34R7EQDtFeiSvBdeKRsPp8c0KT8H1B4lXNkkCQs2WX5p4lm99+ZtLD4glw8x6Ic
 i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+9Aa==
 -----END CERTIFICATE-----
 EOT
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
 }
 `

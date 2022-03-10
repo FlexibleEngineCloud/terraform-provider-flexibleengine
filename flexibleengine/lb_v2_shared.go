@@ -24,13 +24,13 @@ var lbPendingDeleteStatuses = []string{"ERROR", "PENDING_UPDATE", "PENDING_DELET
 
 var lbSkipLBStatuses = []string{"ERROR", "ACTIVE"}
 
-func waitForLBV2Listener(networkingClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
+func waitForLBV2Listener(lbClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
 	log.Printf("[DEBUG] Waiting for listener %s to become %s.", id, target)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
 		Pending:    pending,
-		Refresh:    resourceLBV2ListenerRefreshFunc(networkingClient, id),
+		Refresh:    resourceLBV2ListenerRefreshFunc(lbClient, id),
 		Timeout:    timeout,
 		Delay:      5 * time.Second,
 		MinTimeout: 1 * time.Second,
@@ -52,9 +52,9 @@ func waitForLBV2Listener(networkingClient *golangsdk.ServiceClient, id string, t
 	return nil
 }
 
-func resourceLBV2ListenerRefreshFunc(networkingClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
+func resourceLBV2ListenerRefreshFunc(lbClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		listener, err := listeners.Get(networkingClient, id).Extract()
+		listener, err := listeners.Get(lbClient, id).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -64,13 +64,13 @@ func resourceLBV2ListenerRefreshFunc(networkingClient *golangsdk.ServiceClient, 
 	}
 }
 
-func waitForLBV2LoadBalancer(networkingClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
+func waitForLBV2LoadBalancer(lbClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
 	log.Printf("[DEBUG] Waiting for loadbalancer %s to become %s.", id, target)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
 		Pending:    pending,
-		Refresh:    resourceLBV2LoadBalancerRefreshFunc(networkingClient, id),
+		Refresh:    resourceLBV2LoadBalancerRefreshFunc(lbClient, id),
 		Timeout:    timeout,
 		Delay:      5 * time.Second,
 		MinTimeout: 1 * time.Second,
@@ -92,9 +92,9 @@ func waitForLBV2LoadBalancer(networkingClient *golangsdk.ServiceClient, id strin
 	return nil
 }
 
-func resourceLBV2LoadBalancerRefreshFunc(networkingClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
+func resourceLBV2LoadBalancerRefreshFunc(lbClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		lb, err := loadbalancers.Get(networkingClient, id).Extract()
+		lb, err := loadbalancers.Get(lbClient, id).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -103,13 +103,13 @@ func resourceLBV2LoadBalancerRefreshFunc(networkingClient *golangsdk.ServiceClie
 	}
 }
 
-func waitForLBV2Member(networkingClient *golangsdk.ServiceClient, poolID, memberID string, target string, pending []string, timeout time.Duration) error {
+func waitForLBV2Member(lbClient *golangsdk.ServiceClient, poolID, memberID string, target string, pending []string, timeout time.Duration) error {
 	log.Printf("[DEBUG] Waiting for member %s to become %s.", memberID, target)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
 		Pending:    pending,
-		Refresh:    resourceLBV2MemberRefreshFunc(networkingClient, poolID, memberID),
+		Refresh:    resourceLBV2MemberRefreshFunc(lbClient, poolID, memberID),
 		Timeout:    timeout,
 		Delay:      5 * time.Second,
 		MinTimeout: 1 * time.Second,
@@ -131,9 +131,9 @@ func waitForLBV2Member(networkingClient *golangsdk.ServiceClient, poolID, member
 	return nil
 }
 
-func resourceLBV2MemberRefreshFunc(networkingClient *golangsdk.ServiceClient, poolID, memberID string) resource.StateRefreshFunc {
+func resourceLBV2MemberRefreshFunc(lbClient *golangsdk.ServiceClient, poolID, memberID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		member, err := pools.GetMember(networkingClient, poolID, memberID).Extract()
+		member, err := pools.GetMember(lbClient, poolID, memberID).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -143,13 +143,13 @@ func resourceLBV2MemberRefreshFunc(networkingClient *golangsdk.ServiceClient, po
 	}
 }
 
-func waitForLBV2Monitor(networkingClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
+func waitForLBV2Monitor(lbClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
 	log.Printf("[DEBUG] Waiting for monitor %s to become %s.", id, target)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
 		Pending:    pending,
-		Refresh:    resourceLBV2MonitorRefreshFunc(networkingClient, id),
+		Refresh:    resourceLBV2MonitorRefreshFunc(lbClient, id),
 		Timeout:    timeout,
 		Delay:      5 * time.Second,
 		MinTimeout: 1 * time.Second,
@@ -171,9 +171,9 @@ func waitForLBV2Monitor(networkingClient *golangsdk.ServiceClient, id string, ta
 	return nil
 }
 
-func resourceLBV2MonitorRefreshFunc(networkingClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
+func resourceLBV2MonitorRefreshFunc(lbClient *golangsdk.ServiceClient, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		monitor, err := monitors.Get(networkingClient, id).Extract()
+		monitor, err := monitors.Get(lbClient, id).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -183,13 +183,13 @@ func resourceLBV2MonitorRefreshFunc(networkingClient *golangsdk.ServiceClient, i
 	}
 }
 
-func waitForLBV2Pool(networkingClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
+func waitForLBV2Pool(lbClient *golangsdk.ServiceClient, id string, target string, pending []string, timeout time.Duration) error {
 	log.Printf("[DEBUG] Waiting for pool %s to become %s.", id, target)
 
 	stateConf := &resource.StateChangeConf{
 		Target:     []string{target},
 		Pending:    pending,
-		Refresh:    resourceLBV2PoolRefreshFunc(networkingClient, id),
+		Refresh:    resourceLBV2PoolRefreshFunc(lbClient, id),
 		Timeout:    timeout,
 		Delay:      5 * time.Second,
 		MinTimeout: 1 * time.Second,
@@ -211,9 +211,9 @@ func waitForLBV2Pool(networkingClient *golangsdk.ServiceClient, id string, targe
 	return nil
 }
 
-func resourceLBV2PoolRefreshFunc(networkingClient *golangsdk.ServiceClient, poolID string) resource.StateRefreshFunc {
+func resourceLBV2PoolRefreshFunc(lbClient *golangsdk.ServiceClient, poolID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		pool, err := pools.Get(networkingClient, poolID).Extract()
+		pool, err := pools.Get(lbClient, poolID).Extract()
 		if err != nil {
 			return nil, "", err
 		}
@@ -223,8 +223,8 @@ func resourceLBV2PoolRefreshFunc(networkingClient *golangsdk.ServiceClient, pool
 	}
 }
 
-func waitForLBV2viaPool(networkingClient *golangsdk.ServiceClient, id string, target string, timeout time.Duration) error {
-	pool, err := pools.Get(networkingClient, id).Extract()
+func waitForLBV2viaPool(lbClient *golangsdk.ServiceClient, id string, target string, timeout time.Duration) error {
+	pool, err := pools.Get(lbClient, id).Extract()
 	if err != nil {
 		return err
 	}
@@ -232,19 +232,19 @@ func waitForLBV2viaPool(networkingClient *golangsdk.ServiceClient, id string, ta
 	if pool.Loadbalancers != nil {
 		// each pool has an LB in Octavia lbaasv2 API
 		lbID := pool.Loadbalancers[0].ID
-		return waitForLBV2LoadBalancer(networkingClient, lbID, target, nil, timeout)
+		return waitForLBV2LoadBalancer(lbClient, lbID, target, nil, timeout)
 	}
 
 	if pool.Listeners != nil {
 		// each pool has a listener in Neutron lbaasv2 API
 		listenerID := pool.Listeners[0].ID
-		listener, err := listeners.Get(networkingClient, listenerID).Extract()
+		listener, err := listeners.Get(lbClient, listenerID).Extract()
 		if err != nil {
 			return err
 		}
 		if listener.Loadbalancers != nil {
 			lbID := listener.Loadbalancers[0].ID
-			return waitForLBV2LoadBalancer(networkingClient, lbID, target, nil, timeout)
+			return waitForLBV2LoadBalancer(lbClient, lbID, target, nil, timeout)
 		}
 	}
 
@@ -252,7 +252,7 @@ func waitForLBV2viaPool(networkingClient *golangsdk.ServiceClient, id string, ta
 	return fmt.Errorf("No Load Balancer on pool %s", id)
 }
 
-func resourceLBV2LoadBalancerStatusRefreshFuncNeutron(lbClient *golangsdk.ServiceClient, lbID, resourceType, resourceID string) resource.StateRefreshFunc {
+func resourceLBV2LoadBalancerStatusRefreshFunc(lbClient *golangsdk.ServiceClient, lbID, resourceType, resourceID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		statuses, err := loadbalancers.GetStatuses(lbClient, lbID).Extract()
 		if err != nil {
@@ -361,7 +361,7 @@ func resourceLBV2L7PolicyRefreshFunc(lbClient *golangsdk.ServiceClient, lbID str
 		}
 	}
 
-	return resourceLBV2LoadBalancerStatusRefreshFuncNeutron(lbClient, lbID, "l7policy", l7policy.ID)
+	return resourceLBV2LoadBalancerStatusRefreshFunc(lbClient, lbID, "l7policy", l7policy.ID)
 }
 
 func waitForLBV2L7Policy(lbClient *golangsdk.ServiceClient, parentListener *listeners.Listener, l7policy *l7policies.L7Policy, target string, pending []string, timeout time.Duration) error {
@@ -445,7 +445,7 @@ func resourceLBV2L7RuleRefreshFunc(lbClient *golangsdk.ServiceClient, lbID strin
 		}
 	}
 
-	return resourceLBV2LoadBalancerStatusRefreshFuncNeutron(lbClient, lbID, "l7rule", l7rule.ID)
+	return resourceLBV2LoadBalancerStatusRefreshFunc(lbClient, lbID, "l7rule", l7rule.ID)
 }
 
 func waitForLBV2L7Rule(lbClient *golangsdk.ServiceClient, parentListener *listeners.Listener, parentL7policy *l7policies.L7Policy, l7rule *l7policies.Rule, target string, pending []string, timeout time.Duration) error {

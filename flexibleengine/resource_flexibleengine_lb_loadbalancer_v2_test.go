@@ -109,9 +109,9 @@ func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 
 func testAccCheckLBV2LoadBalancerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -119,7 +119,7 @@ func testAccCheckLBV2LoadBalancerDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := loadbalancers.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := loadbalancers.Get(lbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("LoadBalancer still exists: %s", rs.Primary.ID)
 		}
@@ -141,12 +141,12 @@ func testAccCheckLBV2LoadBalancerExists(
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
-		found, err := loadbalancers.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := loadbalancers.Get(lbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -165,7 +165,7 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 	lb *loadbalancers.LoadBalancer, sg *groups.SecGroup) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

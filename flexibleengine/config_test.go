@@ -305,13 +305,13 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	// test endpoint of elb v2.0
 	serviceClient, err = nil, nil
-	serviceClient, err = config.elbV2Client(OS_REGION_NAME)
+	serviceClient, err = config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
-	expectedURL = fmt.Sprintf("https://elb.%s.%s/v2.0/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
+	expectedURL = fmt.Sprintf("https://elb.%s.%s/v2.0/", OS_REGION_NAME, defaultCloud)
 	actualURL = serviceClient.ResourceBaseURL()
-	testCheckServiceURL(t, expectedURL, actualURL, "elb v2.0")
+	testCheckServiceURL(t, expectedURL, actualURL, "ELB v2.0")
 
 	// test the endpoint of DNS service
 	serviceClient, err = config.dnsV2Client(OS_REGION_NAME)

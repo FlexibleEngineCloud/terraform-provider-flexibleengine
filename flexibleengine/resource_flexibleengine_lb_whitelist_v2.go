@@ -52,9 +52,9 @@ func resourceWhitelistV2() *schema.Resource {
 
 func resourceWhitelistV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	enableWhitelist := d.Get("enable_whitelist").(bool)
@@ -66,7 +66,7 @@ func resourceWhitelistV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	wl, err := whitelists.Create(networkingClient, createOpts).Extract()
+	wl, err := whitelists.Create(lbClient, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine Whitelist: %s", err)
 	}
@@ -77,12 +77,12 @@ func resourceWhitelistV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceWhitelistV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	wl, err := whitelists.Get(networkingClient, d.Id()).Extract()
+	wl, err := whitelists.Get(lbClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "whitelist")
 	}
@@ -100,9 +100,9 @@ func resourceWhitelistV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceWhitelistV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var updateOpts whitelists.UpdateOpts
@@ -115,7 +115,7 @@ func resourceWhitelistV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[DEBUG] Updating whitelist %s with options: %#v", d.Id(), updateOpts)
-	_, err = whitelists.Update(networkingClient, d.Id(), updateOpts).Extract()
+	_, err = whitelists.Update(lbClient, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Unable to update whitelist %s: %s", d.Id(), err)
 	}
@@ -125,13 +125,13 @@ func resourceWhitelistV2Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceWhitelistV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Attempting to delete whitelist %s", d.Id())
-	err = whitelists.Delete(networkingClient, d.Id()).ExtractErr()
+	err = whitelists.Delete(lbClient, d.Id()).ExtractErr()
 	if err != nil {
 		return fmt.Errorf("Error deleting FlexibleEngine whitelist: %s", err)
 	}

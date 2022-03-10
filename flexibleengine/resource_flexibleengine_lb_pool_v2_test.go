@@ -18,13 +18,14 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 		CheckDestroy: testAccCheckLBV2PoolDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccLBV2PoolConfig_basic,
+				Config: testAccLBV2PoolConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2PoolExists("flexibleengine_lb_pool_v2.pool_1", &pool),
+					resource.TestCheckResourceAttr("flexibleengine_lb_pool_v2.pool_1", "name", "pool_1"),
 				),
 			},
 			{
-				Config: TestAccLBV2PoolConfig_update,
+				Config: testAccLBV2PoolConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("flexibleengine_lb_pool_v2.pool_1", "name", "pool_1_updated"),
 				),
@@ -35,9 +36,9 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 
 func testAccCheckLBV2PoolDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -45,7 +46,7 @@ func testAccCheckLBV2PoolDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := pools.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := pools.Get(lbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Pool still exists: %s", rs.Primary.ID)
 		}
@@ -66,12 +67,12 @@ func testAccCheckLBV2PoolExists(n string, pool *pools.Pool) resource.TestCheckFu
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
-		found, err := pools.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := pools.Get(lbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -86,57 +87,45 @@ func testAccCheckLBV2PoolExists(n string, pool *pools.Pool) resource.TestCheckFu
 	}
 }
 
-const TestAccLBV2PoolConfig_basic = `
+var testAccLBV2PoolConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_pool_v2" "pool_1" {
-  name = "pool_1"
-  protocol = "HTTP"
-  lb_method = "ROUND_ROBIN"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  name        = "pool_1"
+  protocol    = "HTTP"
+  lb_method   = "ROUND_ROBIN"
+  listener_id = flexibleengine_lb_listener_v2.listener_1.id
 }
-`
+`, OS_SUBNET_ID)
 
-const TestAccLBV2PoolConfig_update = `
+var testAccLBV2PoolConfig_update = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_pool_v2" "pool_1" {
-  name = "pool_1_updated"
-  protocol = "HTTP"
-  lb_method = "LEAST_CONNECTIONS"
+  name           = "pool_1_updated"
+  protocol       = "HTTP"
+  lb_method      = "LEAST_CONNECTIONS"
   admin_state_up = "true"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  listener_id    = flexibleengine_lb_listener_v2.listener_1.id
 }
-`
+`, OS_SUBNET_ID)

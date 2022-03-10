@@ -59,9 +59,9 @@ func dataSourceCertificateV2() *schema.Resource {
 
 func dataSourceCertificateV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	listOpts := certificates.ListOpts{
@@ -71,7 +71,7 @@ func dataSourceCertificateV2Read(d *schema.ResourceData, meta interface{}) error
 		Type:        d.Get("type").(string),
 		Domain:      d.Get("domain").(string),
 	}
-	allPages, err := certificates.List(networkingClient, listOpts).AllPages()
+	allPages, err := certificates.List(lbClient, listOpts).AllPages()
 	if err != nil {
 		return fmt.Errorf("Error retrieving flexibleengine_lb_certificate_v2: %s", err)
 	}
