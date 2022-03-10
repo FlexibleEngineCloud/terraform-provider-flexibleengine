@@ -83,7 +83,7 @@ func TestAccServiceEndpoints_Management(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of CTS service
-	serviceClient, err = config.ctsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.CtsV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine CTS client: %s", err)
 	}

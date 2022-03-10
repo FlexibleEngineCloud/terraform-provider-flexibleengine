@@ -45,7 +45,10 @@ func dataSourceCTSTrackerV1() *schema.Resource {
 
 func dataSourceCTSTrackerV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	trackerClient, err := config.ctsV1Client(GetRegion(d, config))
+	trackerClient, err := config.CtsV1Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating CTS client: %s", err)
+	}
 
 	listOpts := tracker.ListOpts{
 		TrackerName:    d.Get("tracker_name").(string),

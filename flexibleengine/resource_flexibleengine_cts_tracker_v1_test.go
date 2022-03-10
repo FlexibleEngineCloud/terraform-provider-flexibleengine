@@ -14,6 +14,7 @@ import (
 func TestAccCTSTrackerV1_basic(t *testing.T) {
 	var tracker tracker.Tracker
 	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cts_tracker_v1.tracker_v1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,31 +24,15 @@ func TestAccCTSTrackerV1_basic(t *testing.T) {
 			{
 				Config: testAccCTSTrackerV1_basic(bucketName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCTSTrackerV1Exists("flexibleengine_cts_tracker_v1.tracker_v1", &tracker),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cts_tracker_v1.tracker_v1", "bucket_name", bucketName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_cts_tracker_v1.tracker_v1", "file_prefix_name", "yO8Q"),
+					testAccCheckCTSTrackerV1Exists(resourceName, &tracker),
+					resource.TestCheckResourceAttr(resourceName, "bucket_name", bucketName),
+					resource.TestCheckResourceAttr(resourceName, "file_prefix_name", "yO8Q"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccCTSTrackerV1_timeout(t *testing.T) {
-	var tracker tracker.Tracker
-	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCTSTrackerV1Destroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccCTSTrackerV1_timeout(bucketName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCTSTrackerV1Exists("flexibleengine_cts_tracker_v1.tracker_v1", &tracker),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -55,7 +40,7 @@ func TestAccCTSTrackerV1_timeout(t *testing.T) {
 
 func testAccCheckCTSTrackerV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	ctsClient, err := config.ctsV1Client(OS_REGION_NAME)
+	ctsClient, err := config.CtsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating cts client: %s", err)
 	}
@@ -67,7 +52,7 @@ func testAccCheckCTSTrackerV1Destroy(s *terraform.State) error {
 
 		_, err := tracker.List(ctsClient, tracker.ListOpts{TrackerName: rs.Primary.ID})
 		if err != nil {
-			return fmt.Errorf("cts tracker still exists.")
+			return fmt.Errorf("cts tracker still exists")
 		}
 		if _, ok := err.(golangsdk.ErrDefault404); !ok {
 			return err
@@ -89,7 +74,7 @@ func testAccCheckCTSTrackerV1Exists(n string, trackers *tracker.Tracker) resourc
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		ctsClient, err := config.ctsV1Client(OS_REGION_NAME)
+		ctsClient, err := config.CtsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating cts client: %s", err)
 		}
@@ -111,35 +96,15 @@ func testAccCheckCTSTrackerV1Exists(n string, trackers *tracker.Tracker) resourc
 
 func testAccCTSTrackerV1_basic(bucketName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_s3_bucket" "bucket" {
+resource "flexibleengine_obs_bucket" "bucket" {
   bucket = "%s"
-  acl = "public-read"
+  acl    = "public-read"
   force_destroy = true
 }
 
 resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
-  bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
-  file_prefix_name      = "yO8Q"
-}
-`, bucketName)
-}
-
-func testAccCTSTrackerV1_timeout(bucketName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_s3_bucket" "bucket" {
-  bucket = "%s"
-  acl = "public-read"
-  force_destroy = true
-}
-
-resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
-  bucket_name      = "${flexibleengine_s3_bucket.bucket.bucket}"
-  file_prefix_name      = "yO8Q"
-
-timeouts {
-    create = "5m"
-    delete = "5m"
-  }
+  bucket_name      = flexibleengine_obs_bucket.bucket.bucket
+  file_prefix_name = "yO8Q"
 }
 `, bucketName)
 }
