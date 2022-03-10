@@ -502,7 +502,7 @@ func TestAccServiceEndpoints_Others(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of DRS service
-	serviceClient, err = config.drsV2Client(OS_REGION_NAME)
+	serviceClient, err = drsV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine DRS client: %s", err)
 	}

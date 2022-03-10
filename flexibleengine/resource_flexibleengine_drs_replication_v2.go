@@ -155,7 +155,7 @@ func resourceShutdownInstance(d *schema.ResourceData, meta interface{}) error {
 // resourceReplicationCreate creates a replication resource
 func resourceReplicationCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -213,7 +213,7 @@ func resourceVolumeIDsFromString(VolumeIDs string) []string {
 // resourceReplicationRead returns a replication resource
 func resourceReplicationRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -267,7 +267,7 @@ func replicationStateRefreshFunc(client *golangsdk.ServiceClient, id string) res
 // resourceReplicationDelete deletes a replication resource
 func resourceReplicationDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}

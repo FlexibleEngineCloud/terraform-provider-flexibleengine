@@ -47,7 +47,7 @@ func TestAccDRSV2ReplicationConsistencyGroup_basic(t *testing.T) {
 // testAccCheckDRSV2ReplicationConsistencyGroupDestroy checks destory.
 func testAccCheckDRSV2ReplicationConsistencyGroupDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.drsV2Client(OS_REGION_NAME)
+	client, err := drsV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -81,7 +81,7 @@ func testAccCheckDRSV2ReplicationConsistencyGroupExists(n string, rcg *replicati
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.drsV2Client(OS_REGION_NAME)
+		client, err := drsV2Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 		}

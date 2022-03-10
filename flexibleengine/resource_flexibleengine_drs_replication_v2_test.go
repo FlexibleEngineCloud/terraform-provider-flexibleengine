@@ -32,7 +32,7 @@ func TestAccDRSV2Replication_basic(t *testing.T) {
 // testAccCheckDRSV2ReplicationDestroy checks destory.
 func testAccCheckDRSV2ReplicationDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.drsV2Client(OS_REGION_NAME)
+	client, err := drsV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -66,7 +66,7 @@ func testAccCheckDRSV2ReplicationExists(n string, replication *replications.Repl
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.drsV2Client(OS_REGION_NAME)
+		client, err := drsV2Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 		}

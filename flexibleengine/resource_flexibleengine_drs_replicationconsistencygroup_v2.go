@@ -85,7 +85,7 @@ func resourceReplicationIDsFromSchema(d *schema.ResourceData) []string {
 // resourceReplicationConsistencyGroupCreate creates a replication consistency group resource
 func resourceReplicationConsistencyGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -136,7 +136,7 @@ func resourceReplicationConsistencyGroupCreate(d *schema.ResourceData, meta inte
 // resourceReplicationConsistencyGroupRead returns a replication consistency group resource
 func resourceReplicationConsistencyGroupRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -185,7 +185,7 @@ func replicationconsistencygroupStateRefreshFunc(client *golangsdk.ServiceClient
 // resourceReplicationConsistencyGroupDelete deletes a replication consistency group resource
 func resourceReplicationConsistencyGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -271,7 +271,7 @@ func resourceReplicationConsistencyGroupDelete(d *schema.ResourceData, meta inte
 // resourceReplicationConsistencyGroupUpdate updates a replication consistency group resource
 func resourceReplicationConsistencyGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
@@ -351,7 +351,7 @@ func resourceReplicationConsistencyGroupUpdate(d *schema.ResourceData, meta inte
 // resourceGetReplicationIDs returns add and remove replication ids
 func resourceGetReplicationIDs(d *schema.ResourceData, meta interface{}) ([]string, []string, error) {
 	config := meta.(*Config)
-	client, err := config.drsV2Client(GetRegion(d, config))
+	client, err := drsV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error creating FlexibleEngine drs client: %s", err)
 	}
