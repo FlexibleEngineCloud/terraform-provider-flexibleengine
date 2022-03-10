@@ -19,6 +19,7 @@ func resourceReplicationConsistencyGroup() *schema.Resource {
 		Delete: resourceReplicationConsistencyGroupDelete,
 		Update: resourceReplicationConsistencyGroupUpdate,
 
+		DeprecationMessage: "It has been deprecated",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,

@@ -15,7 +15,7 @@ func TestAccDRSV2ReplicationConsistencyGroup_basic(t *testing.T) {
 	var rcg replicationconsistencygroups.ReplicationConsistencyGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDRSV2ReplicationConsistencyGroupDestroy,
 		Steps: []resource.TestStep{

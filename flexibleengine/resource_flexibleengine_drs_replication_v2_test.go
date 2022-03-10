@@ -15,7 +15,7 @@ func TestAccDRSV2Replication_basic(t *testing.T) {
 	var replication replications.Replication
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDRSV2ReplicationDestroy,
 		Steps: []resource.TestStep{

@@ -1,8 +1,10 @@
 ---
-subcategory: "Data Replication Service (DRS)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_drs_replicationconsistencygroup_v2
+
+!> **Warning:** It has been deprecated.
 
 Manages a V2 replicationconsistencygroup resource within FlexibleEngine.
 

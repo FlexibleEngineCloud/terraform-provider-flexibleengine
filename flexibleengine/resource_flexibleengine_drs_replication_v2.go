@@ -21,6 +21,7 @@ func resourceReplication() *schema.Resource {
 		Read:   resourceReplicationRead,
 		Delete: resourceReplicationDelete,
 
+		DeprecationMessage: "It has been deprecated",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
