@@ -75,7 +75,7 @@ func resourceKmsKeyV1() *schema.Resource {
 
 func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	kmsKeyV1Client, err := config.kmsKeyV1Client(GetRegion(d, config))
+	kmsClient, err := config.KmsKeyV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms key client: %s", err)
 	}
@@ -87,7 +87,7 @@ func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	v, err := keys.Create(kmsKeyV1Client, createOpts).ExtractKeyInfo()
+	v, err := keys.Create(kmsClient, createOpts).ExtractKeyInfo()
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine key: %s", err)
 	}
@@ -99,7 +99,7 @@ func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{WaitingForEnableState, DisabledState},
 		Target:     []string{EnabledState},
-		Refresh:    keyV1StateRefreshFunc(kmsKeyV1Client, v.KeyID),
+		Refresh:    keyV1StateRefreshFunc(kmsClient, v.KeyID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -113,7 +113,7 @@ func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if !d.Get("is_enabled").(bool) {
-		key, err := keys.DisableKey(kmsKeyV1Client, v.KeyID).ExtractKeyInfo()
+		key, err := keys.DisableKey(kmsClient, v.KeyID).ExtractKeyInfo()
 		if err != nil {
 			return fmt.Errorf("Error disabling key: %s", err)
 		}
@@ -131,13 +131,12 @@ func resourceKmsKeyV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceKmsKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
-	kmsKeyV1Client, err := config.kmsKeyV1Client(GetRegion(d, config))
+	kmsClient, err := config.KmsKeyV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms key client: %s", err)
 	}
 
-	v, err := keys.Get(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
+	v, err := keys.Get(kmsClient, d.Id()).ExtractKeyInfo()
 	if err != nil {
 		return err
 	}
@@ -169,7 +168,7 @@ func resourceKmsKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	kmsKeyV1Client, err := config.kmsKeyV1Client(GetRegion(d, config))
+	kmsClient, err := config.KmsKeyV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms key client: %s", err)
 	}
@@ -179,7 +178,7 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 			KeyID:    d.Id(),
 			KeyAlias: d.Get("key_alias").(string),
 		}
-		_, err = keys.UpdateAlias(kmsKeyV1Client, updateAliasOpts).ExtractKeyInfo()
+		_, err = keys.UpdateAlias(kmsClient, updateAliasOpts).ExtractKeyInfo()
 		if err != nil {
 			return fmt.Errorf("Error updating FlexibleEngine key alias: %s", err)
 		}
@@ -190,20 +189,20 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 			KeyID:          d.Id(),
 			KeyDescription: d.Get("key_description").(string),
 		}
-		_, err = keys.UpdateDes(kmsKeyV1Client, updateDesOpts).ExtractKeyInfo()
+		_, err = keys.UpdateDes(kmsClient, updateDesOpts).ExtractKeyInfo()
 		if err != nil {
 			return fmt.Errorf("Error updating FlexibleEngine key description: %s", err)
 		}
 	}
 
 	if d.HasChange("is_enabled") {
-		v, err := keys.Get(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
+		v, err := keys.Get(kmsClient, d.Id()).ExtractKeyInfo()
 		if err != nil {
 			return fmt.Errorf("Error fetching FlexibleEngine key: %s", err)
 		}
 
 		if d.Get("is_enabled").(bool) && v.KeyState == DisabledState {
-			key, err := keys.EnableKey(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
+			key, err := keys.EnableKey(kmsClient, d.Id()).ExtractKeyInfo()
 			if err != nil {
 				return fmt.Errorf("Error enabling key: %s", err)
 			}
@@ -213,7 +212,7 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 		}
 
 		if !d.Get("is_enabled").(bool) && v.KeyState == EnabledState {
-			key, err := keys.DisableKey(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
+			key, err := keys.DisableKey(kmsClient, d.Id()).ExtractKeyInfo()
 			if err != nil {
 				return fmt.Errorf("Error disabling key: %s", err)
 			}
@@ -228,12 +227,12 @@ func resourceKmsKeyV1Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceKmsKeyV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	kmsKeyV1Client, err := config.kmsKeyV1Client(GetRegion(d, config))
+	kmsClient, err := config.KmsKeyV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine kms key client: %s", err)
 	}
 
-	v, err := keys.Get(kmsKeyV1Client, d.Id()).ExtractKeyInfo()
+	v, err := keys.Get(kmsClient, d.Id()).ExtractKeyInfo()
 	if err != nil {
 		return CheckDeleted(d, err, "key")
 	}
@@ -249,7 +248,7 @@ func resourceKmsKeyV1Delete(d *schema.ResourceData, meta interface{}) error {
 	// in a pending deletion state from when the instance was terminated.
 	// If this is true, just move on. It'll eventually delete.
 	if v.KeyState != PendingDeletionState {
-		v, err = keys.Delete(kmsKeyV1Client, deleteOpts).Extract()
+		v, err = keys.Delete(kmsClient, deleteOpts).Extract()
 		if err != nil {
 			return err
 		}

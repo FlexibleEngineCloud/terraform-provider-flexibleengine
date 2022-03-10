@@ -391,7 +391,7 @@ func TestAccServiceEndpoints_Security(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of anti-ddos service
-	serviceClient, err = config.antiddosV1Client(OS_REGION_NAME)
+	serviceClient, err = config.AntiDDosV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine anti-ddos client: %s", err)
 	}
@@ -400,7 +400,7 @@ func TestAccServiceEndpoints_Security(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "anti-ddos")
 
 	// test the endpoint of KMS service
-	serviceClient, err = config.kmsKeyV1Client(OS_REGION_NAME)
+	serviceClient, err = config.KmsKeyV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine KMS client: %s", err)
 	}

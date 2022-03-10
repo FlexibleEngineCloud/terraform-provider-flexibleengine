@@ -69,8 +69,7 @@ func resourceAntiDdosV1() *schema.Resource {
 
 func resourceAntiDdosV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	antiddosClient, err := config.antiddosV1Client(GetRegion(d, config))
-
+	antiddosClient, err := config.AntiDDosV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating AntiDdos client: %s", err)
 	}
@@ -84,7 +83,6 @@ func resourceAntiDdosV1Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	_, err = antiddos.Create(antiddosClient, d.Get("floating_ip_id").(string), createOpts).Extract()
-
 	if err != nil {
 		return fmt.Errorf("Error creating AntiDdos: %s", err)
 	}
@@ -115,7 +113,7 @@ func resourceAntiDdosV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceAntiDdosV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	antiddosClient, err := config.antiddosV1Client(GetRegion(d, config))
+	antiddosClient, err := config.AntiDDosV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating AntiDdos client: %s", err)
 	}
@@ -138,7 +136,7 @@ func resourceAntiDdosV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceAntiDdosV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	antiddosClient, err := config.antiddosV1Client(GetRegion(d, config))
+	antiddosClient, err := config.AntiDDosV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating AntiDdos client: %s", err)
 	}
@@ -175,9 +173,8 @@ func resourceAntiDdosV1Update(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceAntiDdosV1Delete(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
-	antiddosClient, err := config.antiddosV1Client(GetRegion(d, config))
+	antiddosClient, err := config.AntiDDosV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating AntiDdos client: %s", err)
 	}
