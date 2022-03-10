@@ -47,9 +47,9 @@ func TestAccLBV2Monitor_basic(t *testing.T) {
 
 func testAccCheckLBV2MonitorDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -57,7 +57,7 @@ func testAccCheckLBV2MonitorDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := monitors.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := monitors.Get(lbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Monitor still exists: %s", rs.Primary.ID)
 		}
@@ -78,12 +78,12 @@ func testAccCheckLBV2MonitorExists(t *testing.T, n string, monitor *monitors.Mon
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
-		found, err := monitors.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := monitors.Get(lbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}

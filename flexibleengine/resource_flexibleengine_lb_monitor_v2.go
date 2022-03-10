@@ -97,9 +97,9 @@ func resourceMonitorV2() *schema.Resource {
 
 func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
@@ -120,7 +120,7 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	timeout := d.Timeout(schema.TimeoutCreate)
 	poolID := createOpts.PoolID
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
@@ -129,7 +129,7 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Attempting to create monitor")
 	var monitor *monitors.Monitor
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		monitor, err = monitors.Create(networkingClient, createOpts).Extract()
+		monitor, err = monitors.Create(lbClient, createOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -140,7 +140,7 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Unable to create monitor: %s", err)
 	}
 
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
@@ -152,12 +152,12 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	monitor, err := monitors.Get(networkingClient, d.Id()).Extract()
+	monitor, err := monitors.Get(lbClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "monitor")
 	}
@@ -182,9 +182,9 @@ func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var updateOpts monitors.UpdateOpts
@@ -220,13 +220,13 @@ func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Updating monitor %s with options: %#v", d.Id(), updateOpts)
 	timeout := d.Timeout(schema.TimeoutUpdate)
 	poolID := d.Get("pool_id").(string)
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
 
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err = monitors.Update(networkingClient, d.Id(), updateOpts).Extract()
+		_, err = monitors.Update(lbClient, d.Id(), updateOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -238,7 +238,7 @@ func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Wait for LB to become active before continuing
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
@@ -248,21 +248,21 @@ func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMonitorV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting monitor %s", d.Id())
 	timeout := d.Timeout(schema.TimeoutUpdate)
 	poolID := d.Get("pool_id").(string)
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
 
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err = monitors.Delete(networkingClient, d.Id()).ExtractErr()
+		err = monitors.Delete(lbClient, d.Id()).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -273,7 +273,7 @@ func resourceMonitorV2Delete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Unable to delete monitor %s: %s", d.Id(), err)
 	}
 
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}

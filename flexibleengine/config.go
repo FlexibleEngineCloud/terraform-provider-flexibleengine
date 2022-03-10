@@ -8,7 +8,6 @@ import (
 	"log"
 	"math"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/chnsz/golangsdk"
@@ -352,16 +351,6 @@ func (c *Config) otcV1Client(region string) (*golangsdk.ServiceClient, error) {
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	}, "elb")
-}
-
-func (c *Config) elbV2Client(region string) (*golangsdk.ServiceClient, error) {
-	sc, err := c.sdkClient(region, "network")
-	if err == nil {
-		sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "elb", 1)
-		sc.ResourceBase = sc.Endpoint + fmt.Sprintf("v2.0/%s/", c.HwClient.ProjectID)
-	}
-
-	return sc, err
 }
 
 func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {

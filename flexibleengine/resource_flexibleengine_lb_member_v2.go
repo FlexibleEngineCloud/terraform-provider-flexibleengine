@@ -93,9 +93,9 @@ func resourceMemberV2() *schema.Resource {
 
 func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	adminStateUp := d.Get("admin_state_up").(bool)
@@ -118,7 +118,7 @@ func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 	// Wait for LB to become active before continuing
 	poolID := d.Get("pool_id").(string)
 	timeout := d.Timeout(schema.TimeoutCreate)
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Attempting to create member")
 	var member *pools.Member
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		member, err = pools.CreateMember(networkingClient, poolID, createOpts).Extract()
+		member, err = pools.CreateMember(lbClient, poolID, createOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -138,13 +138,13 @@ func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Wait for LB to become ACTIVE again
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
 	// Wait for LB member to become ACTIVE too
 	/*
-		err = waitForLBV2Member(networkingClient, poolID, "admin_state_up", "true", nil, timeout)
+		err = waitForLBV2Member(lbClient, poolID, "admin_state_up", "true", nil, timeout)
 		if err != nil {
 			return err
 		} */
@@ -156,12 +156,12 @@ func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMemberV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	member, err := pools.GetMember(networkingClient, d.Get("pool_id").(string), d.Id()).Extract()
+	member, err := pools.GetMember(lbClient, d.Get("pool_id").(string), d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "member")
 	}
@@ -183,9 +183,9 @@ func resourceMemberV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var updateOpts pools.UpdateMemberOpts
@@ -203,14 +203,14 @@ func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
 	// Wait for LB to become active before continuing
 	poolID := d.Get("pool_id").(string)
 	timeout := d.Timeout(schema.TimeoutUpdate)
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Updating member %s with options: %#v", d.Id(), updateOpts)
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err = pools.UpdateMember(networkingClient, poolID, d.Id(), updateOpts).Extract()
+		_, err = pools.UpdateMember(lbClient, poolID, d.Id(), updateOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -221,7 +221,7 @@ func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Unable to update member %s: %s", d.Id(), err)
 	}
 
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
@@ -231,22 +231,22 @@ func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMemberV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	// Wait for Pool to become active before continuing
 	poolID := d.Get("pool_id").(string)
 	timeout := d.Timeout(schema.TimeoutDelete)
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Attempting to delete member %s", d.Id())
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err = pools.DeleteMember(networkingClient, poolID, d.Id()).ExtractErr()
+		err = pools.DeleteMember(lbClient, poolID, d.Id()).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -254,7 +254,7 @@ func resourceMemberV2Delete(d *schema.ResourceData, meta interface{}) error {
 	})
 
 	// Wait for LB to become ACTIVE
-	err = waitForLBV2viaPool(networkingClient, poolID, "ACTIVE", timeout)
+	err = waitForLBV2viaPool(lbClient, poolID, "ACTIVE", timeout)
 	if err != nil {
 		return err
 	}

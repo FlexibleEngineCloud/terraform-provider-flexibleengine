@@ -74,9 +74,9 @@ func resourceCertificateV2() *schema.Resource {
 
 func resourceCertificateV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	createOpts := certificates.CreateOpts{
@@ -88,7 +88,7 @@ func resourceCertificateV2Create(d *schema.ResourceData, meta interface{}) error
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	c, err := certificates.Create(networkingClient, createOpts).Extract()
+	c, err := certificates.Create(lbClient, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating Certificate: %s", err)
 	}
@@ -101,12 +101,12 @@ func resourceCertificateV2Create(d *schema.ResourceData, meta interface{}) error
 
 func resourceCertificateV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	c, err := certificates.Get(networkingClient, d.Id()).Extract()
+	c, err := certificates.Get(lbClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "certificate")
 	}
@@ -127,9 +127,9 @@ func resourceCertificateV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCertificateV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var updateOpts certificates.UpdateOpts
@@ -153,7 +153,7 @@ func resourceCertificateV2Update(d *schema.ResourceData, meta interface{}) error
 
 	timeout := d.Timeout(schema.TimeoutUpdate)
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		_, err := certificates.Update(networkingClient, d.Id(), updateOpts).Extract()
+		_, err := certificates.Update(lbClient, d.Id(), updateOpts).Extract()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -168,15 +168,15 @@ func resourceCertificateV2Update(d *schema.ResourceData, meta interface{}) error
 
 func resourceCertificateV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting certificate %s", d.Id())
 	timeout := d.Timeout(schema.TimeoutDelete)
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err := certificates.Delete(networkingClient, d.Id()).ExtractErr()
+		err := certificates.Delete(lbClient, d.Id()).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}

@@ -18,13 +18,13 @@ func TestAccLBV2Whitelist_basic(t *testing.T) {
 		CheckDestroy: testAccCheckLBV2WhitelistDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccLBV2WhitelistConfig_basic,
+				Config: testAccLBV2WhitelistConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2WhitelistExists("flexibleengine_lb_whitelist_v2.whitelist_1", &whitelist),
 				),
 			},
 			{
-				Config: TestAccLBV2WhitelistConfig_update,
+				Config: testAccLBV2WhitelistConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("flexibleengine_lb_whitelist_v2.whitelist_1", "enable_whitelist", "true"),
 				),
@@ -35,9 +35,9 @@ func TestAccLBV2Whitelist_basic(t *testing.T) {
 
 func testAccCheckLBV2WhitelistDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -45,7 +45,7 @@ func testAccCheckLBV2WhitelistDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := whitelists.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := whitelists.Get(lbClient, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Whitelist still exists: %s", rs.Primary.ID)
 		}
@@ -66,12 +66,12 @@ func testAccCheckLBV2WhitelistExists(n string, whitelist *whitelists.Whitelist) 
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
-		found, err := whitelists.Get(networkingClient, rs.Primary.ID).Extract()
+		found, err := whitelists.Get(lbClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -86,42 +86,42 @@ func testAccCheckLBV2WhitelistExists(n string, whitelist *whitelists.Whitelist) 
 	}
 }
 
-var TestAccLBV2WhitelistConfig_basic = fmt.Sprintf(`
+var testAccLBV2WhitelistConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
+  name          = "loadbalancer_1"
   vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_whitelist_v2" "whitelist_1" {
   enable_whitelist = true
-  whitelist = "192.168.11.1,192.168.0.1/24"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
+  whitelist        = "192.168.11.1,192.168.0.1/24"
+  listener_id      = flexibleengine_lb_listener_v2.listener_1.id
 }
 `, OS_SUBNET_ID)
 
-var TestAccLBV2WhitelistConfig_update = fmt.Sprintf(`
+var testAccLBV2WhitelistConfig_update = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
+  name          = "loadbalancer_1"
   vip_subnet_id = "%s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_whitelist_v2" "whitelist_1" {
   enable_whitelist = true
-  whitelist = "192.168.11.1,192.168.0.1/24,192.168.201.18/8"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
+  whitelist        = "192.168.11.1,192.168.0.1/24,192.168.201.18/8"
+  listener_id      = flexibleengine_lb_listener_v2.listener_1.id
 }
 `, OS_SUBNET_ID)

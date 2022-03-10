@@ -46,9 +46,9 @@ func testAccCheckCertificateV2DataSourceID(n string) resource.TestCheckFunc {
 
 const testAccDataSourceCertificateV2Config = `
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name = "certificate_test"
+  name        = "certificate_test"
   description = "terraform test certificate"
-  domain = "www.elb.com"
+  domain      = "www.elb.com"
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -106,14 +106,14 @@ EOT
 }
 
 data "flexibleengine_lb_certificate_v2" "by_id" {
-  id = "${flexibleengine_lb_certificate_v2.certificate_1.id}"
+  id = flexibleengine_lb_certificate_v2.certificate_1.id
 }
 
 data "flexibleengine_lb_certificate_v2" "by_domain" {
-  domain = "${flexibleengine_lb_certificate_v2.certificate_1.domain}"
+  domain = flexibleengine_lb_certificate_v2.certificate_1.domain
 }
 
 data "flexibleengine_lb_certificate_v2" "by_name" {
-  name = "${flexibleengine_lb_certificate_v2.certificate_1.name}"
+  name = flexibleengine_lb_certificate_v2.certificate_1.name
 }
 `

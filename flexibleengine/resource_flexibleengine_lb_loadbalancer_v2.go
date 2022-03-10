@@ -106,9 +106,9 @@ func resourceLoadBalancerV2() *schema.Resource {
 
 func resourceLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	var lbProvider string
@@ -129,22 +129,29 @@ func resourceLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	lb, err := loadbalancers.Create(networkingClient, createOpts).Extract()
+	lb, err := loadbalancers.Create(lbClient, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating LoadBalancer: %s", err)
 	}
 
 	// Wait for LoadBalancer to become active before continuing
 	timeout := d.Timeout(schema.TimeoutCreate)
-	err = waitForLBV2LoadBalancer(networkingClient, lb.ID, "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(lbClient, lb.ID, "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
 
 	// Once the loadbalancer has been created, apply any requested security groups
 	// to the port that was created behind the scenes.
-	if err := resourceLoadBalancerV2SecurityGroups(networkingClient, lb.VipPortID, d); err != nil {
-		return err
+	if lb.VipPortID != "" {
+		networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		}
+
+		if err := resourceLoadBalancerV2SecurityGroups(networkingClient, lb.VipPortID, d); err != nil {
+			return err
+		}
 	}
 
 	// If all has been successful, set the ID on the resource
@@ -153,13 +160,8 @@ func resourceLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) erro
 	//set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		elbClient, err := config.elbV2Client(GetRegion(d, config))
-		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-		}
-
 		taglist := expandResourceTags(tagRaw)
-		if tagErr := tags.Create(elbClient, "loadbalancers", lb.ID, taglist).ExtractErr(); tagErr != nil {
+		if tagErr := tags.Create(lbClient, "loadbalancers", lb.ID, taglist).ExtractErr(); tagErr != nil {
 			return fmt.Errorf("Error setting tags of load balancer %s: %s", lb.ID, tagErr)
 		}
 	}
@@ -169,12 +171,13 @@ func resourceLoadBalancerV2Create(d *schema.ResourceData, meta interface{}) erro
 
 func resourceLoadBalancerV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	lbClient, err := config.ElbV2Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
-	lb, err := loadbalancers.Get(networkingClient, d.Id()).Extract()
+	lb, err := loadbalancers.Get(lbClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "loadbalancer")
 	}
@@ -190,10 +193,15 @@ func resourceLoadBalancerV2Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("admin_state_up", lb.AdminStateUp)
 	d.Set("flavor", lb.Flavor)
 	d.Set("loadbalancer_provider", lb.Provider)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	// Get any security groups on the VIP Port
 	if lb.VipPortID != "" {
+		networkingClient, err := config.NetworkingV2Client(region)
+		if err != nil {
+			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		}
+
 		port, err := ports.Get(networkingClient, lb.VipPortID).Extract()
 		if err != nil {
 			return err
@@ -205,12 +213,7 @@ func resourceLoadBalancerV2Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	// fetch tags
-	elbClient, err := config.elbV2Client(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-	}
-
-	if resourceTags, err := tags.Get(elbClient, "loadbalancers", d.Id()).Extract(); err == nil {
+	if resourceTags, err := tags.Get(lbClient, "loadbalancers", d.Id()).Extract(); err == nil {
 		tagmap := tagsToMap(resourceTags.Tags)
 		d.Set("tags", tagmap)
 	} else {
@@ -222,14 +225,14 @@ func resourceLoadBalancerV2Read(d *schema.ResourceData, meta interface{}) error 
 
 func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	// Wait for LoadBalancer to become active before continuing
 	timeout := d.Timeout(schema.TimeoutUpdate)
-	err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "ACTIVE", nil, timeout)
+	err = waitForLBV2LoadBalancer(lbClient, d.Id(), "ACTIVE", nil, timeout)
 	if err != nil {
 		return err
 	}
@@ -250,7 +253,7 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 
 		log.Printf("[DEBUG] Updating loadbalancer %s with options: %#v", d.Id(), updateOpts)
 		err = resource.Retry(timeout, func() *resource.RetryError {
-			_, err = loadbalancers.Update(networkingClient, d.Id(), updateOpts).Extract()
+			_, err = loadbalancers.Update(lbClient, d.Id(), updateOpts).Extract()
 			if err != nil {
 				return checkForRetryableError(err)
 			}
@@ -258,7 +261,7 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 		})
 
 		// Wait for LoadBalancer to become active before continuing
-		err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "ACTIVE", nil, timeout)
+		err = waitForLBV2LoadBalancer(lbClient, d.Id(), "ACTIVE", nil, timeout)
 		if err != nil {
 			return err
 		}
@@ -267,19 +270,21 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 	// Security Groups get updated separately
 	if d.HasChange("security_group_ids") {
 		vipPortID := d.Get("vip_port_id").(string)
-		if err := resourceLoadBalancerV2SecurityGroups(networkingClient, vipPortID, d); err != nil {
-			return err
+		if vipPortID != "" {
+			networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
+			if err != nil {
+				return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			}
+
+			if err := resourceLoadBalancerV2SecurityGroups(networkingClient, vipPortID, d); err != nil {
+				return err
+			}
 		}
 	}
 
 	// update tags
 	if d.HasChange("tags") {
-		elbClient, err := config.elbV2Client(GetRegion(d, config))
-		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine ELB client: %s", err)
-		}
-
-		tagErr := UpdateResourceTags(elbClient, d, "loadbalancers", d.Id())
+		tagErr := UpdateResourceTags(lbClient, d, "loadbalancers", d.Id())
 		if tagErr != nil {
 			return fmt.Errorf("Error updating tags of load balancer:%s, err:%s", d.Id(), tagErr)
 		}
@@ -290,15 +295,15 @@ func resourceLoadBalancerV2Update(d *schema.ResourceData, meta interface{}) erro
 
 func resourceLoadBalancerV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	log.Printf("[DEBUG] Deleting loadbalancer %s", d.Id())
 	timeout := d.Timeout(schema.TimeoutDelete)
 	err = resource.Retry(timeout, func() *resource.RetryError {
-		err = loadbalancers.Delete(networkingClient, d.Id()).ExtractErr()
+		err = loadbalancers.Delete(lbClient, d.Id()).ExtractErr()
 		if err != nil {
 			return checkForRetryableError(err)
 		}
@@ -307,7 +312,7 @@ func resourceLoadBalancerV2Delete(d *schema.ResourceData, meta interface{}) erro
 
 	// Wait for LoadBalancer to become delete
 	pending := []string{"PENDING_UPDATE", "PENDING_DELETE", "ACTIVE"}
-	err = waitForLBV2LoadBalancer(networkingClient, d.Id(), "DELETED", pending, timeout)
+	err = waitForLBV2LoadBalancer(lbClient, d.Id(), "DELETED", pending, timeout)
 	if err != nil {
 		return err
 	}
@@ -316,20 +321,18 @@ func resourceLoadBalancerV2Delete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceLoadBalancerV2SecurityGroups(networkingClient *golangsdk.ServiceClient, vipPortID string, d *schema.ResourceData) error {
-	if vipPortID != "" {
-		if _, ok := d.GetOk("security_group_ids"); ok {
-			securityGroups := resourcePortSecurityGroupsV2(d)
-			updateOpts := ports.UpdateOpts{
-				SecurityGroups: &securityGroups,
-			}
+	if _, ok := d.GetOk("security_group_ids"); ok {
+		securityGroups := resourcePortSecurityGroupsV2(d)
+		updateOpts := ports.UpdateOpts{
+			SecurityGroups: &securityGroups,
+		}
 
-			log.Printf("[DEBUG] Adding security groups to loadbalancer "+
-				"VIP Port %s: %#v", vipPortID, updateOpts)
+		log.Printf("[DEBUG] Adding security groups to loadbalancer "+
+			"VIP Port %s: %#v", vipPortID, updateOpts)
 
-			_, err := ports.Update(networkingClient, vipPortID, updateOpts).Extract()
-			if err != nil {
-				return err
-			}
+		_, err := ports.Update(networkingClient, vipPortID, updateOpts).Extract()
+		if err != nil {
+			return err
 		}
 	}
 

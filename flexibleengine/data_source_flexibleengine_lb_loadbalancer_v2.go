@@ -58,15 +58,10 @@ func dataSourceELBV2Loadbalancer() *schema.Resource {
 
 func dataSourceELBV2LoadbalancerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	lbClient, err := config.ElbV2Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
-	}
-
-	// elb v2.0 client to fetch tags
-	elbClient, err := config.elbV2Client(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating elb v2.0 client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	listOpts := loadbalancers.ListOpts{
@@ -76,7 +71,7 @@ func dataSourceELBV2LoadbalancerRead(d *schema.ResourceData, meta interface{}) e
 		VipSubnetID: d.Get("vip_subnet_id").(string),
 		VipAddress:  d.Get("vip_address").(string),
 	}
-	pages, err := loadbalancers.List(networkingClient, listOpts).AllPages()
+	pages, err := loadbalancers.List(lbClient, listOpts).AllPages()
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve loadbalancers: %s", err)
 	}
@@ -97,7 +92,7 @@ func dataSourceELBV2LoadbalancerRead(d *schema.ResourceData, meta interface{}) e
 	d.SetId(lb.ID)
 
 	mErr := multierror.Append(
-		d.Set("region", GetRegion(d, config)),
+		d.Set("region", region),
 		d.Set("name", lb.Name),
 		d.Set("description", lb.Description),
 		d.Set("status", lb.OperatingStatus),
@@ -110,7 +105,7 @@ func dataSourceELBV2LoadbalancerRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	// Get tags
-	if resourceTags, err := tags.Get(elbClient, "loadbalancers", d.Id()).Extract(); err == nil {
+	if resourceTags, err := tags.Get(lbClient, "loadbalancers", d.Id()).Extract(); err == nil {
 		tagmap := tagsToMap(resourceTags.Tags)
 		d.Set("tags", tagmap)
 	} else {

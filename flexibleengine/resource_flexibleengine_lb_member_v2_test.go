@@ -19,7 +19,7 @@ func TestAccLBV2Member_basic(t *testing.T) {
 		CheckDestroy: testAccCheckLBV2MemberDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:             TestAccLBV2MemberConfig_basic,
+				Config:             testAccLBV2MemberConfig_basic,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckLBV2MemberExists("flexibleengine_lb_member_v2.member_1", &member_1),
@@ -27,7 +27,7 @@ func TestAccLBV2Member_basic(t *testing.T) {
 				),
 			},
 			{
-				Config:             TestAccLBV2MemberConfig_update,
+				Config:             testAccLBV2MemberConfig_update,
 				ExpectNonEmptyPlan: true, // Because admin_state_up remains false, unfinished elb?
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("flexibleengine_lb_member_v2.member_1", "weight", "10"),
@@ -40,9 +40,9 @@ func TestAccLBV2Member_basic(t *testing.T) {
 
 func testAccCheckLBV2MemberDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -51,7 +51,7 @@ func testAccCheckLBV2MemberDestroy(s *terraform.State) error {
 		}
 
 		poolId := rs.Primary.Attributes["pool_id"]
-		_, err := pools.GetMember(networkingClient, poolId, rs.Primary.ID).Extract()
+		_, err := pools.GetMember(lbClient, poolId, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Member still exists: %s", rs.Primary.ID)
 		}
@@ -72,13 +72,13 @@ func testAccCheckLBV2MemberExists(n string, member *pools.Member) resource.TestC
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		lbClient, err := config.ElbV2Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 		}
 
 		poolId := rs.Primary.Attributes["pool_id"]
-		found, err := pools.GetMember(networkingClient, poolId, rs.Primary.ID).Extract()
+		found, err := pools.GetMember(lbClient, poolId, rs.Primary.ID).Extract()
 		if err != nil {
 			return err
 		}
@@ -93,100 +93,76 @@ func testAccCheckLBV2MemberExists(n string, member *pools.Member) resource.TestC
 	}
 }
 
-const TestAccLBV2MemberConfig_basic = `
+var testAccLBV2MemberConfig_basic = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%[1]s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_pool_v2" "pool_1" {
-  name = "pool_1"
-  protocol = "HTTP"
-  lb_method = "ROUND_ROBIN"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
+  name        = "pool_1"
+  protocol    = "HTTP"
+  lb_method   = "ROUND_ROBIN"
+  listener_id = flexibleengine_lb_listener_v2.listener_1.id
 }
 
 resource "flexibleengine_lb_member_v2" "member_1" {
-  address = "172.16.10.10"
+  address       = "172.16.10.10"
   protocol_port = 8080
-  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
-  subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  pool_id       = flexibleengine_lb_pool_v2.pool_1.id
+  subnet_id     = "%[1]s"
 }
 
 resource "flexibleengine_lb_member_v2" "member_2" {
-  address = "172.16.10.11"
+  address       = "172.16.10.11"
   protocol_port = 8080
-  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
-  subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  pool_id       = flexibleengine_lb_pool_v2.pool_1.id
+  subnet_id     = "%[1]s"
 }
-`
+`, OS_SUBNET_ID)
 
-const TestAccLBV2MemberConfig_update = `
+var testAccLBV2MemberConfig_update = fmt.Sprintf(`
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
-  name = "loadbalancer_1"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  name          = "loadbalancer_1"
+  vip_subnet_id = "%[1]s"
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
-  name = "listener_1"
-  protocol = "HTTP"
-  protocol_port = 8080
-  loadbalancer_id = "${flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id}"
+  name            = "listener_1"
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
 }
 
 resource "flexibleengine_lb_pool_v2" "pool_1" {
-  name = "pool_1"
-  protocol = "HTTP"
-  lb_method = "ROUND_ROBIN"
-  listener_id = "${flexibleengine_lb_listener_v2.listener_1.id}"
+  name        = "pool_1"
+  protocol    = "HTTP"
+  lb_method   = "ROUND_ROBIN"
+  listener_id = flexibleengine_lb_listener_v2.listener_1.id
 }
 
 resource "flexibleengine_lb_member_v2" "member_1" {
-  address = "172.16.10.10"
-  protocol_port = 8080
-  weight = 10
+  address        = "172.16.10.10"
+  protocol_port  = 8080
+  weight         = 10
   admin_state_up = "true"
-  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
-  subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  pool_id        = flexibleengine_lb_pool_v2.pool_1.id
+  subnet_id      = "%[1]s"
 }
 
 resource "flexibleengine_lb_member_v2" "member_2" {
-  address = "172.16.10.11"
-  protocol_port = 8080
-  weight = 15
+  address        = "172.16.10.11"
+  protocol_port  = 8080
+  weight         = 15
   admin_state_up = "true"
-  pool_id = "${flexibleengine_lb_pool_v2.pool_1.id}"
-  subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
-
-  timeouts {
-    create = "5m"
-    update = "5m"
-    delete = "5m"
-  }
+  pool_id        = flexibleengine_lb_pool_v2.pool_1.id
+  subnet_id      = "%[1]s"
 }
-`
+`, OS_SUBNET_ID)
