@@ -477,7 +477,7 @@ func TestAccServiceEndpoints_EnterpriseIntelligence(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "SMN v2")
 
 	// test the endpoint of DWS service
-	serviceClient, err = config.dwsV1Client(OS_REGION_NAME)
+	serviceClient, err = config.DwsV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine DWS client: %s", err)
 	}

@@ -192,7 +192,7 @@ func getPublicIP(d *schema.ResourceData) *cluster.PublicIpOpts {
 
 func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.dwsV1Client(GetRegion(d, config))
+	client, err := config.DwsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -240,7 +240,7 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.dwsV1Client(GetRegion(d, config))
+	client, err := config.DwsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -282,7 +282,7 @@ func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceDWSClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.dwsV1Client(GetRegion(d, config))
+	client, err := config.DwsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}

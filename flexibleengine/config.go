@@ -353,27 +353,6 @@ func (c *Config) otcV1Client(region string) (*golangsdk.ServiceClient, error) {
 	}, "elb")
 }
 
-func (c *Config) SmnV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewSMNV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) MlsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewMLSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) MrsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewMapReduceV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) natV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -390,13 +369,6 @@ func (c *Config) drsV2Client(region string) (*golangsdk.ServiceClient, error) {
 
 func (c *Config) orchestrationV1Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewOrchestrationV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) dwsV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewDWSClient(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
 		Availability: c.getHwEndpointType(),
 	})
