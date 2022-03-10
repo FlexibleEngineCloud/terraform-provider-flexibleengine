@@ -16,7 +16,7 @@ func TestAccELBLoadBalancer_basic(t *testing.T) {
 	var lb loadbalancer_elbs.LoadBalancer
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBLoadBalancerDestroy,
 		Steps: []resource.TestStep{
@@ -42,7 +42,7 @@ func TestAccELBLoadBalancer_secGroup(t *testing.T) {
 	var sg_1, sg_2 groups.SecGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBLoadBalancerDestroy,
 		Steps: []resource.TestStep{

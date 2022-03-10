@@ -14,7 +14,7 @@ func TestAccELBBackend_basic(t *testing.T) {
 	var backend backendmember.Backend
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBBackendDestroy,
 		Steps: []resource.TestStep{

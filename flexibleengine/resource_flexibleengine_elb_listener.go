@@ -35,6 +35,7 @@ func resourceEListener() *schema.Resource {
 			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 
+		DeprecationMessage: "It has been deprecated, using enhanced load balancer instead",
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,

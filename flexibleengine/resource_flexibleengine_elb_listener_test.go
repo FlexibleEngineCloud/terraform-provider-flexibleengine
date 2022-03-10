@@ -13,7 +13,7 @@ func TestAccELBListener_basic(t *testing.T) {
 	var listener listeners.Listener
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBListenerDestroy,
 		Steps: []resource.TestStep{
