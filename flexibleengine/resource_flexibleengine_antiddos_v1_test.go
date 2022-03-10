@@ -39,13 +39,18 @@ func TestAccAntiDdosV1_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "app_type_id", "1"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
 func testAccCheckAntiDdosV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	antiddosClient, err := config.antiddosV1Client(OS_REGION_NAME)
+	antiddosClient, err := config.AntiDDosV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating antiddos client: %s", err)
 	}
@@ -76,7 +81,7 @@ func testAccCheckAntiDdosV1Exists(n string, ddos *antiddos.GetResponse) resource
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		antiddosClient, err := config.antiddosV1Client(OS_REGION_NAME)
+		antiddosClient, err := config.AntiDDosV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating antiddos client: %s", err)
 		}
