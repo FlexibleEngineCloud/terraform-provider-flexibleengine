@@ -47,27 +47,28 @@ func testAccCceNodeIdsV3DataSourceID(n string) resource.TestCheckFunc {
 func testAccCceNodeIdsV3DataSource_ccenode(cceName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
-  vpc_id="%s"
-  subnet_id="%s"
-  container_network_type="overlay_l2"
+  name                   = "%s"
+  cluster_type           = "VirtualMachine"
+  flavor_id              = "cce.s1.small"
+  vpc_id                 = "%s"
+  subnet_id              = "%s"
+  container_network_type = "overlay_l2"
 }
 
 resource "flexibleengine_cce_node_v3" "node_1" {
-cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-  name = "%s"
-  flavor_id="s1.medium"
-  availability_zone= "%s"
-  key_pair="%s"
+  cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
+  name              = "%s"
+  flavor_id         = "s1.medium"
+  availability_zone = "%s"
+  key_pair          = "%s"
+
   root_volume {
-    size= 40
-    volumetype= "SATA"
+    size       = 40
+    volumetype = "SATA"
   }
   data_volumes {
-    size= 100
-    volumetype= "SATA"
+    size       = 100
+    volumetype = "SATA"
   }
 }
 `, cceName, OS_VPC_ID, OS_NETWORK_ID, cceName, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
@@ -75,33 +76,10 @@ cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
 
 func testAccCceNodeIdsV3DataSource_basic(cceName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name = "%s"
-  cluster_type="VirtualMachine"
-  flavor_id="cce.s1.small"
-  vpc_id="%s"
-  subnet_id="%s"
-  container_network_type="overlay_l2"
-}
-
-resource "flexibleengine_cce_node_v3" "node_1" {
-cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
-  name = "%s"
-  flavor_id="s1.medium"
-  availability_zone= "%s"
-  key_pair="%s"
-  root_volume {
-    size= 40
-    volumetype= "SATA"
-  }
-  data_volumes {
-    size= 100
-    volumetype= "SATA"
-  }
-}
+%s
 
 data "flexibleengine_cce_node_ids_v3" "node_ids" {
-	cluster_id = "${flexibleengine_cce_cluster_v3.cluster_1.id}"
+	cluster_id = flexibleengine_cce_cluster_v3.cluster_1.id
 }
-`, cceName, OS_VPC_ID, OS_NETWORK_ID, cceName, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+`, testAccCceNodeIdsV3DataSource_ccenode(cceName))
 }

@@ -30,7 +30,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "status", "Available"),
 					resource.TestCheckResourceAttr(resourceName, "cluster_type", "VirtualMachine"),
 					resource.TestCheckResourceAttr(resourceName, "flavor_id", "cce.s1.small"),
-					resource.TestCheckResourceAttr(resourceName, "cluster_version", "v1.11.7-r2"),
+					resource.TestCheckResourceAttr(resourceName, "cluster_version", "v1.17.9-r0"),
 					resource.TestCheckResourceAttr(resourceName, "container_network_type", "overlay_l2"),
 					resource.TestCheckResourceAttr(resourceName, "authentication_mode", "rbac"),
 				),
@@ -52,7 +52,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 
 func testAccCheckCCEClusterV3Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	cceClient, err := config.cceV3Client(OS_REGION_NAME)
+	cceClient, err := config.CceV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 	}
@@ -83,7 +83,7 @@ func testAccCheckCCEClusterV3Exists(n string, cluster *clusters.Clusters) resour
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		cceClient, err := config.cceV3Client(OS_REGION_NAME)
+		cceClient, err := config.CceV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 		}
@@ -109,7 +109,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name            = "%s"
   description     = "a description"
   cluster_type    = "VirtualMachine"
-  cluster_version = "v1.11.7-r2"
+  cluster_version = "v1.17.9-r0"
   flavor_id       = "cce.s1.small"
   vpc_id          = "%s"
   subnet_id       = "%s"
@@ -123,7 +123,7 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name            = "%s"
   description     = "a updated description"
   cluster_type    = "VirtualMachine"
-  cluster_version = "v1.11.7-r2"
+  cluster_version = "v1.17.9-r0"
   flavor_id       = "cce.s1.small"
   vpc_id          = "%s"
   subnet_id       = "%s"

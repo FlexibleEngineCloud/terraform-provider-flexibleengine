@@ -40,13 +40,37 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateIdFunc: testAccCCENodeImportStateIdFunc(),
+			},
 		},
 	})
 }
 
+func testAccCCENodeImportStateIdFunc() resource.ImportStateIdFunc {
+	return func(s *terraform.State) (string, error) {
+		cluster, ok := s.RootModule().Resources["flexibleengine_cce_cluster_v3.cluster_1"]
+		if !ok {
+			return "", fmt.Errorf("Cluster not found: %s", cluster)
+		}
+		node, ok := s.RootModule().Resources["flexibleengine_cce_node_v3.node_1"]
+		if !ok {
+			return "", fmt.Errorf("Node not found: %s", node)
+		}
+
+		if cluster.Primary.ID == "" || node.Primary.ID == "" {
+			return "", fmt.Errorf("resource not found: %s/%s", cluster.Primary.ID, node.Primary.ID)
+		}
+		return fmt.Sprintf("%s/%s", cluster.Primary.ID, node.Primary.ID), nil
+	}
+}
+
 func testAccCheckCCENodeV3Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	cceClient, err := config.cceV3Client(OS_REGION_NAME)
+	cceClient, err := config.CceV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 	}
@@ -95,7 +119,7 @@ func testAccCheckCCENodeV3Exists(n string, cluster string, node *nodes.Nodes) re
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		cceClient, err := config.cceV3Client(OS_REGION_NAME)
+		cceClient, err := config.CceV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine CCE client: %s", err)
 		}

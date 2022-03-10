@@ -170,7 +170,7 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 
 	// test for cceV3Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.cceV3Client(OS_REGION_NAME)
+	serviceClient, err = config.CceV3Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine cce v3 client: %s", err)
 	}
