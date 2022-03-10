@@ -295,7 +295,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	// test endpoint of elb/otc v1.0
 	serviceClient, err = nil, nil
-	serviceClient, err = config.otcV1Client(OS_REGION_NAME)
+	serviceClient, err = otcV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine ELB/otc v1.0 client: %s", err)
 	}

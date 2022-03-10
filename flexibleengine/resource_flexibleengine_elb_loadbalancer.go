@@ -24,6 +24,7 @@ func resourceELoadBalancer() *schema.Resource {
 			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 
+		DeprecationMessage: "It has been deprecated, using enhanced load balancer instead",
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,
@@ -103,7 +104,7 @@ func resourceELoadBalancer() *schema.Resource {
 
 func resourceELoadBalancerCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -151,12 +152,12 @@ func resourceELoadBalancerCreate(d *schema.ResourceData, meta interface{}) error
 
 func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	lb, err := loadbalancer_elbs.Get(networkingClient, d.Id()).Extract()
+	lb, err := loadbalancer_elbs.Get(client, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "loadbalancer")
 	}
@@ -191,7 +192,7 @@ func resourceELoadBalancerRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceELoadBalancerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -222,7 +223,7 @@ func resourceELoadBalancerUpdate(d *schema.ResourceData, meta interface{}) error
 
 func resourceELoadBalancerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

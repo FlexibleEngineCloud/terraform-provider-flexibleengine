@@ -1,8 +1,10 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_elb_loadbalancer
+
+!> **Warning:** Classic load balancers are no longer provided, using elastic load balancers instead.
 
 Manages a **classic** load balancer resource within FlexibleEngine.
 

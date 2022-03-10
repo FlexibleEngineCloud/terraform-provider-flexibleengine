@@ -346,13 +346,6 @@ func (c *Config) networkingV2Client(region string) (*golangsdk.ServiceClient, er
 	})
 }
 
-func (c *Config) otcV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewElbV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	}, "elb")
-}
-
 func (c *Config) natV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),
@@ -421,4 +414,11 @@ func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient
 
 func (c *Config) getHwEndpointType() golangsdk.Availability {
 	return golangsdk.AvailabilityPublic
+}
+
+func otcV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewElbV1(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	}, "elb")
 }

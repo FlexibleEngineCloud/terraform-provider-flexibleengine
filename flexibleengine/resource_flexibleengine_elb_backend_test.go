@@ -14,7 +14,7 @@ func TestAccELBBackend_basic(t *testing.T) {
 	var backend backendmember.Backend
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBBackendDestroy,
 		Steps: []resource.TestStep{
@@ -30,7 +30,7 @@ func TestAccELBBackend_basic(t *testing.T) {
 
 func testAccCheckELBBackendDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.otcV1Client(OS_REGION_NAME)
+	client, err := otcV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -61,7 +61,7 @@ func testAccCheckELBBackendExists(n string, backend *backendmember.Backend) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.otcV1Client(OS_REGION_NAME)
+		client, err := otcV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

@@ -293,10 +293,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_obs_bucket":                         resourceObsBucket(),
 			"flexibleengine_obs_bucket_object":                  resourceObsBucketObject(),
 			"flexibleengine_obs_bucket_replication":             resourceObsBucketReplication(),
-			"flexibleengine_elb_loadbalancer":                   resourceELoadBalancer(),
-			"flexibleengine_elb_listener":                       resourceEListener(),
-			"flexibleengine_elb_backend":                        resourceBackend(),
-			"flexibleengine_elb_health":                         resourceHealth(),
 			"flexibleengine_as_group_v1":                        resourceASGroup(),
 			"flexibleengine_as_configuration_v1":                resourceASConfiguration(),
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
@@ -359,8 +355,13 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_rule_precise_protection":        resourceWafRulePreciseProtection(),
 			"flexibleengine_waf_rule_web_tamper_protection":     resourceWafRuleWebTamperProtection(),
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
+
 			// Deprecated resource
-			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
+			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
+			"flexibleengine_elb_listener":     resourceEListener(),
+			"flexibleengine_elb_backend":      resourceBackend(),
+			"flexibleengine_elb_health":       resourceHealth(),
+			"flexibleengine_rds_instance_v1":  resourceRdsInstance(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,

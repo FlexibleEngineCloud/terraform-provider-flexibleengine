@@ -13,7 +13,7 @@ func TestAccELBListener_basic(t *testing.T) {
 	var listener listeners.Listener
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBListenerDestroy,
 		Steps: []resource.TestStep{
@@ -36,7 +36,7 @@ func TestAccELBListener_basic(t *testing.T) {
 
 func testAccCheckELBListenerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
+	client, err := otcV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -46,7 +46,7 @@ func testAccCheckELBListenerDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := listeners.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := listeners.Get(client, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Listener still exists: %s", rs.Primary.ID)
 		}
@@ -67,7 +67,7 @@ func testAccCheckELBListenerExists(n string, listener *listeners.Listener) resou
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.otcV1Client(OS_REGION_NAME)
+		client, err := otcV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

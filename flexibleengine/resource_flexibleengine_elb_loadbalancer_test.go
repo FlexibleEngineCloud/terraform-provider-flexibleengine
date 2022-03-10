@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -17,7 +16,7 @@ func TestAccELBLoadBalancer_basic(t *testing.T) {
 	var lb loadbalancer_elbs.LoadBalancer
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBLoadBalancerDestroy,
 		Steps: []resource.TestStep{
@@ -43,7 +42,7 @@ func TestAccELBLoadBalancer_secGroup(t *testing.T) {
 	var sg_1, sg_2 groups.SecGroup
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckELBLoadBalancerDestroy,
 		Steps: []resource.TestStep{
@@ -73,10 +72,8 @@ func TestAccELBLoadBalancer_secGroup(t *testing.T) {
 
 func testAccCheckELBLoadBalancerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
+	client, err := otcV1Client(config, OS_REGION_NAME)
 	if err != nil {
-		fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerDestroy FlexibleEngine networking client: %s", err)
-
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
@@ -85,10 +82,8 @@ func testAccCheckELBLoadBalancerDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := loadbalancer_elbs.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := loadbalancer_elbs.Get(client, rs.Primary.ID).Extract()
 		if err == nil {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerDestroy LoadBalancer still exists: %s", rs.Primary.ID)
-
 			return fmt.Errorf("LoadBalancer still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -102,34 +97,25 @@ func testAccCheckELBLoadBalancerExists(
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists Not found: %s \n", n)
-
 			return fmt.Errorf("Not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists No ID is set \n")
 			return fmt.Errorf("No ID is set")
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.otcV1Client(OS_REGION_NAME)
+		client, err := otcV1Client(config, OS_REGION_NAME)
 		if err != nil {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists Error creating FlexibleEngine networking client: %s", err)
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
-		fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists  middle \n ")
-		found, err := loadbalancer_elbs.Get(networkingClient, rs.Primary.ID).Extract()
-		if err != nil {
-			log.Printf("[#####ERR#####] : %v", err)
 
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists err1 =%v\n ", err)
+		found, err := loadbalancer_elbs.Get(client, rs.Primary.ID).Extract()
+		if err != nil {
 			return err
 		}
 
 		if found.ID != rs.Primary.ID {
-			fmt.Printf("@@@@@@@@@@@@@@@@ testAccCheckELBLoadBalancerExists err2 Member not found \n ")
-
 			return fmt.Errorf("Member not found")
 		}
 
@@ -143,7 +129,7 @@ func testAccCheckELBLoadBalancerHasSecGroup(
 	lb *loadbalancer_elbs.LoadBalancer, sg *groups.SecGroup) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		_, err := config.otcV1Client(OS_REGION_NAME)
+		_, err := otcV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
