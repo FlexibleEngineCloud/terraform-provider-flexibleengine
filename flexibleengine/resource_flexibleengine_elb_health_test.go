@@ -40,7 +40,7 @@ func TestAccELBHealth_basic(t *testing.T) {
 
 func testAccCheckELBHealthDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.otcV1Client(OS_REGION_NAME)
+	client, err := otcV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -50,7 +50,7 @@ func testAccCheckELBHealthDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := healthcheck.Get(networkingClient, rs.Primary.ID).Extract()
+		_, err := healthcheck.Get(client, rs.Primary.ID).Extract()
 		if err == nil {
 			return fmt.Errorf("Health still exists: %s", rs.Primary.ID)
 		}
@@ -72,7 +72,7 @@ func testAccCheckELBHealthExists(t *testing.T, n string, health *healthcheck.Hea
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.otcV1Client(OS_REGION_NAME)
+		client, err := otcV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

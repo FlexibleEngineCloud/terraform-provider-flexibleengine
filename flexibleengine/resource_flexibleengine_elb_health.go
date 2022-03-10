@@ -71,7 +71,7 @@ func resourceHealth() *schema.Resource {
 
 func resourceHealthCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -100,12 +100,12 @@ func resourceHealthCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceHealthRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	health, err := healthcheck.Get(networkingClient, d.Id()).Extract()
+	health, err := healthcheck.Get(client, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "health")
 	}
@@ -129,7 +129,7 @@ func resourceHealthRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceHealthUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -159,7 +159,7 @@ func resourceHealthUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Updating health %s with options: %#v", d.Id(), updateOpts)
 
-	_, err = healthcheck.Update(networkingClient, d.Id(), updateOpts).Extract()
+	_, err = healthcheck.Update(client, d.Id(), updateOpts).Extract()
 	if err != nil {
 		return err
 	}
@@ -169,7 +169,7 @@ func resourceHealthUpdate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceHealthDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.otcV1Client(GetRegion(d, config))
+	client, err := otcV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
