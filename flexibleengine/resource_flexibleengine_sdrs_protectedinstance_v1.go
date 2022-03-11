@@ -79,7 +79,7 @@ func resourceSdrsProtectedInstanceV1() *schema.Resource {
 func resourceSdrsProtectedInstanceV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS Client: %s", err)
@@ -121,7 +121,7 @@ func resourceSdrsProtectedInstanceV1Create(d *schema.ResourceData, meta interfac
 func resourceSdrsProtectedInstanceV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
@@ -146,7 +146,7 @@ func resourceSdrsProtectedInstanceV1Read(d *schema.ResourceData, meta interface{
 
 func resourceSdrsProtectedInstanceV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS Client: %s", err)
 	}
@@ -166,7 +166,7 @@ func resourceSdrsProtectedInstanceV1Update(d *schema.ResourceData, meta interfac
 
 func resourceSdrsProtectedInstanceV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}

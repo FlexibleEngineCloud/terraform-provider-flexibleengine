@@ -30,7 +30,7 @@ func TestAccSdrsReplicationAttachV1_basic(t *testing.T) {
 
 func testAccCheckSdrsAttachV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	sdrsClient, err := config.sdrsV1Client(OS_REGION_NAME)
+	sdrsClient, err := sdrsV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
@@ -68,7 +68,7 @@ func testAccCheckSdrsAttachV1Exists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		sdrsClient, err := config.sdrsV1Client(OS_REGION_NAME)
+		sdrsClient, err := sdrsV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 		}

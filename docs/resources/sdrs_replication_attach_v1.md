@@ -53,3 +53,11 @@ The following arguments are supported:
 * `replication_id` - (Required) Specifies the ID of a replication pair. Changing this creates a new replication attach.
 
 * `device` - (Required) Specifies the device name, eg. /dev/vdb. Changing this creates a new replication attach.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - The resource ID in format of <instance_id>:<replication_id>.
+
+* `status` - The status of the SDRS replication attch resource.

@@ -56,13 +56,18 @@ func resourceSdrsReplicationAttachV1() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
 
 func resourceSdrsReplicationAttachV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
@@ -93,7 +98,7 @@ func resourceSdrsReplicationAttachV1Create(d *schema.ResourceData, meta interfac
 
 func resourceSdrsReplicationAttachV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
@@ -124,13 +129,14 @@ func resourceSdrsReplicationAttachV1Read(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Retrieved replication attachment: %#v", attach)
 
 	d.Set("device", attach.Device)
-	d.Set("replication", attach.Replication)
+	d.Set("replication_id", attach.Replication)
+	d.Set("status", n.Status)
 	return nil
 }
 
 func resourceSdrsReplicationAttachV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsClient, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsClient, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
