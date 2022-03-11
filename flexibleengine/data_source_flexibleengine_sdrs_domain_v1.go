@@ -28,7 +28,7 @@ func dataSourceSdrsDomainV1() *schema.Resource {
 
 func dataSourceSdrsDomainV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sdrsV1Client, err := config.sdrsV1Client(GetRegion(d, config))
+	sdrsV1Client, err := sdrsV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating SDRS client: %s", err)
 	}

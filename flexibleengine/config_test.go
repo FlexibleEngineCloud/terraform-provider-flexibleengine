@@ -511,7 +511,7 @@ func TestAccServiceEndpoints_Others(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "DRS")
 
 	// test the endpoint of SDRS service
-	serviceClient, err = config.sdrsV1Client(OS_REGION_NAME)
+	serviceClient, err = sdrsV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine SDRS client: %s", err)
 	}
@@ -520,7 +520,7 @@ func TestAccServiceEndpoints_Others(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "SDRS")
 
 	// test the endpoint of RTS service
-	serviceClient, err = config.orchestrationV1Client(OS_REGION_NAME)
+	serviceClient, err = orchestrationV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine RTS client: %s", err)
 	}

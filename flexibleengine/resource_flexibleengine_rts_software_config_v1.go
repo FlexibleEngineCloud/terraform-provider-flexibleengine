@@ -78,7 +78,7 @@ func resourceOptionsV1(d *schema.ResourceData) map[string]interface{} {
 
 func resourceSoftwareConfigV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchastrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchastrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 
 	if err != nil {
 		return fmt.Errorf("Error creating RTS client: %s", err)
@@ -117,7 +117,7 @@ func resourceSoftwareConfigV1Create(d *schema.ResourceData, meta interface{}) er
 
 func resourceSoftwareConfigV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchastrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchastrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating RTS client: %s", err)
 	}
@@ -149,12 +149,12 @@ func resourceSoftwareConfigV1Read(d *schema.ResourceData, meta interface{}) erro
 
 func resourceSoftwareConfigV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchastrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchastrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating vpc: %s", err)
+		return fmt.Errorf("Error creating RTS client: %s", err)
 	}
-	err = softwareconfig.Delete(orchastrationClient, d.Id()).ExtractErr()
 
+	err = softwareconfig.Delete(orchastrationClient, d.Id()).ExtractErr()
 	if err != nil {
 		if _, ok := err.(golangsdk.ErrDefault404); ok {
 			log.Printf("[INFO] Successfully deleted RTS Software Config %s", d.Id())

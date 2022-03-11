@@ -58,7 +58,10 @@ func dataSourceRTSStackResourcesV1() *schema.Resource {
 
 func dataSourceRTSStackResourcesV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchestrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating RTS client: %s", err)
+	}
 
 	listOpts := stackresources.ListOpts{
 		Name:       d.Get("resource_name").(string),

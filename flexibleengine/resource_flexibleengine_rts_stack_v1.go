@@ -161,7 +161,7 @@ func resourceRTSStackV1Create(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Both template_body and template_url are empty, must specify one of them.")
 	}
 
-	orchestrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchestrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating RTS client: %s", err)
 	}
@@ -207,7 +207,7 @@ func resourceRTSStackV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceRTSStackV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchestrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating RTS Client: %s", err)
 	}
@@ -270,7 +270,7 @@ func resourceRTSStackV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceRTSStackV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchestrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating RTS Client: %s", err)
 	}
@@ -327,7 +327,7 @@ func resourceRTSStackV1Update(d *schema.ResourceData, meta interface{}) error {
 func resourceRTSStackV1Delete(d *schema.ResourceData, meta interface{}) error {
 
 	config := meta.(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(GetRegion(d, config))
+	orchestrationClient, err := orchestrationV1Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating RTS Client: %s", err)
 	}
