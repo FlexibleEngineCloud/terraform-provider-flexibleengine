@@ -403,7 +403,7 @@ func resourceCCENodeUserTags(d *schema.ResourceData) []tags.ResourceTag {
 
 func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodeClient, err := config.cceV3Client(GetRegion(d, config))
+	nodeClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE Node client: %s", err)
 	}
@@ -493,7 +493,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodeClient, err := config.cceV3Client(GetRegion(d, config))
+	nodeClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE Node client: %s", err)
 	}
@@ -573,7 +573,7 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodeV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodeClient, err := config.cceV3Client(GetRegion(d, config))
+	nodeClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 	}
@@ -608,7 +608,7 @@ func resourceCCENodeV3Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodeV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodeClient, err := config.cceV3Client(GetRegion(d, config))
+	nodeClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 	}

@@ -263,7 +263,7 @@ func buildCCENodePoolLoginSpec(d *schema.ResourceData) nodes.LoginSpec {
 
 func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodePoolClient, err := config.cceV3Client(GetRegion(d, config))
+	nodePoolClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine CCE Node Pool client: %s", err)
 	}
@@ -361,7 +361,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodePoolClient, err := config.cceV3Client(GetRegion(d, config))
+	nodePoolClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine CCE Node Pool client: %s", err)
 	}
@@ -430,7 +430,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodePoolClient, err := config.cceV3Client(GetRegion(d, config))
+	nodePoolClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine CCE client: %s", err)
 	}
@@ -491,7 +491,7 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCCENodePoolDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nodePoolClient, err := config.cceV3Client(GetRegion(d, config))
+	nodePoolClient, err := config.CceV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine CCE client: %s", err)
 	}
