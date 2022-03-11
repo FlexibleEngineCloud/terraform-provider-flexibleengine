@@ -1,8 +1,10 @@
 ---
-subcategory: "Data Replication Service (DRS)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_drs_replication_v2
+
+!> **Warning:** It has been deprecated.
 
 Manages a V2 replication resource within FlexibleEngine.
 
