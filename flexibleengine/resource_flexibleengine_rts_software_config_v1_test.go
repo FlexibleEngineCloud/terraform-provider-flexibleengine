@@ -13,7 +13,8 @@ import (
 
 func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 	var config softwareconfig.SoftwareConfig
-	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	rtsName := fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_rts_software_config_v1.config_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,31 +24,15 @@ func TestAccRtsSoftwareConfigV1_basic(t *testing.T) {
 			{
 				Config: testAccRtsSoftwareConfigV1_basic(rtsName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRtsSoftwareConfigV1Exists("flexibleengine_rts_software_config_v1.config_1", &config),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_software_config_v1.config_1", "name", rtsName),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_software_config_v1.config_1", "group", "script"),
+					testAccCheckRtsSoftwareConfigV1Exists(resourceName, &config),
+					resource.TestCheckResourceAttr(resourceName, "name", rtsName),
+					resource.TestCheckResourceAttr(resourceName, "group", "script"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
-	var config softwareconfig.SoftwareConfig
-	var rtsName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRtsSoftwareConfigV1Destroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccRtsSoftwareConfigV1_timeout(rtsName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRtsSoftwareConfigV1Exists("flexibleengine_rts_software_config_v1.config_1", &config),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -55,7 +40,7 @@ func TestAccRtsSoftwareConfigV1_timeout(t *testing.T) {
 
 func testAccCheckRtsSoftwareConfigV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(OS_REGION_NAME)
+	orchestrationClient, err := orchestrationV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating orchestration client: %s", err)
 	}
@@ -86,7 +71,7 @@ func testAccCheckRtsSoftwareConfigV1Exists(n string, configs *softwareconfig.Sof
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		orchestrationClient, err := config.orchestrationV1Client(OS_REGION_NAME)
+		orchestrationClient, err := orchestrationV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating orchestration client: %s", err)
 		}
@@ -123,31 +108,6 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
     description = "value2"
   }]
   group = "script"
-}
-`, rtsName)
-}
-
-func testAccRtsSoftwareConfigV1_timeout(rtsName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_rts_software_config_v1" "config_1" {
-  name = "%s"
-  output_values = [{
-    type = "String"
-    name = "result"
-    error_output = "false"
-    description = "value1"
-  }]
-  input_values=[{
-    default = "0"
-    type = "String"
-    name = "foo"
-    description = "value2"
-  }]
-  group = "script"
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `, rtsName)
 }

@@ -12,6 +12,7 @@ import (
 
 func TestAccRTSStackV1_basic(t *testing.T) {
 	var stacks stacks.RetrievedStack
+	resourceName := "flexibleengine_rts_stack_v1.stack_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,28 +22,25 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 			{
 				Config: testAccRTSStackV1_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "name", "terra_stack"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "status", "CREATE_COMPLETE"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "disable_rollback", "true"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "timeout_mins", "60"),
+					testAccCheckRTSStackV1Exists(resourceName, &stacks),
+					resource.TestCheckResourceAttr(resourceName, "name", "terra_stack"),
+					resource.TestCheckResourceAttr(resourceName, "status", "CREATE_COMPLETE"),
+					resource.TestCheckResourceAttr(resourceName, "disable_rollback", "true"),
+					resource.TestCheckResourceAttr(resourceName, "timeout_mins", "60"),
 				),
 			},
 			{
 				Config: testAccRTSStackV1_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRTSStackV1Exists("flexibleengine_rts_stack_v1.stack_1", &stacks),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "disable_rollback", "false"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "timeout_mins", "50"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_rts_stack_v1.stack_1", "status", "UPDATE_COMPLETE"),
+					resource.TestCheckResourceAttr(resourceName, "disable_rollback", "false"),
+					resource.TestCheckResourceAttr(resourceName, "timeout_mins", "50"),
+					resource.TestCheckResourceAttr(resourceName, "status", "UPDATE_COMPLETE"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -50,7 +48,7 @@ func TestAccRTSStackV1_basic(t *testing.T) {
 
 func testAccCheckRTSStackV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	orchestrationClient, err := config.orchestrationV1Client(OS_REGION_NAME)
+	orchestrationClient, err := orchestrationV1Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating RTS client: %s", err)
 	}
@@ -84,7 +82,7 @@ func testAccCheckRTSStackV1Exists(n string, stack *stacks.RetrievedStack) resour
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		orchestrationClient, err := config.orchestrationV1Client(OS_REGION_NAME)
+		orchestrationClient, err := orchestrationV1Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating RTS Client : %s", err)
 		}
