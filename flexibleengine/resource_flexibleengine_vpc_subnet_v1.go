@@ -113,7 +113,7 @@ func resourceVpcSubnetV1() *schema.Resource {
 
 func resourceVpcSubnetV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
+	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
 
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
@@ -158,7 +158,7 @@ func resourceVpcSubnetV1Create(d *schema.ResourceData, meta interface{}) error {
 	//set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
 		}
@@ -174,7 +174,7 @@ func resourceVpcSubnetV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
+	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -202,7 +202,7 @@ func resourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("region", GetRegion(d, config))
 
 	// save VpcSubnet tags
-	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+	vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
 	}
@@ -219,7 +219,7 @@ func resourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
+	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -252,7 +252,7 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 
 	//update tags
 	if d.HasChange("tags") {
-		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine VPC client: %s", err)
 		}
@@ -267,7 +267,7 @@ func resourceVpcSubnetV1Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcSubnetV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
+	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

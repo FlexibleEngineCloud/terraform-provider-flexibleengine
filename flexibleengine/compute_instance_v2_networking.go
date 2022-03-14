@@ -80,7 +80,7 @@ func expandInstanceNetworks(d *schema.ResourceData, meta interface{}) ([]servers
 // InstanceNIC list struct.
 func getInstanceAddresses(d *schema.ResourceData, meta interface{}, server *cloudservers.CloudServer) ([]InstanceNIC, error) {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

@@ -14,6 +14,7 @@ import (
 
 func TestAccNetworkingV2Network_basic(t *testing.T) {
 	var network networks.Network
+	resourceName := "flexibleengine_networking_network_v2.network_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,15 +24,20 @@ func TestAccNetworkingV2Network_basic(t *testing.T) {
 			{
 				Config: testAccNetworkingV2Network_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
+					testAccCheckNetworkingV2NetworkExists(resourceName, &network),
+					resource.TestCheckResourceAttr(resourceName, "name", "network_1"),
 				),
 			},
 			{
 				Config: testAccNetworkingV2Network_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_network_v2.network_1", "name", "network_2"),
+					resource.TestCheckResourceAttr(resourceName, "name", "network_2"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -102,7 +108,7 @@ func TestAccNetworkingV2Network_multipleSegmentMappings(t *testing.T) {
 
 func testAccCheckNetworkingV2NetworkDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -134,7 +140,7 @@ func testAccCheckNetworkingV2NetworkExists(n string, network *networks.Network) 
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

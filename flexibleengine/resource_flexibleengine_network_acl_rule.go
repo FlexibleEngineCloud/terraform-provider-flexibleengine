@@ -77,7 +77,7 @@ func resourceNetworkACLRule() *schema.Resource {
 
 func resourceNetworkACLRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.networkingV2Client(GetRegion(d, config))
+	fwClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -113,7 +113,7 @@ func resourceNetworkACLRuleCreate(d *schema.ResourceData, meta interface{}) erro
 
 func resourceNetworkACLRuleRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.networkingV2Client(GetRegion(d, config))
+	fwClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -146,7 +146,7 @@ func resourceNetworkACLRuleRead(d *schema.ResourceData, meta interface{}) error 
 
 func resourceNetworkACLRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.networkingV2Client(GetRegion(d, config))
+	fwClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -204,7 +204,7 @@ func resourceNetworkACLRuleUpdate(d *schema.ResourceData, meta interface{}) erro
 
 func resourceNetworkACLRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	fwClient, err := config.networkingV2Client(GetRegion(d, config))
+	fwClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

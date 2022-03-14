@@ -107,7 +107,7 @@ func resourceVpcEIPV1() *schema.Resource {
 
 func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV1Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating networking client: %s", err)
 	}
@@ -142,7 +142,7 @@ func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 	//set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
@@ -157,7 +157,7 @@ func resourceVpcEIPV1Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcEIPV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV1Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating networking client: %s", err)
 	}
@@ -196,7 +196,7 @@ func resourceVpcEIPV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("status", normalizeEIPStatus(eIP.Status))
 
 	// save tags
-	vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+	vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
@@ -213,7 +213,7 @@ func resourceVpcEIPV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcEIPV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV1Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating networking client: %s", err)
 	}
@@ -258,7 +258,7 @@ func resourceVpcEIPV1Update(d *schema.ResourceData, meta interface{}) error {
 
 	//update tags
 	if d.HasChange("tags") {
-		vpcV2Client, err := config.networkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
@@ -274,7 +274,7 @@ func resourceVpcEIPV1Update(d *schema.ResourceData, meta interface{}) error {
 
 func resourceVpcEIPV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV1Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating VPC client: %s", err)
 	}

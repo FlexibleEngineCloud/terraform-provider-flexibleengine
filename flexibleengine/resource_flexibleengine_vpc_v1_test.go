@@ -54,7 +54,7 @@ func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 
 func testAccCheckFlexibleEngineVpcV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	vpcClient, err := config.networkingV1Client(OS_REGION_NAME)
+	vpcClient, err := config.NetworkingV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
@@ -85,7 +85,7 @@ func testAccCheckFlexibleEngineVpcV1Exists(n string, vpc *vpcs.Vpc) resource.Tes
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		vpcClient, err := config.networkingV1Client(OS_REGION_NAME)
+		vpcClient, err := config.NetworkingV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}

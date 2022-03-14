@@ -50,7 +50,7 @@ func dataSourceVpcPeeringConnectionV2() *schema.Resource {
 
 func dataSourceVpcPeeringConnectionV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	peeringClient, err := config.networkingV2Client(GetRegion(d, config))
+	peeringClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine Vpc client: %s", err)
 	}

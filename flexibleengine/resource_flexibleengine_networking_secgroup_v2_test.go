@@ -12,6 +12,7 @@ import (
 
 func TestAccNetworkingV2SecGroup_basic(t *testing.T) {
 	var security_group groups.SecGroup
+	resourceName := "flexibleengine_networking_secgroup_v2.secgroup_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,19 +22,22 @@ func TestAccNetworkingV2SecGroup_basic(t *testing.T) {
 			{
 				Config: testAccNetworkingV2SecGroup_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &security_group),
+					testAccCheckNetworkingV2SecGroupExists(resourceName, &security_group),
 					testAccCheckNetworkingV2SecGroupRuleCount(&security_group, 2),
+					resource.TestCheckResourceAttr(resourceName, "name", "security_group"),
 				),
 			},
 			{
 				Config: testAccNetworkingV2SecGroup_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPtr(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", "id", &security_group.ID),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", "name", "security_group_2"),
+					resource.TestCheckResourceAttrPtr(resourceName, "id", &security_group.ID),
+					resource.TestCheckResourceAttr(resourceName, "name", "security_group_2"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -80,7 +84,7 @@ func TestAccNetworkingV2SecGroup_timeout(t *testing.T) {
 
 func testAccCheckNetworkingV2SecGroupDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -111,7 +115,7 @@ func testAccCheckNetworkingV2SecGroupExists(n string, security_group *groups.Sec
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

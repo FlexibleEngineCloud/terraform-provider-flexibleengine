@@ -54,7 +54,7 @@ func TestAccFlexibleEngineVpcSubnetV1_basic(t *testing.T) {
 
 func testAccCheckFlexibleEngineVpcSubnetV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	subnetClient, err := config.networkingV1Client(OS_REGION_NAME)
+	subnetClient, err := config.NetworkingV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
@@ -84,7 +84,7 @@ func testAccCheckFlexibleEngineVpcSubnetV1Exists(n string, subnet *subnets.Subne
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		subnetClient, err := config.networkingV1Client(OS_REGION_NAME)
+		subnetClient, err := config.NetworkingV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
 		}

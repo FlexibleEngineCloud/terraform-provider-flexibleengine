@@ -44,7 +44,7 @@ func resourceNetworkingFloatingIPAssociateV2() *schema.Resource {
 
 func resourceNetworkingFloatingIPAssociateV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine network client: %s", err)
 	}
@@ -71,12 +71,13 @@ func resourceNetworkingFloatingIPAssociateV2Create(d *schema.ResourceData, meta 
 
 	d.SetId(floatingIPID)
 
-	return resourceNetworkFloatingIPV2Read(d, meta)
+	return resourceNetworkingFloatingIPAssociateV2Read(d, meta)
 }
 
 func resourceNetworkingFloatingIPAssociateV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	networkingClient, err := config.NetworkingV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine network client: %s", err)
 	}
@@ -86,16 +87,16 @@ func resourceNetworkingFloatingIPAssociateV2Read(d *schema.ResourceData, meta in
 		return CheckDeleted(d, err, "floating IP")
 	}
 
+	d.Set("region", region)
 	d.Set("floating_ip", floatingIP.FloatingIP)
 	d.Set("port_id", floatingIP.PortID)
-	d.Set("region", GetRegion(d, config))
 
 	return nil
 }
 
 func resourceNetworkingFloatingIPAssociateV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine network client: %s", err)
 	}

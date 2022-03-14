@@ -281,7 +281,7 @@ func flattenComputeNetworks(
 	d *schema.ResourceData, meta interface{}, server *cloudservers.CloudServer) ([]map[string]interface{}, string) {
 
 	config := meta.(*Config)
-	networkingClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		log.Printf("[ERROR] failed to create FlexibleEngine networking client: %s", err)
 		return nil, ""
