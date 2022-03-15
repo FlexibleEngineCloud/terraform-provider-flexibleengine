@@ -97,7 +97,7 @@ func resourceNatGatewayV2() *schema.Resource {
 
 func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natClient, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -151,7 +151,7 @@ func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natClient, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -174,7 +174,7 @@ func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceNatGatewayV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natClient, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -203,7 +203,7 @@ func resourceNatGatewayV2Update(d *schema.ResourceData, meta interface{}) error 
 
 func resourceNatGatewayV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natClient, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}

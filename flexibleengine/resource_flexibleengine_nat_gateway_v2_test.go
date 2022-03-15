@@ -49,7 +49,7 @@ func TestAccNatGateway_basic(t *testing.T) {
 
 func testAccCheckNatV2GatewayDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	natClient, err := config.natV2Client(OS_REGION_NAME)
+	natClient, err := natV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -80,7 +80,7 @@ func testAccCheckNatV2GatewayExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		natClient, err := config.natV2Client(OS_REGION_NAME)
+		natClient, err := natV2Client(config, OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 		}

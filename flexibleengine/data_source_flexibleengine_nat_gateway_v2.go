@@ -52,7 +52,7 @@ func dataSourceNatGatewayV2() *schema.Resource {
 
 func dataSourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natClient, err := config.natV2Client(GetRegion(d, config))
+	natClient, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}

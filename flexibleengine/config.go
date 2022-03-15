@@ -332,13 +332,6 @@ func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, erro
 	})
 }
 
-func (c *Config) natV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewSDKClient(
 		c.HwClient,
@@ -351,6 +344,13 @@ func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient
 
 func (c *Config) getHwEndpointType() golangsdk.Availability {
 	return golangsdk.AvailabilityPublic
+}
+
+func natV2Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
+	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
+		Region:       c.determineRegion(region),
+		Availability: c.getHwEndpointType(),
+	})
 }
 
 func orchestrationV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {

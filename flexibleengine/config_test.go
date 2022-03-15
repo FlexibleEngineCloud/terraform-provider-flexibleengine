@@ -285,7 +285,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	// test endpoint of nat gateway
 	serviceClient, err = nil, nil
-	serviceClient, err = config.natV2Client(OS_REGION_NAME)
+	serviceClient, err = natV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine nat gateway client: %s", err)
 	}
