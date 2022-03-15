@@ -285,7 +285,7 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	// test endpoint of nat gateway
 	serviceClient, err = nil, nil
-	serviceClient, err = config.natV2Client(OS_REGION_NAME)
+	serviceClient, err = natV2Client(config, OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine nat gateway client: %s", err)
 	}
@@ -432,6 +432,14 @@ func TestAccServiceEndpoints_Application(t *testing.T) {
 	expectedURL = fmt.Sprintf("https://dcs.%s.%s/v1.0/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "DCS v1")
+
+	serviceClient, err = config.CssV1Client(OS_REGION_NAME)
+	if err != nil {
+		t.Fatalf("Error creating FlexibleEngine CSS v1 client: %s", err)
+	}
+	expectedURL = fmt.Sprintf("https://css.%s.%s/v1.0/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
+	actualURL = serviceClient.ResourceBaseURL()
+	testCheckServiceURL(t, expectedURL, actualURL, "CSS v1")
 
 }
 

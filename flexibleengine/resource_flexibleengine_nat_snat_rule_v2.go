@@ -88,7 +88,7 @@ func resourceNatSnatRuleV2() *schema.Resource {
 
 func resourceNatSnatRuleV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natV2Client, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -141,7 +141,7 @@ func resourceNatSnatRuleV2Create(d *schema.ResourceData, meta interface{}) error
 
 func resourceNatSnatRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natV2Client, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}
@@ -167,7 +167,7 @@ func resourceNatSnatRuleV2Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceNatSnatRuleV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	natV2Client, err := config.natV2Client(GetRegion(d, config))
+	natV2Client, err := natV2Client(config, GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine nat client: %s", err)
 	}

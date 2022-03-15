@@ -66,7 +66,7 @@ func resourceCssSnapshotV1() *schema.Resource {
 
 func resourceCssSnapshotV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	cssClient, err := config.sdkClient(GetRegion(d, config), "css")
+	cssClient, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
@@ -109,7 +109,7 @@ func resourceCssSnapshotV1Create(d *schema.ResourceData, meta interface{}) error
 
 func resourceCssSnapshotV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	cssClient, err := config.sdkClient(GetRegion(d, config), "css")
+	cssClient, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
@@ -150,7 +150,7 @@ func resourceCssSnapshotV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCssSnapshotV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	cssClient, err := config.sdkClient(GetRegion(d, config), "css")
+	cssClient, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine CSS storage client: %s", err)
 	}
@@ -200,7 +200,7 @@ func resourceCssSnapshotImport(d *schema.ResourceData, meta interface{}) ([]*sch
 	snapshotID := parts[1]
 
 	config := meta.(*Config)
-	client, err := config.sdkClient(GetRegion(d, config), "css")
+	client, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating css client, err=%s", err)
 	}

@@ -214,9 +214,9 @@ func resourceCssClusterV1UserInputParams(d *schema.ResourceData) map[string]inte
 
 func resourceCssClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.sdkClient(GetRegion(d, config), "css")
+	client, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
 
 	opts := resourceCssClusterV1UserInputParams(d)
@@ -272,9 +272,9 @@ func resourceCssClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceCssClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.sdkClient(GetRegion(d, config), "css")
+	client, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
 
 	v, err := sendCssClusterV1ReadRequest(d, client)
@@ -325,9 +325,9 @@ func resourceCssClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 
 func resourceCssClusterV1Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.sdkClient(GetRegion(d, config), "css")
+	client, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
 
 	opts := resourceCssClusterV1UserInputParams(d)
@@ -403,9 +403,9 @@ func resourceCssClusterV1Update(d *schema.ResourceData, meta interface{}) error 
 
 func resourceCssClusterV1Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.sdkClient(GetRegion(d, config), "css")
+	client, err := config.CssV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating sdk client, err=%s", err)
+		return fmt.Errorf("Error creating FlexibleEngine CSS client: %s", err)
 	}
 
 	url, err := replaceVars(d, "clusters/{id}", nil)
