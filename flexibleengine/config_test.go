@@ -314,13 +314,13 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 	testCheckServiceURL(t, expectedURL, actualURL, "ELB v2.0")
 
 	// test the endpoint of DNS service
-	serviceClient, err = config.dnsV2Client(OS_REGION_NAME)
+	serviceClient, err = config.DnsV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine DNS client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://dns.%s/v2/", defaultCloud)
 	actualURL = serviceClient.ResourceBaseURL()
-	testCheckServiceURL(t, expectedURL, actualURL, "dns")
+	testCheckServiceURL(t, expectedURL, actualURL, "DNS")
 
 	// test the endpoint of VPC endpoint
 	serviceClient, err = config.VPCEPClient(OS_REGION_NAME)
