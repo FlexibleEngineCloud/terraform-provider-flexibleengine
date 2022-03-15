@@ -460,6 +460,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 
 	config.Endpoints = make(map[string]string)
 	config.Endpoints["obs"] = fmt.Sprintf("https://oss.%s.%s/", region, config.Cloud)
+	config.Endpoints["dns"] = fmt.Sprintf("https://dns.%s/", config.Cloud)
 
 	return &config, nil
 }
