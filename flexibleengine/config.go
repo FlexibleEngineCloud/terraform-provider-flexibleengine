@@ -332,16 +332,6 @@ func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, erro
 	})
 }
 
-func (c *Config) sdkClient(region, serviceType string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewSDKClient(
-		c.HwClient,
-		golangsdk.EndpointOpts{
-			Region:       c.determineRegion(region),
-			Availability: c.getHwEndpointType(),
-		},
-		serviceType)
-}
-
 func (c *Config) getHwEndpointType() golangsdk.Availability {
 	return golangsdk.AvailabilityPublic
 }

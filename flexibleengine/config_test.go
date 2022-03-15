@@ -433,6 +433,14 @@ func TestAccServiceEndpoints_Application(t *testing.T) {
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "DCS v1")
 
+	serviceClient, err = config.CssV1Client(OS_REGION_NAME)
+	if err != nil {
+		t.Fatalf("Error creating FlexibleEngine CSS v1 client: %s", err)
+	}
+	expectedURL = fmt.Sprintf("https://css.%s.%s/v1.0/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
+	actualURL = serviceClient.ResourceBaseURL()
+	testCheckServiceURL(t, expectedURL, actualURL, "CSS v1")
+
 }
 
 func TestAccServiceEndpoints_EnterpriseIntelligence(t *testing.T) {
