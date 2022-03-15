@@ -421,7 +421,7 @@ func resourceClusterV1Create(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine MRS client: %s", err)
 	}
-	vpcClient, err := config.networkingV1Client(region)
+	vpcClient, err := config.NetworkingV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
 	}

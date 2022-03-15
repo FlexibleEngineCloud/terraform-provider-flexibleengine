@@ -35,6 +35,11 @@ func TestAccNetworkingV2SecGroupRule_basic(t *testing.T) {
 						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_2", &secgroup_rule_2),
 				),
 			},
+			{
+				ResourceName:      "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -87,7 +92,7 @@ func TestAccNetworkingV2SecGroupRule_numericProtocol(t *testing.T) {
 
 func testAccCheckNetworkingV2SecGroupRuleDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -118,7 +123,7 @@ func testAccCheckNetworkingV2SecGroupRuleExists(n string, security_group_rule *r
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

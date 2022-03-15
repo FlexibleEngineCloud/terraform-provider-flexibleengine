@@ -235,7 +235,7 @@ func getInstanceNetworkInfo(
 	d *schema.ResourceData, meta interface{}, queryType, queryTerm string) (map[string]string, error) {
 
 	config := meta.(*Config)
-	networkClient, err := config.networkingV2Client(GetRegion(d, config))
+	networkClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}

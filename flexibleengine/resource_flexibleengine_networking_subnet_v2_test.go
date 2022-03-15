@@ -12,6 +12,7 @@ import (
 
 func TestAccNetworkingV2Subnet_basic(t *testing.T) {
 	var subnet subnets.Subnet
+	resourceName := "flexibleengine_networking_subnet_v2.subnet_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,23 +22,23 @@ func TestAccNetworkingV2Subnet_basic(t *testing.T) {
 			{
 				Config: testAccNetworkingV2Subnet_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.100"),
+					testAccCheckNetworkingV2SubnetExists(resourceName, &subnet),
+					resource.TestCheckResourceAttr(resourceName, "allocation_pools.0.start", "192.168.199.100"),
 				),
 			},
 			{
 				Config: testAccNetworkingV2Subnet_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_subnet_v2.subnet_1", "name", "subnet_1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_subnet_v2.subnet_1", "gateway_ip", "192.168.199.1"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_subnet_v2.subnet_1", "enable_dhcp", "true"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_subnet_v2.subnet_1", "allocation_pools.0.start", "192.168.199.150"),
+					resource.TestCheckResourceAttr(resourceName, "name", "subnet_1"),
+					resource.TestCheckResourceAttr(resourceName, "gateway_ip", "192.168.199.1"),
+					resource.TestCheckResourceAttr(resourceName, "enable_dhcp", "true"),
+					resource.TestCheckResourceAttr(resourceName, "allocation_pools.0.start", "192.168.199.150"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -123,7 +124,7 @@ func TestAccNetworkingV2Subnet_timeout(t *testing.T) {
 
 func testAccCheckNetworkingV2SubnetDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
@@ -154,7 +155,7 @@ func testAccCheckNetworkingV2SubnetExists(n string, subnet *subnets.Subnet) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkingClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkingClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}

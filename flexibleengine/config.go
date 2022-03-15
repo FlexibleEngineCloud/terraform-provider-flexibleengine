@@ -332,20 +332,6 @@ func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, erro
 	})
 }
 
-func (c *Config) networkingV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewNetworkV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-func (c *Config) networkingV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewNetworkV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) natV2Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
 		Region:       c.determineRegion(region),

@@ -12,6 +12,7 @@ import (
 
 func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 	var route routes.Route
+	resourceName := "flexibleengine_vpc_route_v2.route_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,30 +22,15 @@ func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 			{
 				Config: testAccRouteV2_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineRouteV2Exists("flexibleengine_vpc_route_v2.route_1", &route),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_route_v2.route_1", "destination", "192.168.0.0/16"),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_vpc_route_v2.route_1", "type", "peering"),
+					testAccCheckFlexibleEngineRouteV2Exists(resourceName, &route),
+					resource.TestCheckResourceAttr(resourceName, "destination", "192.168.0.0/16"),
+					resource.TestCheckResourceAttr(resourceName, "type", "peering"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccFlexibleEngineVpcRouteV2_timeout(t *testing.T) {
-	var route routes.Route
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckFlexibleEngineRouteV2Destroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccRouteV2_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineRouteV2Exists("flexibleengine_vpc_route_v2.route_1", &route),
-				),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -52,7 +38,7 @@ func TestAccFlexibleEngineVpcRouteV2_timeout(t *testing.T) {
 
 func testAccCheckFlexibleEngineRouteV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	routeClient, err := config.networkingV2Client(OS_REGION_NAME)
+	routeClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine route client: %s", err)
 	}
@@ -83,7 +69,7 @@ func testAccCheckFlexibleEngineRouteV2Exists(n string, route *routes.Route) reso
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		routeClient, err := config.networkingV2Client(OS_REGION_NAME)
+		routeClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine route client: %s", err)
 		}
@@ -114,45 +100,15 @@ resource "flexibleengine_vpc_v1" "vpc_2" {
   cidr = "192.168.0.0/16"
 }
 resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
-  name = "flexibleengine_peering"
-  vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-  peer_vpc_id = "${flexibleengine_vpc_v1.vpc_2.id}"
+  name        = "flexibleengine_peering"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
+  peer_vpc_id = flexibleengine_vpc_v1.vpc_2.id
 }
 resource "flexibleengine_vpc_route_v2" "route_1" {
-  type = "peering"
-  nexthop = "${flexibleengine_vpc_peering_connection_v2.peering_1.id}"
+  type        = "peering"
+  nexthop     = flexibleengine_vpc_peering_connection_v2.peering_1.id
   destination = "192.168.0.0/16"
-  vpc_id ="${flexibleengine_vpc_v1.vpc_1.id}"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
 
-}
-`
-
-const testAccRouteV2_timeout = `
-resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = "vpc_test"
-  cidr = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_v1" "vpc_2" {
-  name = "vpc_test1"
-  cidr = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
-  name = "flexibleengine_peering"
-  vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-  peer_vpc_id = "${flexibleengine_vpc_v1.vpc_2.id}"
-}
-
-resource "flexibleengine_vpc_route_v2" "route_1" {
-   type = "peering"
-  nexthop = "${flexibleengine_vpc_peering_connection_v2.peering_1.id}"
-  destination = "192.168.0.0/16"
-  vpc_id ="${flexibleengine_vpc_v1.vpc_1.id}"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
 }
 `

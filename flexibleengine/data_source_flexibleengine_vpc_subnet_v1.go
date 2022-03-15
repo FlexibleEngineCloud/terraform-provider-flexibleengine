@@ -77,7 +77,7 @@ func dataSourceVpcSubnetV1() *schema.Resource {
 
 func dataSourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.networkingV1Client(GetRegion(d, config))
+	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine Vpc client: %s", err)
 	}

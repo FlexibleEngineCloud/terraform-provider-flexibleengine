@@ -13,6 +13,7 @@ import (
 
 func TestAccNetworkingV2FloatingIP_basic(t *testing.T) {
 	var fip floatingips.FloatingIP
+	resourceName := "flexibleengine_networking_floatingip_v2.fip_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,8 +23,13 @@ func TestAccNetworkingV2FloatingIP_basic(t *testing.T) {
 			{
 				Config: testAccNetworkingV2FloatingIP_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2FloatingIPExists("flexibleengine_networking_floatingip_v2.fip_1", &fip),
+					testAccCheckNetworkingV2FloatingIPExists(resourceName, &fip),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -49,7 +55,7 @@ func TestAccNetworkingV2FloatingIP_timeout(t *testing.T) {
 
 func testAccCheckNetworkingV2FloatingIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	networkClient, err := config.networkingV2Client(OS_REGION_NAME)
+	networkClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine floating IP: %s", err)
 	}
@@ -80,7 +86,7 @@ func testAccCheckNetworkingV2FloatingIPExists(n string, kp *floatingips.Floating
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		networkClient, err := config.networkingV2Client(OS_REGION_NAME)
+		networkClient, err := config.NetworkingV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 		}
