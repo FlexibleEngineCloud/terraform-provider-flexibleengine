@@ -53,7 +53,7 @@ resource flexibleengine_dis_stream "test" {
 
 func testAccCheckDisStreamV2Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.Config.DisV2Client(OS_REGION_NAME)
+	client, err := config.DisV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating dis client, err=%s", err)
 	}
@@ -75,7 +75,7 @@ func testAccCheckDisStreamV2Destroy(s *terraform.State) error {
 func testAccCheckDisStreamV2Exists(resourceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.Config.DisV2Client(OS_REGION_NAME)
+		client, err := config.DisV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating dis client, err=%s", err)
 		}

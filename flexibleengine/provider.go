@@ -454,7 +454,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config.RegionProjectIDMap = make(map[string]string)
 	config.RPLock = new(sync.Mutex)
 
-	if err := config.LoadAndValidate(); err != nil {
+	if err := LoadAndValidate(&config); err != nil {
 		return nil, diag.FromErr(err)
 	}
 

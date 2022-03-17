@@ -45,7 +45,7 @@ func TestAccDmsKafkaTopic_basic(t *testing.T) {
 
 func testAccCheckKafkaTopicDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.Config.DmsV1Client(OS_REGION_NAME)
+	client, err := config.DmsV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("error creating DMS client, err=%s", err)
 	}
@@ -86,7 +86,7 @@ func testAccCheckKafkaTopicExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.Config.DmsV1Client(OS_REGION_NAME)
+		client, err := config.DmsV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("error creating DMS client, err=%s", err)
 		}
