@@ -262,12 +262,12 @@ func (c *Config) determineRegion(region string) string {
 }
 
 func (c *Config) getDomainID() (string, error) {
-	identityClient, err := c.identityV3Client(c.Region)
+	identityClient, err := c.IdentityV3Client(c.Region)
 	if err != nil {
 		return "", fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
-	identityClient.ResourceBase = identityClient.Endpoint + "auth/"
+	identityClient.ResourceBase += "auth/"
 
 	// the List request does not support query options
 	allPages, err := domains.List(identityClient, nil).AllPages()
@@ -289,13 +289,6 @@ func (c *Config) getDomainID() (string, error) {
 	}
 
 	return all[0].ID, nil
-}
-
-func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewIdentityV3(c.DomainClient, golangsdk.EndpointOpts{
-		//Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
 }
 
 func (c *Config) getHwEndpointType() golangsdk.Availability {

@@ -19,12 +19,6 @@ func resourceIdentityGroupV3() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"domain_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -34,13 +28,19 @@ func resourceIdentityGroupV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+
+			"domain_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 		},
 	}
 }
 
 func resourceIdentityGroupV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -65,7 +65,7 @@ func resourceIdentityGroupV3Create(d *schema.ResourceData, meta interface{}) err
 
 func resourceIdentityGroupV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -86,7 +86,7 @@ func resourceIdentityGroupV3Read(d *schema.ResourceData, meta interface{}) error
 
 func resourceIdentityGroupV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -125,7 +125,7 @@ func resourceIdentityGroupV3Update(d *schema.ResourceData, meta interface{}) err
 
 func resourceIdentityGroupV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}

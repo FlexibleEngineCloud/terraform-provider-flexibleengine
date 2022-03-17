@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/chnsz/golangsdk/openstack/identity/v3.0/policies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -57,12 +56,10 @@ func resourceIdentityRoleV3() *schema.Resource {
 
 func resourceIdentityRoleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	policy := policies.Policy{}
 	policyDoc := d.Get("policy").(string)
@@ -91,12 +88,10 @@ func resourceIdentityRoleCreate(d *schema.ResourceData, meta interface{}) error 
 
 func resourceIdentityRoleRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	role, err := policies.Get(identityClient, d.Id()).Extract()
 	if err != nil {
@@ -122,12 +117,10 @@ func resourceIdentityRoleRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceIdentityRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	policy := policies.Policy{}
 	policyDoc := d.Get("policy").(string)
@@ -154,12 +147,10 @@ func resourceIdentityRoleUpdate(d *schema.ResourceData, meta interface{}) error 
 
 func resourceIdentityRoleDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	err = policies.Delete(identityClient, d.Id()).ExtractErr()
 	if err != nil {

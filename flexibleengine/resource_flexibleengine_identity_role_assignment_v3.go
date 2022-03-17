@@ -52,7 +52,7 @@ func resourceIdentityRoleAssignmentV3() *schema.Resource {
 
 func resourceIdentityRoleAssignmentV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OpenStack identity client: %s", err)
 	}
@@ -79,7 +79,7 @@ func resourceIdentityRoleAssignmentV3Create(d *schema.ResourceData, meta interfa
 
 func resourceIdentityRoleAssignmentV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OpenStack identity client: %s", err)
 	}
@@ -95,14 +95,13 @@ func resourceIdentityRoleAssignmentV3Read(d *schema.ResourceData, meta interface
 	d.Set("project_id", projectID)
 	d.Set("group_id", groupID)
 	d.Set("role_id", roleAssignment.ID)
-	d.Set("region", GetRegion(d, config))
 
 	return nil
 }
 
 func resourceIdentityRoleAssignmentV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating OpenStack identity client: %s", err)
 	}

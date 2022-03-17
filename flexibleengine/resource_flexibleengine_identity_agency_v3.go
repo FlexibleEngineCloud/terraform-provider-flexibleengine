@@ -117,22 +117,7 @@ func resourceIdentityAgencyProRoleHash(v interface{}) int {
 	return schema.HashString(buf.String())
 }
 
-func agencyClient(d *schema.ResourceData, config *Config) (*golangsdk.ServiceClient, error) {
-	c, err := config.identityV3Client(GetRegion(d, config))
-
-	if err != nil {
-		return nil, err
-	}
-
-	c.Endpoint = strings.Replace(c.Endpoint, "v3", "v3.0", 1)
-	return c, nil
-}
-
-func listProjectsOfDomain(domainID string, client *golangsdk.ServiceClient) (map[string]string, error) {
-	old := client.Endpoint
-	defer func() { client.Endpoint = old }()
-	client.Endpoint = strings.Replace(old, "v3.0", "v3", 1)
-
+func listProjectsOfDomain(client *golangsdk.ServiceClient, domainID string) (map[string]string, error) {
 	opts := sdkprojects.ListOpts{
 		DomainID: domainID,
 	}
@@ -154,11 +139,7 @@ func listProjectsOfDomain(domainID string, client *golangsdk.ServiceClient) (map
 	return r, nil
 }
 
-func listRolesOfDomain(domainID string, client *golangsdk.ServiceClient) (map[string]string, error) {
-	old := client.Endpoint
-	defer func() { client.Endpoint = old }()
-	client.Endpoint = strings.Replace(old, "v3.0", "v3", 1)
-
+func listRolesOfDomain(client *golangsdk.ServiceClient, domainID string) (map[string]string, error) {
 	opts := sdkroles.ListOpts{
 		DomainID: domainID,
 	}
@@ -187,13 +168,13 @@ func listRolesOfDomain(domainID string, client *golangsdk.ServiceClient) (map[st
 	return r, nil
 }
 
-func allRolesOfDomain(domainID string, client *golangsdk.ServiceClient) (map[string]string, error) {
-	roles, err := listRolesOfDomain("", client)
+func allRolesOfDomain(client *golangsdk.ServiceClient, domainID string) (map[string]string, error) {
+	roles, err := listRolesOfDomain(client, "")
 	if err != nil {
 		return nil, fmt.Errorf("Error listing global roles, err=%s", err)
 	}
 
-	customRoles, err := listRolesOfDomain(domainID, client)
+	customRoles, err := listRolesOfDomain(client, domainID)
 	if err != nil {
 		return nil, fmt.Errorf("Error listing domain's custom roles, err=%s", err)
 	}
@@ -255,9 +236,14 @@ func resourceIdentityAgencyV3Create(d *schema.ResourceData, meta interface{}) er
 	}
 
 	config := meta.(*Config)
-	client, err := agencyClient(d, config)
+	region := GetRegion(d, config)
+	client, err := config.IAMV3Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
+	}
+	identityClient, err := config.IdentityV3Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
 	domainID := config.DomainID
@@ -286,12 +272,12 @@ func resourceIdentityAgencyV3Create(d *schema.ResourceData, meta interface{}) er
 
 	d.SetId(a.ID)
 
-	projects, err := listProjectsOfDomain(domainID, client)
+	projects, err := listProjectsOfDomain(identityClient, domainID)
 	if err != nil {
 		return fmt.Errorf("Error querying the projects, err=%s", err)
 	}
 
-	roles, err := allRolesOfDomain(domainID, client)
+	roles, err := allRolesOfDomain(identityClient, domainID)
 	if err != nil {
 		return fmt.Errorf("Error querying the roles, err=%s", err)
 	}
@@ -340,9 +326,14 @@ func resourceIdentityAgencyV3Create(d *schema.ResourceData, meta interface{}) er
 
 func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := agencyClient(d, config)
+	region := GetRegion(d, config)
+	client, err := config.IAMV3Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
+	}
+	identityClient, err := config.IdentityV3Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
 	a, err := agency.Get(client, d.Id()).Extract()
@@ -365,7 +356,7 @@ func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) erro
 		d.Set("delegated_domain_name", a.DelegatedDomainName)
 	}
 
-	projects, err := listProjectsOfDomain(a.DomainID, client)
+	projects, err := listProjectsOfDomain(identityClient, a.DomainID)
 	if err != nil {
 		return fmt.Errorf("Error querying the projects, err=%s", err)
 	}
@@ -413,9 +404,14 @@ func resourceIdentityAgencyV3Read(d *schema.ResourceData, meta interface{}) erro
 
 func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := agencyClient(d, config)
+	region := GetRegion(d, config)
+	client, err := config.IAMV3Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating client: %s", err)
+		return fmt.Errorf("Error creating IAM client: %s", err)
+	}
+	identityClient, err := config.IdentityV3Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
 
 	aID := d.Id()
@@ -452,14 +448,14 @@ func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) er
 
 	var roles map[string]string
 	if d.HasChange("project_role") || d.HasChange("domain_roles") {
-		roles, err = allRolesOfDomain(domainID, client)
+		roles, err = allRolesOfDomain(identityClient, domainID)
 		if err != nil {
 			return fmt.Errorf("Error querying the roles, err=%s", err)
 		}
 	}
 
 	if d.HasChange("project_role") {
-		projects, err := listProjectsOfDomain(domainID, client)
+		projects, err := listProjectsOfDomain(identityClient, domainID)
 		if err != nil {
 			return fmt.Errorf("Error querying the projects, err=%s", err)
 		}
@@ -539,9 +535,9 @@ func resourceIdentityAgencyV3Update(d *schema.ResourceData, meta interface{}) er
 
 func resourceIdentityAgencyV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := agencyClient(d, config)
+	client, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating client: %s", err)
+		return fmt.Errorf("Error creating IAM client: %s", err)
 	}
 
 	rID := d.Id()

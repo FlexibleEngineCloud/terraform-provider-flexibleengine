@@ -57,7 +57,7 @@ func TestAccIdentityProjectV3_basic(t *testing.T) {
 
 func testAccCheckIdentityProjectV3Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	identityClient, err := config.identityV3Client(OS_REGION_NAME)
+	identityClient, err := config.IdentityV3Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -88,7 +88,7 @@ func testAccCheckIdentityProjectV3Exists(n string, project *projects.Project) re
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		identityClient, err := config.identityV3Client(OS_REGION_NAME)
+		identityClient, err := config.IdentityV3Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 		}

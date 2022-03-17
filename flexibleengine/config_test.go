@@ -58,13 +58,21 @@ func TestAccServiceEndpoints_Global(t *testing.T) {
 	config := testProvider.Meta().(*Config)
 
 	// test the endpoint of identity service
-	serviceClient, err = config.identityV3Client(OS_REGION_NAME)
+	serviceClient, err = config.IdentityV3Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine identity client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://iam.%s.%s/v3/", OS_REGION_NAME, defaultCloud)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "Identity v3")
+
+	serviceClient, err = config.IAMV3Client(OS_REGION_NAME)
+	if err != nil {
+		t.Fatalf("Error creating FlexibleEngine IAM client: %s", err)
+	}
+	expectedURL = fmt.Sprintf("https://iam.%s.%s/v3.0/", OS_REGION_NAME, defaultCloud)
+	actualURL = serviceClient.ResourceBaseURL()
+	testCheckServiceURL(t, expectedURL, actualURL, "IAM v3.0")
 }
 
 func TestAccServiceEndpoints_Management(t *testing.T) {
