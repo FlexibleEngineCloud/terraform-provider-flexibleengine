@@ -497,7 +497,7 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE Node client: %s", err)
 	}
-	computeClient, err := config.computeV1Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
 	}
@@ -592,7 +592,7 @@ func resourceCCENodeV3Update(d *schema.ResourceData, meta interface{}) error {
 
 	// update tags
 	if d.HasChange("tags") {
-		computeClient, err := config.computeV1Client(GetRegion(d, config))
+		computeClient, err := config.ComputeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
 		}

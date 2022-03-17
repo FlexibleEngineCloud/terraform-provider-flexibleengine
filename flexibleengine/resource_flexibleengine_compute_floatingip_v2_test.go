@@ -12,6 +12,7 @@ import (
 
 func TestAccComputeV2FloatingIP_basic(t *testing.T) {
 	var fip floatingips.FloatingIP
+	resourceName := "flexibleengine_compute_floatingip_v2.fip_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,8 +22,13 @@ func TestAccComputeV2FloatingIP_basic(t *testing.T) {
 			{
 				Config: testAccComputeV2FloatingIP_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2FloatingIPExists("flexibleengine_compute_floatingip_v2.fip_1", &fip),
+					testAccCheckComputeV2FloatingIPExists(resourceName, &fip),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -30,7 +36,7 @@ func TestAccComputeV2FloatingIP_basic(t *testing.T) {
 
 func testAccCheckComputeV2FloatingIPDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	computeClient, err := config.computeV2Client(OS_REGION_NAME)
+	computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -61,7 +67,7 @@ func testAccCheckComputeV2FloatingIPExists(n string, kp *floatingips.FloatingIP)
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}

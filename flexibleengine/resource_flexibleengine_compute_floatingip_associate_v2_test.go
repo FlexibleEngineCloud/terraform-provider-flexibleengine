@@ -29,6 +29,11 @@ func TestAccComputeV2FloatingIPAssociate_basic(t *testing.T) {
 					testAccCheckComputeV2FloatingIPAssociateAssociated(&fip, &instance, 1),
 				),
 			},
+			{
+				ResourceName:      "flexibleengine_compute_floatingip_associate_v2.fip_1",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -109,7 +114,7 @@ func TestAccComputeV2FloatingIPAssociate_attachNew(t *testing.T) {
 
 func testAccCheckComputeV2FloatingIPAssociateDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	computeClient, err := config.computeV2Client(OS_REGION_NAME)
+	computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -153,7 +158,7 @@ func testAccCheckComputeV2FloatingIPAssociateAssociated(
 	fip *floatingips.FloatingIP, instance *servers.Server, n int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 
 		newInstance, err := servers.Get(computeClient, instance.ID).Extract()
 		if err != nil {
@@ -192,8 +197,8 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 `, OS_NETWORK_ID)
 
@@ -210,9 +215,9 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.access_ip_v4}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  fixed_ip    = flexibleengine_compute_instance_v2.instance_1.access_ip_v4
 }
 `, OS_NETWORK_ID)
 
@@ -230,9 +235,9 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  fixed_ip    = flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4
 }
 `, OS_NETWORK_ID)
 
@@ -243,7 +248,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -255,7 +260,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   security_groups = ["default"]
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
+    uuid = flexibleengine_networking_network_v2.network_1.id
   }
 
   network {
@@ -267,9 +272,9 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  fixed_ip = "${flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  fixed_ip    = flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4
 }
 `, OS_NETWORK_ID)
 
@@ -289,8 +294,8 @@ resource "flexibleengine_networking_floatingip_v2" "fip_2" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 `, OS_NETWORK_ID)
 
@@ -310,7 +315,7 @@ resource "flexibleengine_networking_floatingip_v2" "fip_2" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_2.address}"
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_2.address
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 `, OS_NETWORK_ID)

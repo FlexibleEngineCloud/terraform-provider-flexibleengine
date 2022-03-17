@@ -331,7 +331,7 @@ func resourceBlockStorageVolumeV2Delete(d *schema.ResourceData, meta interface{}
 	// make sure this volume is detached from all instances before deleting
 	if len(v.Attachments) > 0 {
 		log.Printf("[DEBUG] detaching volumes")
-		if computeClient, err := config.computeV2Client(GetRegion(d, config)); err != nil {
+		if computeClient, err := config.ComputeV2Client(GetRegion(d, config)); err != nil {
 			return err
 		} else {
 			for _, volumeAttachment := range v.Attachments {

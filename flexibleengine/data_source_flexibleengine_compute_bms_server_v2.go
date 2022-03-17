@@ -80,24 +80,28 @@ func dataSourceBMSServersV2() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"uuid": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"ip": {
+						"port": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"fixed_ip_v4": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"fixed_ip_v6": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"mac": {
 							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"type": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"version": {
-							Type:     schema.TypeFloat,
 							Computed: true,
 						},
 					},
@@ -155,7 +159,10 @@ func dataSourceBMSServersV2() *schema.Resource {
 
 func dataSourceBMSServersV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	bmsClient, err := config.bmsClient(GetRegion(d, config))
+	bmsClient, err := config.ComputeV2Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
+	}
 
 	listServerOpts := servers.ListOpts{
 		ID:         d.Get("id").(string),
@@ -194,14 +201,12 @@ func dataSourceBMSServersV2Read(d *schema.ResourceData, meta interface{}) error 
 		secGroups = append(secGroups, mapping)
 	}
 
-	d.Set("server_id", server.ID)
 	d.Set("user_id", server.UserID)
 	d.Set("name", server.Name)
 	d.Set("status", server.Status)
 	d.Set("host_status", server.HostStatus)
 	d.Set("host_id", server.HostID)
 	d.Set("flavor_id", server.Flavor.ID)
-	d.Set("network", server.Addresses)
 	d.Set("metadata", server.Metadata)
 	d.Set("tenant_id", server.TenantID)
 	d.Set("image_id", server.Image.ID)
@@ -219,7 +224,7 @@ func dataSourceBMSServersV2Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("instance_name", server.InstanceName)
 	d.Set("tags", server.Tags)
 	d.Set("region", GetRegion(d, config))
-	networks, err := flattenServerNetwork(d, meta)
+	networks, err := flattenServerNetwork(d, meta, &server)
 	if err != nil {
 		return err
 	}

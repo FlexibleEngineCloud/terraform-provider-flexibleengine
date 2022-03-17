@@ -14,7 +14,7 @@ import (
 
 func resourceECSAutoRecoveryV1Read(d *schema.ResourceData, meta interface{}, instanceID string) (bool, error) {
 	config := meta.(*Config)
-	client, err := config.computeV1Client(GetRegion(d, config))
+	client, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return false, fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -31,7 +31,7 @@ func resourceECSAutoRecoveryV1Read(d *schema.ResourceData, meta interface{}, ins
 
 func setAutoRecoveryForInstance(d *schema.ResourceData, meta interface{}, instanceID string, ar bool) error {
 	config := meta.(*Config)
-	client, err := config.computeV1Client(GetRegion(d, config))
+	client, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -60,14 +60,14 @@ func resourceECSTagsV1Read(d *schema.ResourceData, meta interface{}, instanceID 
 	tagmap := make(map[string]string)
 
 	config := meta.(*Config)
-	client, err := config.computeV1Client(GetRegion(d, config))
+	client, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return tagmap, fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 	}
 
 	ecsTaglist, err := tags.Get(client, instanceID).Extract()
 	if err != nil {
-		return tagmap, fmt.Errorf("Error fetching OpenTelekomCloud instance tags: %s", err)
+		return tagmap, fmt.Errorf("Error fetching ECS instance tags: %s", err)
 	}
 
 	for _, val := range ecsTaglist.Tags {

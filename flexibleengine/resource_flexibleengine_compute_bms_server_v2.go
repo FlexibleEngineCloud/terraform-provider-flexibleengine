@@ -262,6 +262,20 @@ func resourceComputeBMSInstanceV2() *schema.Resource {
 	}
 }
 
+func expandBmsInstanceNetworks(allInstanceNetworks []ServerNetwork) []servers.Network {
+	var networks []servers.Network
+	for _, v := range allInstanceNetworks {
+		n := servers.Network{
+			UUID:    v.UUID,
+			Port:    v.Port,
+			FixedIP: v.FixedIP,
+		}
+		networks = append(networks, n)
+	}
+
+	return networks
+}
+
 func bmsTagsCreate(client *golangsdk.ServiceClient, serverID string) error {
 	createOpts := tags.CreateOpts{
 		Tag: []string{"__type_baremetal"},
@@ -269,7 +283,7 @@ func bmsTagsCreate(client *golangsdk.ServiceClient, serverID string) error {
 
 	_, err := tags.Create(client, serverID, createOpts).Extract()
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine Tags: %s", err)
+		return fmt.Errorf("Error creating BMS Tags: %s", err)
 	}
 
 	return nil
@@ -277,19 +291,24 @@ func bmsTagsCreate(client *golangsdk.ServiceClient, serverID string) error {
 
 func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	bmsClient, err := config.ComputeV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
+	}
+	imsClient, err := config.ImageV2Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	var createOpts servers.CreateOptsBuilder
 
-	imageId, err := getBMSImageID(computeClient, d)
+	imageId, err := getBMSImageID(imsClient, d)
 	if err != nil {
 		return err
 	}
 
-	flavorId, err := getComputeFlavorID(computeClient, d)
+	flavorId, err := getComputeFlavorID(bmsClient, d)
 	if err != nil {
 		return err
 	}
@@ -339,9 +358,9 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 
 	var server *servers.Server
 	if _, ok := d.GetOk("block_device"); ok {
-		server, err = bootfromvolume.Create(computeClient, createOpts).Extract()
+		server, err = bootfromvolume.Create(bmsClient, createOpts).Extract()
 	} else {
-		server, err = servers.Create(computeClient, createOpts).Extract()
+		server, err = servers.Create(bmsClient, createOpts).Extract()
 	}
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine server: %s", err)
@@ -352,10 +371,6 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 	d.SetId(server.ID)
 
 	// Set bms sepcific tag
-	bmsClient, err := config.bmsClient(GetRegion(d, config))
-	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine bms client: %s", err)
-	}
 	err = bmsTagsCreate(bmsClient, d.Id())
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine bms tag: %s", err)
@@ -370,7 +385,7 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"BUILD"},
 		Target:     []string{"ACTIVE"},
-		Refresh:    computeV2StateRefreshFunc(computeClient, server.ID),
+		Refresh:    computeV2StateRefreshFunc(bmsClient, server.ID),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -383,17 +398,22 @@ func resourceComputeBMSInstanceV2Create(d *schema.ResourceData, meta interface{}
 			server.ID, err)
 	}
 
-	return resourceComputeInstanceV2Read(d, meta)
+	return resourceComputeBMSInstanceV2Read(d, meta)
 }
 
 func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	bmsClient, err := config.ComputeV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
+	imsClient, err := config.ImageV2Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
+	}
 
-	server, err := bms.Get(computeClient, d.Id()).Extract()
+	server, err := bms.Get(bmsClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "server")
 	}
@@ -403,7 +423,7 @@ func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("name", server.Name)
 
 	// Get the instance network and address information
-	networks, err := flattenServerNetwork(d, meta)
+	networks, err := flattenServerNetwork(d, meta, server)
 	if err != nil {
 		return err
 	}
@@ -445,14 +465,14 @@ func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("metadata", server.Metadata)
 	d.Set("flavor_id", server.Flavor.ID)
 
-	flavor, err := flavors.Get(computeClient, server.Flavor.ID).Extract()
+	flavor, err := flavors.Get(bmsClient, server.Flavor.ID).Extract()
 	if err != nil {
 		return err
 	}
 	d.Set("flavor_name", flavor.Name)
 
 	// Set the instance's image information appropriately
-	if err := setBMSImageInfo(computeClient, server, d); err != nil {
+	if err := setBMSImageInfo(imsClient, server, d); err != nil {
 		return err
 	}
 
@@ -462,14 +482,14 @@ func resourceComputeBMSInstanceV2Read(d *schema.ResourceData, meta interface{}) 
 	d.Set("host_id", server.HostID)
 	d.Set("kernel_id", server.KernelId)
 	d.Set("user_id", server.UserID)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	return nil
 }
 
 func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -632,7 +652,7 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 
 func resourceComputeBMSInstanceV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}

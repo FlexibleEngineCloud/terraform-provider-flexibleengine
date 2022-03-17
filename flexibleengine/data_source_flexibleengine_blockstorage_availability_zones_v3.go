@@ -39,7 +39,7 @@ func dataSourceBlockStorageAvailabilityZonesV3() *schema.Resource {
 
 func dataSourceBlockStorageAvailabilityZonesV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.computeV2Client(GetRegion(d, config))
+	client, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine block storage client: %s", err)
 	}

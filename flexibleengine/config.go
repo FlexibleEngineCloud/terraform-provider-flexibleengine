@@ -291,30 +291,6 @@ func (c *Config) getDomainID() (string, error) {
 	return all[0].ID, nil
 }
 
-// client for ecs v1
-func (c *Config) computeV1Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewComputeV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-// client for nova v2 and bms Services i.e. flavor, nic, keypair.
-func (c *Config) computeV2Client(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewComputeV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
-//bmsClient used to access the v2.1 bms Services i.e. servers, tags.
-func (c *Config) bmsClient(region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewBMSV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
-	})
-}
-
 func (c *Config) identityV3Client(region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewIdentityV3(c.DomainClient, golangsdk.EndpointOpts{
 		//Region:       c.determineRegion(region),

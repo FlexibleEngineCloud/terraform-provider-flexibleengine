@@ -313,7 +313,7 @@ func parseEcsInstanceTagInfo(tags []string) map[string]interface{} {
 
 func dataSourceComputeInstancesRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	config := meta.(*Config)
-	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine ECS client: %s", err)
 	}

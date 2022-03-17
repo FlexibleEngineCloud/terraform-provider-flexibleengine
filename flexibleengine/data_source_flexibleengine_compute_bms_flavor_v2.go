@@ -75,7 +75,7 @@ func dataSourceBMSFlavorV2() *schema.Resource {
 
 func dataSourceBMSFlavorV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	flavorClient, err := config.computeV2Client(GetRegion(d, config))
+	flavorClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating Flexibleengine bms client: %s", err)
 	}

@@ -160,7 +160,7 @@ func dataSourceComputeInstance() *schema.Resource {
 
 func dataSourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ECS client: %s", err)
 	}
@@ -263,7 +263,7 @@ func dataSourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// Set meta
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err == nil {
 		novaResp, err := servers.Get(computeClient, d.Id()).Extract()
 		if err == nil {

@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
+	bms "github.com/chnsz/golangsdk/openstack/bms/v2/servers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -21,6 +21,7 @@ import (
 // virtual NIC.
 type ServerNICS struct {
 	IP      string
+	IPv6    string
 	MAC     string
 	Type    string
 	Version float64
@@ -41,6 +42,7 @@ type ServerNetwork struct {
 	Name          string
 	Port          string
 	FixedIP       string
+	FixedIPv6     string
 	AccessNetwork bool
 }
 
@@ -73,7 +75,7 @@ func getAllServerNetwork(d *schema.ResourceData, meta interface{}) ([]ServerNetw
 
 		if networkID == "" && networkName == "" && portID == "" {
 			return nil, fmt.Errorf(
-				"At least one of network.uuid, network.name, or network.port must be set.")
+				"At least one of network.uuid, network.name, or network.port must be set")
 		}
 
 		// If a user specified both an ID and name, that makes things easy
@@ -142,22 +144,25 @@ func getServerAddresses(addresses map[string]interface{}) []ServerAddress {
 
 		instanceNIC := ServerNICS{}
 		for _, v := range v.([]interface{}) {
-
 			v := v.(map[string]interface{})
 
-			//	if v["OS-EXT-IPS:type"] == "fixed" {
+			nicType := v["OS-EXT-IPS:type"].(string)
+			if nicType != "fixed" {
+				continue
+			}
+
 			switch v["version"].(float64) {
 			case 6:
-				instanceNIC.IP = fmt.Sprintf("[%s]", v["addr"].(string))
+				instanceNIC.IPv6 = v["addr"].(string)
 			default:
 				instanceNIC.IP = v["addr"].(string)
 			}
-			//}
+
 			if v, ok := v["OS-EXT-IPS-MAC:mac_addr"].(string); ok {
 				instanceNIC.MAC = v
 			}
 
-			instanceNIC.Type = v["OS-EXT-IPS:type"].(string)
+			instanceNIC.Type = nicType
 			instanceNIC.Version = v["version"].(float64)
 
 			instanceAddresses.ServerNICS = append(instanceAddresses.ServerNICS, instanceNIC)
@@ -171,34 +176,9 @@ func getServerAddresses(addresses map[string]interface{}) []ServerAddress {
 	return allServerAddresses
 }
 
-func expandBmsInstanceNetworks(allInstanceNetworks []ServerNetwork) []servers.Network {
-	var networks []servers.Network
-	for _, v := range allInstanceNetworks {
-		n := servers.Network{
-			UUID:    v.UUID,
-			Port:    v.Port,
-			FixedIP: v.FixedIP,
-		}
-		networks = append(networks, n)
-	}
-
-	return networks
-}
-
 // flattenInstanceNetworks collects instance network information from different
 // sources and aggregates it all together into a map array.
-func flattenServerNetwork(d *schema.ResourceData, meta interface{}) ([]map[string]interface{}, error) {
-
-	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
-	if err != nil {
-		return nil, fmt.Errorf("Error creating Flexibleengine compute client: %s", err)
-	}
-
-	server, err := servers.Get(computeClient, d.Id()).Extract()
-	if err != nil {
-		return nil, CheckDeleted(d, err, "server")
-	}
+func flattenServerNetwork(d *schema.ResourceData, meta interface{}, server *bms.Server) ([]map[string]interface{}, error) {
 
 	allServerAddresses := getServerAddresses(server.Addresses)
 	allServerNetworks, err := getAllServerNetwork(d, meta)
@@ -217,11 +197,12 @@ func flattenServerNetwork(d *schema.ResourceData, meta interface{}) ([]map[strin
 		for _, instanceAddresses := range allServerAddresses {
 			for _, instanceNIC := range instanceAddresses.ServerNICS {
 				v := map[string]interface{}{
-					"name":    instanceAddresses.NetworkName,
-					"ip":      instanceNIC.IP,
-					"mac":     instanceNIC.MAC,
-					"type":    instanceNIC.Type,
-					"version": instanceNIC.Version,
+					"name":        instanceAddresses.NetworkName,
+					"fixed_ip_v4": instanceNIC.IP,
+					"mac":         instanceNIC.MAC,
+				}
+				if instanceNIC.IPv6 != "" {
+					v["fixed_ip_v6"] = instanceNIC.IPv6
 				}
 				networks = append(networks, v)
 			}
@@ -241,9 +222,11 @@ func flattenServerNetwork(d *schema.ResourceData, meta interface{}) ([]map[strin
 				copy(instanceAddresses.ServerNICS, instanceAddresses.ServerNICS[1:])
 				v := map[string]interface{}{
 					"name":           instanceAddresses.NetworkName,
-					"ip":             instanceNIC.IP,
 					"uuid":           instanceNetwork.UUID,
 					"port":           instanceNetwork.Port,
+					"fixed_ip_v4":    instanceNIC.IP,
+					"fixed_ip_v6":    instanceNIC.IPv6,
+					"mac":            instanceNIC.MAC,
 					"access_network": instanceNetwork.AccessNetwork,
 				}
 				networks = append(networks, v)

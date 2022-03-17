@@ -61,7 +61,7 @@ func dataSourceBMSNicV2() *schema.Resource {
 
 func dataSourceBMSNicV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	nicClient, err := config.computeV2Client(GetRegion(d, config))
+	nicClient, err := config.ComputeV2Client(GetRegion(d, config))
 
 	listOpts := nics.ListOpts{
 		ID:     d.Get("id").(string),
