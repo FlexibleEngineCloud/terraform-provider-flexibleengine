@@ -18,11 +18,14 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/pathorcontents"
 )
 
-type Config struct {
-	huaweiconfig.Config
-}
+// PublicType indicates that an endpoint is "public" in service catalog
+const PublicType golangsdk.Availability = golangsdk.AvailabilityPublic
 
-func (c *Config) LoadAndValidate() error {
+// Config is the alias of huaweicloud Config
+type Config = huaweiconfig.Config
+
+// LoadAndValidate overwrites the the c.LoadAndValidate
+func LoadAndValidate(c *Config) error {
 	if c.MaxRetries < 0 {
 		return fmt.Errorf("max_retries should be a positive value")
 	}
@@ -51,7 +54,7 @@ func (c *Config) LoadAndValidate() error {
 
 	// set DomainID for IAM resource
 	if c.DomainID == "" {
-		if domainID, err := c.getDomainID(); err == nil {
+		if domainID, err := getDomainID(c); err == nil {
 			c.DomainID = domainID
 		} else {
 			log.Printf("[WARN] get domain id failed: %s", err)
@@ -250,18 +253,7 @@ func genClients(c *Config, pao, dao golangsdk.AuthOptionsProvider) error {
 	return err
 }
 
-func (c *Config) determineRegion(region string) string {
-	// If a resource-level region was not specified, and a provider-level region was set,
-	// use the provider-level region.
-	if region == "" && c.Region != "" {
-		region = c.Region
-	}
-
-	log.Printf("[DEBUG] FlexibleEngine Region is: %s", region)
-	return region
-}
-
-func (c *Config) getDomainID() (string, error) {
+func getDomainID(c *Config) (string, error) {
 	identityClient, err := c.IdentityV3Client(c.Region)
 	if err != nil {
 		return "", fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
@@ -291,41 +283,48 @@ func (c *Config) getDomainID() (string, error) {
 	return all[0].ID, nil
 }
 
-func (c *Config) getHwEndpointType() golangsdk.Availability {
-	return golangsdk.AvailabilityPublic
-}
-
 func natV2Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
+		Region:       determineRegion(c, region),
+		Availability: PublicType,
 	})
 }
 
 func orchestrationV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewOrchestrationV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
+		Region:       determineRegion(c, region),
+		Availability: PublicType,
 	})
 }
 
 func sdrsV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewSDRSV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       region,
-		Availability: c.getHwEndpointType(),
+		Region:       determineRegion(c, region),
+		Availability: PublicType,
 	})
 }
 
 func otcV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewElbV1(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
+		Region:       determineRegion(c, region),
+		Availability: PublicType,
 	}, "elb")
 }
 
 func drsV2Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewDRSServiceV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       c.determineRegion(region),
-		Availability: c.getHwEndpointType(),
+		Region:       determineRegion(c, region),
+		Availability: PublicType,
 	})
+}
+
+func determineRegion(c *Config, region string) string {
+	// If a resource-level region was not specified, and a provider-level region was set,
+	// use the provider-level region.
+	if region == "" && c.Region != "" {
+		region = c.Region
+	}
+
+	log.Printf("[DEBUG] FlexibleEngine Region is: %s", region)
+	return region
 }

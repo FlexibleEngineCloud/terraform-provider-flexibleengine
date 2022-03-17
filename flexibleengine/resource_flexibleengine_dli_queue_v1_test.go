@@ -71,7 +71,7 @@ resource flexibleengine_dli_queue "test" {
 
 func testAccCheckDliQueueV1Destroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	client, err := config.Config.DliV1Client(OS_REGION_NAME)
+	client, err := config.DliV1Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("error creating dli client, err=%s", err)
 	}
@@ -93,7 +93,7 @@ func testAccCheckDliQueueV1Destroy(s *terraform.State) error {
 func testAccCheckDliQueueV1Exists(resourceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		client, err := config.Config.DliV1Client(OS_REGION_NAME)
+		client, err := config.DliV1Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("error creating dli client, err=%s", err)
 		}
