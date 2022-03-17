@@ -2,7 +2,6 @@ package flexibleengine
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -97,11 +96,10 @@ func TestAccIdentityV3Agency_domain(t *testing.T) {
 
 func testAccCheckIdentityV3AgencyDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	identityClient, err := config.identityV3Client(OS_REGION_NAME)
+	identityClient, err := config.IAMV3Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "flexibleengine_identity_agency_v3" {
@@ -129,11 +127,11 @@ func testAccCheckIdentityV3AgencyExists(n string, a *agency.Agency) resource.Tes
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		identityClient, err := config.identityV3Client(OS_REGION_NAME)
+		identityClient, err := config.IAMV3Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+			return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 		}
-		identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
+
 		found, err := agency.Get(identityClient, rs.Primary.ID).Extract()
 		if err != nil {
 			return err

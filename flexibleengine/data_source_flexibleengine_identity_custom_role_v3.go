@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/chnsz/golangsdk/openstack/identity/v3.0/policies"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -53,12 +52,10 @@ func dataSourceIdentityCustomRoleV3() *schema.Resource {
 
 func dataSourceIdentityCustomRoleRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IAMV3Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine IAM client: %s", err)
 	}
-
-	identityClient.Endpoint = strings.Replace(identityClient.Endpoint, "v3", "v3.0", 1)
 
 	allPages, err := policies.List(identityClient).AllPages()
 	if err != nil {

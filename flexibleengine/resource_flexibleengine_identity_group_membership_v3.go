@@ -2,6 +2,7 @@ package flexibleengine
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/identity/v3/users"
@@ -37,7 +38,7 @@ func resourceIdentityGroupMembershipV3() *schema.Resource {
 
 func resourceIdentityGroupMembershipV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -56,7 +57,7 @@ func resourceIdentityGroupMembershipV3Create(d *schema.ResourceData, meta interf
 
 func resourceIdentityGroupMembershipV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -69,9 +70,8 @@ func resourceIdentityGroupMembershipV3Read(d *schema.ResourceData, meta interfac
 		if _, b := err.(golangsdk.ErrDefault404); b {
 			d.SetId("")
 			return nil
-		} else {
-			return fmt.Errorf("Unable to query groups: %s", err)
 		}
+		return fmt.Errorf("Unable to query groups: %s", err)
 	}
 
 	allUsers, err := users.ExtractUsers(allPages)
@@ -94,7 +94,7 @@ func resourceIdentityGroupMembershipV3Read(d *schema.ResourceData, meta interfac
 
 func resourceIdentityGroupMembershipV3Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -129,7 +129,7 @@ func resourceIdentityGroupMembershipV3Update(d *schema.ResourceData, meta interf
 
 func resourceIdentityGroupMembershipV3Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	identityClient, err := config.identityV3Client(GetRegion(d, config))
+	identityClient, err := config.IdentityV3Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine identity client: %s", err)
 	}
@@ -157,7 +157,11 @@ func addUsersToGroup(identityClient *golangsdk.ServiceClient, group string, user
 func removeUsersFromGroup(identityClient *golangsdk.ServiceClient, group string, userList []string) error {
 	for _, u := range userList {
 		if r := users.RemoveFromGroup(identityClient, group, u).ExtractErr(); r != nil {
-			return fmt.Errorf("Error remove user %s from group %s: %s", group, u, r)
+			if _, ok := r.(golangsdk.ErrDefault404); ok {
+				log.Printf("[WARN] the user %s is not exist, ignore to remove it from the group", u)
+				continue
+			}
+			return fmt.Errorf("Error remove user %s from group %s: %s", u, group, r)
 		}
 	}
 	return nil
