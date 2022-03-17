@@ -376,14 +376,19 @@ func resourceComputeInstanceV2() *schema.Resource {
 
 func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	computeClient, err := config.ComputeV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
+	}
+	imsClient, err := config.ImageV2Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	var createOpts servers.CreateOptsBuilder
 
-	imageId, err := getInstanceImageID(computeClient, d)
+	imageId, err := getInstanceImageID(imsClient, d)
 	if err != nil {
 		return err
 	}
@@ -501,7 +506,7 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if hasFilledOpt(d, "tags") {
-		ecsClient, err := config.computeV1Client(GetRegion(d, config))
+		ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 		}
@@ -519,10 +524,15 @@ func resourceComputeInstanceV2Create(d *schema.ResourceData, meta interface{}) e
 
 func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
-	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	computeClient, err := config.ComputeV2Client(region)
+	ecsClient, err := config.ComputeV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
+	}
+	imsClient, err := config.ImageV2Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine image client: %s", err)
 	}
 
 	server, err := cloudservers.Get(ecsClient, d.Id()).Extract()
@@ -532,7 +542,7 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 
 	log.Printf("[DEBUG] Retrieved compute instance %s: %+v", d.Id(), server)
 	// Set some attributes
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 	d.Set("availability_zone", server.AvailabilityZone)
 	d.Set("name", server.Name)
 	d.Set("status", server.Status)
@@ -542,7 +552,7 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 	d.Set("flavor_name", flavorInfo.Name)
 
 	// Set the instance's image information appropriately
-	if err := setInstanceImageInfo(d, computeClient, server.Image.ID); err != nil {
+	if err := setInstanceImageInfo(d, imsClient, server.Image.ID); err != nil {
 		return err
 	}
 
@@ -662,7 +672,7 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 
 func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -832,7 +842,7 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 		oMap := oRaw.(map[string]interface{})
 		nMap := nRaw.(map[string]interface{})
 
-		ecsClient, err := config.computeV1Client(GetRegion(d, config))
+		ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute v1 client: %s", err)
 		}
@@ -859,7 +869,7 @@ func resourceComputeInstanceV2Update(d *schema.ResourceData, meta interface{}) e
 
 func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -916,7 +926,7 @@ func resourceComputeInstanceV2Delete(d *schema.ResourceData, meta interface{}) e
 
 func resourceComputeInstanceV2ImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
-	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 	if err != nil {
 		return nil, fmt.Errorf("Error creating HuaweiCloud compute client: %s", err)
 	}

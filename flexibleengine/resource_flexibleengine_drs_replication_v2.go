@@ -122,7 +122,7 @@ func resourceShutdownInstance(d *schema.ResourceData, meta interface{}) error {
 		if v.AvailabilityZone != prioritystation {
 			log.Printf("[DEBUG] Get disaster recovery volume (%s): %#v", volumeid, v)
 
-			computeClient, err := config.computeV2Client(GetRegion(d, config))
+			computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 			if err != nil {
 				return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 			}

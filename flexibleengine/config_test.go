@@ -102,7 +102,7 @@ func TestAccServiceEndpoints_Management(t *testing.T) {
 }
 
 // TestAccServiceEndpoints_Compute test for endpoints of the clients used in ecs
-// include computeV1Client,computeV2Client,bmsClient,autoscalingV1Client,imageV2Client,
+// include computeV1Client,computeV2Client,autoscalingV1Client,imageV2Client,
 // cceV3Client
 func TestAccServiceEndpoints_Compute(t *testing.T) {
 	testAccPreCheckServiceEndpoints(t)
@@ -120,7 +120,7 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 	var err error
 
 	// test for computeV1Client
-	serviceClient, err = config.computeV1Client(OS_REGION_NAME)
+	serviceClient, err = config.ComputeV1Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine ecs v1 client: %s", err)
 	}
@@ -130,23 +130,13 @@ func TestAccServiceEndpoints_Compute(t *testing.T) {
 
 	// test for computeV2Client
 	serviceClient, err = nil, nil
-	serviceClient, err = config.computeV2Client(OS_REGION_NAME)
+	serviceClient, err = config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine ecs v2 client: %s", err)
 	}
-	expectedURL = fmt.Sprintf("https://ecs.%s.%s/v2/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
-	actualURL = serviceClient.ResourceBaseURL()
-	testCheckServiceURL(t, expectedURL, actualURL, "ecs v2")
-
-	// test for bmsClient
-	serviceClient, err = nil, nil
-	serviceClient, err = config.bmsClient(OS_REGION_NAME)
-	if err != nil {
-		t.Fatalf("Error creating FlexibleEngine bms v2 client: %s", err)
-	}
 	expectedURL = fmt.Sprintf("https://ecs.%s.%s/v2.1/%s/", OS_REGION_NAME, defaultCloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
-	testCheckServiceURL(t, expectedURL, actualURL, "bms v2.1")
+	testCheckServiceURL(t, expectedURL, actualURL, "ecs v2")
 
 	// test for AutoscalingV1Client
 	serviceClient, err = nil, nil

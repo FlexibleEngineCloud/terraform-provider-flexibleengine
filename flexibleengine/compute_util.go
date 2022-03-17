@@ -9,10 +9,10 @@ import (
 	"github.com/chnsz/golangsdk/openstack/blockstorage/v2/volumes"
 	bms "github.com/chnsz/golangsdk/openstack/bms/v2/servers"
 	"github.com/chnsz/golangsdk/openstack/compute/v2/flavors"
-	"github.com/chnsz/golangsdk/openstack/compute/v2/images"
 	"github.com/chnsz/golangsdk/openstack/compute/v2/servers"
 	"github.com/chnsz/golangsdk/openstack/ecs/v1/block_devices"
 	"github.com/chnsz/golangsdk/openstack/ecs/v1/cloudservers"
+	"github.com/chnsz/golangsdk/openstack/imageservice/v2/images"
 	"github.com/chnsz/golangsdk/openstack/networking/v2/networks"
 	"github.com/chnsz/golangsdk/openstack/networking/v2/ports"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -77,7 +77,7 @@ func getComputeFlavorID(client *golangsdk.ServiceClient, d *schema.ResourceData)
 // If a bootable block_device was specified, ignore the image altogether.
 // If an image_id was specified, use it.
 // If an image_name was specified, look up the image ID, report if error.
-func getInstanceImageID(computeClient *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
+func getInstanceImageID(client *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
 
 	if vL, ok := d.GetOk("block_device"); ok {
 		needImage := false
@@ -109,11 +109,11 @@ func getInstanceImageID(computeClient *golangsdk.ServiceClient, d *schema.Resour
 	}
 
 	if imageName != "" {
-		imageID, err := images.IDFromName(computeClient, imageName)
+		img, err := getImage(client, "", imageName)
 		if err != nil {
 			return "", err
 		}
-		return imageID, nil
+		return img.ID, nil
 	}
 
 	return "", fmt.Errorf("neither a boot device, image ID, or image name were able to be determined")
@@ -122,7 +122,7 @@ func getInstanceImageID(computeClient *golangsdk.ServiceClient, d *schema.Resour
 // getBMSImageID determines the Image ID using the following rules:
 // If an image_id was specified, use it.
 // If an image_name was specified, look up the image ID, report if error.
-func getBMSImageID(computeClient *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
+func getBMSImageID(client *golangsdk.ServiceClient, d *schema.ResourceData) (string, error) {
 
 	if imageID := d.Get("image_id").(string); imageID != "" {
 		return imageID, nil
@@ -141,17 +141,49 @@ func getBMSImageID(computeClient *golangsdk.ServiceClient, d *schema.ResourceDat
 	}
 
 	if imageName != "" {
-		imageID, err := images.IDFromName(computeClient, imageName)
+		img, err := getImage(client, "", imageName)
 		if err != nil {
 			return "", err
 		}
-		return imageID, nil
+		return img.ID, nil
 	}
 
 	return "", fmt.Errorf("neither a image ID, or image name were able to be determined")
 }
 
-func setInstanceImageInfo(d *schema.ResourceData, computeClient *golangsdk.ServiceClient, imageID string) error {
+func getImage(client *golangsdk.ServiceClient, id, name string) (*images.Image, error) {
+	listOpts := &images.ListOpts{
+		ID:    id,
+		Name:  name,
+		Limit: 1,
+	}
+	allPages, err := images.List(client, listOpts).AllPages()
+	if err != nil {
+		return nil, fmt.Errorf("Unable to query images: %s", err)
+	}
+
+	allImages, err := images.ExtractImages(allPages)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to retrieve images: %s", err)
+	}
+
+	if len(allImages) < 1 {
+		return nil, fmt.Errorf("Unable to find images %s: Maybe not existed", id)
+	}
+
+	img := allImages[0]
+	if id != "" && img.ID != id {
+		return nil, fmt.Errorf("Unexpected images ID")
+	}
+	if name != "" && img.Name != name {
+		return nil, fmt.Errorf("Unexpected images Name")
+	}
+
+	log.Printf("[DEBUG] Retrieved Image %s: %#v", id, img)
+	return &img, nil
+}
+
+func setInstanceImageInfo(d *schema.ResourceData, client *golangsdk.ServiceClient, imageID string) error {
 	// If block_device was used, an Image does not need to be specified, unless an image/local
 	// combination was used. This emulates normal boot behavior. Otherwise, ignore the image altogether.
 	if vL, ok := d.GetOk("block_device"); ok {
@@ -170,39 +202,33 @@ func setInstanceImageInfo(d *schema.ResourceData, computeClient *golangsdk.Servi
 
 	if imageID != "" {
 		d.Set("image_id", imageID)
-		if image, err := images.Get(computeClient, imageID).Extract(); err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				// If the image name can't be found, set the value to "Image not found".
-				// The most likely scenario is that the image no longer exists in the Image Service
-				// but the instance still has a record from when it existed.
-				d.Set("image_name", "Image not found")
-				return nil
-			}
-			return err
-		} else {
-			d.Set("image_name", image.Name)
+		image, err := images.Get(client, imageID).Extract()
+		if err != nil {
+			// If the image name can't be found, set the value to "Image not found".
+			// The most likely scenario is that the image no longer exists in the Image Service
+			// but the instance still has a record from when it existed.
+			d.Set("image_name", "Image not found")
+			return nil
 		}
+		d.Set("image_name", image.Name)
 	}
 
 	return nil
 }
 
-func setBMSImageInfo(computeClient *golangsdk.ServiceClient, server *bms.Server, d *schema.ResourceData) error {
+func setBMSImageInfo(client *golangsdk.ServiceClient, server *bms.Server, d *schema.ResourceData) error {
 	imageID := server.Image.ID
 	if imageID != "" {
 		d.Set("image_id", imageID)
-		if image, err := images.Get(computeClient, imageID).Extract(); err != nil {
-			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				// If the image name can't be found, set the value to "Image not found".
-				// The most likely scenario is that the image no longer exists in the Image Service
-				// but the instance still has a record from when it existed.
-				d.Set("image_name", "Image not found")
-				return nil
-			}
-			return err
-		} else {
-			d.Set("image_name", image.Name)
+		image, err := images.Get(client, imageID).Extract()
+		if err != nil {
+			// If the image name can't be found, set the value to "Image not found".
+			// The most likely scenario is that the image no longer exists in the Image Service
+			// but the instance still has a record from when it existed.
+			d.Set("image_name", "Image not found")
+			return nil
 		}
+		d.Set("image_name", image.Name)
 	}
 
 	return nil
@@ -298,7 +324,7 @@ func flattenInstanceVolumeAttached(
 	d *schema.ResourceData, meta interface{}, server *cloudservers.CloudServer) ([]map[string]interface{}, string, error) {
 
 	config := meta.(*Config)
-	ecsClient, err := config.computeV1Client(GetRegion(d, config))
+	ecsClient, err := config.ComputeV1Client(GetRegion(d, config))
 	blockStorageClient, err := config.BlockStorageV2Client(GetRegion(d, config))
 	if err != nil {
 		return nil, "", fmt.Errorf("Error creating FlexibleEngine client: %s", err)

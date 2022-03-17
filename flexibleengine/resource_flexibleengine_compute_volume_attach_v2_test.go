@@ -12,6 +12,7 @@ import (
 
 func TestAccComputeV2VolumeAttach_basic(t *testing.T) {
 	var va volumeattach.VolumeAttachment
+	resourceName := "flexibleengine_compute_volume_attach_v2.va_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,8 +22,13 @@ func TestAccComputeV2VolumeAttach_basic(t *testing.T) {
 			{
 				Config: testAccComputeV2VolumeAttach_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
+					testAccCheckComputeV2VolumeAttachExists(resourceName, &va),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -46,27 +52,9 @@ func TestAccComputeV2VolumeAttach_device(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2VolumeAttach_timeout(t *testing.T) {
-	var va volumeattach.VolumeAttachment
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeV2VolumeAttachDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeV2VolumeAttach_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2VolumeAttachExists("flexibleengine_compute_volume_attach_v2.va_1", &va),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckComputeV2VolumeAttachDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	computeClient, err := config.computeV2Client(OS_REGION_NAME)
+	computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -102,7 +90,7 @@ func testAccCheckComputeV2VolumeAttachExists(n string, va *volumeattach.VolumeAt
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
@@ -154,8 +142,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
 }
 `, OS_NETWORK_ID)
 
@@ -174,33 +162,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-  device = "/dev/vdc"
-}
-`, OS_NETWORK_ID)
-
-var testAccComputeV2VolumeAttach_timeout = fmt.Sprintf(`
-resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  size = 1
-}
-
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  security_groups = ["default"]
-  network {
-    uuid = "%s"
-  }
-}
-
-resource "flexibleengine_compute_volume_attach_v2" "va_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  volume_id = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
-
-  timeouts {
-    create = "5m"
-    delete = "5m"
-  }
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  volume_id   = flexibleengine_blockstorage_volume_v2.volume_1.id
+  device      = "/dev/vdc"
 }
 `, OS_NETWORK_ID)

@@ -268,23 +268,6 @@ func TestAccComputeV2Instance_metadataRemove(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2Instance_timeout(t *testing.T) {
-	var instance servers.Server
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeV2Instance_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2InstanceExists("flexibleengine_compute_instance_v2.instance_1", &instance),
-				),
-			},
-		},
-	})
-}
-
 func TestAccComputeV2Instance_auto_recovery(t *testing.T) {
 	var instance servers.Server
 
@@ -315,7 +298,7 @@ func TestAccComputeV2Instance_auto_recovery(t *testing.T) {
 
 func testAccCheckComputeV2InstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	computeClient, err := config.computeV2Client(OS_REGION_NAME)
+	computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -348,7 +331,7 @@ func testAccCheckComputeV2InstanceExists(n string, instance *servers.Server) res
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
@@ -371,7 +354,7 @@ func testAccCheckComputeV2InstanceExists(n string, instance *servers.Server) res
 func testAccCheckComputeV2InstanceDoesNotExist(n string, instance *servers.Server) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
@@ -434,7 +417,7 @@ func testAccCheckComputeV2InstanceBootVolumeAttachment(
 		var attachments []volumeattach.VolumeAttachment
 
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return err
 		}
@@ -496,7 +479,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["default", flexibleengine_networking_secgroup_v2.secgroup_1.name]
   network {
     uuid = "%s"
   }
@@ -536,7 +519,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["default", "${flexibleengine_networking_secgroup_v2.secgroup_1.name}", "${flexibleengine_networking_secgroup_v2.secgroup_2.name}"]
+  security_groups = ["default", flexibleengine_networking_secgroup_v2.secgroup_1.name, flexibleengine_networking_secgroup_v2.secgroup_2.name]
   network {
     uuid = "%s"
   }
@@ -576,7 +559,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
     uuid = "%s"
   }
   block_device {
-    uuid = "${flexibleengine_blockstorage_volume_v2.vol_1.id}"
+    uuid = flexibleengine_blockstorage_volume_v2.vol_1.id
     source_type = "volume"
     boot_index = 0
     destination_type = "volume"
@@ -665,7 +648,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
     delete_on_termination = true
   }
   block_device {
-    uuid = "${flexibleengine_blockstorage_volume_v2.volume_1.id}"
+    uuid = flexibleengine_blockstorage_volume_v2.volume_1.id
     source_type = "volume"
     destination_type = "volume"
     boot_index = 1
@@ -730,7 +713,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -748,7 +731,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
+    uuid = flexibleengine_networking_network_v2.network_1.id
     fixed_ip_v4 = "192.168.1.100"
     access_network = true
   }
@@ -816,33 +799,6 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 `, OS_NETWORK_ID)
 
-/*
-var testAccComputeV2Instance_forceDelete = fmt.Sprintf(`
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  security_groups = ["default"]
-  network {
-    uuid = "%s"
-  }
-  force_delete = true
-}
-`, OS_NETWORK_ID)
-*/
-
-var testAccComputeV2Instance_timeout = fmt.Sprintf(`
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "instance_1"
-  security_groups = ["default"]
-  network {
-    uuid = "%s"
-  }
-
-  timeouts {
-    create = "10m"
-  }
-}
-`, OS_NETWORK_ID)
-
 var testAccComputeV2Instance_networkNameToID = fmt.Sprintf(`
 resource "flexibleengine_networking_network_v2" "network_1" {
   name = "network_1"
@@ -850,7 +806,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -868,7 +824,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 
   network {
-    name = "${flexibleengine_networking_network_v2.network_1.name}"
+    name = flexibleengine_networking_network_v2.network_1.name
   }
 
 }
@@ -881,7 +837,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -894,7 +850,7 @@ resource "flexibleengine_networking_network_v2" "network_2" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_2" {
   name = "subnet_2"
-  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
+  network_id = flexibleengine_networking_network_v2.network_2.id
   cidr = "192.168.2.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -903,44 +859,44 @@ resource "flexibleengine_networking_subnet_v2" "subnet_2" {
 
 resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
     ip_address = "192.168.1.103"
   }
 }
 
 resource "flexibleengine_networking_port_v2" "port_2" {
   name = "port_2"
-  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
+  network_id = flexibleengine_networking_network_v2.network_2.id
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_2.id}"
+    subnet_id = flexibleengine_networking_subnet_v2.subnet_2.id
     ip_address = "192.168.2.103"
   }
 }
 
 resource "flexibleengine_networking_port_v2" "port_3" {
   name = "port_3"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
     ip_address = "192.168.1.104"
   }
 }
 
 resource "flexibleengine_networking_port_v2" "port_4" {
   name = "port_4"
-  network_id = "${flexibleengine_networking_network_v2.network_2.id}"
+  network_id = flexibleengine_networking_network_v2.network_2.id
   admin_state_up = "true"
 
   fixed_ip {
-    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_2.id}"
+    subnet_id = flexibleengine_networking_subnet_v2.subnet_2.id
     ip_address = "192.168.2.104"
   }
 }
@@ -961,39 +917,39 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
+    uuid = flexibleengine_networking_network_v2.network_1.id
     fixed_ip_v4 = "192.168.1.100"
   }
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_2.id}"
+    uuid = flexibleengine_networking_network_v2.network_2.id
     fixed_ip_v4 = "192.168.2.100"
   }
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_1.id}"
+    uuid = flexibleengine_networking_network_v2.network_1.id
     fixed_ip_v4 = "192.168.1.101"
   }
 
   network {
-    uuid = "${flexibleengine_networking_network_v2.network_2.id}"
+    uuid = flexibleengine_networking_network_v2.network_2.id
     fixed_ip_v4 = "192.168.2.101"
   }
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_1.id}"
+    port = flexibleengine_networking_port_v2.port_1.id
   }
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_2.id}"
+    port = flexibleengine_networking_port_v2.port_2.id
   }
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_3.id}"
+    port = flexibleengine_networking_port_v2.port_3.id
   }
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_4.id}"
+    port = flexibleengine_networking_port_v2.port_4.id
   }
 }
 `, OS_NETWORK_ID)

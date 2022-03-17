@@ -37,26 +37,9 @@ func TestAccComputeV2BmsInstance_basic(t *testing.T) {
 	})
 }
 
-func TestAccComputeV2BmsInstance_timeout(t *testing.T) {
-	var instance servers.Server
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccBmsFlavorPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeV2InstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeV2BmsInstance_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckComputeV2BmsInstanceExists("flexibleengine_compute_bms_server_v2.instance_1", &instance),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckComputeV2BmsInstanceDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
-	computeClient, err := config.computeV2Client(OS_REGION_NAME)
+	computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -89,7 +72,7 @@ func testAccCheckComputeV2BmsInstanceExists(n string, instance *servers.Server) 
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		computeClient, err := config.computeV2Client(OS_REGION_NAME)
+		computeClient, err := config.ComputeV2Client(OS_REGION_NAME)
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 		}
@@ -111,10 +94,10 @@ func testAccCheckComputeV2BmsInstanceExists(n string, instance *servers.Server) 
 
 var testAccComputeV2BmsInstance_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_bms_server_v2" "instance_1" {
-  name = "instance_1"
-  flavor_id = "physical.o2.medium"
-  flavor_name = "physical.o2.medium"
-  security_groups = ["default"]
+  name              = "instance_1"
+  flavor_id         = "physical.o2.medium"
+  flavor_name       = "physical.o2.medium"
+  security_groups   = ["default"]
   availability_zone = "%s"
   metadata = {
     foo = "bar"
@@ -127,33 +110,16 @@ resource "flexibleengine_compute_bms_server_v2" "instance_1" {
 
 var testAccComputeV2BmsInstance_update = fmt.Sprintf(`
 resource "flexibleengine_compute_bms_server_v2" "instance_1" {
-  name = "instance_2"
-  flavor_id = "physical.o2.medium"
-  flavor_name = "physical.o2.medium"
-  security_groups = ["default"]
+  name              = "instance_2"
+  flavor_id         = "physical.o2.medium"
+  flavor_name       = "physical.o2.medium"
+  security_groups   = ["default"]
   availability_zone = "%s"
   metadata = {
     foo = "bar"
   }
   network {
     uuid = "%s"
-  }
-}
-`, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)
-
-var testAccComputeV2BmsInstance_timeout = fmt.Sprintf(`
-resource "flexibleengine_compute_bms_server_v2" "instance_1" {
-  name = "instance_1"
-  flavor_id = "physical.o2.medium"
-  flavor_name = "physical.o2.medium"
-  security_groups = ["default"]
-  availability_zone = "%s"
-  network {
-    uuid = "%s"
-  }
-
-  timeouts {
-    create = "20m"
   }
 }
 `, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)

@@ -51,7 +51,7 @@ func resourceComputeKeypairV2() *schema.Resource {
 
 func resourceComputeKeypairV2Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -121,7 +121,7 @@ func writeToPemFile(path, privateKey string) error {
 
 func resourceComputeKeypairV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
@@ -140,7 +140,7 @@ func resourceComputeKeypairV2Read(d *schema.ResourceData, meta interface{}) erro
 
 func resourceComputeKeypairV2Delete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	computeClient, err := config.computeV2Client(GetRegion(d, config))
+	computeClient, err := config.ComputeV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine compute client: %s", err)
 	}
