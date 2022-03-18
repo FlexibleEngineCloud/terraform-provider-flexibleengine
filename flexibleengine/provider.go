@@ -133,6 +133,13 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("OS_AUTH_URL", nil),
 			},
 
+			"cloud": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: descriptions["cloud"],
+				DefaultFunc: schema.EnvDefaultFunc("OS_CLOUD", defaultCloud),
+			},
+
 			"insecure": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -411,6 +418,8 @@ func init() {
 		"cert": "A client certificate to authenticate with.",
 
 		"key": "A client private key to authenticate with.",
+
+		"cloud": "The endpoint of cloud provider, defaults to prod-cloud-ocb.orange-business.com",
 	}
 }
 
@@ -418,6 +427,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config := Config{}
 
 	region := d.Get("region").(string)
+	cloud := d.Get("cloud").(string)
 	config.Region = region
 
 	config.TenantID = d.Get("tenant_id").(string)
@@ -430,7 +440,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	if v, ok := d.GetOk("auth_url"); ok {
 		config.IdentityEndpoint = v.(string)
 	} else {
-		config.IdentityEndpoint = fmt.Sprintf("https://iam.%s.%s/v3", region, defaultCloud)
+		config.IdentityEndpoint = fmt.Sprintf("https://iam.%s.%s/v3", region, cloud)
 	}
 
 	config.DomainID = d.Get("domain_id").(string)
@@ -449,7 +459,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config.ClientCertFile = d.Get("cert").(string)
 	config.ClientKeyFile = d.Get("key").(string)
 	config.TerraformVersion = terraformVersion
-	config.Cloud = defaultCloud
+	config.Cloud = cloud
 	config.RegionClient = true
 	config.RegionProjectIDMap = make(map[string]string)
 	config.RPLock = new(sync.Mutex)
