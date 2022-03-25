@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/cts/v1/tracker"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -33,15 +32,6 @@ func resourceCTSTrackerV1() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
-			"status": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"tracker_name": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"bucket_name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -51,6 +41,15 @@ func resourceCTSTrackerV1() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateName,
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"tracker_name": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -69,21 +68,22 @@ func resourceCTSTrackerCreate(d *schema.ResourceData, meta interface{}) error {
 		FilePrefixName: d.Get("file_prefix_name").(string),
 	}
 
+	log.Printf("[DEBUG] CTS tracker creating options: %#v", createOpts)
 	trackers, err := tracker.Create(ctsClient, createOpts).Extract()
-	log.Printf("[DEBUG]trackers %#v", trackers)
 	if err != nil {
 		return fmt.Errorf("Error creating CTS tracker : %s", err)
 	}
 
 	d.SetId(trackers.TrackerName)
 
-	time.Sleep(20 * time.Second)
+	time.Sleep(5 * time.Second)
 	return resourceCTSTrackerRead(d, meta)
 }
 
 func resourceCTSTrackerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	ctsClient, err := config.CtsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	ctsClient, err := config.CtsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating cts Client: %s", err)
 	}
@@ -96,25 +96,23 @@ func resourceCTSTrackerRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	trackers, err := tracker.List(ctsClient, listOpts)
 	if err != nil {
-		if _, ok := err.(golangsdk.ErrDefault404); ok {
-			log.Printf("[WARN] Removing cts tracker %s as it's already gone", d.Id())
-			d.SetId("")
-			return nil
-		}
+		return CheckDeleted(d, err, "CTS tracker")
+	}
 
-		return fmt.Errorf("Error retrieving cts tracker: %s", err)
+	if len(trackers) == 0 {
+		return fmt.Errorf("can not find CTS tracker %s", d.Id())
 	}
 
 	ctsTracker := trackers[0]
+	log.Printf("[DEBUG] fetching CTS tracker: %#v", ctsTracker)
 
-	d.Set("tracker_name", ctsTracker.TrackerName)
+	d.Set("region", region)
 	d.Set("bucket_name", ctsTracker.BucketName)
-	d.Set("status", ctsTracker.Status)
 	d.Set("file_prefix_name", ctsTracker.FilePrefixName)
+	d.Set("tracker_name", ctsTracker.TrackerName)
+	d.Set("status", ctsTracker.Status)
 
-	d.Set("region", GetRegion(d, config))
-	time.Sleep(20 * time.Second)
-
+	time.Sleep(5 * time.Second)
 	return nil
 }
 

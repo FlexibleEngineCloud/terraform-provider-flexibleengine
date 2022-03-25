@@ -1170,15 +1170,17 @@ func deleteAllBucketObjects(obsClient *obs.ObsClient, bucket string) error {
 	}
 
 	objects := make([]obs.ObjectToDelete, len(resp.Contents))
+	allKeys := make([]string, len(resp.Contents))
 	for i, content := range resp.Contents {
 		objects[i].Key = content.Key
+		allKeys[i] = content.Key
 	}
 
 	deleteOpts := &obs.DeleteObjectsInput{
 		Bucket:  bucket,
 		Objects: objects,
 	}
-	log.Printf("[DEBUG] objects of %s will be deleted: %v", bucket, objects)
+	log.Printf("[DEBUG] objects of %s will be deleted: %v", bucket, allKeys)
 	output, err := obsClient.DeleteObjects(deleteOpts)
 	if err != nil {
 		return getObsError("Error deleting all objects of OBS bucket", bucket, err)

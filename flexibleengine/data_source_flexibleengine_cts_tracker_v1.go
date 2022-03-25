@@ -45,7 +45,8 @@ func dataSourceCTSTrackerV1() *schema.Resource {
 
 func dataSourceCTSTrackerV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	trackerClient, err := config.CtsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	trackerClient, err := config.CtsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating CTS client: %s", err)
 	}
@@ -58,7 +59,6 @@ func dataSourceCTSTrackerV1Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	refinedTrackers, err := tracker.List(trackerClient, listOpts)
-
 	if err != nil {
 		return fmt.Errorf("Unable to retrieve cts tracker: %s", err)
 	}
@@ -74,17 +74,15 @@ func dataSourceCTSTrackerV1Read(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	trackers := refinedTrackers[0]
-
 	log.Printf("[INFO] Retrieved cts tracker %s using given filter", trackers.TrackerName)
 
 	d.SetId(trackers.TrackerName)
 
+	d.Set("region", region)
 	d.Set("tracker_name", trackers.TrackerName)
 	d.Set("bucket_name", trackers.BucketName)
 	d.Set("file_prefix_name", trackers.FilePrefixName)
 	d.Set("status", trackers.Status)
-
-	d.Set("region", GetRegion(d, config))
 
 	return nil
 }
