@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/cts/v1/tracker"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -13,7 +12,7 @@ import (
 
 func TestAccCTSTrackerV1_basic(t *testing.T) {
 	var tracker tracker.Tracker
-	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	var bucketName = fmt.Sprintf("acc-test-%s", acctest.RandString(5))
 	resourceName := "flexibleengine_cts_tracker_v1.tracker_v1"
 
 	resource.Test(t, resource.TestCase{
@@ -26,7 +25,7 @@ func TestAccCTSTrackerV1_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCTSTrackerV1Exists(resourceName, &tracker),
 					resource.TestCheckResourceAttr(resourceName, "bucket_name", bucketName),
-					resource.TestCheckResourceAttr(resourceName, "file_prefix_name", "yO8Q"),
+					resource.TestCheckResourceAttr(resourceName, "file_prefix_name", "tracker"),
 				),
 			},
 			{
@@ -50,12 +49,9 @@ func testAccCheckCTSTrackerV1Destroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := tracker.List(ctsClient, tracker.ListOpts{TrackerName: rs.Primary.ID})
-		if err != nil {
+		trackerList, _ := tracker.List(ctsClient, tracker.ListOpts{TrackerName: rs.Primary.ID})
+		if len(trackerList) != 0 {
 			return fmt.Errorf("cts tracker still exists")
-		}
-		if _, ok := err.(golangsdk.ErrDefault404); !ok {
-			return err
 		}
 	}
 
@@ -83,6 +79,11 @@ func testAccCheckCTSTrackerV1Exists(n string, trackers *tracker.Tracker) resourc
 		if err != nil {
 			return err
 		}
+
+		if len(trackerList) == 0 {
+			return fmt.Errorf("can not find cts tracker %s", rs.Primary.ID)
+		}
+
 		found := trackerList[0]
 		if found.TrackerName != rs.Primary.ID {
 			return fmt.Errorf("cts tracker not found")
@@ -104,7 +105,7 @@ resource "flexibleengine_obs_bucket" "bucket" {
 
 resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
   bucket_name      = flexibleengine_obs_bucket.bucket.bucket
-  file_prefix_name = "yO8Q"
+  file_prefix_name = "tracker"
 }
 `, bucketName)
 }

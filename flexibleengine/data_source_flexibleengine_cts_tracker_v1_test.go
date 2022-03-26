@@ -10,7 +10,7 @@ import (
 )
 
 func TestAccCTSTrackerV1DataSource_basic(t *testing.T) {
-	var bucketName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
+	var bucketName = fmt.Sprintf("acc-test-%s", acctest.RandString(5))
 	dataName := "data.flexibleengine_cts_tracker_v1.tracker_v1"
 
 	resource.Test(t, resource.TestCase{
@@ -54,7 +54,6 @@ resource "flexibleengine_obs_bucket" "bucket" {
 
 resource "flexibleengine_cts_tracker_v1" "tracker_v1" {
   bucket_name      = flexibleengine_obs_bucket.bucket.bucket
-  file_prefix_name = "yO8Q"
 }
 
 data "flexibleengine_cts_tracker_v1" "tracker_v1" {  
