@@ -283,13 +283,6 @@ func getDomainID(c *Config) (string, error) {
 	return all[0].ID, nil
 }
 
-func natV2Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
-	return huaweisdk.NewNatV2(c.HwClient, golangsdk.EndpointOpts{
-		Region:       determineRegion(c, region),
-		Availability: PublicType,
-	})
-}
-
 func orchestrationV1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 	return huaweisdk.NewOrchestrationV1(c.HwClient, golangsdk.EndpointOpts{
 		Region:       determineRegion(c, region),

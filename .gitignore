@@ -26,7 +26,7 @@ website/node_modules
 localrc2
 localrc
 
-website/vendor
+vendor/
 
 # Test exclusions
 !command/test-fixtures/**/*.tfstate

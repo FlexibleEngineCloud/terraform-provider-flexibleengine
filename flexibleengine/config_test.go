@@ -283,13 +283,13 @@ func TestAccServiceEndpoints_Network(t *testing.T) {
 
 	// test endpoint of nat gateway
 	serviceClient, err = nil, nil
-	serviceClient, err = natV2Client(config, OS_REGION_NAME)
+	serviceClient, err = config.NatV2Client(OS_REGION_NAME)
 	if err != nil {
 		t.Fatalf("Error creating FlexibleEngine nat gateway client: %s", err)
 	}
 	expectedURL = fmt.Sprintf("https://nat.%s.%s/v2.0/", OS_REGION_NAME, config.Cloud)
 	actualURL = serviceClient.ResourceBaseURL()
-	testCheckServiceURL(t, expectedURL, actualURL, "nat gateway v2")
+	testCheckServiceURL(t, expectedURL, actualURL, "nat gateway v2.0")
 
 	// test endpoint of elb/otc v1.0
 	serviceClient, err = nil, nil
