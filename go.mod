@@ -1,4 +1,4 @@
-module github.com/terraform-providers/terraform-provider-flexibleengine
+module github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
 
 go 1.14
 
