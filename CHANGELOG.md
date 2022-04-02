@@ -1,3 +1,21 @@
+# CHANGELOG
+
+## 1.28.0 (April 2, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_fgs_function` [GH-732]
+  - `flexibleengine_fgs_trigger` [GH-732]
+  - `flexibleengine_fgs_dependency` [GH-732]
+
+* **New Data Source:**
+  - `flexibleengine_fgs_dependencies` [GH-732]
+
+BUG FIXES:
+
+* `resource/flexibleengine_cts_tracker_v1`: check length to avoid index out of range [GH-728]
+
 ## 1.27.1 (March 4, 2022)
 
 BUG FIXES:
