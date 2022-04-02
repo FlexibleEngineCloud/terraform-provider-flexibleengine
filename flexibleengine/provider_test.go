@@ -33,6 +33,7 @@ var (
 	OS_SDRS_ENVIRONMENT       = os.Getenv("OS_SDRS_ENVIRONMENT")
 	OS_DELEGATED_DOMAIN_NAME  = os.Getenv("OS_DELEGATED_DOMAIN_NAME")
 	OS_DESTINATION_BUCKET     = os.Getenv("OS_DESTINATION_BUCKET")
+	OS_FGS_BUCKET             = os.Getenv("OS_FGS_BUCKET")
 	OS_TENANT_NAME            = getTenantName()
 )
 

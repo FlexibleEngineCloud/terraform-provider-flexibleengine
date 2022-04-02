@@ -7,7 +7,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 const (
@@ -17,6 +20,10 @@ const (
 
 // This is a global MutexKV for use within this plugin.
 var osMutexKV = mutexkv.NewMutexKV()
+
+func init() {
+	utils.PackageName = "FlexibleEngine"
+}
 
 // Provider returns a schema.Provider for FlexibleEngine.
 func Provider() *schema.Provider {
@@ -229,6 +236,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_public_services":              dataSourceVPCEPPublicServices(),
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 
+			// importing data source
+			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
+
 			// Deprecated data source
 			"flexibleengine_dcs_az_v1":      dataSourceDcsAZV1(),
 			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
@@ -363,6 +373,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_rule_web_tamper_protection":     resourceWafRuleWebTamperProtection(),
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
+			// importing resource
+			"flexibleengine_fgs_dependency": fgs.ResourceFgsDependency(),
+			"flexibleengine_fgs_function":   fgs.ResourceFgsFunctionV2(),
+			"flexibleengine_fgs_trigger":    fgs.ResourceFunctionGraphTrigger(),
+
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
 			"flexibleengine_elb_listener":     resourceEListener(),
@@ -470,6 +485,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 
 	config.Endpoints = make(map[string]string)
 	config.Endpoints["obs"] = fmt.Sprintf("https://oss.%s.%s/", region, config.Cloud)
+	config.Endpoints["fgs"] = fmt.Sprintf("https://fgs.%s.%s/", region, config.Cloud)
 	config.Endpoints["dns"] = fmt.Sprintf("https://dns.%s/", config.Cloud)
 
 	return &config, nil
