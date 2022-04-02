@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/flexibleengine"
 	"github.com/chnsz/golangsdk/openstack/obs"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/terraform-providers/terraform-provider-flexibleengine/flexibleengine"
 )
 
 func main() {
