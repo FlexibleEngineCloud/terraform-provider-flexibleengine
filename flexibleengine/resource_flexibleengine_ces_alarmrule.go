@@ -151,6 +151,10 @@ func resourceAlarmRule() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+						"suppress_duration": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
 					},
 				},
 			},
