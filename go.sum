@@ -75,6 +75,9 @@ github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA
 github.com/cheggaaa/pb v1.0.27/go.mod h1:pQciLPpbU0oxA0h+VJYYLxO+XeDQb5pZijXscXHm81s=
 github.com/chnsz/golangsdk v0.0.0-20220328032852-6b7cdcd8a506 h1:BMOcL1ic8tnPqbLhKiYvbfG6inAfSDYwyE+sWpFKoXc=
 github.com/chnsz/golangsdk v0.0.0-20220328032852-6b7cdcd8a506/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
+github.com/chnsz/golangsdk v0.0.0-20220409031514-b48169f0cea6/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
+github.com/chnsz/golangsdk v0.0.0-20220414095129-997c3994cc66 h1:CGBr9uVt/nKF4HmXETGXKPLVaLLiLjDdaWZfR/HLByE=
+github.com/chnsz/golangsdk v0.0.0-20220414095129-997c3994cc66/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
@@ -229,6 +232,8 @@ github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.0.80 h1:Xq9WC4DdigWodVe1hMDwcsOQ
 github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.0.80/go.mod h1:IvF+Pe06JMUivVgN6B4wcsPEoFvVa40IYaOPZyUt5HE=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.35.0 h1:FQK4JxYHwdQN9FpsAPtrbRDyR06h/sSrub/wH63QOxg=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.35.0/go.mod h1:L8qsK1q0lvUXXr+dK2YT3gPtA/QdD9AWcpdIVV+jG2k=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.35.2-0.20220413091922-4559afe01d1d h1:YjAmJJvlQcxMd6qvu8FCR+Xry7LVOBnZqf0vGM8Nbsk=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.35.2-0.20220413091922-4559afe01d1d/go.mod h1:3Z43EgbnP+idZVqLFiFE2Gkj83+l7qQMCUFKgLFk4VQ=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.11/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=

@@ -223,7 +223,7 @@ func getPublicIps(publicIpMeta map[string]interface{}) configurations.PublicIpOp
 	}
 
 	eipOpts := configurations.EipOpts{
-		IpType:    eipMap["ip_type"].(string),
+		Type:      eipMap["ip_type"].(string),
 		Bandwidth: bandWidthOpts,
 	}
 
@@ -247,7 +247,7 @@ func getInstanceConfig(configDataMap map[string]interface{}) (configurations.Ins
 	log.Printf("[DEBUG] get personality: %#v", personalities)
 
 	instanceConfigOpts := configurations.InstanceConfigOpts{
-		ID:          configDataMap["instance_id"].(string),
+		InstanceID:  configDataMap["instance_id"].(string),
 		FlavorRef:   configDataMap["flavor"].(string),
 		ImageRef:    configDataMap["image"].(string),
 		SSHKey:      configDataMap["key_name"].(string),
@@ -263,7 +263,7 @@ func getInstanceConfig(configDataMap map[string]interface{}) (configurations.Ins
 	if len(pubicIpData) == 1 {
 		publicIpMap := pubicIpData[0].(map[string]interface{})
 		publicIps := getPublicIps(publicIpMap)
-		instanceConfigOpts.PubicIp = publicIps
+		instanceConfigOpts.PubicIP = &publicIps
 		log.Printf("[DEBUG] get publicIps: %#v", publicIps)
 	}
 	log.Printf("[DEBUG] get instanceConfig: %#v", instanceConfigOpts)
