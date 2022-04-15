@@ -1,10 +1,9 @@
 package flexibleengine
 
 import (
-	"time"
-
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/chnsz/golangsdk/openstack/cts/v1/tracker"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,8 +20,8 @@ func resourceCTSTrackerV1() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(10 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
+			Create: schema.DefaultTimeout(5 * time.Minute),
+			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -88,11 +87,9 @@ func resourceCTSTrackerRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating cts Client: %s", err)
 	}
 
+	trackerName := d.Id()
 	listOpts := tracker.ListOpts{
-		TrackerName:    d.Get("tracker_name").(string),
-		BucketName:     d.Get("bucket_name").(string),
-		FilePrefixName: d.Get("file_prefix_name").(string),
-		Status:         d.Get("status").(string),
+		TrackerName: trackerName,
 	}
 	trackers, err := tracker.List(ctsClient, listOpts)
 	if err != nil {
@@ -100,7 +97,7 @@ func resourceCTSTrackerRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if len(trackers) == 0 {
-		return fmt.Errorf("can not find CTS tracker %s", d.Id())
+		return fmt.Errorf("cannot find CTS tracker %s", trackerName)
 	}
 
 	ctsTracker := trackers[0]
@@ -124,7 +121,7 @@ func resourceCTSTrackerUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 	var updateOpts tracker.UpdateOpts
 
-	//as bucket_name is mandatory while updating tracker
+	// bucket_name is mandatory while updating tracker
 	updateOpts.BucketName = d.Get("bucket_name").(string)
 
 	if d.HasChange("file_prefix_name") {
@@ -138,7 +135,8 @@ func resourceCTSTrackerUpdate(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error updating cts tracker: %s", err)
 	}
-	time.Sleep(20 * time.Second)
+
+	time.Sleep(10 * time.Second)
 	return resourceCTSTrackerRead(d, meta)
 }
 
@@ -154,7 +152,7 @@ func resourceCTSTrackerDelete(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	time.Sleep(20 * time.Second)
+	time.Sleep(10 * time.Second)
 	log.Printf("[DEBUG] Successfully deleted cts tracker %s", d.Id())
 
 	return nil
