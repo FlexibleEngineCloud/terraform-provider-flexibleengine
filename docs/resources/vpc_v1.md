@@ -38,29 +38,33 @@ resource "flexibleengine_vpc_v1" "vpc_with_tags" {
 
 The following arguments are supported:
 
-* `cidr` - (Required) The range of available subnets in the VPC. The value ranges from 10.0.0.0/8 to 10.255.255.0/24, 172.16.0.0/12 to 172.31.255.0/24, or 192.168.0.0/16 to 192.168.255.0/24.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the VPC. If omitted, the
+  provider-level region will be used. Changing this creates a new VPC resource.
 
-* `region` - (Optional) The region in which to obtain the V1 VPC client. A VPC client is needed to create a VPC. If omitted, the region argument of the provider is used. Changing this creates a new VPC.
+* `name` - (Required, String) Specifies the name of the VPC. The name must be unique for a tenant. The value is a string
+  of no more than 64 characters and can contain digits, letters, underscores (_), and hyphens (-).
 
-* `name` - (Required) The name of the VPC. The name must be unique for a tenant. The value is a string of no more than 64 characters and can contain digits, letters, underscores (_), and hyphens (-). Changing this updates the name of the existing VPC.
+* `cidr` - (Required, String) Specifies the range of available subnets in the VPC. The value ranges from 10.0.0.0/8 to
+  10.255.255.0/24, 172.16.0.0/12 to 172.31.255.0/24, or 192.168.0.0/16 to 192.168.255.0/24.
 
-* `tags` - (Optional) The key/value pairs to associate with the VPC.
+* `description` - (Optional, String) Specifies supplementary information about the VPC. The value is a string of
+  no more than 255 characters and cannot contain angle brackets (< or >).
+
+* `secondary_cidr` - (Optional, String) Specifies the secondary CIDR block of the VPC.
+
+  -> The argument cannot be imported into your Terraform state. And the following secondary CIDR blocks cannot be added
+  to a VPC: 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.
+  [View the complete list of unsupported CIDR blocks](https://docs.prod-cloud-ocb.orange-business.com/usermanual/vpc/vpc_vpc_0007.html).
+
+* `tags` - (Optional, Map) Specifies the key/value pairs to associate with the VPC.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `id` -  ID of the VPC.
+* `id` - The VPC ID in UUID format.
 
-* `name` -  See Argument Reference above.
-
-* `cidr` - See Argument Reference above.
-
-* `status` - The current status of the desired VPC. Can be either CREATING, OK, DOWN, PENDING_UPDATE, PENDING_DELETE, or ERROR.
-
-* `shared` - Specifies whether the cross-tenant sharing is supported.
-
-* `region` - See Argument Reference above.
+* `status` - The current status of the VPC. Possible values are as follows: CREATING, OK or ERROR.
 
 ## Import
 

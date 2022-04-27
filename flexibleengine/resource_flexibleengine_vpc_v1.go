@@ -15,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// resourceVirtualPrivateCloudV1 is not used any more since v1.29.0
+// flexibleengine_vpc_v1 can be imported directly
 func resourceVirtualPrivateCloudV1() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceVirtualPrivateCloudV1Create,
