@@ -11,6 +11,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -327,7 +328,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
 			"flexibleengine_vpc_eip_v1":                         resourceVpcEIPV1(),
-			"flexibleengine_vpc_v1":                             resourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1":                      resourceVpcSubnetV1(),
 			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
@@ -378,6 +378,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_fgs_function":    fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":     fgs.ResourceFunctionGraphTrigger(),
 			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),
+			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
