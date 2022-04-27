@@ -10,6 +10,7 @@ import (
 
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -316,7 +317,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_as_lifecycle_hook_v1":               resourceASLifecycleHook(),
 			"flexibleengine_smn_topic_v2":                       resourceTopic(),
 			"flexibleengine_smn_subscription_v2":                resourceSubscription(),
-			"flexibleengine_rds_instance_v3":                    resourceRdsInstanceV3(),
 			"flexibleengine_rds_read_replica_v3":                resourceRdsReadReplicaInstance(),
 			"flexibleengine_rds_parametergroup_v3":              resourceRdsConfigurationV3(),
 			"flexibleengine_networking_vip_v2":                  resourceNetworkingVIPV2(),
@@ -374,9 +374,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing resource
-			"flexibleengine_fgs_dependency": fgs.ResourceFgsDependency(),
-			"flexibleengine_fgs_function":   fgs.ResourceFgsFunctionV2(),
-			"flexibleengine_fgs_trigger":    fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_fgs_dependency":  fgs.ResourceFgsDependency(),
+			"flexibleengine_fgs_function":    fgs.ResourceFgsFunctionV2(),
+			"flexibleengine_fgs_trigger":     fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
