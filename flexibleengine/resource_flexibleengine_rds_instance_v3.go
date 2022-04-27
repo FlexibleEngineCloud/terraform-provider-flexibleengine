@@ -15,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// resourceRdsInstanceV3 is not used any more since v1.29.0
+// flexibleengine_rds_instance_v3 can be imported directly
 func resourceRdsInstanceV3() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceRdsInstanceV3Create,

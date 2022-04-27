@@ -78,9 +78,8 @@ func testAccPreCheckRequiredEnvVars(t *testing.T) {
 		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
 	}
 
-	v := os.Getenv("OS_AUTH_URL")
-	if v == "" {
-		t.Fatal("OS_AUTH_URL must be set for acceptance tests")
+	if OS_AVAILABILITY_ZONE == "" {
+		t.Fatal("OS_AVAILABILITY_ZONE must be set for acceptance tests")
 	}
 
 	if OS_IMAGE_ID == "" && OS_IMAGE_NAME == "" {
