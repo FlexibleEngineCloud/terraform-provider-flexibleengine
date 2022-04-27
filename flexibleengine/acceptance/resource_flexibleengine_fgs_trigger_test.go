@@ -1,4 +1,4 @@
-package flexibleengine
+package acceptance
 
 import (
 	"fmt"
@@ -109,7 +109,7 @@ func TestAccFunctionGraphTrigger_obs(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckS3(t)
+			testAccPreCheckOBS(t)
 		},
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{

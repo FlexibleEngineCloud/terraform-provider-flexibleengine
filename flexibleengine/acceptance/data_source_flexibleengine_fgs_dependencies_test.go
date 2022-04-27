@@ -1,4 +1,4 @@
-package flexibleengine
+package acceptance
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccFunctionGraphDependencies_basic(t *testing.T) {
+func TestAccDataFGSDependencies_basic(t *testing.T) {
 	dataSourceName := "data.flexibleengine_fgs_dependencies.test"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -16,7 +16,7 @@ func TestAccFunctionGraphDependencies_basic(t *testing.T) {
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFunctionGraphDependencies_basic(),
+				Config: testAccDataFGSDependencies_basic(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestMatchResourceAttr(dataSourceName, "packages.#", regexp.MustCompile(`[1-9][0-9]*`)),
 				),
@@ -25,7 +25,7 @@ func TestAccFunctionGraphDependencies_basic(t *testing.T) {
 	})
 }
 
-func TestAccFunctionGraphDependencies_name(t *testing.T) {
+func TestAccDataFGSDependencies_name(t *testing.T) {
 	dataSourceName := "data.flexibleengine_fgs_dependencies.test"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -33,7 +33,7 @@ func TestAccFunctionGraphDependencies_name(t *testing.T) {
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFunctionGraphDependencies_name(),
+				Config: testAccDataFGSDependencies_name(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "type", "public"),
 					resource.TestCheckResourceAttr(dataSourceName, "name", "obssdk"),
@@ -44,7 +44,7 @@ func TestAccFunctionGraphDependencies_name(t *testing.T) {
 	})
 }
 
-func TestAccFunctionGraphDependencies_runtime(t *testing.T) {
+func TestAccDataFGSDependencies_runtime(t *testing.T) {
 	dataSourceName := "data.flexibleengine_fgs_dependencies.test"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -52,7 +52,7 @@ func TestAccFunctionGraphDependencies_runtime(t *testing.T) {
 		ProviderFactories: TestAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFunctionGraphDependencies_runtime(),
+				Config: testAccDataFGSDependencies_runtime(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "type", "public"),
 					resource.TestCheckResourceAttr(dataSourceName, "runtime", "Python2.7"),
@@ -63,13 +63,13 @@ func TestAccFunctionGraphDependencies_runtime(t *testing.T) {
 	})
 }
 
-func testAccFunctionGraphDependencies_basic() string {
+func testAccDataFGSDependencies_basic() string {
 	return fmt.Sprintf(`
 data "flexibleengine_fgs_dependencies" "test" {}
 `)
 }
 
-func testAccFunctionGraphDependencies_name() string {
+func testAccDataFGSDependencies_name() string {
 	return fmt.Sprintf(`
 data "flexibleengine_fgs_dependencies" "test" {
   type = "public"
@@ -78,7 +78,7 @@ data "flexibleengine_fgs_dependencies" "test" {
 `)
 }
 
-func testAccFunctionGraphDependencies_runtime() string {
+func testAccDataFGSDependencies_runtime() string {
 	return fmt.Sprintf(`
 data "flexibleengine_fgs_dependencies" "test" {
   type    = "public"

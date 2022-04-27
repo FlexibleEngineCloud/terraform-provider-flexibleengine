@@ -1,4 +1,4 @@
-package flexibleengine
+package acceptance
 
 import (
 	"fmt"
