@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -12,31 +13,33 @@ import (
 )
 
 func TestAccNetworkingV2SecGroupRule_basic(t *testing.T) {
-	var secgroup_1 groups.SecGroup
-	var secgroup_2 groups.SecGroup
-	var secgroup_rule_1 rules.SecGroupRule
-	var secgroup_rule_2 rules.SecGroupRule
+	var secgroup groups.SecGroup
+	var secgroupRule rules.SecGroupRule
 
-	resource.Test(t, resource.TestCase{
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2SecGroupRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2SecGroupRule_basic,
+				Config: testAccNetworkingV2SecGroupRule_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
-					testAccCheckNetworkingV2SecGroupRuleExists(
-						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
-					testAccCheckNetworkingV2SecGroupRuleExists(
-						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_2", &secgroup_rule_2),
+						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup),
+					testAccCheckNetworkingV2SecGroupRuleExists(resourceName, &secgroupRule),
+					resource.TestCheckResourceAttr(resourceName, "direction", "ingress"),
+					resource.TestCheckResourceAttr(resourceName, "port_range_min", "22"),
+					resource.TestCheckResourceAttr(resourceName, "port_range_max", "22"),
+					resource.TestCheckResourceAttr(resourceName, "ethertype", "IPv4"),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "tcp"),
+					resource.TestCheckResourceAttr(resourceName, "remote_ip_prefix", "0.0.0.0/0"),
 				),
 			},
 			{
-				ResourceName:      "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1",
+				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -44,47 +47,87 @@ func TestAccNetworkingV2SecGroupRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkingV2SecGroupRule_timeout(t *testing.T) {
-	var secgroup_1 groups.SecGroup
-	var secgroup_2 groups.SecGroup
+func TestAccNetworkingV2SecGroupRule_remoteGroup(t *testing.T) {
+	var secgroupRule rules.SecGroupRule
 
-	resource.Test(t, resource.TestCase{
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2SecGroupRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2SecGroupRule_timeout,
+				Config: testAccNetworkingV2SecGroupRule_remoteGroup(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_2", &secgroup_2),
+					testAccCheckNetworkingV2SecGroupRuleExists(resourceName, &secgroupRule),
+					resource.TestCheckResourceAttr(resourceName, "direction", "ingress"),
+					resource.TestCheckResourceAttr(resourceName, "port_range_min", "80"),
+					resource.TestCheckResourceAttr(resourceName, "port_range_max", "80"),
+					resource.TestCheckResourceAttr(resourceName, "ethertype", "IPv4"),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "tcp"),
+					resource.TestCheckResourceAttrSet(resourceName, "remote_group_id"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccNetworkingV2SecGroupRule_ipv6(t *testing.T) {
+	var secgroupRule rules.SecGroupRule
+
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckNetworkingV2SecGroupRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkingV2SecGroupRule_ipv6(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNetworkingV2SecGroupRuleExists(resourceName, &secgroupRule),
+					resource.TestCheckResourceAttr(resourceName, "remote_ip_prefix", "2001:558:fc00::/39"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
 func TestAccNetworkingV2SecGroupRule_numericProtocol(t *testing.T) {
-	var secgroup_1 groups.SecGroup
-	var secgroup_rule_1 rules.SecGroupRule
+	var secgroupRule rules.SecGroupRule
 
-	resource.Test(t, resource.TestCase{
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2SecGroupRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2SecGroupRule_numericProtocol,
+				Config: testAccNetworkingV2SecGroupRule_numericProtocol(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &secgroup_1),
-					testAccCheckNetworkingV2SecGroupRuleExists(
-						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", &secgroup_rule_1),
-					resource.TestCheckResourceAttr(
-						"flexibleengine_networking_secgroup_rule_v2.secgroup_rule_1", "protocol", "115"),
+					testAccCheckNetworkingV2SecGroupRuleExists(resourceName, &secgroupRule),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "115"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -111,7 +154,7 @@ func testAccCheckNetworkingV2SecGroupRuleDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckNetworkingV2SecGroupRuleExists(n string, security_group_rule *rules.SecGroupRule) resource.TestCheckFunc {
+func testAccCheckNetworkingV2SecGroupRuleExists(n string, sgRule *rules.SecGroupRule) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -137,283 +180,81 @@ func testAccCheckNetworkingV2SecGroupRuleExists(n string, security_group_rule *r
 			return fmt.Errorf("Security group rule not found")
 		}
 
-		*security_group_rule = *found
+		*sgRule = *found
 
 		return nil
 	}
 }
 
-const testAccNetworkingV2SecGroupRule_basic = `
+func testAccNetworkingV2SecGroupRule_base(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
+  name        = "secgroup-%s"
   description = "terraform security group rule acceptance test"
+}
+`, rName)
 }
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
-  description = "terraform security group rule acceptance test"
-}
+func testAccNetworkingV2SecGroupRule_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
-  direction = "ingress"
-  ethertype = "IPv4"
-  port_range_max = 22
-  port_range_min = 22
-  protocol = "tcp"
-  remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  port_range_max    = 22
+  port_range_min    = 22
+  protocol          = "tcp"
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+}
+`, testAccNetworkingV2SecGroupRule_base(rName))
 }
 
-resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_2" {
-  direction = "ingress"
-  ethertype = "IPv4"
-  port_range_max = 80
-  port_range_min = 80
-  protocol = "tcp"
-  remote_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-}
-`
-
-const testAccNetworkingV2SecGroupRule_lowerCaseCIDR = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
-  description = "terraform security group rule acceptance test"
-}
+func testAccNetworkingV2SecGroupRule_remoteGroup(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
-  direction = "ingress"
-  ethertype = "IPv6"
-  port_range_max = 22
-  port_range_min = 22
-  protocol = "tcp"
-  remote_ip_prefix = "2001:558:FC00::/39"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  port_range_max    = 80
+  port_range_min    = 80
+  protocol          = "tcp"
+  remote_group_id   = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
 }
-`
-
-const testAccNetworkingV2SecGroupRule_timeout = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
-  description = "terraform security group rule acceptance test"
+`, testAccNetworkingV2SecGroupRule_base(rName))
 }
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
-  name = "secgroup_2"
-  description = "terraform security group rule acceptance test"
-}
+func testAccNetworkingV2SecGroupRule_ipv6(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
-  direction = "ingress"
-  ethertype = "IPv4"
-  port_range_max = 22
-  port_range_min = 22
-  protocol = "tcp"
-  remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-
-  timeouts {
-    delete = "5m"
-  }
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  port_range_max    = 22
+  port_range_min    = 22
+  protocol          = "tcp"
+  remote_ip_prefix  = "2001:558:FC00::/39"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+}
+`, testAccNetworkingV2SecGroupRule_base(rName))
 }
 
-resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_2" {
-  direction = "ingress"
-  ethertype = "IPv4"
-  port_range_max = 80
-  port_range_min = 80
-  protocol = "tcp"
-  remote_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
-
-  timeouts {
-    delete = "5m"
-  }
-}
-`
-
-const testAccNetworkingV2SecGroupRule_protocols = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
-  description = "terraform security group rule acceptance test"
-}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ah" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "ah"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_dccp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "dccp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_egp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "egp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_esp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "esp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_gre" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "gre"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_igmp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "igmp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_encap" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-encap"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_frag" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-frag"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_icmp" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-icmp"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_nonxt" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-nonxt"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_opts" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-opts"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ipv6_route" {
-#  direction = "ingress"
-#  ethertype = "IPv6"
-#  protocol = "ipv6-route"
-#  remote_ip_prefix = "::/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_ospf" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "ospf"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_pgm" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "pgm"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_rsvp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "rsvp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_sctp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "sctp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_udplite" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "udplite"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-
-# NOT SUPPORTED
-#resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_vrrp" {
-#  direction = "ingress"
-#  ethertype = "IPv4"
-#  protocol = "vrrp"
-#  remote_ip_prefix = "0.0.0.0/0"
-#  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
-#}
-`
-
-const testAccNetworkingV2SecGroupRule_numericProtocol = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "secgroup_1"
-  description = "terraform security group rule acceptance test"
-}
+func testAccNetworkingV2SecGroupRule_numericProtocol(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
-  direction = "ingress"
-  ethertype = "IPv4"
-  port_range_max = 22
-  port_range_min = 22
-  protocol = "115"
-  remote_ip_prefix = "0.0.0.0/0"
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  port_range_max    = 22
+  port_range_min    = 22
+  protocol          = "115"
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
 }
-`
+`, testAccNetworkingV2SecGroupRule_base(rName))
+}

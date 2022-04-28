@@ -34,6 +34,11 @@ func resourceNetworkingSecGroupRuleV2() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"security_group_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
 			"direction": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -69,24 +74,22 @@ func resourceNetworkingSecGroupRuleV2() *schema.Resource {
 				Computed: true,
 			},
 			"remote_ip_prefix": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: validateCIDR,
 				StateFunc: func(v interface{}) string {
 					return strings.ToLower(v.(string))
 				},
 			},
-			"security_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
+
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}
@@ -171,7 +174,6 @@ func resourceNetworkingSecGroupRuleV2Read(d *schema.ResourceData, meta interface
 	d.Set("remote_group_id", security_group_rule.RemoteGroupID)
 	d.Set("remote_ip_prefix", security_group_rule.RemoteIPPrefix)
 	d.Set("security_group_id", security_group_rule.SecGroupID)
-	d.Set("tenant_id", security_group_rule.TenantID)
 	d.Set("region", GetRegion(d, config))
 
 	return nil

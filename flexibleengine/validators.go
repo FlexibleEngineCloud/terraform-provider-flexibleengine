@@ -129,7 +129,7 @@ func validateCIDR(v interface{}, k string) (ws []string, errors []error) {
 		return
 	}
 
-	if ipnet == nil || value != ipnet.String() {
+	if ipnet == nil || strings.ToLower(value) != ipnet.String() {
 		errors = append(errors, fmt.Errorf(
 			"%q must contain a valid network CIDR, got %q", k, value))
 	}
