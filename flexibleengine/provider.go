@@ -3,11 +3,14 @@ package flexibleengine
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
@@ -147,6 +150,13 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Description: descriptions["cloud"],
 				DefaultFunc: schema.EnvDefaultFunc("OS_CLOUD", defaultCloud),
+			},
+
+			"endpoints": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Experimental Feature: the custom endpoints used to override the default endpoint URL",
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 
 			"insecure": {
@@ -481,14 +491,64 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	config.RegionProjectIDMap = make(map[string]string)
 	config.RPLock = new(sync.Mutex)
 
-	if err := LoadAndValidate(&config); err != nil {
+	// get custom endpoints
+	endpoints, err := flattenProviderEndpoints(d)
+	if err != nil {
 		return nil, diag.FromErr(err)
 	}
 
-	config.Endpoints = make(map[string]string)
-	config.Endpoints["obs"] = fmt.Sprintf("https://oss.%s.%s/", region, config.Cloud)
-	config.Endpoints["fgs"] = fmt.Sprintf("https://fgs.%s.%s/", region, config.Cloud)
-	config.Endpoints["dns"] = fmt.Sprintf("https://dns.%s/", config.Cloud)
+	// set default endpoints
+	if _, ok := endpoints["obs"]; !ok {
+		endpoints["obs"] = fmt.Sprintf("https://oss.%s.%s/", region, config.Cloud)
+	}
+	if _, ok := endpoints["fgs"]; !ok {
+		endpoints["fgs"] = fmt.Sprintf("https://fgs.%s.%s/", region, config.Cloud)
+	}
+	if _, ok := endpoints["dns"]; !ok {
+		endpoints["dns"] = fmt.Sprintf("https://dns.%s/", config.Cloud)
+	}
 
+	config.Endpoints = endpoints
+	if err := LoadAndValidate(&config); err != nil {
+		return nil, diag.FromErr(err)
+	}
 	return &config, nil
+}
+
+func flattenProviderEndpoints(d *schema.ResourceData) (map[string]string, error) {
+	endpoints := d.Get("endpoints").(map[string]interface{})
+	epMap := make(map[string]string)
+
+	for key, val := range endpoints {
+		endpoint := strings.TrimSpace(val.(string))
+		// check empty string
+		if endpoint == "" {
+			return nil, fmt.Errorf("the value of customer endpoint %s must be specified", key)
+		}
+
+		// add prefix "https://" and suffix "/"
+		if !strings.HasPrefix(endpoint, "http") {
+			endpoint = fmt.Sprintf("https://%s", endpoint)
+		}
+		if !strings.HasSuffix(endpoint, "/") {
+			endpoint = fmt.Sprintf("%s/", endpoint)
+		}
+		epMap[key] = endpoint
+	}
+
+	// unify the endpoint which has multiple versions
+	for key := range endpoints {
+		ep, ok := epMap[key]
+		if !ok {
+			continue
+		}
+
+		multiKeys := config.GetServiceDerivedCatalogKeys(key)
+		for _, k := range multiKeys {
+			epMap[k] = ep
+		}
+	}
+
+	log.Printf("[DEBUG] customer endpoints: %+v", epMap)
+	return epMap, nil
 }
