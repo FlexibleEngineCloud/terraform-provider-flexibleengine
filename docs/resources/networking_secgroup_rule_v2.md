@@ -4,9 +4,7 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 # flexibleengine_networking_secgroup_rule_v2
 
-Manages a V2 neutron security group rule resource within FlexibleEngine.
-Unlike Nova security groups, neutron separates the group from the rules
-and also allows an admin to target a specific tenant_id.
+Manages a Security Group Rule resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -36,13 +34,17 @@ The following arguments are supported:
     `region` argument of the provider is used. Changing this creates a new
     security group rule.
 
+* `security_group_id` - (Required) The security group ID the rule should belong
+    to. Changing this creates a new security group rule.
+
 * `direction` - (Required) The direction of the rule, valid values are __ingress__
     or __egress__. Changing this creates a new security group rule.
 
 * `ethertype` - (Required) The layer 3 protocol type, valid values are __IPv4__
     or __IPv6__. Changing this creates a new security group rule.
 
-* `protocol` - (Optional) The layer 4 protocol type, valid values are following. Changing this creates a new security group rule. This is required if you want to specify a port range.
+* `protocol` - (Optional) The layer 4 protocol type, valid values are following.
+    Changing this creates a new security group rule. This is required if you want to specify a port range.
   * __tcp__
   * __udp__
   * __icmp__
@@ -80,28 +82,11 @@ The following arguments are supported:
     FlexibleEngine ID of a security group in the same tenant. Changing this creates
     a new security group rule.
 
-* `security_group_id` - (Required) The security group id the rule should belong
-    to, the value needs to be an FlexibleEngine ID of a security group in the same
-    tenant. Changing this creates a new security group rule.
-
-* `tenant_id` - (Optional) The owner of the security group. Required if admin
-    wants to create a port for another tenant. Changing this creates a new
-    security group rule.
-
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `direction` - See Argument Reference above.
-* `ethertype` - See Argument Reference above.
-* `protocol` - See Argument Reference above.
-* `port_range_min` - See Argument Reference above.
-* `port_range_max` - See Argument Reference above.
-* `remote_ip_prefix` - See Argument Reference above.
-* `remote_group_id` - See Argument Reference above.
-* `security_group_id` - See Argument Reference above.
-* `tenant_id` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
 
 ## Import
 
