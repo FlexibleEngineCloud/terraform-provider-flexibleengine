@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 1.29.0 (April 29, 2022)
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_rds_instance_v3`: support enable SSL for MySQL [GH-744]
+* `resource/flexibleengine_vpc_v1`: support description and secondary_cidr [GH-745]
+* `resource/flexibleengine_as_group_v1`: support to forcibly delete an AS group [GH-746]
+
+BUG FIXES:
+
+* `resource/flexibleengine_cts_tracker_v1`: only filter CTS trckers by name [GH-738]
+* `resource/flexibleengine_networking_secgroup_rule_v2`: add validation for remote_ip_prefix [GH-747]
+
 ## 1.28.0 (April 2, 2022)
 
 FEATURES:
