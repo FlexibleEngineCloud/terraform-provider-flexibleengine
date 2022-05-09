@@ -82,6 +82,10 @@ The following arguments are supported:
     FlexibleEngine ID of a security group in the same tenant. Changing this creates
     a new security group rule.
 
+* `description` - (Optional) Specifies the supplementary information about the security group rule.
+  This parameter can contain a maximum of 255 characters and cannot contain angle brackets (< or >).
+  Changing this creates a new security group rule.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:

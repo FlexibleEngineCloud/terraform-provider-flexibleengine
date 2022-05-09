@@ -43,23 +43,24 @@ func resourceNetworkingSecGroupV2() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
 			"delete_default_rules": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				ForceNew: true,
+			},
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}
 }
 
 func resourceNetworkingSecGroupV2Create(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
 	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
@@ -72,9 +73,9 @@ func resourceNetworkingSecGroupV2Create(d *schema.ResourceData, meta interface{}
 		TenantID:    d.Get("tenant_id").(string),
 	}
 
-	log.Printf("[DEBUG] Create FlexibleEngine Neutron Security Group: %#v", opts)
+	log.Printf("[DEBUG] Create FlexibleEngine Security Group: %#v", opts)
 
-	security_group, err := groups.Create(networkingClient, opts).Extract()
+	securityGroup, err := groups.Create(networkingClient, opts).Extract()
 	if err != nil {
 		return err
 	}
@@ -82,11 +83,11 @@ func resourceNetworkingSecGroupV2Create(d *schema.ResourceData, meta interface{}
 	// Delete the default security group rules if it has been requested.
 	deleteDefaultRules := d.Get("delete_default_rules").(bool)
 	if deleteDefaultRules {
-		security_group, err := groups.Get(networkingClient, security_group.ID).Extract()
+		securityGroup, err := groups.Get(networkingClient, securityGroup.ID).Extract()
 		if err != nil {
 			return err
 		}
-		for _, rule := range security_group.Rules {
+		for _, rule := range securityGroup.Rules {
 			if err := rules.Delete(networkingClient, rule.ID).ExtractErr(); err != nil {
 				return fmt.Errorf(
 					"There was a problem deleting a default security group rule: %s", err)
@@ -94,32 +95,28 @@ func resourceNetworkingSecGroupV2Create(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	log.Printf("[DEBUG] FlexibleEngine Neutron Security Group created: %#v", security_group)
-
-	d.SetId(security_group.ID)
+	log.Printf("[DEBUG] FlexibleEngine Security Group created: %#v", securityGroup)
+	d.SetId(securityGroup.ID)
 
 	return resourceNetworkingSecGroupV2Read(d, meta)
 }
 
 func resourceNetworkingSecGroupV2Read(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG] Retrieve information about security group: %s", d.Id())
-
 	config := meta.(*Config)
-	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	networkingClient, err := config.NetworkingV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	security_group, err := groups.Get(networkingClient, d.Id()).Extract()
-
+	securityGroup, err := groups.Get(networkingClient, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "FlexibleEngine Neutron Security group")
+		return CheckDeleted(d, err, "FlexibleEngine Security group")
 	}
 
-	d.Set("description", security_group.Description)
-	d.Set("tenant_id", security_group.TenantID)
-	d.Set("name", security_group.Name)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
+	d.Set("name", securityGroup.Name)
+	d.Set("description", securityGroup.Description)
 
 	return nil
 }
@@ -176,7 +173,7 @@ func resourceNetworkingSecGroupV2Delete(d *schema.ResourceData, meta interface{}
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting FlexibleEngine Neutron Security Group: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Security Group: %s", err)
 	}
 
 	d.SetId("")
@@ -190,7 +187,7 @@ func waitForSecGroupDelete(networkingClient *golangsdk.ServiceClient, secGroupId
 		r, err := groups.Get(networkingClient, secGroupId).Extract()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Neutron Security Group %s", secGroupId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Security Group %s", secGroupId)
 				return r, "DELETED", nil
 			}
 			return r, "ACTIVE", err
@@ -199,7 +196,7 @@ func waitForSecGroupDelete(networkingClient *golangsdk.ServiceClient, secGroupId
 		err = groups.Delete(networkingClient, secGroupId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Neutron Security Group %s", secGroupId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Security Group %s", secGroupId)
 				return r, "DELETED", nil
 			}
 			if errCode, ok := err.(golangsdk.ErrUnexpectedResponseCode); ok {
@@ -210,7 +207,7 @@ func waitForSecGroupDelete(networkingClient *golangsdk.ServiceClient, secGroupId
 			return r, "ACTIVE", err
 		}
 
-		log.Printf("[DEBUG] FlexibleEngine Neutron Security Group %s still active.\n", secGroupId)
+		log.Printf("[DEBUG] FlexibleEngine Security Group %s still active.\n", secGroupId)
 		return r, "ACTIVE", nil
 	}
 }

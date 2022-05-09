@@ -83,6 +83,12 @@ func resourceNetworkingSecGroupRuleV2() *schema.Resource {
 					return strings.ToLower(v.(string))
 				},
 			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+			},
 
 			"tenant_id": {
 				Type:       schema.TypeString,
@@ -96,7 +102,6 @@ func resourceNetworkingSecGroupRuleV2() *schema.Resource {
 }
 
 func resourceNetworkingSecGroupRuleV2Create(d *schema.ResourceData, meta interface{}) error {
-
 	config := meta.(*Config)
 	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
 	if err != nil {
@@ -119,6 +124,7 @@ func resourceNetworkingSecGroupRuleV2Create(d *schema.ResourceData, meta interfa
 		PortRangeMax:   d.Get("port_range_max").(int),
 		RemoteGroupID:  d.Get("remote_group_id").(string),
 		RemoteIPPrefix: d.Get("remote_ip_prefix").(string),
+		Description:    d.Get("description").(string),
 		TenantID:       d.Get("tenant_id").(string),
 	}
 
@@ -137,44 +143,42 @@ func resourceNetworkingSecGroupRuleV2Create(d *schema.ResourceData, meta interfa
 		opts.Protocol = protocol
 	}
 
-	log.Printf("[DEBUG] Create FlexibleEngine Neutron security group: %#v", opts)
+	log.Printf("[DEBUG] Create FlexibleEngine security group: %#v", opts)
 
-	security_group_rule, err := rules.Create(networkingClient, opts).Extract()
+	sgRule, err := rules.Create(networkingClient, opts).Extract()
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] FlexibleEngine Neutron Security Group Rule created: %#v", security_group_rule)
-
-	d.SetId(security_group_rule.ID)
+	log.Printf("[DEBUG] FlexibleEngine Security Group Rule created: %#v", sgRule)
+	d.SetId(sgRule.ID)
 
 	return resourceNetworkingSecGroupRuleV2Read(d, meta)
 }
 
 func resourceNetworkingSecGroupRuleV2Read(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG] Retrieve information about security group rule: %s", d.Id())
-
 	config := meta.(*Config)
-	networkingClient, err := config.NetworkingV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	networkingClient, err := config.NetworkingV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine networking client: %s", err)
 	}
 
-	security_group_rule, err := rules.Get(networkingClient, d.Id()).Extract()
-
+	sgRule, err := rules.Get(networkingClient, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "FlexibleEngine Security Group Rule")
 	}
 
-	d.Set("direction", security_group_rule.Direction)
-	d.Set("ethertype", security_group_rule.EtherType)
-	d.Set("protocol", security_group_rule.Protocol)
-	d.Set("port_range_min", security_group_rule.PortRangeMin)
-	d.Set("port_range_max", security_group_rule.PortRangeMax)
-	d.Set("remote_group_id", security_group_rule.RemoteGroupID)
-	d.Set("remote_ip_prefix", security_group_rule.RemoteIPPrefix)
-	d.Set("security_group_id", security_group_rule.SecGroupID)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
+	d.Set("direction", sgRule.Direction)
+	d.Set("ethertype", sgRule.EtherType)
+	d.Set("protocol", sgRule.Protocol)
+	d.Set("port_range_min", sgRule.PortRangeMin)
+	d.Set("port_range_max", sgRule.PortRangeMax)
+	d.Set("remote_group_id", sgRule.RemoteGroupID)
+	d.Set("remote_ip_prefix", sgRule.RemoteIPPrefix)
+	d.Set("security_group_id", sgRule.SecGroupID)
+	d.Set("description", sgRule.Description)
 
 	return nil
 }
@@ -199,7 +203,7 @@ func resourceNetworkingSecGroupRuleV2Delete(d *schema.ResourceData, meta interfa
 
 	_, err = stateConf.WaitForState()
 	if err != nil {
-		return fmt.Errorf("Error deleting FlexibleEngine Neutron Security Group Rule: %s", err)
+		return fmt.Errorf("Error deleting FlexibleEngine Security Group Rule: %s", err)
 	}
 
 	d.SetId("")
@@ -297,7 +301,7 @@ func waitForSecGroupRuleDelete(networkingClient *golangsdk.ServiceClient, secGro
 		r, err := rules.Get(networkingClient, secGroupRuleId).Extract()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Neutron Security Group Rule %s", secGroupRuleId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Security Group Rule %s", secGroupRuleId)
 				return r, "DELETED", nil
 			}
 			return r, "ACTIVE", err
@@ -306,13 +310,13 @@ func waitForSecGroupRuleDelete(networkingClient *golangsdk.ServiceClient, secGro
 		err = rules.Delete(networkingClient, secGroupRuleId).ExtractErr()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
-				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Neutron Security Group Rule %s", secGroupRuleId)
+				log.Printf("[DEBUG] Successfully deleted FlexibleEngine Security Group Rule %s", secGroupRuleId)
 				return r, "DELETED", nil
 			}
 			return r, "ACTIVE", err
 		}
 
-		log.Printf("[DEBUG] FlexibleEngine Neutron Security Group Rule %s still active.\n", secGroupRuleId)
+		log.Printf("[DEBUG] FlexibleEngine Security Group Rule %s still active.\n", secGroupRuleId)
 		return r, "ACTIVE", nil
 	}
 }

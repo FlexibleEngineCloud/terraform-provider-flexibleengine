@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -11,7 +12,9 @@ import (
 )
 
 func TestAccNetworkingV2SecGroup_basic(t *testing.T) {
-	var security_group groups.SecGroup
+	var secGroup groups.SecGroup
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	updateName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 	resourceName := "flexibleengine_networking_secgroup_v2.secgroup_1"
 
 	resource.Test(t, resource.TestCase{
@@ -20,18 +23,18 @@ func TestAccNetworkingV2SecGroup_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2SecGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2SecGroup_basic,
+				Config: testAccNetworkingV2SecGroup_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(resourceName, &security_group),
-					testAccCheckNetworkingV2SecGroupRuleCount(&security_group, 2),
-					resource.TestCheckResourceAttr(resourceName, "name", "security_group"),
+					testAccCheckNetworkingV2SecGroupExists(resourceName, &secGroup),
+					testAccCheckNetworkingV2SecGroupRuleCount(&secGroup, 2),
+					resource.TestCheckResourceAttr(resourceName, "name", "sg-"+rName),
 				),
 			},
 			{
-				Config: testAccNetworkingV2SecGroup_update,
+				Config: testAccNetworkingV2SecGroup_update(updateName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPtr(resourceName, "id", &security_group.ID),
-					resource.TestCheckResourceAttr(resourceName, "name", "security_group_2"),
+					resource.TestCheckResourceAttrPtr(resourceName, "id", &secGroup.ID),
+					resource.TestCheckResourceAttr(resourceName, "name", "sg-"+updateName),
 				),
 			},
 			{
@@ -44,7 +47,9 @@ func TestAccNetworkingV2SecGroup_basic(t *testing.T) {
 }
 
 func TestAccNetworkingV2SecGroup_noDefaultRules(t *testing.T) {
-	var security_group groups.SecGroup
+	var secGroup groups.SecGroup
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_networking_secgroup_v2.secgroup_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -52,30 +57,11 @@ func TestAccNetworkingV2SecGroup_noDefaultRules(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2SecGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2SecGroup_noDefaultRules,
+				Config: testAccNetworkingV2SecGroup_noDefaultRules(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &security_group),
-					testAccCheckNetworkingV2SecGroupRuleCount(&security_group, 0),
-				),
-			},
-		},
-	})
-}
-
-func TestAccNetworkingV2SecGroup_timeout(t *testing.T) {
-	var security_group groups.SecGroup
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckNetworkingV2SecGroupDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccNetworkingV2SecGroup_timeout,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SecGroupExists(
-						"flexibleengine_networking_secgroup_v2.secgroup_1", &security_group),
+					testAccCheckNetworkingV2SecGroupExists(resourceName, &secGroup),
+					testAccCheckNetworkingV2SecGroupRuleCount(&secGroup, 0),
+					resource.TestCheckResourceAttr(resourceName, "name", "sg-"+rName),
 				),
 			},
 		},
@@ -103,7 +89,7 @@ func testAccCheckNetworkingV2SecGroupDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckNetworkingV2SecGroupExists(n string, security_group *groups.SecGroup) resource.TestCheckFunc {
+func testAccCheckNetworkingV2SecGroupExists(n string, secGroup *groups.SecGroup) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -129,7 +115,7 @@ func testAccCheckNetworkingV2SecGroupExists(n string, security_group *groups.Sec
 			return fmt.Errorf("Security group not found")
 		}
 
-		*security_group = *found
+		*secGroup = *found
 
 		return nil
 	}
@@ -147,35 +133,30 @@ func testAccCheckNetworkingV2SecGroupRuleCount(
 	}
 }
 
-const testAccNetworkingV2SecGroup_basic = `
+func testAccNetworkingV2SecGroup_basic(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "security_group"
+  name        = "sg-%s"
   description = "terraform security group acceptance test"
 }
-`
+`, rName)
+}
 
-const testAccNetworkingV2SecGroup_update = `
+func testAccNetworkingV2SecGroup_update(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "security_group_2"
+  name        = "sg-%s"
   description = "terraform security group acceptance test"
 }
-`
-
-const testAccNetworkingV2SecGroup_noDefaultRules = `
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-	name = "security_group_1"
-	description = "terraform security group acceptance test"
-	delete_default_rules = true
+`, rName)
 }
-`
 
-const testAccNetworkingV2SecGroup_timeout = `
+func testAccNetworkingV2SecGroup_noDefaultRules(rName string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name = "security_group"
-  description = "terraform security group acceptance test"
-
-  timeouts {
-    delete = "5m"
-  }
+  name                 = "sg-%s"
+  description          = "terraform security group acceptance test"
+  delete_default_rules = true
 }
-`
+`, rName)
+}

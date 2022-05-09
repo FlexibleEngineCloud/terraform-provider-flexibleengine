@@ -4,9 +4,7 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 # flexibleengine_networking_secgroup_v2
 
-Manages a V2 neutron security group resource within FlexibleEngine.
-Unlike Nova security groups, neutron separates the group from the rules
-and also allows an admin to target a specific tenant_id.
+Manages a Security Group resource within FlexibleEngine.
 
 ## Example Usage
 
@@ -30,22 +28,15 @@ The following arguments are supported:
 
 * `description` - (Optional) A unique name for the security group.
 
-* `tenant_id` - (Optional) The owner of the security group. Required if admin
-    wants to create a port for another tenant. Changing this creates a new
-    security group.
-
 * `delete_default_rules` - (Optional) Whether or not to delete the default
     egress security rules. This is `false` by default. See the below note
     for more information.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `tenant_id` - See Argument Reference above.
+* `id` - The resource ID in UUID format.
 
 ## Default Security Group Rules
 
