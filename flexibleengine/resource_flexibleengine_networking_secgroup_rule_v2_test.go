@@ -36,6 +36,7 @@ func TestAccNetworkingV2SecGroupRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ethertype", "IPv4"),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "tcp"),
 					resource.TestCheckResourceAttr(resourceName, "remote_ip_prefix", "0.0.0.0/0"),
+					resource.TestCheckResourceAttrSet(resourceName, "description"),
 				),
 			},
 			{
@@ -189,7 +190,7 @@ func testAccCheckNetworkingV2SecGroupRuleExists(n string, sgRule *rules.SecGroup
 func testAccNetworkingV2SecGroupRule_base(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name        = "secgroup-%s"
+  name        = "sg-%s"
   description = "terraform security group rule acceptance test"
 }
 `, rName)
@@ -207,6 +208,7 @@ resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   protocol          = "tcp"
   remote_ip_prefix  = "0.0.0.0/0"
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  description       = "allow SSH"
 }
 `, testAccNetworkingV2SecGroupRule_base(rName))
 }
