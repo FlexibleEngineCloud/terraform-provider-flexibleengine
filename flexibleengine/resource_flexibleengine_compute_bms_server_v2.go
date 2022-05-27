@@ -552,7 +552,6 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 		secgroupsToRemove := oldSGSet.Difference(newSGSet)
 
 		log.Printf("[DEBUG] Security groups to add: %v", secgroupsToAdd)
-
 		log.Printf("[DEBUG] Security groups to remove: %v", secgroupsToRemove)
 
 		for _, g := range secgroupsToRemove.List() {
@@ -563,9 +562,8 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 				}
 
 				return fmt.Errorf("Error removing security group (%s) from FlexibleEngine server (%s): %s", g, d.Id(), err)
-			} else {
-				log.Printf("[DEBUG] Removed security group (%s) from instance (%s)", g, d.Id())
 			}
+			log.Printf("[DEBUG] Removed security group (%s) from instance (%s)", g, d.Id())
 		}
 
 		for _, g := range secgroupsToAdd.List() {
@@ -647,7 +645,7 @@ func resourceComputeBMSInstanceV2Update(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	return resourceComputeInstanceV2Read(d, meta)
+	return resourceComputeBMSInstanceV2Read(d, meta)
 }
 
 func resourceComputeBMSInstanceV2Delete(d *schema.ResourceData, meta interface{}) error {
