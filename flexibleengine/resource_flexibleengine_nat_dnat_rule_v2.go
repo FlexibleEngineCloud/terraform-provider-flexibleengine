@@ -79,6 +79,13 @@ func resourceNatDnatRuleV2() *schema.Resource {
 				ForceNew:     true,
 			},
 
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
+
 			"created_at": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -88,11 +95,6 @@ func resourceNatDnatRuleV2() *schema.Resource {
 				Computed: true,
 			},
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
-			"tenant_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -109,6 +111,7 @@ func resourceNatDnatUserInputParams(d *schema.ResourceData) map[string]interface
 		"port_id":               d.Get("port_id"),
 		"private_ip":            d.Get("private_ip"),
 		"protocol":              d.Get("protocol"),
+		"description":           d.Get("description"),
 	}
 }
 
@@ -193,6 +196,18 @@ func resourceNatDnatRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	if !e {
 		params["protocol"] = protocolProp
+	}
+
+	desc, err := navigateValue(opts, []string{"description"}, nil)
+	if err != nil {
+		return err
+	}
+	e, err = isEmptyValue(reflect.ValueOf(desc))
+	if err != nil {
+		return err
+	}
+	if !e {
+		params["description"] = desc
 	}
 
 	log.Printf("[DEBUG] Creating new Dnat: %#v", params)
@@ -375,20 +390,27 @@ func resourceNatDnatRuleRead(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
+	desc, ok := opts["description"]
+	if desc != nil {
+		ok, _ = isEmptyValue(reflect.ValueOf(desc))
+		ok = !ok
+	}
+	if !ok {
+		desc, err = navigateValue(res, []string{"read", "dnat_rule", "description"}, nil)
+		if err != nil {
+			return fmt.Errorf("Error reading Dnat:description, err: %s", err)
+		}
+		if err = d.Set("description", desc); err != nil {
+			return fmt.Errorf("Error setting Dnat:description, err: %s", err)
+		}
+	}
+
 	statusProp, err := navigateValue(res, []string{"read", "dnat_rule", "status"}, nil)
 	if err != nil {
 		return fmt.Errorf("Error reading Dnat:status, err: %s", err)
 	}
 	if err = d.Set("status", statusProp); err != nil {
 		return fmt.Errorf("Error setting Dnat:status, err: %s", err)
-	}
-
-	tenantIDProp, err := navigateValue(res, []string{"read", "dnat_rule", "tenant_id"}, nil)
-	if err != nil {
-		return fmt.Errorf("Error reading Dnat:tenant_id, err: %s", err)
-	}
-	if err = d.Set("tenant_id", tenantIDProp); err != nil {
-		return fmt.Errorf("Error setting Dnat:tenant_id, err: %s", err)
 	}
 
 	return nil

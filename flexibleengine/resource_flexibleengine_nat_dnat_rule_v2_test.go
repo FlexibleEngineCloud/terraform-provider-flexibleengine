@@ -39,6 +39,7 @@ func TestAccNatDnat_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNatDnatExists(),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "tcp"),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by terraform acc test"),
 					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
 			},
@@ -65,6 +66,7 @@ func TestAccNatDnat_protocol(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNatDnatExists(),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "any"),
+					resource.TestCheckResourceAttr(resourceName, "description", "created by terraform acc test"),
 					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
 			},
@@ -186,6 +188,7 @@ resource "flexibleengine_nat_dnat_rule_v2" "dnat" {
   floating_ip_id = flexibleengine_networking_floatingip_v2.fip_1.id
   private_ip     = flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4
   protocol       = "tcp"
+  description    = "created by terraform acc test"
   internal_service_port = 80
   external_service_port = 8080
 }
@@ -203,6 +206,7 @@ resource "flexibleengine_nat_dnat_rule_v2" "dnat" {
   floating_ip_id = flexibleengine_networking_floatingip_v2.fip_1.id
   private_ip     = flexibleengine_compute_instance_v2.instance_1.network.0.fixed_ip_v4
   protocol       = "any"
+  description    = "created by terraform acc test"
   internal_service_port = 0
   external_service_port = 0
 }
