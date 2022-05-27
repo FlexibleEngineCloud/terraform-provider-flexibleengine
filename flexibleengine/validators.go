@@ -341,3 +341,24 @@ func IsRFC3339Time(i interface{}, k string) (warnings []string, errors []error) 
 
 	return warnings, errors
 }
+
+func flavorWithXenType(i interface{}, k string) (warnings []string, errors []error) {
+	xenTypes := []string{"c1", "c2", "d1", "s1", "m1", "g1", "g2", "t2"}
+
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %s to be string", k))
+		return warnings, errors
+	}
+
+	virtualization := strings.Split(v, ".")[0]
+	for _, xen := range xenTypes {
+		if strings.ToLower(virtualization) == xen {
+			warnings = append(warnings, fmt.Sprintf("%s: virtualization type of %s is Xen. "+
+				"Use KVM-based flavor to get more features.", k, v))
+			return warnings, errors
+		}
+	}
+
+	return warnings, errors
+}
