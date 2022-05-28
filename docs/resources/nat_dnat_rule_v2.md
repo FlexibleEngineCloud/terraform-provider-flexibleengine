@@ -62,6 +62,10 @@ The following arguments are supported:
   the IP address of a VPC for dedicated connection. This parameter is mandatory in
   Direct Connect scenario. Changing this creates a new dnat rule.
 
+* `description` - (Optional) Specifies the description of the dnat rule.
+  The value is a string of no more than 255 characters, and angle brackets (<>) are not allowed.
+  Changing this creates a new dnat rule.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
