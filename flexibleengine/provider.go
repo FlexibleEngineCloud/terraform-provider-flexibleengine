@@ -12,6 +12,7 @@ import (
 
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
@@ -249,6 +250,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_endpoints":                    dataSourceVPCEPEndpoints(),
 
 			// importing data source
+			"flexibleengine_cbr_vaults":       cbr.DataSourceCbrVaultsV3(),
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
 			// Deprecated data source
@@ -384,6 +386,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing resource
+			"flexibleengine_cbr_policy":      cbr.ResourceCBRPolicyV3(),
+			"flexibleengine_cbr_vault":       cbr.ResourceCBRVaultV3(),
 			"flexibleengine_fgs_dependency":  fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":    fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":     fgs.ResourceFunctionGraphTrigger(),

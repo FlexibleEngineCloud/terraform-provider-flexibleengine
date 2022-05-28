@@ -28,6 +28,9 @@ var (
 	OS_IMAGE_ID     = os.Getenv("OS_IMAGE_ID")
 	OS_KEYPAIR_NAME = os.Getenv("OS_KEYPAIR_NAME")
 	OS_FGS_BUCKET   = os.Getenv("OS_FGS_BUCKET")
+
+	OS_DEST_REGION     = os.Getenv("OS_DEST_REGION")
+	OS_DEST_PROJECT_ID = os.Getenv("OS_DEST_PROJECT_ID")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -85,5 +88,11 @@ func testAccPreCheckOBS(t *testing.T) {
 
 	if OS_ACCESS_KEY == "" || OS_SECRET_KEY == "" {
 		t.Skip("OS_ACCESS_KEY and OS_SECRET_KEY must be set for OBS acceptance tests")
+	}
+}
+
+func testAccPreCheckReplication(t *testing.T) {
+	if OS_DEST_REGION == "" || OS_DEST_PROJECT_ID == "" {
+		t.Skip("Skipping the replication policy acceptance tests.")
 	}
 }
