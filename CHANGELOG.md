@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 1.30.0 (June 15, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_cbr_vaults` [GH-760]
+  - `flexibleengine_cbr_policy` [GH-760]
+
+* **New Data Source:**
+  - `flexibleengine_cbr_vaults` [GH-760]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_kms_key_v1`: support key rotation management [GH-702]
+* `resource/flexibleengine_networking_secgroup_rule_v2`: support `description` field [GH-749]
+* `resource/flexibleengine_nat_dnat_rule_v2`: support `description` field [GH-750]
+* `resource/flexibleengine_compute_instance_v2`: add warnings when flavor is Xen-based [GH-758]
+
 ## 1.29.0 (April 29, 2022)
 
 ENHANCEMENTS:
