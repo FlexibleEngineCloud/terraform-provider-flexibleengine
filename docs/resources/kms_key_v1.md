@@ -2,7 +2,7 @@
 subcategory: "Key Management Service (KMS)"
 ---
 
-# flexibleengine\_kms\_key_v1
+# flexibleengine_kms_key_v1
 
 Manages a V1 key resource within KMS.
 
@@ -22,21 +22,22 @@ resource "flexibleengine_kms_key_v1" "key_1" {
 
 The following arguments are supported:
 
-* `key_alias` - (Required) The alias in which to create the key. It is required when
-    we create a new key. Changing this updates the alias of key.
+* `key_alias` - (Required) Specifies the name of a KMS key.
 
-* `key_description` - (Optional) The description of the key as viewed in FlexibleEngine console.
-    Changing this updates the description of key.
+* `key_description` - (Optional) Specifies the description of a KMS key.
 
 * `realm` - (Optional) Region where a key resides. Changing this creates a new key.
 
-* `pending_days` - (Optional) Duration in days after which the key is deleted
+* `pending_days` - (Optional) Specifies the duration in days after which the key is deleted
     after destruction of the resource, must be between 7 and 1096 days. Defaults to 7.
     It only be used when delete a key.
 
 * `is_enabled` - (Optional) Specifies whether the key is enabled. Defaults to true.
-    Changing this updates the state of existing key.
 
+* `rotation_enabled` - (Optional) Specifies whether the key rotation is enabled. Defaults to false.
+
+* `rotation_interval` - (Optional) Specifies the key rotation interval. The valid value is range from 30 to 365,
+  defaults to 365.
 
 ## Attributes Reference
 
@@ -48,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 * `origin` - Origin of a key. The default value is kms.
 * `domain_id` - ID of a user domain for the key.
 * `creation_date` - Creation time (time stamp) of a key.
-
+* `rotation_number` - The total number of key rotations.
 
 ## Import
 

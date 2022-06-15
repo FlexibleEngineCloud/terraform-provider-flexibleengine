@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/chnsz/golangsdk/openstack/kms/v1/keys"
+	"github.com/chnsz/golangsdk/openstack/kms/v1/rotation"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -70,6 +71,18 @@ func dataSourceKmsKeyV1() *schema.Resource {
 			},
 			"scheduled_deletion_date": {
 				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"rotation_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"rotation_interval": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"rotation_number": {
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 		},
@@ -176,6 +189,21 @@ func dataSourceKmsKeyV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("origin", key.Origin)
 	d.Set("creation_date", key.CreationDate)
 	d.Set("scheduled_deletion_date", key.ScheduledDeletionDate)
+
+	// Set KMS rotation
+	rotationOpts := &rotation.RotationOpts{
+		KeyID: key.KeyID,
+	}
+	r, err := rotation.Get(kmsClient, rotationOpts).Extract()
+	if err == nil {
+		d.Set("rotation_enabled", r.Enabled)
+		if r.Enabled {
+			d.Set("rotation_interval", r.Interval)
+			d.Set("rotation_number", r.NumberOfRotations)
+		}
+	} else {
+		log.Printf("[WARN] Error fetching details about key rotation: %s", err)
+	}
 
 	return nil
 }

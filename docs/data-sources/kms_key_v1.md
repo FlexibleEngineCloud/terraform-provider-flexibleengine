@@ -2,7 +2,7 @@
 subcategory: "Key Management Service (KMS)"
 ---
 
-# flexibleengine\_kms\_key_v1
+# flexibleengine_kms_key_v1
 
 Use this data source to get the ID of an available FlexibleEngine KMS key.
 
@@ -10,10 +10,7 @@ Use this data source to get the ID of an available FlexibleEngine KMS key.
 
 ```hcl
 data "flexibleengine_kms_key_v1" "key_1" {
-  key_alias       = "test_key"
-  key_description = "test key description"
-  key_state       = "2"
-  key_id          = "af650527-a0ff-4527-aef3-c493df1f3012"
+  key_alias = "test_key"
 }
 ```
 
@@ -42,8 +39,11 @@ data "flexibleengine_kms_key_v1" "key_1" {
 
 ## Attributes Reference
 
-`id` is set to the ID of the found key. In addition, the following attributes
-are exported:
+In addition to all arguments above, the following attributes are exported:
 
+* `id` - The data source ID in UUID format.
 * `creation_date` - Creation time (time stamp) of a key.
 * `scheduled_deletion_date` - Scheduled deletion time (time stamp) of a key.
+* `rotation_enabled` - Indicates whether the key rotation is enabled or not.
+* `rotation_interval` - The key rotation interval. It's valid when rotation is enabled.
+* `rotation_number` - The total number of key rotations. It's valid when rotation is enabled.

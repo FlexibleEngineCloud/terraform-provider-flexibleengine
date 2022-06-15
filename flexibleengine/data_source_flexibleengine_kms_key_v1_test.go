@@ -12,6 +12,8 @@ import (
 var keyAlias = fmt.Sprintf("key_alias_%s", acctest.RandString(5))
 
 func TestAccKmsKeyV1DataSource_basic(t *testing.T) {
+	datasourceName := "data.flexibleengine_kms_key_v1.key1"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -22,9 +24,9 @@ func TestAccKmsKeyV1DataSource_basic(t *testing.T) {
 			{
 				Config: testAccKmsKeyV1DataSource_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckKmsKeyV1DataSourceID("data.flexibleengine_kms_key_v1.key1"),
-					resource.TestCheckResourceAttr(
-						"data.flexibleengine_kms_key_v1.key1", "key_alias", keyAlias),
+					testAccCheckKmsKeyV1DataSourceID(datasourceName),
+					resource.TestCheckResourceAttr(datasourceName, "key_alias", keyAlias),
+					resource.TestCheckResourceAttr(datasourceName, "rotation_enabled", "false"),
 				),
 			},
 		},

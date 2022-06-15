@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccKmsKeyV1_basic(t *testing.T) {
+func TestAccKmsKey_basic(t *testing.T) {
 	var key keys.Key
 	var keyAlias = fmt.Sprintf("kms_%s", acctest.RandString(5))
 	var keyAliasUpdate = fmt.Sprintf("kms_updated_%s", acctest.RandString(5))
@@ -26,6 +26,7 @@ func TestAccKmsKeyV1_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsV1KeyExists(resourceName, &key),
 					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAlias),
+					resource.TestCheckResourceAttr(resourceName, "rotation_enabled", "false"),
 				),
 			},
 			{
@@ -137,6 +138,49 @@ func TestAccKmsKey_isEnabled(t *testing.T) {
 	})
 }
 
+func TestAccKmsKey_rotation(t *testing.T) {
+	var key keys.Key
+	keyAlias := acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "flexibleengine_kms_key_v1.key_1"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckKmsV1KeyDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKmsV1Key_basic(keyAlias),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKmsV1KeyExists(resourceName, &key),
+					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAlias),
+					resource.TestCheckResourceAttr(resourceName, "rotation_enabled", "false"),
+				),
+			},
+			{
+				Config: testAccKmsKey_rotation(keyAlias),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAlias),
+					resource.TestCheckResourceAttr(resourceName, "rotation_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "rotation_interval", "365"),
+				),
+			},
+			{
+				Config: testAccKmsKey_rotation_interval(keyAlias),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "key_alias", keyAlias),
+					resource.TestCheckResourceAttr(resourceName, "rotation_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "rotation_interval", "200"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckKmsKeyIsEnabled(key *keys.Key, isEnabled bool) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		if (key.KeyState == EnabledState) != isEnabled {
@@ -182,4 +226,23 @@ resource "flexibleengine_kms_key_v1" "bar" {
   pending_days    = "7"
   is_enabled      = false
 }`, rName, rName)
+}
+
+func testAccKmsKey_rotation(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_kms_key_v1" "key_1" {
+  key_alias        = "%s"
+  pending_days     = "7"
+  rotation_enabled = true
+}`, rName)
+}
+
+func testAccKmsKey_rotation_interval(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_kms_key_v1" "key_1" {
+  key_alias         = "%s"
+  pending_days      = "7"
+  rotation_enabled  = true
+  rotation_interval = 200
+}`, rName)
 }
