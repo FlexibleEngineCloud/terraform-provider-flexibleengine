@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/aws/aws-sdk-go v1.25.3
-	github.com/chnsz/golangsdk v0.0.0-20220615020710-87cd9b9a3040
+	github.com/chnsz/golangsdk v0.0.0-20220616110846-5f3079766b1d
 	github.com/hashicorp/errwrap v1.1.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-multierror v1.1.1

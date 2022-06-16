@@ -48,6 +48,7 @@ func resourceLTSGroupV2Create(d *schema.ResourceData, meta interface{}) error {
 
 	createOpts := &loggroups.CreateOpts{
 		LogGroupName: d.Get("group_name").(string),
+		TTL:          7, // fixed to 7days
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
