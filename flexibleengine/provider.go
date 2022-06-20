@@ -15,6 +15,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
@@ -386,13 +387,17 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing resource
-			"flexibleengine_cbr_policy":      cbr.ResourceCBRPolicyV3(),
-			"flexibleengine_cbr_vault":       cbr.ResourceCBRVaultV3(),
-			"flexibleengine_fgs_dependency":  fgs.ResourceFgsDependency(),
-			"flexibleengine_fgs_function":    fgs.ResourceFgsFunctionV2(),
-			"flexibleengine_fgs_trigger":     fgs.ResourceFunctionGraphTrigger(),
-			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),
-			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(),
+			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
+			"flexibleengine_cbr_vault":              cbr.ResourceCBRVaultV3(),
+			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
+			"flexibleengine_fgs_function":           fgs.ResourceFgsFunctionV2(),
+			"flexibleengine_fgs_trigger":            fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_rds_instance_v3":        rds.ResourceRdsInstance(),
+			"flexibleengine_swr_organization":       swr.ResourceSWROrganization(),
+			"flexibleengine_swr_organization_users": swr.ResourceSWROrganizationPermissions(),
+			"flexibleengine_swr_repository":         swr.ResourceSWRRepository(),
+			"flexibleengine_swr_repository_sharing": swr.ResourceSWRRepositorySharing(),
+			"flexibleengine_vpc_v1":                 vpc.ResourceVirtualPrivateCloudV1(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),

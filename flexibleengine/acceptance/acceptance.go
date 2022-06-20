@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	hwacceptance "github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
 
 	"github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/flexibleengine"
 )
@@ -29,8 +30,9 @@ var (
 	OS_KEYPAIR_NAME = os.Getenv("OS_KEYPAIR_NAME")
 	OS_FGS_BUCKET   = os.Getenv("OS_FGS_BUCKET")
 
-	OS_DEST_REGION     = os.Getenv("OS_DEST_REGION")
-	OS_DEST_PROJECT_ID = os.Getenv("OS_DEST_PROJECT_ID")
+	OS_DEST_REGION         = os.Getenv("OS_DEST_REGION")
+	OS_DEST_PROJECT_ID     = os.Getenv("OS_DEST_PROJECT_ID")
+	OS_SWR_SHARING_ACCOUNT = os.Getenv("OS_SWR_SHARING_ACCOUNT")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -41,6 +43,8 @@ var testAccProvider *schema.Provider
 
 func init() {
 	testAccProvider = flexibleengine.Provider()
+	// update TestAccProvider in huaweicloud acceptance package
+	hwacceptance.TestAccProvider = testAccProvider
 
 	TestAccProviderFactories = map[string]func() (*schema.Provider, error){
 		"flexibleengine": func() (*schema.Provider, error) {
@@ -94,5 +98,12 @@ func testAccPreCheckOBS(t *testing.T) {
 func testAccPreCheckReplication(t *testing.T) {
 	if OS_DEST_REGION == "" || OS_DEST_PROJECT_ID == "" {
 		t.Skip("Skipping the replication policy acceptance tests.")
+	}
+}
+
+func testAccPreCheckSWRDomian(t *testing.T) {
+	if OS_SWR_SHARING_ACCOUNT == "" {
+		t.Skip("OS_SWR_SHARING_ACCOUNT must be set for swr domian tests, " +
+			"the value of OS_SWR_SHARING_ACCOUNT should be another IAM user name")
 	}
 }
