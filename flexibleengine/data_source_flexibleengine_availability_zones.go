@@ -9,10 +9,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func dataSourceComputeAvailabilityZonesV2() *schema.Resource {
+func dataSourceAvailabilityZones() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceComputeAvailabilityZonesV2Read,
+		Read: dataSourceAvailabilityZonesRead,
 		Schema: map[string]*schema.Schema{
+			"region": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+			},
+			"state": {
+				Type:         schema.TypeString,
+				Default:      "available",
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{"available", "unavailable"}, true),
+			},
 			"names": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -20,24 +31,11 @@ func dataSourceComputeAvailabilityZonesV2() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
-
-			"region": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-			},
-
-			"state": {
-				Type:         schema.TypeString,
-				Default:      "available",
-				Optional:     true,
-				ValidateFunc: validation.StringInSlice([]string{"available", "unavailable"}, true),
-			},
 		},
 	}
 }
 
-func dataSourceComputeAvailabilityZonesV2Read(d *schema.ResourceData, meta interface{}) error {
+func dataSourceAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
 	computeClient, err := config.ComputeV2Client(region)
@@ -47,11 +45,11 @@ func dataSourceComputeAvailabilityZonesV2Read(d *schema.ResourceData, meta inter
 
 	allPages, err := availabilityzones.List(computeClient).AllPages()
 	if err != nil {
-		return fmt.Errorf("Error retrieving flexibleengine_compute_availability_zones_v2: %s", err)
+		return fmt.Errorf("Error retrieving availability zones: %s", err)
 	}
 	zoneInfo, err := availabilityzones.ExtractAvailabilityZones(allPages)
 	if err != nil {
-		return fmt.Errorf("Error extracting flexibleengine_compute_availability_zones_v2 from response: %s", err)
+		return fmt.Errorf("Error extracting availability zones from response: %s", err)
 	}
 
 	stateBool := d.Get("state").(string) == "available"

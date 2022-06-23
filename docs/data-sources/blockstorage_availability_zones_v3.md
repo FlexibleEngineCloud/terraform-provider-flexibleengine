@@ -1,10 +1,12 @@
 ---
-subcategory: "Elastic Volume Service (EVS)"
+subcategory: "Deprecated"
 ---
 
-# flexibleengine\_blockstorage\_availability\_zones\_v3
+# flexibleengine_blockstorage_availability_zones_v3
 
 Use this data source to get a list of Block Storage availability zones from FlexibleEngine
+
+!> **WARNING:** It has been deprecated, use `flexibleengine_availability_zones` instead.
 
 ## Example Usage
 

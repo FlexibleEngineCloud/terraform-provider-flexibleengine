@@ -142,10 +142,10 @@ func testAccCheckNatDnatExists() resource.TestCheckFunc {
 
 func testAccNatV2DnatRule_base(suffix string) string {
 	return fmt.Sprintf(`
-data "flexibleengine_compute_availability_zones_v2" "test" {}
+data "flexibleengine_availability_zones" "test" {}
 
 data "flexibleengine_compute_flavors_v2" "test" {
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
   performance_type  = "normal"
   cpu_core          = 2
   memory_size       = 4
@@ -164,7 +164,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   image_id          = data.flexibleengine_images_image_v2.test.id
   flavor_id         = data.flexibleengine_compute_flavors_v2.test.flavors[0]
   security_groups   = ["default"]
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
 
   network {
     uuid = flexibleengine_vpc_subnet_v1.subnet_1.id
