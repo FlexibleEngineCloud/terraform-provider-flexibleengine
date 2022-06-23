@@ -4,9 +4,9 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 # flexibleengine_vpc_subnet_v1
 
-Provides an VPC subnet resource.
+Provides a VPC subnet resource within FlexibleEngine.
 
-# Example Usage
+## Example Usage
 
 ```hcl
 resource "flexibleengine_vpc_v1" "vpc_v1" {
@@ -34,42 +34,62 @@ resource "flexibleengine_vpc_subnet_v1" "subnet_with_tags" {
 }
 ```
 
-# Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
-* `name` (Required) - The subnet name. The value is a string of 1 to 64 characters that can contain letters, digits, underscores (_), and hyphens (-).
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the vpc subnet. If omitted, the
+  provider-level region will be used. Changing this creates a new subnet.
 
-* `cidr` (Required) - Specifies the network segment on which the subnet resides. The value must be in CIDR format. The value must be within the CIDR block of the VPC. The subnet mask cannot be greater than 28. Changing this creates a new Subnet.
+* `name` (Required, String) - Specifies the subnet name. The value is a string of 1 to 64 characters that can contain
+  letters, digits, underscores (_), and hyphens (-).
 
-* `gateway_ip` (Required) - Specifies the gateway of the subnet. The value must be a valid IP address. The value must be an IP address in the subnet segment. Changing this creates a new Subnet.
+* `cidr` (Required, String, ForceNew) - Specifies the network segment on which the subnet resides. The value must be in
+  CIDR format and within the CIDR block of the VPC. The subnet mask cannot be greater than 28. Changing this creates a
+  new subnet.
 
-* `vpc_id` (Required) - Specifies the ID of the VPC to which the subnet belongs. Changing this creates a new Subnet.
+* `gateway_ip` (Required, String, ForceNew) - Specifies the gateway of the subnet. The value must be a valid IP address
+  in the subnet segment. Changing this creates a new subnet.
 
-* `dhcp_enable` (Optional) - Specifies whether the DHCP function is enabled for the subnet. The value can be true or false. If this parameter is left blank, it is set to true by default.
+* `vpc_id` (Required, String, ForceNew) - Specifies the ID of the VPC to which the subnet belongs. Changing this creates
+  a new subnet.
 
-* `primary_dns` (Optional) - Specifies the IP address of DNS server 1 on the subnet. The value must be a valid IP address.
+* `ipv6_enable` (Optional, Bool) - Specifies whether the IPv6 function is enabled for the subnet. Defaults to false.
 
-* `secondary_dns` (Optional) - Specifies the IP address of DNS server 2 on the subnet. The value must be a valid IP address.
+* `dhcp_enable` (Optional, Bool) - Specifies whether the DHCP function is enabled for the subnet. Defaults to true.
 
-* `dns_list` (Optional) - Specifies the DNS server address list of a subnet. This field is required if you need to use more than two DNS servers. This parameter value is the superset of both DNS server address 1 and DNS server address 2.
+* `primary_dns` (Optional, String) - Specifies the IP address of DNS server 1 on the subnet. The value must be a valid
+  IP address.
 
-* `availability_zone` (Optional) - Identifies the availability zone (AZ) to which the subnet belongs. The value must be an existing AZ in the system. Changing this creates a new Subnet.
+* `secondary_dns` (Optional, String) - Specifies the IP address of DNS server 2 on the subnet. The value must be a valid
+  IP address.
 
-* `tags` - (Optional) The key/value pairs to associate with the subnet.
+* `dns_list` (Optional, List) - Specifies the DNS server address list of a subnet. This field is required if you need to
+  use more than two DNS servers. This parameter value is the superset of both DNS server address 1 and DNS server
+  address 2.
 
-# Attributes Reference
+* `availability_zone` (Optional, String, ForceNew) - Specifies the availability zone (AZ) to which the subnet belongs.
+  The value must be an existing AZ in the system. Changing this creates a new subnet.
 
-All of the argument attributes are also exported as
-result attributes:
+* `tags` - (Optional, Map) The key/value pairs to associate with the subnet.
 
-* `id` - Specifies a resource ID in UUID format.
- 
-* `status` - Specifies the status of the subnet. The value can be ACTIVE, DOWN, UNKNOWN, or ERROR.
+## Attributes Reference
 
-* `subnet_id` - Specifies the subnet (Native OpenStack API) ID.
+In addition to all arguments above, the following attributes are exported:
 
-# Import
+* `id` - The resource ID in UUID format.
+
+* `status` - The status of the subnet. The value can be ACTIVE, DOWN, UNKNOWN, or ERROR.
+
+* `subnet_id` - The subnet (Native OpenStack API) ID.
+
+* `ipv6_subnet_id` - The ID of the IPv6 subnet (Native OpenStack API).
+
+* `ipv6_cidr` - The IPv6 subnet CIDR block.
+
+* `ipv6_gateway` - The IPv6 subnet gateway.
+
+## Import
 
 Subnets can be imported using the `subnet id`, e.g.
 

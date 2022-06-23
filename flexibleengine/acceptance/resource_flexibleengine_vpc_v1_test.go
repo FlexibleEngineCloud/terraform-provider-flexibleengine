@@ -12,7 +12,7 @@ import (
 	"github.com/chnsz/golangsdk/openstack/networking/v1/vpcs"
 )
 
-func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
+func TestAccVpcV1_basic(t *testing.T) {
 	var vpc vpcs.Vpc
 
 	resourceName := "flexibleengine_vpc_v1.vpc_1"
@@ -22,12 +22,12 @@ func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
-		CheckDestroy:      testAccCheckFlexibleEngineVpcV1Destroy,
+		CheckDestroy:      testAccCheckVpcV1Destroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccVpcV1_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					testAccCheckVpcV1Exists(resourceName, &vpc),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "cidr", "192.168.0.0/16"),
 					resource.TestCheckResourceAttr(resourceName, "status", "OK"),
@@ -39,7 +39,7 @@ func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 			{
 				Config: testAccVpcV1_update(rNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					testAccCheckVpcV1Exists(resourceName, &vpc),
 					resource.TestCheckResourceAttr(resourceName, "name", rNameUpdate),
 					resource.TestCheckResourceAttr(resourceName, "description", "updated by acc test"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
@@ -54,7 +54,7 @@ func TestAccFlexibleEngineVpcV1_basic(t *testing.T) {
 	})
 }
 
-func TestAccFlexibleEngineVpcV1_secondaryCIDR(t *testing.T) {
+func TestAccVpcV1_secondaryCIDR(t *testing.T) {
 	var vpc vpcs.Vpc
 
 	resourceName := "flexibleengine_vpc_v1.vpc_1"
@@ -63,12 +63,12 @@ func TestAccFlexibleEngineVpcV1_secondaryCIDR(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: TestAccProviderFactories,
-		CheckDestroy:      testAccCheckFlexibleEngineVpcV1Destroy,
+		CheckDestroy:      testAccCheckVpcV1Destroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccVpcV1_secondaryCIDR(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					testAccCheckVpcV1Exists(resourceName, &vpc),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "cidr", "192.168.0.0/16"),
 					resource.TestCheckResourceAttr(resourceName, "secondary_cidr", "168.10.0.0/16"),
@@ -87,7 +87,7 @@ func TestAccFlexibleEngineVpcV1_secondaryCIDR(t *testing.T) {
 			{
 				Config: testAccVpcV1_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFlexibleEngineVpcV1Exists(resourceName, &vpc),
+					testAccCheckVpcV1Exists(resourceName, &vpc),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "cidr", "192.168.0.0/16"),
 					resource.TestCheckResourceAttr(resourceName, "status", "OK"),
@@ -97,7 +97,7 @@ func TestAccFlexibleEngineVpcV1_secondaryCIDR(t *testing.T) {
 	})
 }
 
-func testAccCheckFlexibleEngineVpcV1Destroy(s *terraform.State) error {
+func testAccCheckVpcV1Destroy(s *terraform.State) error {
 	conf := testAccProvider.Meta().(*config.Config)
 	vpcClient, err := conf.NetworkingV1Client(OS_REGION_NAME)
 	if err != nil {
@@ -118,7 +118,7 @@ func testAccCheckFlexibleEngineVpcV1Destroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFlexibleEngineVpcV1Exists(n string, vpc *vpcs.Vpc) resource.TestCheckFunc {
+func testAccCheckVpcV1Exists(n string, vpc *vpcs.Vpc) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

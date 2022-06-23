@@ -71,13 +71,30 @@ func dataSourceVpcSubnetV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"ipv6_subnet_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"ipv6_enable": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"ipv6_cidr": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"ipv6_gateway": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
 
 func dataSourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	subnetClient, err := config.NetworkingV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	subnetClient, err := config.NetworkingV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine Vpc client: %s", err)
 	}
@@ -113,6 +130,7 @@ func dataSourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[INFO] Retrieved Subnet using given filter %s: %+v", Subnets.ID, Subnets)
 	d.SetId(Subnets.ID)
 
+	d.Set("region", region)
 	d.Set("name", Subnets.Name)
 	d.Set("cidr", Subnets.CIDR)
 	d.Set("dns_list", Subnets.DnsList)
@@ -124,7 +142,10 @@ func dataSourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("availability_zone", Subnets.AvailabilityZone)
 	d.Set("vpc_id", Subnets.VPC_ID)
 	d.Set("subnet_id", Subnets.SubnetId)
-	d.Set("region", GetRegion(d, config))
+	d.Set("ipv6_enable", Subnets.EnableIPv6)
+	d.Set("ipv6_subnet_id", Subnets.IPv6SubnetId)
+	d.Set("ipv6_cidr", Subnets.IPv6CIDR)
+	d.Set("ipv6_gateway", Subnets.IPv6Gateway)
 
 	return nil
 }
