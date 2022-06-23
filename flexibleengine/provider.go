@@ -343,7 +343,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
 			"flexibleengine_vpc_eip_v1":                         resourceVpcEIPV1(),
-			"flexibleengine_vpc_subnet_v1":                      resourceVpcSubnetV1(),
 			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
 			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
@@ -399,7 +398,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_swr_organization_users": swr.ResourceSWROrganizationPermissions(),
 			"flexibleengine_swr_repository":         swr.ResourceSWRRepository(),
 			"flexibleengine_swr_repository_sharing": swr.ResourceSWRRepositorySharing(),
-			"flexibleengine_vpc_v1":                 vpc.ResourceVirtualPrivateCloudV1(),
+
+			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
+			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),

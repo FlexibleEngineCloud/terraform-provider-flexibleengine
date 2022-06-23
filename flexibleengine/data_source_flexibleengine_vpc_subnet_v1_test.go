@@ -11,34 +11,36 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccFlexibleEngineVpcSubnetV1DataSource_basic(t *testing.T) {
+func TestAccVpcSubnetV1DataSource_basic(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	rInt := rand.Intn(50)
-	name := fmt.Sprintf("terraform-testacc-subnet-data-source-%d", rInt)
+	name := fmt.Sprintf("testacc-subnet-data-source-%d", rInt)
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFlexibleEngineVpcSubnetV1Config(name),
+				Config: testAccDataSourceVpcSubnetV1Config(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_id", name, "192.168.0.0/16",
+					testAccDataSourceVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_id", name, "192.168.0.0/24",
 						"192.168.0.1"),
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_name", name, "192.168.0.0/16",
+					testAccDataSourceVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_name", name, "192.168.0.0/24",
 						"192.168.0.1"),
-					testAccDataSourceFlexibleEngineVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_vpc_id", name, "192.168.0.0/16",
+					testAccDataSourceVpcSubnetV1Check("data.flexibleengine_vpc_subnet_v1.by_vpc_id", name, "192.168.0.0/24",
 						"192.168.0.1"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_vpc_subnet_v1.by_id", "status", "ACTIVE"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_vpc_subnet_v1.by_id", "dhcp_enable", "true"),
+					resource.TestCheckResourceAttr(
+						"data.flexibleengine_vpc_subnet_v1.by_id", "ipv6_enable", "false"),
 				),
 			},
 		},
 	})
 }
 
-func testAccDataSourceFlexibleEngineVpcSubnetV1Check(n, name, cidr, gateway_ip string) resource.TestCheckFunc {
+func testAccDataSourceVpcSubnetV1Check(n, name, cidr, gatewayIP string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -66,7 +68,7 @@ func testAccDataSourceFlexibleEngineVpcSubnetV1Check(n, name, cidr, gateway_ip s
 		if attr["name"] != name {
 			return fmt.Errorf("bad subnet name %s", attr["name"])
 		}
-		if attr["gateway_ip"] != gateway_ip {
+		if attr["gateway_ip"] != gatewayIP {
 			return fmt.Errorf("bad subnet gateway_ip %s", attr["gateway_ip"])
 		}
 
@@ -74,30 +76,30 @@ func testAccDataSourceFlexibleEngineVpcSubnetV1Check(n, name, cidr, gateway_ip s
 	}
 }
 
-func testAccDataSourceFlexibleEngineVpcSubnetV1Config(name string) string {
+func testAccDataSourceVpcSubnetV1Config(name string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_vpc_v1" "vpc_1" {
   name = "test_vpc"
-  cidr= "192.168.0.0/16"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name = "%s"
-  cidr = "192.168.0.0/16"
+  name       = "%s"
+  cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
-  vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
  }
 
 data "flexibleengine_vpc_subnet_v1" "by_id" {
-  id = "${flexibleengine_vpc_subnet_v1.subnet_1.id}"
+  id = flexibleengine_vpc_subnet_v1.subnet_1.id
 }
 
 data "flexibleengine_vpc_subnet_v1" "by_name" {
-  name = "${flexibleengine_vpc_subnet_v1.subnet_1.name}"
+  name = flexibleengine_vpc_subnet_v1.subnet_1.name
 }
 
 data "flexibleengine_vpc_subnet_v1" "by_vpc_id" {
-  vpc_id = "${flexibleengine_vpc_subnet_v1.subnet_1.vpc_id}"
+  vpc_id = flexibleengine_vpc_subnet_v1.subnet_1.vpc_id
 }
 `, name)
 }

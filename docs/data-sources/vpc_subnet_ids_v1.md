@@ -2,11 +2,11 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# Data Source: flexibleengine_vpc_subnet_ids_v1
+# flexibleengine_vpc_subnet_ids_v1
 
-`flexibleengine_vpc_subnet_ids_v1` provides a list of subnet ids for a vpc_id
+Provides a list of subnet ids for a vpc_id
 
-This resource can be useful for getting back a list of subnet ids for a vpc.
+This data source can be useful for getting back a list of subnet ids for a vpc.
 
 ## Example Usage
 
@@ -14,16 +14,16 @@ The following example shows outputing all cidr blocks for every subnet id in a v
 
  ```hcl
 data "flexibleengine_vpc_subnet_ids_v1" "subnet_ids" {
-  vpc_id = "${var.vpc_id}" 
+  vpc_id = var.vpc_id
 }
 
 data "flexibleengine_vpc_subnet_v1" "subnet" {
-  count = "${length(data.flexibleengine_vpc_subnet_ids_v1.subnet_ids.ids)}"
-  id    = "${data.flexibleengine_vpc_subnet_ids_v1.subnet_ids.ids[count.index]}"
+  count = length(data.flexibleengine_vpc_subnet_ids_v1.subnet_ids.ids)
+  id    = data.flexibleengine_vpc_subnet_ids_v1.subnet_ids.ids[count.index]
  }
 
 output "subnet_cidr_blocks" {
-  value = "${data.flexibleengine_vpc_subnet_v1.subnet.*.cidr}"
+  value = data.flexibleengine_vpc_subnet_v1.subnet.*.cidr
 }
  ```
 
