@@ -13,6 +13,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
@@ -248,6 +249,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_identity_custom_role_v3":   dataSourceIdentityCustomRoleV3(),
 			"flexibleengine_vpcep_public_services":     dataSourceVPCEPPublicServices(),
 			"flexibleengine_vpcep_endpoints":           dataSourceVPCEPEndpoints(),
+			"flexibleengine_elb_flavors":               dataSourceElbFlavorsV3(),
 
 			// importing data source
 			"flexibleengine_cbr_vaults":       cbr.DataSourceCbrVaultsV3(),
@@ -401,6 +403,8 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
+
+			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
