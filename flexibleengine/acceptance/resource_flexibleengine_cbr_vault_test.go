@@ -321,7 +321,7 @@ func testAccCBRV3VaultBasicConfiguration(config, rName string) string {
 	return fmt.Sprintf(`
 %s
 
-data "flexibleengine_compute_availability_zones_v2" "test" {}
+data "flexibleengine_availability_zones" "test" {}
 
 data "flexibleengine_compute_flavors_v2" "test" {
   performance_type = "normal"
@@ -360,7 +360,7 @@ resource "flexibleengine_compute_keypair_v2" "test" {
 }
 
 resource "flexibleengine_compute_instance_v2" "test" {
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
   name              = "%s"
   image_id          = data.flexibleengine_images_image_v2.test.id
   flavor_id         = data.flexibleengine_compute_flavors_v2.test.flavors[0]
@@ -378,7 +378,7 @@ resource "flexibleengine_compute_instance_v2" "test" {
 resource "flexibleengine_blockstorage_volume_v2" "test" {
   count = length(var.volume_configuration)
 
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
   volume_type       = var.volume_configuration[count.index].volume_type
   name              = "%s_${tostring(count.index)}"
   size              = var.volume_configuration[count.index].size
@@ -498,7 +498,7 @@ resource "flexibleengine_cbr_vault" "test" {
 // Vaults of type 'turbo'
 func testAccCBRV3Vault_turboBase(rName string) string {
 	return fmt.Sprintf(`
-data "flexibleengine_compute_availability_zones_v2" "test" {}
+data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_vpc_v1" "test" {
   name = "%s"
@@ -523,7 +523,7 @@ resource "flexibleengine_sfs_turbo" "test1" {
   vpc_id            = flexibleengine_vpc_v1.test.id
   subnet_id         = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.test.id
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
 }`, rName, rName, rName, rName)
 }
 
@@ -559,7 +559,7 @@ resource "flexibleengine_sfs_turbo" "test2" {
   vpc_id            = flexibleengine_vpc_v1.test.id
   subnet_id         = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.test.id
-  availability_zone = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
 }
 
 resource "flexibleengine_cbr_vault" "test" {

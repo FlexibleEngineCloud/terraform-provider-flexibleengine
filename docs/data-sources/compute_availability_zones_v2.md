@@ -1,10 +1,12 @@
 ---
-subcategory: "Elastic Cloud Server (ECS)"
+subcategory: "Deprecated"
 ---
 
-# flexibleengine\_compute\_availability\_zones\_v2
+# flexibleengine_compute_availability_zones_v2
 
 Use this data source to get a list of availability zones from FlexibleEngine
+
+!> **WARNING:** It has been deprecated, use `flexibleengine_availability_zones` instead.
 
 ## Example Usage
 

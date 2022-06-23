@@ -157,7 +157,7 @@ func testAccCheckCCENodePoolExists(n string, cluster string, nodePool *nodepools
 
 func testAccCCENodePool_Base(rName string) string {
 	return fmt.Sprintf(`
-data "flexibleengine_compute_availability_zones_v2" "test" {}
+data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_compute_keypair_v2" "test" {
   name = "%s"
@@ -184,7 +184,7 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   name               = "%s"
   os                 = "EulerOS 2.5"
   flavor_id          = "s3.large.2"
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   key_pair           = flexibleengine_compute_keypair_v2.test.name
   scall_enable       = false
   initial_node_count = 1
@@ -229,7 +229,7 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   name               = "%s"
   os                 = "EulerOS 2.5"
   flavor_id          = "s3.large.2"
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   key_pair           = flexibleengine_compute_keypair_v2.test.name
   scall_enable       = true
   initial_node_count = 2

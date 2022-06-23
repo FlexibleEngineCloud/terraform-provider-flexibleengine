@@ -373,7 +373,7 @@ func testAccCheckMRSV2ClusterExists(n string, clusterGet *cluster.Cluster) resou
 
 func testAccMrsMapReduceClusterConfig_base(rName string) string {
 	return fmt.Sprintf(`
-data "flexibleengine_compute_availability_zones_v2" "test" {}
+data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_vpc_v1" "test" {
   name = "%s"
@@ -398,7 +398,7 @@ func testAccMrsMapReduceClusterConfig_basic(rName, pwd string) string {
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "STREAMING"
   version            = "MRS 2.0.1"
@@ -446,7 +446,7 @@ func testAccMrsMapReduceClusterConfig_update(rName, pwd string) string {
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "STREAMING"
   version            = "MRS 2.0.1"
@@ -494,7 +494,7 @@ func testAccMrsMapReduceClusterConfig_analysis(rName, pwd string, nodeNums Group
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "ANALYSIS"
   version            = "MRS 3.1.0-LTS.1"
@@ -540,7 +540,7 @@ func testAccMrsMapReduceClusterConfig_stream(rName, pwd string, nodeNums GroupNo
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "STREAMING"
   version            = "MRS 3.1.0-LTS.1"
@@ -576,7 +576,7 @@ func testAccMrsMapReduceClusterConfig_hybrid(rName, pwd string, nodeNums GroupNo
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "MIXED"
   version            = "MRS 2.0.1"
@@ -641,7 +641,7 @@ func testAccMrsMapReduceClusterConfig_custom(rName, pwd string, nodeNum1 int) st
 %s
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "CUSTOM"
   version            = "MRS 3.1.0-LTS.1"
@@ -740,7 +740,7 @@ resource "flexibleengine_vpc_eip_v1" "test" {
 }
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
-  availability_zone  = data.flexibleengine_compute_availability_zones_v2.test.names[0]
+  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
   name               = "%s"
   type               = "STREAMING"
   version            = "MRS 2.0.1"

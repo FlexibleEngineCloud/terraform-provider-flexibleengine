@@ -11,7 +11,9 @@ import (
 
 func dataSourceBlockStorageAvailabilityZonesV3() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceBlockStorageAvailabilityZonesV3Read,
+		Read:               dataSourceBlockStorageAvailabilityZonesV3Read,
+		DeprecationMessage: "use flexibleengine_availability_zones data source instead",
+
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,
