@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
@@ -390,6 +391,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing resource
+			"flexibleengine_api_gateway_api":        huaweicloud.ResourceAPIGatewayAPI(),
+			"flexibleengine_api_gateway_group":      huaweicloud.ResourceAPIGatewayGroup(),
 			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
 			"flexibleengine_cbr_vault":              cbr.ResourceCBRVaultV3(),
 			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
