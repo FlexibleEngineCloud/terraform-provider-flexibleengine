@@ -408,6 +408,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
+			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
