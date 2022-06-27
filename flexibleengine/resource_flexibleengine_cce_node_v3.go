@@ -125,6 +125,11 @@ func resourceCCENodeV3() *schema.Resource {
 							Required: true,
 							ForceNew: true,
 						},
+						"kms_key_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
 						"extend_params": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -306,6 +311,14 @@ func resourceCCEDataVolume(d *schema.ResourceData) []nodes.VolumeSpec {
 			Size:        rawMap["size"].(int),
 			VolumeType:  rawMap["volumetype"].(string),
 			ExtendParam: rawMap["extend_params"].(map[string]interface{}),
+		}
+
+		if rawMap["kms_key_id"].(string) != "" {
+			metadata := nodes.VolumeMetadata{
+				SystemEncrypted: "1",
+				SystemCmkid:     rawMap["kms_key_id"].(string),
+			}
+			volumes[i].Metadata = &metadata
 		}
 	}
 	return volumes
@@ -736,10 +749,16 @@ func expandResourceCCERootVolume(spec nodes.Spec) []map[string]interface{} {
 func expandResourceCCEDataVolumes(spec nodes.Spec) []map[string]interface{} {
 	volumes := make([]map[string]interface{}, len(spec.DataVolumes))
 	for i, item := range spec.DataVolumes {
+		var kmsID string
+		if item.Metadata != nil {
+			kmsID = item.Metadata.SystemCmkid
+		}
+
 		volumes[i] = map[string]interface{}{
 			"size":          item.Size,
 			"volumetype":    item.VolumeType,
 			"extend_params": item.ExtendParam,
+			"kms_key_id":    kmsID,
 		}
 	}
 	return volumes

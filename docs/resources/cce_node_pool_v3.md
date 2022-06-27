@@ -6,7 +6,6 @@ subcategory: "Cloud Container Engine (CCE)"
 
 Add a node pool to a container cluster.
 
-
 ## Example Usage
 
 ```hcl
@@ -38,9 +37,10 @@ resource "flexibleengine_cce_node_pool_v3" "node_pool" {
     volumetype = "SAS"
   }
 }
-``` 
+```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster. Changing this parameter will create a new resource.
@@ -51,8 +51,8 @@ The following arguments are supported:
 
 * `flavor_id` - (Required, String, ForceNew) Specifies the flavor id. Changing this parameter will create a new resource.
 
-*  `type` - (Optional, String, ForceNew) Node Pool type. Possible values are: "vm" and "ElasticBMS".
- 
+* `type` - (Optional, String, ForceNew) Node Pool type. Possible values are: "vm" and "ElasticBMS".
+
 * `availability_zone` - (Optional, String, ForceNew) specify the name of the available partition (AZ).
     Default value is random to create nodes in a random AZ in the node pool.
     Changing this parameter will create a new resource.
@@ -104,31 +104,33 @@ The following arguments are supported:
 
 The `root_volume` block supports:
 
-* `size` - (Required, Int) Disk size in GB.
-    
-* `volumetype` - (Required, String) Disk type.
-    
-* `extend_params` - (Optional, Map) Disk expansion parameters in key/value pair format.
+* `size` - (Required, Int) Specifies the disk size in GB.
+
+* `volumetype` - (Required, String) Specifies the disk type.
+
+* `extend_params` - (Optional, Map) Specifies the disk expansion parameters in key/value pair format.
 
 The `data_volumes` block supports:
-    
-* `size` - (Required, Int) Disk size in GB.
-    
-* `volumetype` - (Required, String) Disk type.
-    
-* `extend_params` - (Optional, Map) Disk expansion parameters in key/value pair format.
+
+* `size` - (Required, Int) Specifies the disk size in GB.
+
+* `volumetype` - (Required, String) Specifies the disk type.
+
+* `kms_key_id` - (Optional, String) Specifies the KMS key ID. This is used to encrypt the volume.
+
+* `extend_params` - (Optional, Map) Specifies the disk expansion parameters in key/value pair format.
 
 The `taints` block supports:
-    
+
 * `key` - (Required, String) A key must contain 1 to 63 characters starting with a letter or digit.
   Only letters, digits, hyphens (-), underscores (_), and periods (.) are allowed.
   A DNS subdomain name can be used as the prefix of a key.
-    
+
 * `value` - (Required, String) A value must start with a letter or digit and can contain a maximum of 63 characters,
   including letters, digits, hyphens (-), underscores (_), and periods (.).
-    
+
 * `effect` - (Required, String) Available options are *NoSchedule*, *PreferNoSchedule* and *NoExecute*.
-    
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
@@ -140,14 +142,16 @@ In addition to all arguments above, the following attributes are exported:
 * `billing_mode` -  Billing mode of a node.
 
 ## Timeouts
+
 This resource provides the following timeouts configuration options:
-- `create` - Default is 20 minute.
-- `delete` - Default is 20 minute.
+
+* `create` - Default is 20 minute.
+* `delete` - Default is 20 minute.
 
 ## Import
 
 Node_pool can be imported using the cluster and node_pool id, e.g.
 
 ```
-$ terraform import flexibleengine_cce_node_pool_v3.node_pool_1 <cluster-id>/<node_pool-id>
+terraform import flexibleengine_cce_node_pool_v3.node_pool_1 <cluster-id>/<node_pool-id>
 ```
