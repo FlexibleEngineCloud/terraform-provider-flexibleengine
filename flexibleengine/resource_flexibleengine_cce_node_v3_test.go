@@ -13,10 +13,12 @@ import (
 
 func TestAccCCENodeV3_basic(t *testing.T) {
 	var node nodes.Nodes
-	var cceName = fmt.Sprintf("terra-test-%s", acctest.RandString(5))
-	resourceName := "flexibleengine_cce_node_v3.node_1"
 
-	resource.Test(t, resource.TestCase{
+	cceName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_node_v3.node_1"
+	clusterName := "flexibleengine_cce_cluster_v3.cluster_1"
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCCENodeV3Destroy,
@@ -24,8 +26,8 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 			{
 				Config: testAccCCENodeV3_basic(cceName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCCENodeV3Exists("flexibleengine_cce_node_v3.node_1", "flexibleengine_cce_cluster_v3.cluster_1", &node),
-					resource.TestCheckResourceAttr(resourceName, "name", "test-node"),
+					testAccCheckCCENodeV3Exists(resourceName, clusterName, &node),
+					resource.TestCheckResourceAttr(resourceName, "name", cceName),
 					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s1.medium"),
 					resource.TestCheckResourceAttr(resourceName, "status", "Active"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
@@ -35,9 +37,41 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 			{
 				Config: testAccCCENodeV3_update(cceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", "test-node2"),
+					resource.TestCheckResourceAttr(resourceName, "name", cceName+"-update"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateIdFunc: testAccCCENodeImportStateIdFunc(),
+			},
+		},
+	})
+}
+
+func TestAccCCENodeV3_data_volume_encryption(t *testing.T) {
+	var node nodes.Nodes
+
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_node_v3.node_1"
+	clusterName := "flexibleengine_cce_cluster_v3.cluster_1"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccCCEKeyPairPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCCENodeV3Destroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCCENodeV3_data_volume_encryption(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCENodeV3Exists(resourceName, clusterName, &node),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "data_volumes.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "data_volumes.0.kms_key_id",
+						"flexibleengine_kms_key_v1.test", "id"),
 				),
 			},
 			{
@@ -139,8 +173,10 @@ func testAccCheckCCENodeV3Exists(n string, cluster string, node *nodes.Nodes) re
 	}
 }
 
-func testAccCCENodeV3_basic(cceName string) string {
+func testAccCCENodeV3_base(rName string) string {
 	return fmt.Sprintf(`
+data "flexibleengine_availability_zones" "test" {}
+
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name         = "%s"
   cluster_type = "VirtualMachine"
@@ -148,13 +184,18 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   vpc_id       = "%s"
   subnet_id    = "%s"
   container_network_type = "overlay_l2"
+}`, rName, OS_VPC_ID, OS_NETWORK_ID)
 }
+
+func testAccCCENodeV3_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
-  name              = "test-node"
+  name              = "%s"
   flavor_id         = "s1.medium"
-  availability_zone = "%s"
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
 
   root_volume {
@@ -169,25 +210,18 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key = "value"
     foo = "bar"
   }
-}`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME)
 }
 
-func testAccCCENodeV3_update(cceName string) string {
+func testAccCCENodeV3_update(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name         = "%s"
-  cluster_type = "VirtualMachine"
-  flavor_id    = "cce.s1.small"
-  vpc_id       = "%s"
-  subnet_id    = "%s"
-  container_network_type = "overlay_l2"
-}
+%s
 
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
-  name              = "test-node2"
+  name              = "%s-update"
   flavor_id         = "s1.medium"
-  availability_zone = "%s"
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
 
   root_volume {
@@ -202,5 +236,38 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key   = "value1"
     owner = "terraform"
   }
-}`, cceName, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE, OS_KEYPAIR_NAME)
+}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME)
+}
+
+func testAccCCENodeV3_data_volume_encryption(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_kms_key_v1" "test" {
+  key_alias    = "%s"
+  pending_days = "7"
+}
+
+resource "flexibleengine_cce_node_v3" "node_1" {
+  cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
+  name              = "%s"
+  flavor_id         = "s1.medium"
+  availability_zone = data.flexibleengine_availability_zones.test.names[0]
+  key_pair          = "%s"
+
+  root_volume {
+    size       = 40
+    volumetype = "SSD"
+  }
+  data_volumes {
+    size       = 100
+    volumetype = "SSD"
+    kms_key_id = flexibleengine_kms_key_v1.test.id
+  }
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}
+`, testAccCCENodeV3_base(rName), rName, rName, OS_KEYPAIR_NAME)
 }
