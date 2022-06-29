@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_instance_v2
+# flexibleengine_compute_instance_v2
 
 Manages a V2 VM instance resource within FlexibleEngine.
 
@@ -366,7 +366,7 @@ The `block_device` block supports:
     `SAS` (high I/O disk type), or `SATA` (common I/O disk type)
 
 * `boot_index` - (Optional) The boot index of the volume. It defaults to 0, which
-	indicates that it's a system disk. Changing this creates a new server.
+    indicates that it's a system disk. Changing this creates a new server.
 
 * `destination_type` - (Optional) The type that gets created. Possible values
     are "volume" and "local". Changing this creates a new server.
@@ -380,22 +380,7 @@ The `block_device` block supports:
 
 The `scheduler_hints` block supports:
 
-* `group` - (Optional) A UUID of a Server Group. The instance will be placed
-    into that group.
-
-* `different_host` - (Optional) A list of instance UUIDs. The instance will
-    be scheduled on a different host than all other instances.
-
-* `same_host` - (Optional) A list of instance UUIDs. The instance will be
-    scheduled on the same host of those specified.
-
-* `query` - (Optional) A conditional query that a compute node must pass in
-    order to host an instance.
-
-* `target_cell` - (Optional) The name of a cell to host the instance.
-
-* `build_near_host_ip` - (Optional) An IP Address in CIDR form. The instance
-    will be placed on a compute node that is in the same subnet.
+* `group` - (Optional) Specifies the **anti-affinity** group ID. The instance will be placed into that group.
 
 ## Attributes Reference
 
@@ -403,7 +388,7 @@ The following attributes are exported:
 
 * `region` - See Argument Reference above.
 * `name` - See Argument Reference above.
-* `access_ip_v4` - The first detected Fixed IPv4 address _or_ the Floating IP.
+* `access_ip_v4` - The first detected Fixed IPv4 address *or* the Floating IP.
 * `access_ip_v6` - The first detected Fixed IPv6 address.
 * `metadata` - See Argument Reference above.
 * `security_groups` - See Argument Reference above.
@@ -436,9 +421,11 @@ The `volume_attached` block supports:
 ## Import
 
 Instances can be imported by their `id`. For example,
+
 ```
 terraform import flexibleengine_compute_instance_v2.my_instance b11b407c-e604-4e8d-8bc4-92398320b847
 ```
+
 Note that the imported state may not be identical to your resource definition, due to some attrubutes
 missing from the API response, security or some other reason. The missing attributes include:
 `admin_pass`, `config_drive`, `user_data`, `block_device`, `scheduler_hints`, `stop_before_destroy`,
@@ -446,6 +433,7 @@ missing from the API response, security or some other reason. The missing attrib
 `terraform plan` after importing an instance. You can then decide if changes should
 be applied to the instance, or the resource definition should be updated to align
 with the instance. Also you can ignore changes as below.
+
 ```
 resource "flexibleengine_compute_instance_v2" "my_instance" {
     ...
