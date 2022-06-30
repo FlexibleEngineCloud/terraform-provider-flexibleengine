@@ -255,33 +255,50 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Optional: true,
 							ForceNew: true,
 						},
-						"different_host": {
-							Type:     schema.TypeList,
+						"tenancy": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: validation.StringInSlice([]string{"dedicated", "shared"}, false),
+						},
+						"deh_id": {
+							Type:     schema.TypeString,
 							Optional: true,
+							Computed: true,
 							ForceNew: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+						},
+						"different_host": {
+							Type:       schema.TypeList,
+							Optional:   true,
+							ForceNew:   true,
+							Elem:       &schema.Schema{Type: schema.TypeString},
+							Deprecated: "`different_host` has not been supported",
 						},
 						"same_host": {
-							Type:     schema.TypeList,
-							Optional: true,
-							ForceNew: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:       schema.TypeList,
+							Optional:   true,
+							ForceNew:   true,
+							Elem:       &schema.Schema{Type: schema.TypeString},
+							Deprecated: "`same_host` has not been supported",
 						},
 						"query": {
-							Type:     schema.TypeList,
-							Optional: true,
-							ForceNew: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:       schema.TypeList,
+							Optional:   true,
+							ForceNew:   true,
+							Elem:       &schema.Schema{Type: schema.TypeString},
+							Deprecated: "`query` has not been supported",
 						},
 						"target_cell": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Type:       schema.TypeString,
+							Optional:   true,
+							ForceNew:   true,
+							Deprecated: "`target_cell` has not been supported",
 						},
 						"build_near_host_ip": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Type:       schema.TypeString,
+							Optional:   true,
+							ForceNew:   true,
+							Deprecated: "`build_near_host_ip` has not been supported",
 						},
 					},
 				},
@@ -628,6 +645,15 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		for i, v := range osHints.Group {
 			schedulerHints[i] = map[string]interface{}{
 				"group": v,
+			}
+		}
+		d.Set("scheduler_hints", schedulerHints)
+	} else if len(osHints.DedicatedHostID) > 0 {
+		schedulerHints := make([]map[string]interface{}, len(osHints.DedicatedHostID))
+		for i, v := range osHints.DedicatedHostID {
+			schedulerHints[i] = map[string]interface{}{
+				"tenancy": "dedicated",
+				"deh_id":  v,
 			}
 		}
 		d.Set("scheduler_hints", schedulerHints)
@@ -1017,6 +1043,8 @@ func resourceInstanceSchedulerHintsV2(d *schema.ResourceData, schedulerHintsRaw 
 
 	schedulerHints := schedulerhints.SchedulerHints{
 		Group:           schedulerHintsRaw["group"].(string),
+		Tenancy:         schedulerHintsRaw["tenancy"].(string),
+		DedicatedHostID: schedulerHintsRaw["deh_id"].(string),
 		DifferentHost:   differentHost,
 		SameHost:        sameHost,
 		Query:           query,
@@ -1049,6 +1077,10 @@ func resourceComputeSchedulerHintsHash(v interface{}) int {
 
 	if m["group"] != nil {
 		buf.WriteString(fmt.Sprintf("%s-", m["group"].(string)))
+	}
+
+	if v, ok := m["tenancy"]; ok && v.(string) != "" {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
 
 	if m["target_cell"] != nil {
