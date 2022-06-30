@@ -1,21 +1,18 @@
 ---
-subcategory: "Deprecated"
+subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine_lb_certificate_v2
+# flexibleengine_elb_certificate
 
-Manages an **enhanced** load balancer certificate resource within FlexibleEngine.
-
-!> **Warning:** It has been deprecated, using `flexibleengine_elb_certificate` instead.
+Manages an ELB certificate resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_certificate_v2" "certificate_1" {
+resource "flexibleengine_elb_certificate" "certificate_1" {
   name        = "certificate_1"
   description = "terraform test certificate"
   domain      = "www.elb.com"
-
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -46,7 +43,7 @@ nEqm7HWkNxHhf8A6En/IjleuddS1sf9e/x+TJN1Xhnt9W6pe7Fk1
 -----END RSA PRIVATE KEY-----
 EOT
 
-certificate = <<EOT
+  certificate = <<EOT
 -----BEGIN CERTIFICATE-----
 MIIDpTCCAo2gAwIBAgIJAKdmmOBYnFvoMA0GCSqGSIb3DQEBCwUAMGkxCzAJBgNV
 BAYTAnh4MQswCQYDVQQIDAJ4eDELMAkGA1UEBwwCeHgxCzAJBgNVBAoMAnh4MQsw
@@ -77,31 +74,47 @@ EOT
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an LB certificate. If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    LB certificate.
+* `region` - (Optional, String, ForceNew) The region in which to create the ELB certificate resource. If omitted, the
+  provider-level region will be used. Changing this creates a new certificate.
 
-* `name` - (Optional) Human-readable name for the Certificate. Does not have
-    to be unique.
+* `name` - (Optional, String) Specifies the name of the certificate. Does not have to be unique.
 
-* `private_key` - (Required) The private encrypted key of the Certificate, PEM format.
+* `description` - (Optional, String) Specifies the description of the certificate.
 
-* `certificate` - (Required) The public encrypted key of the Certificate, PEM format.
+* `type` - (Optional, String, ForceNew) Specifies the certificate type. The default value is "server".
+  The value can be one of the following:
+  + server: indicates the server certificate.
+  + client: indicates the CA certificate.
 
-* `description` - (Optional) Human-readable description for the Certificate.
+* `certificate` - (Required, String) Specifies the public encrypted key of the certificate, PEM format.
 
-* `domain` - (Optional) The domain of the Certificate.
+* `private_key` - (Optional, String) Specifies the private encrypted key of the certificate, PEM format.
+  This parameter is valid and mandatory only when `type` is set to "server".
+
+* `domain` - (Optional, String) Specifies the domain of the certificate. The value contains a maximum of 100 characters.
+  This parameter is valid only when `type` is set to "server".
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `domain` - See Argument Reference above.
-* `private_key` - See Argument Reference above.
-* `certificate` - See Argument Reference above.
+* `id` - Specifies a resource ID in UUID format.
 * `update_time` - Indicates the update time.
 * `create_time` - Indicates the creation time.
+* `expire_time` - Indicates the expire time.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `update` - Default is 10 minute.
+* `delete` - Default is 5 minute.
+
+## Import
+
+ELB certificate can be imported using the certificate ID, e.g.
+
+```
+$ terraform import flexibleengine_elb_certificate.certificate_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```
