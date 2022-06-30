@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## 1.31.0 (June 30, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_swr_organization` [GH-766]
+  - `flexibleengine_swr_organization_users` [GH-766]
+  - `flexibleengine_swr_repository` [GH-766]
+  - `flexibleengine_swr_repository_sharing` [GH-766]
+  - `flexibleengine_lb_loadbalancer_v3` [GH-770]
+  - `flexibleengine_lb_listener_v3` [GH-772]
+  - `flexibleengine_api_gateway_api` [GH-771]
+  - `flexibleengine_api_gateway_group` [GH-771]
+  - `flexibleengine_enterprise_project` [GH-775]
+  - `flexibleengine_elb_certificate` [GH-777]
+  - `flexibleengine_elb_ipgroup` [GH-777]
+
+* **New Data Source:**
+  - `flexibleengine_availability_zones` [GH-768]
+  - `flexibleengine_elb_flavors` [GH-770]
+  - `flexibleengine_elb_certificate` [GH-777]
+  - `flexibleengine_enterprise_project` [GH-775]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_vpc_subnet_v1`: support to enable IPv6 function [GH-769]
+* `resource/flexibleengine_compute_instance_v2`: support to deploy ECS to a dedicated host [GH-773]
+* `resource/flexibleengine_cce_node_v3`: support data volume encryption [GH-774]
+
+DEPRECATED:
+
+* flexibleengine_lb_certificate_v2 [GH-777]
+* data/flexibleengine_compute_availability_zones_v2 [GH-768]
+* data/flexibleengine_blockstorage_availability_zones_v3 [GH-768]
+
 ## 1.30.0 (June 15, 2022)
 
 FEATURES:
