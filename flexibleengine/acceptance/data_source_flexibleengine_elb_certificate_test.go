@@ -1,21 +1,60 @@
----
-subcategory: "Deprecated"
----
+package acceptance
 
-# flexibleengine_lb_certificate_v2
+import (
+	"fmt"
+	"testing"
 
-Manages an **enhanced** load balancer certificate resource within FlexibleEngine.
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+)
 
-!> **Warning:** It has been deprecated, using `flexibleengine_elb_certificate` instead.
+func TestAccDataSourceELbCertificate_basic(t *testing.T) {
+	name := fmt.Sprintf("cert-%s", acctest.RandString(6))
+	dataSourceName := "data.flexibleengine_elb_certificate.cert_1"
 
-## Example Usage
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccELbCertDataSource_conf(name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckELBCertDataSourceID(dataSourceName),
+					resource.TestCheckResourceAttr(dataSourceName, "name", name),
+					resource.TestCheckResourceAttrSet(dataSourceName, "expiration"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "domain"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "type"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "description"),
+				),
+			},
+		},
+	})
+}
 
-```hcl
-resource "flexibleengine_lb_certificate_v2" "certificate_1" {
-  name        = "certificate_1"
+func testAccCheckELBCertDataSourceID(r string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[r]
+		if !ok {
+			return fmt.Errorf("Can't find the ELB data source: %s", r)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("The ELB certificate data source ID not set")
+		}
+		return nil
+	}
+}
+
+func testAccELbCertDataSource_conf(name string) string {
+	return fmt.Sprintf(`
+data "flexibleengine_elb_certificate" "cert_1" {
+  name = flexibleengine_elb_certificate.certificate_1.name
+}
+
+resource "flexibleengine_elb_certificate" "certificate_1" {
+  name        = "%s"
   description = "terraform test certificate"
   domain      = "www.elb.com"
-
   private_key = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAwZ5UJULAjWr7p6FVwGRQRjFN2s8tZ/6LC3X82fajpVsYqF1x
@@ -46,7 +85,7 @@ nEqm7HWkNxHhf8A6En/IjleuddS1sf9e/x+TJN1Xhnt9W6pe7Fk1
 -----END RSA PRIVATE KEY-----
 EOT
 
-certificate = <<EOT
+  certificate = <<EOT
 -----BEGIN CERTIFICATE-----
 MIIDpTCCAo2gAwIBAgIJAKdmmOBYnFvoMA0GCSqGSIb3DQEBCwUAMGkxCzAJBgNV
 BAYTAnh4MQswCQYDVQQIDAJ4eDELMAkGA1UEBwwCeHgxCzAJBgNVBAoMAnh4MQsw
@@ -71,37 +110,5 @@ i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+8Kg==
 -----END CERTIFICATE-----
 EOT
 }
-```
-
-## Argument Reference
-
-The following arguments are supported:
-
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an LB certificate. If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    LB certificate.
-
-* `name` - (Optional) Human-readable name for the Certificate. Does not have
-    to be unique.
-
-* `private_key` - (Required) The private encrypted key of the Certificate, PEM format.
-
-* `certificate` - (Required) The public encrypted key of the Certificate, PEM format.
-
-* `description` - (Optional) Human-readable description for the Certificate.
-
-* `domain` - (Optional) The domain of the Certificate.
-
-## Attributes Reference
-
-The following attributes are exported:
-
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `domain` - See Argument Reference above.
-* `private_key` - See Argument Reference above.
-* `certificate` - See Argument Reference above.
-* `update_time` - Indicates the update time.
-* `create_time` - Indicates the creation time.
+`, name)
+}

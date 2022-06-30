@@ -256,6 +256,7 @@ func Provider() *schema.Provider {
 			// importing data source
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
+			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
 
 			// Deprecated data source
@@ -288,7 +289,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
 			"flexibleengine_images_image_v2":                    resourceImagesImageV2(),
 			"flexibleengine_kms_key_v1":                         resourceKmsKeyV1(),
-			"flexibleengine_lb_certificate_v2":                  resourceCertificateV2(),
 			"flexibleengine_lb_loadbalancer_v2":                 resourceLoadBalancerV2(),
 			"flexibleengine_lb_listener_v2":                     resourceListenerV2(),
 			"flexibleengine_lb_pool_v2":                         resourcePoolV2(),
@@ -413,13 +413,16 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
+			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
+			"flexibleengine_elb_ipgroup":        elb.ResourceIpGroupV3(),
 
 			// Deprecated resource
-			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
-			"flexibleengine_elb_listener":     resourceEListener(),
-			"flexibleengine_elb_backend":      resourceBackend(),
-			"flexibleengine_elb_health":       resourceHealth(),
-			"flexibleengine_rds_instance_v1":  resourceRdsInstance(),
+			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
+			"flexibleengine_elb_listener":      resourceEListener(),
+			"flexibleengine_elb_backend":       resourceBackend(),
+			"flexibleengine_elb_health":        resourceHealth(),
+			"flexibleengine_lb_certificate_v2": resourceCertificateV2(),
+			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,
