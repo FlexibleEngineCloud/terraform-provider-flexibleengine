@@ -15,6 +15,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
@@ -253,8 +254,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_flavors":               dataSourceElbFlavorsV3(),
 
 			// importing data source
-			"flexibleengine_cbr_vaults":       cbr.DataSourceCbrVaultsV3(),
-			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
+			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
+			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
+			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
 
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
@@ -391,8 +393,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing resource
-			"flexibleengine_api_gateway_api":        huaweicloud.ResourceAPIGatewayAPI(),
-			"flexibleengine_api_gateway_group":      huaweicloud.ResourceAPIGatewayGroup(),
+			"flexibleengine_api_gateway_api":   huaweicloud.ResourceAPIGatewayAPI(),
+			"flexibleengine_api_gateway_group": huaweicloud.ResourceAPIGatewayGroup(),
+
+			"flexibleengine_enterprise_project":     eps.ResourceEnterpriseProject(),
 			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
 			"flexibleengine_cbr_vault":              cbr.ResourceCBRVaultV3(),
 			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
@@ -526,6 +530,9 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	}
 	if _, ok := endpoints["dns"]; !ok {
 		endpoints["dns"] = fmt.Sprintf("https://dns.%s/", config.Cloud)
+	}
+	if _, ok := endpoints["eps"]; !ok {
+		endpoints["eps"] = fmt.Sprintf("https://eps.%s/", config.Cloud)
 	}
 
 	config.Endpoints = endpoints
