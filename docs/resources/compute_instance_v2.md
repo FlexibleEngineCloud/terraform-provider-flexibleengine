@@ -382,6 +382,12 @@ The `scheduler_hints` block supports:
 
 * `group` - (Optional) Specifies the **anti-affinity** group ID. The instance will be placed into that group.
 
+* `tenancy` - (Optional) Specifies whether the ECS is created on a Dedicated Host (DeH) or in a shared pool (default).
+  The value can be **shared** or **dedicated**.
+
+* `deh_id` - (Optional) Specifies the DeH ID. This parameter takes effect only when the value of tenancy is dedicated.
+  If you do not specify this parameter, the system will automatically assign a DeH to you to deploy ECSs.
+
 ## Attributes Reference
 
 The following attributes are exported:

@@ -255,6 +255,18 @@ func resourceComputeInstanceV2() *schema.Resource {
 							Optional: true,
 							ForceNew: true,
 						},
+						"tenancy": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: validation.StringInSlice([]string{"dedicated", "shared"}, false),
+						},
+						"deh_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							ForceNew: true,
+						},
 						"different_host": {
 							Type:       schema.TypeList,
 							Optional:   true,
@@ -633,6 +645,15 @@ func resourceComputeInstanceV2Read(d *schema.ResourceData, meta interface{}) err
 		for i, v := range osHints.Group {
 			schedulerHints[i] = map[string]interface{}{
 				"group": v,
+			}
+		}
+		d.Set("scheduler_hints", schedulerHints)
+	} else if len(osHints.DedicatedHostID) > 0 {
+		schedulerHints := make([]map[string]interface{}, len(osHints.DedicatedHostID))
+		for i, v := range osHints.DedicatedHostID {
+			schedulerHints[i] = map[string]interface{}{
+				"tenancy": "dedicated",
+				"deh_id":  v,
 			}
 		}
 		d.Set("scheduler_hints", schedulerHints)
@@ -1022,6 +1043,8 @@ func resourceInstanceSchedulerHintsV2(d *schema.ResourceData, schedulerHintsRaw 
 
 	schedulerHints := schedulerhints.SchedulerHints{
 		Group:           schedulerHintsRaw["group"].(string),
+		Tenancy:         schedulerHintsRaw["tenancy"].(string),
+		DedicatedHostID: schedulerHintsRaw["deh_id"].(string),
 		DifferentHost:   differentHost,
 		SameHost:        sameHost,
 		Query:           query,
@@ -1054,6 +1077,10 @@ func resourceComputeSchedulerHintsHash(v interface{}) int {
 
 	if m["group"] != nil {
 		buf.WriteString(fmt.Sprintf("%s-", m["group"].(string)))
+	}
+
+	if v, ok := m["tenancy"]; ok && v.(string) != "" {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
 
 	if m["target_cell"] != nil {
