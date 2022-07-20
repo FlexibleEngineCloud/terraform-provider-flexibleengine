@@ -30,6 +30,7 @@ func TestAccComputeV2Instance_basic(t *testing.T) {
 					testAccCheckComputeV2InstanceMetadata(&instance, "foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "availability_zone", OS_AVAILABILITY_ZONE),
 					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key2", "value.key"),
 				),
 			},
 			{
@@ -466,7 +467,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
   tags = {
     key1 = "value1"
-    key2 = "value2"
+    key2 = "value.key"
   }
 }
 `, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)

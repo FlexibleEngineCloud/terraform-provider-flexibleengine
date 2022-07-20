@@ -329,7 +329,7 @@ The following arguments are supported:
 
 * `auto_recovery` - (Optional) Configures or deletes automatic recovery of an instance
 
-* `tags` - (Optional) Tags key/value pairs to associate with the instance.
+* `tags` - (Optional) Specifies the key/value pairs to associate with the instance.
 
 The `network` block supports:
 
