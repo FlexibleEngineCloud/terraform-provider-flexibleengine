@@ -333,9 +333,9 @@ func resourceComputeInstanceV2() *schema.Resource {
 				Computed: true,
 			},
 			"tags": {
-				Type:         schema.TypeMap,
-				Optional:     true,
-				ValidateFunc: validateECSTagValue,
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"all_metadata": {
 				Type:     schema.TypeMap,
