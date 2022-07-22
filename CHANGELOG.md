@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.31.1 (Jul 22, 2022)
+
+BUG FIXES:
+
+* `resource/flexibleengine_compute_instance_v2`: ignore tags validation [GH-781]
+
 ## 1.31.0 (June 30, 2022)
 
 FEATURES:
