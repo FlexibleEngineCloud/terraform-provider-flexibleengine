@@ -21,6 +21,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/modelarts"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
@@ -271,6 +272,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
 
+			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
+			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
+
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
 			"flexibleengine_blockstorage_availability_zones_v3": dataSourceBlockStorageAvailabilityZonesV3(),
@@ -438,6 +442,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
 			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
 			"flexibleengine_elb_ipgroup":        elb.ResourceIpGroupV3(),
+
+			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
+			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
