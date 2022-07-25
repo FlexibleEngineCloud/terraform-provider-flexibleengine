@@ -28,6 +28,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/tms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
@@ -450,6 +451,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_swr_repository":            swr.ResourceSWRRepository(),
 			"flexibleengine_swr_repository_sharing":    swr.ResourceSWRRepositorySharing(),
 
+			"flexibleengine_tms_tags": tms.ResourceTmsTag(),
+
 			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
 
@@ -584,6 +587,9 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	}
 	if _, ok := endpoints["eps"]; !ok {
 		endpoints["eps"] = fmt.Sprintf("https://eps.%s/", config.Cloud)
+	}
+	if _, ok := endpoints["tms"]; !ok {
+		endpoints["tms"] = fmt.Sprintf("https://tms.%s/", config.Cloud)
 	}
 
 	config.Endpoints = endpoints
