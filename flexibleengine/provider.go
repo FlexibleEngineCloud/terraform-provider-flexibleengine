@@ -31,6 +31,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/tms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
@@ -273,11 +274,13 @@ func Provider() *schema.Provider {
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
+
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
 			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
 			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
 			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
+			"flexibleengine_sms_source_servers": sms.DataSourceServers(),
 			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
 
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
@@ -456,6 +459,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_account":               rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":              rds.ResourceRdsDatabase(),
 			"flexibleengine_rds_database_privilege":    rds.ResourceRdsDatabasePrivilege(),
+			"flexibleengine_sms_server_template":       sms.ResourceServerTemplate(),
+			"flexibleengine_sms_task":                  sms.ResourceMigrateTask(),
 			"flexibleengine_swr_organization":          swr.ResourceSWROrganization(),
 			"flexibleengine_swr_organization_users":    swr.ResourceSWROrganizationPermissions(),
 			"flexibleengine_swr_repository":            swr.ResourceSWRRepository(),
@@ -625,6 +630,9 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	}
 	if _, ok := endpoints["waf-dedicated"]; !ok {
 		endpoints["waf-dedicated"] = fmt.Sprintf("https://premium-waf.%s.%s/", region, config.Cloud)
+	}
+	if _, ok := endpoints["sms"]; !ok {
+		endpoints["sms"] = fmt.Sprintf("https://sms.%s.%s/", region, config.Cloud)
 	}
 
 	config.Endpoints = endpoints
