@@ -14,6 +14,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
@@ -399,6 +400,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_enterprise_project":     eps.ResourceEnterpriseProject(),
 			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
 			"flexibleengine_cbr_vault":              cbr.ResourceVault(),
+			"flexibleengine_cce_namespace":          cce.ResourceCCENamespaceV1(),
+			"flexibleengine_cce_pvc":                cce.ResourceCcePersistentVolumeClaimsV1(),
 			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":           fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":            fgs.ResourceFunctionGraphTrigger(),
