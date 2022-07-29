@@ -398,10 +398,12 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_enterprise_project":     eps.ResourceEnterpriseProject(),
 			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
-			"flexibleengine_cbr_vault":              cbr.ResourceCBRVaultV3(),
+			"flexibleengine_cbr_vault":              cbr.ResourceVault(),
 			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":           fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":            fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
+			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
 			"flexibleengine_rds_instance_v3":        rds.ResourceRdsInstance(),
 			"flexibleengine_swr_organization":       swr.ResourceSWROrganization(),
 			"flexibleengine_swr_organization_users": swr.ResourceSWROrganizationPermissions(),
