@@ -30,8 +30,10 @@ resource "flexibleengine_dms_kafka_instance" "product_1" {
   network_id        = var.subnet_id
   security_group_id = var.security_group_id
 
-  access_user = "user"
-  password    = "Kafkatest@123"
+  manager_user     = "admin"
+  manager_password = "AdminTest@123"
+  access_user      = "user"
+  password         = "Kafkatest@123"
 }
 ```
 
@@ -89,6 +91,15 @@ The following arguments are supported:
 
   Defaults to **dms.physical.storage.ultra**. Changing this creates a new instance resource.
 
+* `manager_user` - (Optional, String, ForceNew) Specifies the username for logging in to the Kafka Manager.
+  The username consists of 4 to 64 characters and can contain letters, digits, hyphens (-), and underscores (_).
+  Changing this creates a new instance resource.
+
+* `manager_password` - (Optional, String, ForceNew) Specifies the password for logging in to the Kafka Manager. The
+  password must meet the following complexity requirements: Must be 8 to 32 characters long. Must contain at least 2 of
+  the following character types: lowercase letters, uppercase letters, digits, and special characters (`~!@#$%^&*()-_
+  =+\\|[{}]:'",<.>/?). Changing this creates a new instance resource.
+
 * `access_user` - (Optional, String, ForceNew) Specifies a username who can accesse the instance with
   SASL authentication. A username consists of 4 to 64 characters and supports only letters, digits, and hyphens (-).
   Changing this creates a new instance resource.
@@ -125,6 +136,7 @@ In addition to all arguments above, the following attributes are exported:
 * `subnet_name` - Indicates the name of a subnet.
 * `security_group_name` - Indicates the name of a security group.
 * `node_num` - Indicates the count of ECS instances.
+* `manegement_connect_address` - Indicates the connection address of the Kafka Manager of a Kafka instance.
 * `connect_address` - Indicates the IP addresses of the DMS Kafka instance.
 * `port` - Indicates the port number of the DMS Kafka instance.
 * `ssl_enable` - Indicates whether the Kafka SASL_SSL is enabled.
@@ -135,12 +147,13 @@ In addition to all arguments above, the following attributes are exported:
 DMS Kafka instance can be imported using the instance id, e.g.
 
 ```
- $ terraform import flexibleengine_dms_kafka_instance.instance_1 8d3c7938-dc47-4937-a30f-c80de381c5e3
+$ terraform import flexibleengine_dms_kafka_instance.instance_1 8d3c7938-dc47-4937-a30f-c80de381c5e3
 ```
 
-Note that the imported state may not be identical to your resource definition, because of `access_user` and `password`
-are missing from the API response due to security reason. It is generally recommended running `terraform plan` after
-importing a DMS Kafka instance. You can then decide if changes should be applied to the instance, or the resource
+Note that the imported state may not be identical to your resource definition, because of `access_user`, `password`,
+`manager_user` and `manager_password` are missing from the API response due to security reason.
+It is generally recommended running `terraform plan` after importing a DMS Kafka instance.
+You can then decide if changes should be applied to the instance, or the resource
 definition should be updated to align with the instance. Also you can ignore changes as below.
 
 ```
@@ -149,7 +162,7 @@ resource "flexibleengine_dms_kafka_instance" "instance_1" {
 
   lifecycle {
     ignore_changes = [
-      access_user, password,
+      access_user, password, manager_user, manager_password,
     ]
   }
 }
