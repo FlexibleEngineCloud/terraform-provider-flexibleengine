@@ -73,6 +73,8 @@ github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA
 github.com/cheggaaa/pb v1.0.27/go.mod h1:pQciLPpbU0oxA0h+VJYYLxO+XeDQb5pZijXscXHm81s=
 github.com/chnsz/golangsdk v0.0.0-20220712120536-79e07dbb668c h1:nypZgt4qDK+8HxcVoC3SWxoeDwSdKf9OfOjnX+bYBFw=
 github.com/chnsz/golangsdk v0.0.0-20220712120536-79e07dbb668c/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
+github.com/chnsz/golangsdk v0.0.0-20220802123257-6d62ca9bcbcf h1:kbZPmTrPx2gm26feSwEzn08TYr8jLXXXDHWKVfcws6g=
+github.com/chnsz/golangsdk v0.0.0-20220802123257-6d62ca9bcbcf/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
@@ -220,6 +222,8 @@ github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.0.92 h1:uQ2DXAr9dSJ5kKy7JEc+skgD
 github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.0.92/go.mod h1:Dp/HY22Nf1KFrdZOmeOGkADh52Z/FPg/dI1w5gW4rNA=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.38.2-0.20220729080106-cbbbd93b6613 h1:Izek3Lf2ntBeSWaJFC9aRQp2DFfkM+hdhQVgovJa2ng=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.38.2-0.20220729080106-cbbbd93b6613/go.mod h1:ddGob9iJMJMpgrwEUN5RQS6jYM6RNjE7JClUQS0+eyU=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.38.2 h1:5u9YIWBozd9da6Sdz7aPYJoN0zSEdtTjq2tdRlvzK68=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.38.2/go.mod h1:ddGob9iJMJMpgrwEUN5RQS6jYM6RNjE7JClUQS0+eyU=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.11/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=

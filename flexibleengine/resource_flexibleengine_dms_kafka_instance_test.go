@@ -31,6 +31,7 @@ func TestAccDmsKafkaInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "status", "RUNNING"),
 					resource.TestCheckResourceAttr(resourceName, "ssl_enable", "true"),
 					resource.TestCheckResourceAttrSet(resourceName, "product_spec_code"),
+					resource.TestCheckResourceAttrSet(resourceName, "manegement_connect_address"),
 					resource.TestCheckResourceAttrSet(resourceName, "port"),
 				),
 			},
@@ -46,7 +47,7 @@ func TestAccDmsKafkaInstance_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
-					"access_user", "password",
+					"access_user", "password", "manager_user", "manager_password",
 				},
 			},
 		},
@@ -129,6 +130,8 @@ func testAccDmsKafkaInstance_basic(resName string) string {
 
 resource "flexibleengine_dms_kafka_instance" "instance_1" {
   name               = "%s"
+  manager_user       = "admin"
+  manager_password   = "Dmstest@123"
   access_user        = "user"
   password           = "Dmstest@123"
   vpc_id             = flexibleengine_vpc_v1.vpc_1.id
@@ -149,6 +152,8 @@ func testAccDmsKafkaInstance_update(resName, resUpdate string) string {
 resource "flexibleengine_dms_kafka_instance" "instance_1" {
   name               = "%s"
   description        = "instance update description"
+  manager_user       = "admin"
+  manager_password   = "Dmstest@123"
   access_user        = "user"
   password           = "Dmstest@123"
   vpc_id             = flexibleengine_vpc_v1.vpc_1.id

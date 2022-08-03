@@ -13,6 +13,7 @@ import (
 
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/dms/v1/instances"
+	dmsv2 "github.com/chnsz/golangsdk/openstack/dms/v2/kafka/instances"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -109,6 +110,19 @@ func resourceDmsKafkaInstances() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 
+			"manager_user": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				RequiredWith: []string{"manager_password"},
+			},
+			"manager_password": {
+				Type:         schema.TypeString,
+				Sensitive:    true,
+				Optional:     true,
+				ForceNew:     true,
+				RequiredWith: []string{"manager_user"},
+			},
 			"access_user": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -171,6 +185,10 @@ func resourceDmsKafkaInstances() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"manegement_connect_address": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"connect_address": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -199,7 +217,7 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 	dmsV1Client, err := config.DmsV1Client(GetRegion(d, config))
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine DMS instance client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DMS v1 client: %s", err)
 	}
 
 	sslEnable := false
@@ -222,13 +240,15 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 		MaintainBegin:   d.Get("maintain_begin").(string),
 		MaintainEnd:     d.Get("maintain_end").(string),
 
-		AccessUser: d.Get("access_user").(string),
-		SslEnable:  sslEnable,
+		AccessUser:       d.Get("access_user").(string),
+		KafkaManagerUser: d.Get("manager_user").(string),
+		SslEnable:        sslEnable,
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	// Add password here so it wouldn't go in the above log entry
 	createOpts.Password = d.Get("password").(string)
+	createOpts.KafkaManagerPassword = d.Get("manager_password").(string)
 
 	v, err := instances.Create(dmsV1Client, createOpts).Extract()
 	if err != nil {
@@ -260,12 +280,12 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 func resourceDmsKafkaInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	region := GetRegion(d, config)
-	dmsV1Client, err := config.DmsV1Client(region)
+	dmsV2Client, err := config.DmsV2Client(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine DMS instance client: %s", err)
+		return fmt.Errorf("Error creating FlexibleEngine DMS v2 client: %s", err)
 	}
 
-	v, err := instances.Get(dmsV1Client, d.Id()).Extract()
+	v, err := dmsv2.Get(dmsV2Client, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "DMS instance")
 	}
@@ -297,7 +317,8 @@ func resourceDmsKafkaInstancesRead(d *schema.ResourceData, meta interface{}) err
 		d.Set("subnet_name", v.SubnetName),
 		d.Set("security_group_id", v.SecurityGroupID),
 		d.Set("security_group_name", v.SecurityGroupName),
-		d.Set("node_num", v.Nodeum),
+		d.Set("node_num", v.NodeNum),
+		d.Set("manegement_connect_address", v.ManagementConnectAddress),
 		d.Set("connect_address", v.ConnectAddress),
 		d.Set("port", v.Port),
 		d.Set("maintain_begin", v.MaintainBegin),
