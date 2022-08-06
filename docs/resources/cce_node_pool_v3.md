@@ -153,5 +153,5 @@ This resource provides the following timeouts configuration options:
 Node_pool can be imported using the cluster and node_pool id, e.g.
 
 ```
-terraform import flexibleengine_cce_node_pool_v3.node_pool_1 <cluster-id>/<node_pool-id>
+terraform import flexibleengine_cce_node_pool_v3.node_pool_1 {cluster-id}/{node_pool-id}
 ```

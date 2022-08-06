@@ -97,5 +97,5 @@ MRS jobs can be imported using their `id` and the IDs of the MRS cluster to whic
 by a slash, e.g.
 
 ```
-$ terraform import flexibleengine_mrs_job_v2.test <cluster_id>/<id>
+$ terraform import flexibleengine_mrs_job_v2.test {cluster_id}/{id}
 ```

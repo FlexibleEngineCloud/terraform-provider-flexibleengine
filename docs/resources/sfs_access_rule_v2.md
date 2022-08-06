@@ -77,5 +77,5 @@ In addition to all arguments above, the following attributes are exported:
 SFS access rule can be imported by specifying the SFS ID and access rule ID separated by a slash, e.g.:
 
 ```
-$ terraform import flexibleengine_sfs_access_rule_v2 <sfs_id>/<rule_id>
+$ terraform import flexibleengine_sfs_access_rule_v2 {sfs_id}/{rule_id}
 ```
