@@ -58,5 +58,5 @@ This resource can be imported by specifying the CSS cluster ID and snapshot ID
 separated by a slash, e.g.:
 
 ```
-$ terraform import flexibleengine_css_snapshot_v1.snapshot_1 <cluster_id>/<snapshot_id>
+$ terraform import flexibleengine_css_snapshot_v1.snapshot_1 {cluster_id}/{snapshot_id}
 ```

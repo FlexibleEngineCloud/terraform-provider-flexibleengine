@@ -119,5 +119,5 @@ This resource can be imported by specifying all three arguments, separated
 by a forward slash:
 
 ```
-$ terraform import flexibleengine_compute_floatingip_associate_v2.fip_1 <floating_ip>/<instance_id>/<fixed_ip>
+$ terraform import flexibleengine_compute_floatingip_associate_v2.fip_1 {floating_ip}/{instance_id}/{fixed_ip}
 ```
