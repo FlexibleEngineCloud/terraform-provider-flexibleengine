@@ -259,6 +259,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
 			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
+			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
 
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
