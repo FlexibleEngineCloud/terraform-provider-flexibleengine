@@ -14,7 +14,7 @@ import (
 func TestAccVpcV1EIP_basic(t *testing.T) {
 	var eip eips.PublicIp
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
-	resourceName := "flexibleengine_vpc_eip_v1.eip_1"
+	resourceName := "flexibleengine_vpc_eip.eip_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -59,7 +59,7 @@ func testAccCheckVpcV1EIPDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_vpc_eip_v1" {
+		if rs.Type != "flexibleengine_vpc_eip" {
 			continue
 		}
 
@@ -106,7 +106,7 @@ func testAccCheckVpcV1EIPExists(n string, kp *eips.PublicIp) resource.TestCheckF
 
 func testAccVpcV1EIP_basic(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -121,7 +121,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 
 func testAccVpcV1EIP_tags(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }

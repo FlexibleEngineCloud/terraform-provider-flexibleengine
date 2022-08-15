@@ -6,8 +6,7 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 Manages a V2 floating IP resource within FlexibleEngine.
 
-!> **Warning:** It will be deprecated, using `flexibleengine_vpc_eip_v1` instead.
-
+!> **Warning:** It will be deprecated, using `flexibleengine_vpc_eip` instead.
 
 ## Example Usage
 

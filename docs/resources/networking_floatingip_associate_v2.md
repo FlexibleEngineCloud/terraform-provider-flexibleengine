@@ -5,10 +5,10 @@ subcategory: "Virtual Private Cloud (VPC)"
 # flexibleengine_networking_floatingip_associate_v2
 
 Associates a floating IP to a port. This is useful for situations where you have
-a pre-allocated floating IP or are unable to use the `flexibleengine_vpc_eip_v1`
+a pre-allocated floating IP or are unable to use the `flexibleengine_vpc_eip`
 or `flexibleengine_networking_floatingip_v2` resource to create a floating IP.
 
-You can also use `publicip.0.port_id` of `flexibleengine_vpc_eip_v1` resource to associate a port.
+You can also use `publicip.0.port_id` of `flexibleengine_vpc_eip` resource to associate a port.
 
 ## Example Usage
 

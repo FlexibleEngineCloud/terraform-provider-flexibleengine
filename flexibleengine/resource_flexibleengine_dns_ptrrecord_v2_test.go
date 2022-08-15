@@ -99,7 +99,7 @@ func testAccCheckDNSV2PtrRecordExists(n string, ptrrecord *ptrrecords.Ptr) resou
 
 func testAccDNSV2PtrRecord_basic(ptrName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -114,7 +114,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
   name          = "%s"
   description   = "a ptr record"
-  floatingip_id = flexibleengine_vpc_eip_v1.eip_1.id
+  floatingip_id = flexibleengine_vpc_eip.eip_1.id
   ttl           = 6000
 }
 `, ptrName)
@@ -122,7 +122,7 @@ resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
 
 func testAccDNSV2PtrRecord_update(ptrName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -137,7 +137,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
   name          = "%s"
   description   = "ptr record updated"
-  floatingip_id = flexibleengine_vpc_eip_v1.eip_1.id
+  floatingip_id = flexibleengine_vpc_eip.eip_1.id
   ttl           = 6000
 
   tags = {

@@ -2,14 +2,14 @@
 subcategory: "Domain Name Service (DNS)"
 ---
 
-# flexibleengine\_dns\_ptrrecord_v2
+# flexibleengine_dns_ptrrecord_v2
 
 Manages a DNS PTR record in the FlexibleEngine DNS Service.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -24,7 +24,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
   name          = "ptr.example.com."
   description   = "An example PTR record"
-  floatingip_id = flexibleengine_vpc_eip_v1.eip_1.id
+  floatingip_id = flexibleengine_vpc_eip.eip_1.id
   ttl           = 3000
 
   tags = {

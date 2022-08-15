@@ -2,14 +2,14 @@
 subcategory: "Elastic IP (EIP)"
 ---
 
-# flexibleengine_vpc_eip_v1
+# flexibleengine_vpc_eip
 
 Use this data source to get the details of an available EIP.
 
 ## Example Usage
 
 ```hcl
-data "flexibleengine_vpc_eip_v1" "by_address" {
+data "flexibleengine_vpc_eip" "by_address" {
   public_ip = "123.60.208.163"
 }
 ```

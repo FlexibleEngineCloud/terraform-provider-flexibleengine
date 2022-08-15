@@ -217,10 +217,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
-			"flexibleengine_vpc_eip_v1":                dataSourceVpcEipV1(),
 			"flexibleengine_vpc_route_v2":              dataSourceVPCRouteV2(),
 			"flexibleengine_vpc_route_ids_v2":          dataSourceVPCRouteIdsV2(),
 			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
+			"flexibleengine_vpc_eip":                   dataSourceVpcEipV1(),
 			"flexibleengine_nat_gateway_v2":            dataSourceNatGatewayV2(),
 			"flexibleengine_sfs_file_system_v2":        dataSourceSFSFileSystemV2(),
 			"flexibleengine_compute_bms_flavors_v2":    dataSourceBMSFlavorV2(),
@@ -263,6 +263,8 @@ func Provider() *schema.Provider {
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
 			"flexibleengine_blockstorage_availability_zones_v3": dataSourceBlockStorageAvailabilityZonesV3(),
+
+			"flexibleengine_vpc_eip_v1": dataSourceVpcEipV1(),
 
 			"flexibleengine_dcs_az_v1":      dataSourceDcsAZV1(),
 			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
@@ -348,7 +350,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_dnat_rule_v2":                   resourceNatDnatRuleV2(),
 			"flexibleengine_nat_gateway_v2":                     resourceNatGatewayV2(),
 			"flexibleengine_nat_snat_rule_v2":                   resourceNatSnatRuleV2(),
-			"flexibleengine_vpc_eip_v1":                         resourceVpcEIPV1(),
+			"flexibleengine_vpc_eip":                            resourceVpcEIPV1(),
 			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
 			"flexibleengine_vpc_route_v2":                       resourceVPCRouteV2(),
 			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
@@ -428,6 +430,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_health":        resourceHealth(),
 			"flexibleengine_lb_certificate_v2": resourceCertificateV2(),
 			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
+			"flexibleengine_vpc_eip_v1":        resourceVpcEIPV1(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,

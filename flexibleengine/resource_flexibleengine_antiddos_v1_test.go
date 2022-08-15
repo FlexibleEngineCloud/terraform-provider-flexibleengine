@@ -98,7 +98,7 @@ func testAccCheckAntiDdosV1Exists(n string, ddos *antiddos.GetResponse) resource
 }
 
 const testAccAntiDdosV1_basic = `
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -111,7 +111,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 }
 
 resource "flexibleengine_antiddos_v1" "antiddos_1" {
-  floating_ip_id         = flexibleengine_vpc_eip_v1.eip_1.id
+  floating_ip_id         = flexibleengine_vpc_eip.eip_1.id
   enable_l7              = true
   traffic_pos_id         = 1
   http_request_pos_id    = 2
@@ -120,7 +120,7 @@ resource "flexibleengine_antiddos_v1" "antiddos_1" {
 }
 `
 const testAccAntiDdosV1_update = `
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -133,7 +133,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
 }
 
 resource "flexibleengine_antiddos_v1" "antiddos_1" {
-  floating_ip_id         = flexibleengine_vpc_eip_v1.eip_1.id
+  floating_ip_id         = flexibleengine_vpc_eip.eip_1.id
   enable_l7              = true
   traffic_pos_id         = 2
   http_request_pos_id    = 1
