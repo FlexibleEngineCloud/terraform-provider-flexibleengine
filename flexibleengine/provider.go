@@ -19,6 +19,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
@@ -261,6 +262,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
+			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
+			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
 
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
