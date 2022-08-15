@@ -11,7 +11,7 @@ import (
 
 func TestAccVpcV1EipDataSource_basic(t *testing.T) {
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
-	dataSourceName := "data.flexibleengine_vpc_eip_v1.test"
+	dataSourceName := "data.flexibleengine_vpc_eip.test"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
@@ -48,7 +48,7 @@ func testAccCheckVpcEipDataSourceID(n string) resource.TestCheckFunc {
 
 func testAccDataSourceVpcEipConfig_basic(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_vpc_eip_v1" "test" {
+resource "flexibleengine_vpc_eip" "test" {
   publicip {
     type = "5_bgp"
   }
@@ -60,8 +60,8 @@ resource "flexibleengine_vpc_eip_v1" "test" {
   }
 }
 
-data "flexibleengine_vpc_eip_v1" "test" {
-  public_ip = flexibleengine_vpc_eip_v1.test.address
+data "flexibleengine_vpc_eip" "test" {
+  public_ip = flexibleengine_vpc_eip.test.address
 }
 `, rName)
 }

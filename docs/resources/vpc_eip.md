@@ -2,14 +2,14 @@
 subcategory: "Elastic IP (EIP)"
 ---
 
-# flexibleengine_vpc_eip_v1
+# flexibleengine_vpc_eip
 
 Manages an EIP resource within FlexibleEngine VPC.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_vpc_eip_v1" "eip_1" {
+resource "flexibleengine_vpc_eip" "eip_1" {
   publicip {
     type = "5_bgp"
   }
@@ -20,7 +20,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_1" {
   }
 }
 
-resource "flexibleengine_vpc_eip_v1" "eip_with_tags" {
+resource "flexibleengine_vpc_eip" "eip_with_tags" {
   publicip {
     type = "5_bgp"
   }
@@ -41,7 +41,7 @@ resource "flexibleengine_vpc_eip_v1" "eip_with_tags" {
 The following arguments are supported:
 
 * `region` - (Optional) The region in which to create the EIP. If omitted,
-    the `region` argument of the provider is used. Changing this creates a new EIP.
+  the `region` argument of the provider is used. Changing this creates a new EIP.
 
 * `publicip` - (Required) The elastic IP address object.
 
@@ -51,7 +51,7 @@ The following arguments are supported:
 
 The `publicip` block supports:
 
-* `type` - (Required) The value must be a type supported by the system. Only `5_bgp` supported now.
+* `type` - (Required) The value must be a type supported by the system. Only **5_bgp** supported now.
     Changing this creates a new EIP.
 
 * `ip_address` - (Optional) The value must be a valid IP address in the available IP address segment.
@@ -59,7 +59,6 @@ The `publicip` block supports:
 
 * `port_id` - (Optional) The port id which this EIP will associate with. If the value
     is not specified, the EIP will be in unbind state.
-
 
 The `bandwidth` block supports:
 
@@ -73,7 +72,7 @@ The `bandwidth` block supports:
     Changing this creates a new EIP.
 
 * `charge_mode` - (Optional) Specifies whether the bandwidth is billed by traffic or by bandwidth size.
-    Only *traffic* supported now. Changing this creates a new EIP.
+    Only **traffic** supported now. Changing this creates a new EIP.
 
 ## Attributes Reference
 
@@ -88,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 EIPs can be imported using the `id`, e.g.
 
 ```
-$ terraform import flexibleengine_vpc_eip_v1.eip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
+$ terraform import flexibleengine_vpc_eip.eip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```
