@@ -15,6 +15,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eip"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
@@ -36,6 +37,7 @@ var osMutexKV = mutexkv.NewMutexKV()
 
 func init() {
 	utils.PackageName = "FlexibleEngine"
+	cse.DefaultVersion = "CSE"
 }
 
 // Provider returns a schema.Provider for FlexibleEngine.
@@ -404,21 +406,24 @@ func Provider() *schema.Provider {
 			"flexibleengine_api_gateway_api":   huaweicloud.ResourceAPIGatewayAPI(),
 			"flexibleengine_api_gateway_group": huaweicloud.ResourceAPIGatewayGroup(),
 
-			"flexibleengine_enterprise_project":     eps.ResourceEnterpriseProject(),
-			"flexibleengine_cbr_policy":             cbr.ResourceCBRPolicyV3(),
-			"flexibleengine_cbr_vault":              cbr.ResourceVault(),
-			"flexibleengine_cce_namespace":          cce.ResourceCCENamespaceV1(),
-			"flexibleengine_cce_pvc":                cce.ResourceCcePersistentVolumeClaimsV1(),
-			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
-			"flexibleengine_fgs_function":           fgs.ResourceFgsFunctionV2(),
-			"flexibleengine_fgs_trigger":            fgs.ResourceFunctionGraphTrigger(),
-			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
-			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
-			"flexibleengine_rds_instance_v3":        rds.ResourceRdsInstance(),
-			"flexibleengine_swr_organization":       swr.ResourceSWROrganization(),
-			"flexibleengine_swr_organization_users": swr.ResourceSWROrganizationPermissions(),
-			"flexibleengine_swr_repository":         swr.ResourceSWRRepository(),
-			"flexibleengine_swr_repository_sharing": swr.ResourceSWRRepositorySharing(),
+			"flexibleengine_enterprise_project":        eps.ResourceEnterpriseProject(),
+			"flexibleengine_cbr_policy":                cbr.ResourceCBRPolicyV3(),
+			"flexibleengine_cbr_vault":                 cbr.ResourceVault(),
+			"flexibleengine_cce_namespace":             cce.ResourceCCENamespaceV1(),
+			"flexibleengine_cce_pvc":                   cce.ResourceCcePersistentVolumeClaimsV1(),
+			"flexibleengine_cse_microservice":          cse.ResourceMicroservice(),
+			"flexibleengine_cse_microservice_engine":   cse.ResourceMicroserviceEngine(),
+			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
+			"flexibleengine_fgs_dependency":            fgs.ResourceFgsDependency(),
+			"flexibleengine_fgs_function":              fgs.ResourceFgsFunctionV2(),
+			"flexibleengine_fgs_trigger":               fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_rds_account":               rds.ResourceRdsAccount(),
+			"flexibleengine_rds_database":              rds.ResourceRdsDatabase(),
+			"flexibleengine_rds_instance_v3":           rds.ResourceRdsInstance(),
+			"flexibleengine_swr_organization":          swr.ResourceSWROrganization(),
+			"flexibleengine_swr_organization_users":    swr.ResourceSWROrganizationPermissions(),
+			"flexibleengine_swr_repository":            swr.ResourceSWRRepository(),
+			"flexibleengine_swr_repository_sharing":    swr.ResourceSWRRepositorySharing(),
 
 			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
