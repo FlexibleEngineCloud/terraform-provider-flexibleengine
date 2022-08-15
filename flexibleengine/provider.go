@@ -15,6 +15,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eip"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
@@ -418,6 +419,8 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
 			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
+
+			"flexibleengine_vpc_eip_associate": eip.ResourceEIPAssociate(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
