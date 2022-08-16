@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## 1.32.0 (August 16, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_rds_account` [GH-784]
+  - `flexibleengine_rds_database` [GH-784]
+  - `flexibleengine_cce_namespace` [GH-785]
+  - `flexibleengine_cce_pvc` [GH-785]
+  - `flexibleengine_vpc_eip_associate` [GH-792]
+  - `flexibleengine_cse_microservice` [GH-794]
+  - `flexibleengine_cse_microservice_engine` [GH-794]
+  - `flexibleengine_cse_microservice_instance` [GH-794]
+
+* **New Data Source:**
+  - `flexibleengine_networking_port` [GH-790]
+  - `flexibleengine_identity_group` [GH-793]
+  - `flexibleengine_identity_users` [GH-793]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_dms_kafka_instance`: support manager user and password [GH-786]
+
 ## 1.31.1 (Jul 22, 2022)
 
 BUG FIXES:
