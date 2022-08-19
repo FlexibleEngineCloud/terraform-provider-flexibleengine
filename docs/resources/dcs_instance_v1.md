@@ -2,7 +2,7 @@
 subcategory: "Distributed Cache Service (DCS)"
 ---
 
-# flexibleengine\_dcs\_instance_v1
+# flexibleengine_dcs_instance_v1
 
 Manages a DCS instance in the flexibleengine DCS Service.
 
@@ -73,7 +73,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
 The following arguments are supported:
 
 * `name` - (Required) Indicates the name of an instance. An instance name starts with a letter,
-	consists of 4 to 64 characters, and supports only letters, digits, and hyphens (-).
+    consists of 4 to 64 characters, and supports only letters, digits, and hyphens (-).
 
 * `description` - (Optional) Indicates the description of an instance. It is a character
     string containing not more than 1024 characters.
@@ -104,7 +104,7 @@ The following arguments are supported:
 * `network_id` - (Required) Specifies the network id of the subnet. Changing this creates a new instance.
 
 * `security_group_id` - (Optional) Specifies the id of the security group which the instance belongs to.
-    This parameter is mandatory for Memcached and Redis 3.0 versions.
+    This parameter is only supported and **mandatory** for Memcached and Redis 3.0 versions.
 
 * `available_zones` - (Required) IDs or Names of the AZs where cache nodes reside. For details
     on how to query AZs, see Querying AZ Information.
@@ -112,68 +112,67 @@ The following arguments are supported:
 
 * `product_id` - (Optional) Product ID used to differentiate DCS instance types. For example now there are following values available:
 
-	- dcs.memcached.master_standby-h,
-	- dcs.memcached.master_standby-m,
-	- dcs.memcached.single_node-h,
-	- dcs.memcached.single_node-m,
-	- dcs.master_standby-h,
-	- dcs.cluster-h,
-	- dcs.single_node-h,
-	- redis.cluster.xu1.large.r1.4-h,
-	- redis.cluster.xu1.large.r2.4-h,
-	- redis.cluster.xu1.large.r1.8-h,
-	- redis.cluster.xu1.large.r2.16-h,
-	- redis.cluster.xu1.large.r1.16-h,
-	- redis.cluster.xu1.large.r2.24-h,
-	- redis.cluster.xu1.large.r2.32-h,
-	- redis.cluster.xu1.large.r1.32-h,
-	- redis.cluster.xu1.large.r2.48-h,
-	- redis.cluster.xu1.large.r1.48-h 
-	- redis.cluster.xu1.large.r2.64-h
-	- redis.cluster.xu1.large.r1.64-h
-	- redis.cluster.xu1.large.r2.96-h
-	- redis.cluster.xu1.large.r1.96-h
-	- redis.cluster.xu1.large.r2.128-h
-	- redis.cluster.xu1.large.r1.128-h
-	- redis.cluster.xu1.large.r1.192-h
-	- redis.cluster.xu1.large.r2.192-h
-	- redis.cluster.xu1.large.r2.256-h
-	- redis.cluster.xu1.large.r1.256-h
-	- redis.cluster.xu1.large.r2.384-h
-	- redis.cluster.xu1.large.r1.384-h
-	- redis.cluster.xu1.large.r1.512-h
-	- redis.cluster.xu1.large.r2.512-h
+    - dcs.memcached.master_standby-h
+    - dcs.memcached.master_standby-m
+    - dcs.memcached.single_node-h
+    - dcs.memcached.single_node-m
+    - dcs.master_standby-h
+    - dcs.cluster-h
+    - dcs.single_node-h
+    - redis.cluster.xu1.large.r1.4-h
+    - redis.cluster.xu1.large.r2.4-h
+    - redis.cluster.xu1.large.r1.8-h
+    - redis.cluster.xu1.large.r2.16-h
+    - redis.cluster.xu1.large.r1.16-h
+    - redis.cluster.xu1.large.r2.24-h
+    - redis.cluster.xu1.large.r2.32-h
+    - redis.cluster.xu1.large.r1.32-h
+    - redis.cluster.xu1.large.r2.48-h
+    - redis.cluster.xu1.large.r1.48-h
+    - redis.cluster.xu1.large.r2.64-h
+    - redis.cluster.xu1.large.r1.64-h
+    - redis.cluster.xu1.large.r2.96-h
+    - redis.cluster.xu1.large.r1.96-h
+    - redis.cluster.xu1.large.r2.128-h
+    - redis.cluster.xu1.large.r1.128-h
+    - redis.cluster.xu1.large.r1.192-h
+    - redis.cluster.xu1.large.r2.192-h
+    - redis.cluster.xu1.large.r2.256-h
+    - redis.cluster.xu1.large.r1.256-h
+    - redis.cluster.xu1.large.r2.384-h
+    - redis.cluster.xu1.large.r1.384-h
+    - redis.cluster.xu1.large.r1.512-h
+    - redis.cluster.xu1.large.r2.512-h
 
 .....
 
-For the whole list and the specification of product id please check the DCS API DOC for querying: https://dcs.eu-west-0.prod-cloud-ocb.orange-business.com/v1.0/products
-
-Changing this creates a new instance.
+You can use [flexibleengine_dcs_product_v1](https://registry.terraform.io/providers/FlexibleEngineCloud/flexibleengine/latest/docs/data-sources/dcs_product_v1)
+to get the ID of an available product. Changing this creates a new instance.
 
 * `instance_type` - (Deprecated, Optional) DCS instance specification code. For example now there are following values available:
 
-	- dcs.single_node
-	- dcs.master_standby
-	- dcs.cluster
+    - dcs.single_node
+    - dcs.master_standby
+    - dcs.cluster
 
 * `maintain_begin` - (Optional) Indicates the time at which a maintenance time window starts.
     Format: HH:mm:ss.
     The start time and end time of a maintenance time window must indicate the time segment of
-	a supported maintenance time window. For details, see section Querying Maintenance Time Windows.
+    a supported maintenance time window. For details, see section Querying Maintenance Time Windows.
     The start time must be set to 22:00, 02:00, 06:00, 10:00, 14:00, or 18:00.
     Parameters maintain_begin and maintain_end must be set in pairs. If parameter maintain_begin
-	is left blank, parameter maintain_end is also blank. In this case, the system automatically
-	allocates the default start time 02:00.
+    is left blank, parameter maintain_end is also blank. In this case, the system automatically
+    allocates the default start time 02:00.
 
 * `maintain_end` - (Optional) Indicates the time at which a maintenance time window ends.
     Format: HH:mm:ss.
     The start time and end time of a maintenance time window must indicate the time segment of
-	a supported maintenance time window. For details, see section Querying Maintenance Time Windows.
+    a supported maintenance time window. For details, see section Querying Maintenance Time Windows.
     The end time is four hours later than the start time. For example, if the start time is 22:00,
-	the end time is 02:00.
+    the end time is 02:00.
     Parameters maintain_begin and maintain_end must be set in pairs. If parameter maintain_end is left
-	blank, parameter maintain_begin is also blank. In this case, the system automatically allocates
-	the default end time 06:00.
+    blank, parameter maintain_begin is also blank. In this case, the system automatically allocates
+    the default end time 06:00.
 
 * `save_days` - (Optional) Retention time. Unit: day. Range: 1–7.
     Changing this creates a new instance.
