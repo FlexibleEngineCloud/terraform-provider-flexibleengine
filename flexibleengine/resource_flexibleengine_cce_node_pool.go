@@ -346,7 +346,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:      []string{"Synchronizing"},
+		Pending:      []string{"Synchronizing", "Synchronized"},
 		Target:       []string{""},
 		Refresh:      waitForCceNodePoolActive(nodePoolClient, clusterid, s.Metadata.Id),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
@@ -479,12 +479,12 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"Synchronizing"},
+		Pending:    []string{"Synchronizing", "Synchronized"},
 		Target:     []string{""},
 		Refresh:    waitForCceNodePoolActive(nodePoolClient, clusterid, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      15 * time.Second,
-		MinTimeout: 5 * time.Second,
+		Delay:      60 * time.Second,
+		MinTimeout: 10 * time.Second,
 	}
 	_, err = stateConf.WaitForState()
 	if err != nil {
