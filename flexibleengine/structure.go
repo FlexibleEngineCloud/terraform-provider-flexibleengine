@@ -170,9 +170,8 @@ func flattenStackOutputs(stackOutputs []*stacks.Output) map[string]string {
 	return outputs
 }
 
-// flattenStackParameters is flattening list of
-//  stack Parameters and only returning existing
-// parameters to avoid clash with default values
+// flattenStackParameters is flattening list of stack Parameters and
+// only returning existing parameters to avoid clash with default values
 func flattenStackParameters(stackParams map[string]string,
 	originalParams map[string]interface{}) map[string]string {
 	params := make(map[string]string, len(stackParams))
