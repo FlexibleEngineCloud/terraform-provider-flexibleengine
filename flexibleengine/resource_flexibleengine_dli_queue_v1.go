@@ -220,9 +220,7 @@ func resourceDliQueueDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-/*
-  support cu_count scaling
-*/
+// support cu_count scaling
 func resourceDliQueueUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	client, err := config.DliV1Client(config.GetRegion(d))

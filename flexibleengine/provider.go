@@ -22,6 +22,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
@@ -267,6 +268,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
 			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
 			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
+			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
 
 			// Deprecated data source

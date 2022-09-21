@@ -283,9 +283,7 @@ func resourceMRSClusterV2() *schema.Resource {
 	}
 }
 
-/*
-   for custom node,the groupName should been empty
-*/
+// for custom node, the groupName should been empty
 func nodeGroupSchemaResource(groupName string, nodeScalable bool, minNodeNum, maxNodeNum int) *schema.Resource {
 	nodeResource := schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -1056,8 +1054,8 @@ func resourceMRSClusterV2Delete(d *schema.ResourceData, meta interface{}) error 
 }
 
 /*
-	When the host type is core, the map key format: {type}-{groupName},
-	parse from the host name : {clustId}_{groupName}xxxx[-000x]
+When the host type is core, the map key format: {type}-{groupName},
+parse from the host name : {clustId}_{groupName}xxxx[-000x]
 */
 func queryMrsClusterHosts(d *schema.ResourceData, mrsV1Client *golangsdk.ServiceClient) (map[string][]string, error) {
 
