@@ -27,7 +27,7 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDNSV2RecordSet_basic(zoneName),
+				Config: testAccDNSV2RecordSet_basic(zoneName, 3000),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDNSV2RecordSetExists(resourceName, &recordset),
 					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
@@ -38,7 +38,8 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDNSV2RecordSet_tags(zoneName),
+				// only update tags
+				Config: testAccDNSV2RecordSet_tags(zoneName, 3000),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
 					resource.TestCheckResourceAttr(resourceName, "description", "a record set"),
@@ -48,10 +49,19 @@ func TestAccDNSV2RecordSet_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDNSV2RecordSet_update(zoneName),
+				// only update ttl
+				Config: testAccDNSV2RecordSet_tags(zoneName, 6000),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "ttl", "6000"),
+					resource.TestCheckResourceAttr(resourceName, "records.#", "2"),
+				),
+			},
+			{
+				// update ttl, description, records and tags
+				Config: testAccDNSV2RecordSet_update(zoneName, 5000),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "description", "an updated record set"),
-					resource.TestCheckResourceAttr(resourceName, "ttl", "6000"),
+					resource.TestCheckResourceAttr(resourceName, "ttl", "5000"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_updated"),
 				),
 			},
@@ -88,6 +98,7 @@ func TestAccDNSV2RecordSet_readTTL(t *testing.T) {
 func TestAccDNSV2RecordSet_private(t *testing.T) {
 	var recordset recordsets.RecordSet
 	zoneName := randomZoneName()
+	rName := fmt.Sprintf("acpttest-%s", acctest.RandString(5))
 	resourceName := "flexibleengine_dns_recordset_v2.recordset_1"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -96,7 +107,7 @@ func TestAccDNSV2RecordSet_private(t *testing.T) {
 		CheckDestroy: testAccCheckDNSV2RecordSetDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDNSV2RecordSet_private(zoneName),
+				Config: testAccDNSV2RecordSet_private(rName, zoneName, 3000),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDNSV2RecordSetExists(resourceName, &recordset),
 					resource.TestCheckResourceAttr(resourceName, "name", zoneName),
@@ -106,6 +117,13 @@ func TestAccDNSV2RecordSet_private(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "records.#", "3"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+				),
+			},
+			{
+				Config: testAccDNSV2RecordSet_private(rName, zoneName, 600),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "ttl", "600"),
+					resource.TestCheckResourceAttr(resourceName, "records.#", "3"),
 				),
 			},
 		},
@@ -186,7 +204,7 @@ resource "flexibleengine_dns_zone_v2" "zone_1" {
 `, zoneName)
 }
 
-func testAccDNSV2RecordSet_basic(zoneName string) string {
+func testAccDNSV2RecordSet_basic(zoneName string, ttl int) string {
 	return fmt.Sprintf(`
 %s
 
@@ -195,13 +213,13 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   name        = "%s"
   type        = "A"
   description = "a record set"
-  ttl         = 3000
+  ttl         = %d
   records     = ["10.1.0.0", "10.1.0.1"]
 }
-`, testAccDNSV2RecordSet_base(zoneName), zoneName)
+`, testAccDNSV2RecordSet_base(zoneName), zoneName, ttl)
 }
 
-func testAccDNSV2RecordSet_tags(zoneName string) string {
+func testAccDNSV2RecordSet_tags(zoneName string, ttl int) string {
 	return fmt.Sprintf(`
 %s
 
@@ -210,7 +228,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   name        = "%s"
   type        = "A"
   description = "a record set"
-  ttl         = 3000
+  ttl         = %d
   records     = ["10.1.0.0", "10.1.0.1"]
 
   tags = {
@@ -218,10 +236,10 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
     key = "value"
   }
 }
-`, testAccDNSV2RecordSet_base(zoneName), zoneName)
+`, testAccDNSV2RecordSet_base(zoneName), zoneName, ttl)
 }
 
-func testAccDNSV2RecordSet_update(zoneName string) string {
+func testAccDNSV2RecordSet_update(zoneName string, ttl int) string {
 	return fmt.Sprintf(`
 %s
 
@@ -230,7 +248,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   name        = "%s"
   type        = "A"
   description = "an updated record set"
-  ttl         = 6000
+  ttl         = %d
   records     = ["10.1.0.2", "10.1.0.1"]
 
   tags = {
@@ -238,7 +256,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
     key = "value_updated"
   }
 }
-`, testAccDNSV2RecordSet_base(zoneName), zoneName)
+`, testAccDNSV2RecordSet_base(zoneName), zoneName, ttl)
 }
 
 func testAccDNSV2RecordSet_readTTL(zoneName string) string {
@@ -254,7 +272,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
 `, testAccDNSV2RecordSet_base(zoneName), zoneName)
 }
 
-func testAccDNSV2RecordSet_private(rName string) string {
+func testAccDNSV2RecordSet_private(rName, zoneName string, ttl int) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_vpc_v1" "vpc_1" {
   name = "%s"
@@ -277,7 +295,7 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
   name        = "%s"
   type        = "A"
   description = "a private record set"
-  ttl         = 3000
+  ttl         = %d
   records     = ["10.1.0.3", "10.1.0.2", "10.1.0.1"]
 
   tags = {
@@ -285,5 +303,5 @@ resource "flexibleengine_dns_recordset_v2" "recordset_1" {
     key = "value"
   }
 }
-`, rName, rName, rName)
+`, rName, zoneName, zoneName, ttl)
 }
