@@ -346,7 +346,8 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	cceClient, err := config.CceV3Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	cceClient, err := config.CceV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating flexibleengine CCE client: %s", err)
 	}
@@ -362,6 +363,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.SetId(n.Metadata.Id)
+	d.Set("region", region)
 	d.Set("name", n.Metadata.Name)
 	d.Set("status", n.Status.Phase)
 	d.Set("flavor_id", n.Spec.Flavor)
@@ -375,12 +377,8 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("container_network_type", n.Spec.ContainerNetwork.Mode)
 	d.Set("container_network_cidr", n.Spec.ContainerNetwork.Cidr)
 	d.Set("service_network_cidr", n.Spec.KubernetesSvcIPRange)
-	d.Set("internal_endpoint", n.Status.Endpoints[0].Internal)
-	d.Set("external_endpoint", n.Status.Endpoints[0].External)
-	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)
 	d.Set("authentication_mode", n.Spec.Authentication.Mode)
 	d.Set("security_group_id", n.Spec.HostNetwork.SecurityGroup)
-	d.Set("region", GetRegion(d, config))
 
 	cert, err := clusters.GetCert(cceClient, d.Id()).Extract()
 	if err != nil {
@@ -398,7 +396,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.Set("certificate_clusters", clusterList)
 
-	//Set Certificate Users
+	// Set Certificate Users
 	var userList []map[string]interface{}
 	for _, userObj := range cert.Users {
 		userCert := make(map[string]interface{})
@@ -417,6 +415,20 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 		masterList = append(masterList, master)
 	}
 	d.Set("masters", masterList)
+
+	// Set endpoint
+	var internalEP, externalEP string
+	for _, ep := range n.Status.Endpoints {
+		if ep.Type == "Internal" {
+			internalEP = ep.Url
+		} else if ep.Type == "External" {
+			externalEP = ep.Url
+		}
+	}
+	d.Set("internal_endpoint", internalEP)
+	d.Set("external_endpoint", externalEP)
+	// the value is always empty, keep compatibility
+	d.Set("external_apig_endpoint", n.Status.Endpoints[0].ExternalOTC)
 
 	return nil
 }

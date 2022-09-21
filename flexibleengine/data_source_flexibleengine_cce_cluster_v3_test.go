@@ -24,6 +24,8 @@ func TestAccCCEClusterV3DataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", cceName),
 					resource.TestCheckResourceAttr(resourceName, "status", "Available"),
 					resource.TestCheckResourceAttr(resourceName, "cluster_type", "VirtualMachine"),
+					resource.TestCheckResourceAttr(resourceName, "authentication_mode", "rbac"),
+					resource.TestCheckResourceAttrSet(resourceName, "internal_endpoint"),
 				),
 			},
 		},
