@@ -64,3 +64,11 @@ All above argument parameters can be exported as attribute parameters along with
 * `external_apig_endpoint` - The endpoint of the cluster to be accessed through API Gateway.
 
 * `billingMode` - Charging mode of the cluster.
+
+* `authentication_mode` - Authentication mode of the cluster, possible values are x509 and rbac.
+
+* `masters` - Advanced configuration of master nodes. Structure is documented below.
+
+The `masters` block supports:
+
+* `availability_zone` - The availability zone (AZ) of the master node.

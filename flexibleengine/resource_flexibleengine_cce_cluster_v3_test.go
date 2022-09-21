@@ -33,6 +33,7 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "cluster_version", "v1.17.9-r0"),
 					resource.TestCheckResourceAttr(resourceName, "container_network_type", "overlay_l2"),
 					resource.TestCheckResourceAttr(resourceName, "authentication_mode", "rbac"),
+					resource.TestCheckResourceAttrSet(resourceName, "internal_endpoint"),
 				),
 			},
 			{

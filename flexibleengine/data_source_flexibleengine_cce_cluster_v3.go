@@ -91,13 +91,30 @@ func dataSourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"authentication_mode": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"masters": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"availability_zone": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
 
 func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	cceClient, err := config.CceV3Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	cceClient, err := config.CceV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Unable to create flexibleengine CCE client : %s", err)
 	}
@@ -126,28 +143,49 @@ func dataSourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error 
 			" Please try a more specific search criteria")
 	}
 
-	Cluster := refinedClusters[0]
-	log.Printf("[DEBUG] Retrieved Clusters using given filter %s: %+v", Cluster.Metadata.Id, Cluster)
+	clusterInfo := refinedClusters[0]
+	log.Printf("[DEBUG] Retrieved Clusters using given filter %s: %+v", clusterInfo.Metadata.Id, clusterInfo)
 
-	d.SetId(Cluster.Metadata.Id)
-	d.Set("region", GetRegion(d, config))
-	d.Set("name", Cluster.Metadata.Name)
-	d.Set("flavor_id", Cluster.Spec.Flavor)
-	d.Set("description", Cluster.Spec.Description)
-	d.Set("cluster_version", Cluster.Spec.Version)
-	d.Set("cluster_type", Cluster.Spec.Type)
-	d.Set("billing_mode", Cluster.Spec.BillingMode)
-	d.Set("vpc_id", Cluster.Spec.HostNetwork.VpcId)
-	d.Set("subnet_id", Cluster.Spec.HostNetwork.SubnetId)
-	d.Set("security_group_id", Cluster.Spec.HostNetwork.SecurityGroup)
-	d.Set("highway_subnet_id", Cluster.Spec.HostNetwork.HighwaySubnet)
-	d.Set("container_network_cidr", Cluster.Spec.ContainerNetwork.Cidr)
-	d.Set("container_network_type", Cluster.Spec.ContainerNetwork.Mode)
-	d.Set("service_network_cidr", Cluster.Spec.KubernetesSvcIPRange)
-	d.Set("status", Cluster.Status.Phase)
-	d.Set("internal_endpoint", Cluster.Status.Endpoints[0].Internal)
-	d.Set("external_endpoint", Cluster.Status.Endpoints[0].External)
-	d.Set("external_apig_endpoint", Cluster.Status.Endpoints[0].ExternalOTC)
+	d.SetId(clusterInfo.Metadata.Id)
+	d.Set("region", region)
+	d.Set("name", clusterInfo.Metadata.Name)
+	d.Set("flavor_id", clusterInfo.Spec.Flavor)
+	d.Set("description", clusterInfo.Spec.Description)
+	d.Set("cluster_version", clusterInfo.Spec.Version)
+	d.Set("cluster_type", clusterInfo.Spec.Type)
+	d.Set("billing_mode", clusterInfo.Spec.BillingMode)
+	d.Set("vpc_id", clusterInfo.Spec.HostNetwork.VpcId)
+	d.Set("subnet_id", clusterInfo.Spec.HostNetwork.SubnetId)
+	d.Set("security_group_id", clusterInfo.Spec.HostNetwork.SecurityGroup)
+	d.Set("highway_subnet_id", clusterInfo.Spec.HostNetwork.HighwaySubnet)
+	d.Set("container_network_cidr", clusterInfo.Spec.ContainerNetwork.Cidr)
+	d.Set("container_network_type", clusterInfo.Spec.ContainerNetwork.Mode)
+	d.Set("service_network_cidr", clusterInfo.Spec.KubernetesSvcIPRange)
+	d.Set("authentication_mode", clusterInfo.Spec.Authentication.Mode)
+	d.Set("status", clusterInfo.Status.Phase)
+
+	// Set masters
+	var masterList []map[string]interface{}
+	for _, masterObj := range clusterInfo.Spec.Masters {
+		master := make(map[string]interface{})
+		master["availability_zone"] = masterObj.MasterAZ
+		masterList = append(masterList, master)
+	}
+	d.Set("masters", masterList)
+
+	// Set endpoint
+	var internalEP, externalEP string
+	for _, ep := range clusterInfo.Status.Endpoints {
+		if ep.Type == "Internal" {
+			internalEP = ep.Url
+		} else if ep.Type == "External" {
+			externalEP = ep.Url
+		}
+	}
+	d.Set("internal_endpoint", internalEP)
+	d.Set("external_endpoint", externalEP)
+	// the value is always empty, keep compatibility
+	d.Set("external_apig_endpoint", clusterInfo.Status.Endpoints[0].ExternalOTC)
 
 	return nil
 }
