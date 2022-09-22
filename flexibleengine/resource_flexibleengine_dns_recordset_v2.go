@@ -229,27 +229,30 @@ func resourceDNSRecordSetV2Update(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChanges("description", "ttl", "records") {
 		var updateOpts recordsets.UpdateOpts
+
+		// fix #703
+		// API issue: `UpdateOpts.Records` field should not be empty
+		// "code":"DNS.0308", "message":"Attribute 'records' is invalid, records is null or empty."
+		// if you want to change it, please verify again.
+		recordsraw := d.Get("records").(*schema.Set).List()
+		records := make([]string, len(recordsraw))
+		for i, recordraw := range recordsraw {
+			records[i] = recordraw.(string)
+		}
+		updateOpts.Records = records
+
 		if d.HasChange("ttl") {
 			updateOpts.TTL = d.Get("ttl").(int)
-		}
-
-		if d.HasChange("records") {
-			recordsraw := d.Get("records").(*schema.Set).List()
-			records := make([]string, len(recordsraw))
-			for i, recordraw := range recordsraw {
-				records[i] = recordraw.(string)
-			}
-			updateOpts.Records = records
 		}
 
 		if d.HasChange("description") {
 			updateOpts.Description = d.Get("description").(string)
 		}
 
-		log.Printf("[DEBUG] Updating  record set %s with options: %#v", recordsetID, updateOpts)
+		log.Printf("[DEBUG] Updating record set %s with options: %#v", recordsetID, updateOpts)
 		_, err = recordsets.Update(dnsClient, zoneID, recordsetID, updateOpts).Extract()
 		if err != nil {
-			return fmt.Errorf("Error updating FlexibleEngine DNS  record set: %s", err)
+			return fmt.Errorf("Error updating FlexibleEngine DNS record set: %s", err)
 		}
 
 		log.Printf("[DEBUG] Waiting for DNS record set (%s) to update", recordsetID)
