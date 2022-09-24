@@ -264,6 +264,7 @@ func Provider() *schema.Provider {
 			// importing data source
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
+			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
