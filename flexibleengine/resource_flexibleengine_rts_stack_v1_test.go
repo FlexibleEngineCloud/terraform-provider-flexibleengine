@@ -136,7 +136,6 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
     }
   }
 JSON
-
 }
 `
 
@@ -174,6 +173,5 @@ resource "flexibleengine_rts_stack_v1" "stack_1" {
     }
   }
 JSON
-
 }
 `

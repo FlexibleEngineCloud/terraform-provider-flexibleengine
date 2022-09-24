@@ -83,7 +83,7 @@ JSON
 }
 
 data "flexibleengine_rts_stack_v1" "stacks" {
-        name = "${flexibleengine_rts_stack_v1.stack_1.name}"
+  name = flexibleengine_rts_stack_v1.stack_1.name
 }
 `, stackName)
 }

@@ -85,7 +85,7 @@ JSON
 }
 
 data "flexibleengine_rts_stack_resource_v1" "resource_1" {
-  stack_name = "${flexibleengine_rts_stack_v1.stack_1.name}"
+  stack_name    = flexibleengine_rts_stack_v1.stack_1.name
   resource_name = "random"
 }
 `, stackName)
