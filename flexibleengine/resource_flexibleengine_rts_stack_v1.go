@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"time"
-
-	"reflect"
 	"unsafe"
 
 	"github.com/chnsz/golangsdk"
@@ -435,7 +433,5 @@ func waitForRTSStackUpdate(orchestrationClient *golangsdk.ServiceClient, stackNa
 }
 
 func BytesToString(b []byte) string {
-	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
-	sh := reflect.StringHeader{Data: bh.Data, Len: bh.Len}
-	return *(*string)(unsafe.Pointer(&sh))
+	return *(*string)(unsafe.Pointer(&b))
 }

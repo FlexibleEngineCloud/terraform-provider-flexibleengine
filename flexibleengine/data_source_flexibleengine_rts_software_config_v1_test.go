@@ -62,7 +62,7 @@ resource "flexibleengine_rts_software_config_v1" "config_1" {
 }
 
 data "flexibleengine_rts_software_config_v1" "configs" {
-  id = "${flexibleengine_rts_software_config_v1.config_1.id}"
+  id = flexibleengine_rts_software_config_v1.config_1.id
 }
 `, rtsName)
 }
