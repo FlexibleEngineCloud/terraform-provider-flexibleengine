@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## 1.33.0 (September 30, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_modelarts_dataset` [GH-810]
+  - `flexibleengine_modelarts_dataset_version` [GH-810]
+  - `flexibleengine_drs_job` [GH-811]
+  - `flexibleengine_apig_api_publishment` [GH-815]
+  - `flexibleengine_apig_api` [GH-815]
+  - `flexibleengine_apig_application` [GH-815]
+  - `flexibleengine_apig_custom_authorizer` [GH-815]
+  - `flexibleengine_apig_environment` [GH-815]
+  - `flexibleengine_apig_group` [GH-815]
+  - `flexibleengine_apig_instance` [GH-815]
+  - `flexibleengine_apig_response` [GH-815]
+  - `flexibleengine_apig_throttling_policy_associate` [GH-815]
+  - `flexibleengine_apig_throttling_policy` [GH-815]
+  - `flexibleengine_apig_vpc_channel` [GH-815]
+
+* **New Data Source:**
+  - `flexibleengine_smn_topics` [GH-806]
+  - `flexibleengine_sfs_turbos` [GH-807]
+  - `flexibleengine_modelarts_datasets` [GH-810]
+  - `flexibleengine_modelarts_dataset_versions` [GH-810]
+  - `flexibleengine_cce_clusters` [GH-812]
+  - `flexibleengine_apig_environments` [GH-815]
+
+BUG FIXES:
+
+* `resource/flexibleengine_cce_cluster_v3`: set internal_endpoint and external_endpoint correctly [GH-808]
+* `resource/flexibleengine_rts_stack_v1`: fix misuse of reflect.StringHeader [GH-813]
+
 ## 1.32.0 (August 16, 2022)
 
 FEATURES:
