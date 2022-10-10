@@ -8,6 +8,7 @@ import (
 
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/cce/v3/clusters"
+	"github.com/chnsz/golangsdk/openstack/networking/v1/eips"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -128,7 +129,6 @@ func resourceCCEClusterV3() *schema.Resource {
 			"eip": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: validateIP,
 			},
 			"masters": {
@@ -440,15 +440,35 @@ func resourceCCEClusterV3Update(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error creating flexibleengine CCE Client: %s", err)
 	}
 
-	var updateOpts clusters.UpdateOpts
-
 	if d.HasChange("description") {
+		var updateOpts clusters.UpdateOpts
 		updateOpts.Spec.Description = d.Get("description").(string)
-	}
-	_, err = clusters.Update(cceClient, d.Id(), updateOpts).Extract()
+		_, err = clusters.Update(cceClient, d.Id(), updateOpts).Extract()
 
-	if err != nil {
-		return fmt.Errorf("Error updating flexibleengine CCE: %s", err)
+		if err != nil {
+			return fmt.Errorf("Error updating flexibleengine CCE: %s", err)
+		}
+	}
+
+	if d.HasChange("eip") {
+		eipClient, err := config.NetworkingV1Client(config.GetRegion(d))
+		if err != nil {
+			return fmt.Errorf("error creating networking client: %s", err)
+		}
+
+		oldEip, newEip := d.GetChange("eip")
+		if oldEip.(string) != "" {
+			err = resourceCCEClusterV3EipAction(cceClient, eipClient, d.Id(), oldEip.(string), "unbind")
+			if err != nil {
+				return err
+			}
+		}
+		if newEip.(string) != "" {
+			err = resourceCCEClusterV3EipAction(cceClient, eipClient, d.Id(), newEip.(string), "bind")
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	return resourceCCEClusterV3Read(d, meta)
@@ -512,4 +532,49 @@ func waitForCCEClusterDelete(cceClient *golangsdk.ServiceClient, clusterId strin
 		log.Printf("[DEBUG] flexibleengine CCE cluster %s still available.\n", clusterId)
 		return r, "Available", nil
 	}
+}
+
+func resourceCCEClusterV3EipAction(cceClient, eipClient *golangsdk.ServiceClient,
+	clusterID, eip, action string) error {
+	eipID, err := getEipIDbyAddress(eipClient, eip)
+	if err != nil {
+		return fmt.Errorf("error fetching EIP ID: %s", err)
+	}
+
+	opts := clusters.UpdateIpOpts{
+		Action: action,
+		Spec: clusters.IpSpec{
+			ID: eipID,
+		},
+	}
+
+	err = clusters.UpdateMasterIp(cceClient, clusterID, opts).ExtractErr()
+	if err != nil {
+		return fmt.Errorf("error %sing the eip of CCE cluster: %s", action, err)
+	}
+	return nil
+}
+
+func getEipIDbyAddress(client *golangsdk.ServiceClient, address string) (string, error) {
+	listOpts := &eips.ListOpts{
+		PublicIp: []string{address},
+	}
+	pages, err := eips.List(client, listOpts).AllPages()
+	if err != nil {
+		return "", err
+	}
+
+	allEips, err := eips.ExtractPublicIPs(pages)
+	if err != nil {
+		return "", fmt.Errorf("Unable to retrieve eips: %s ", err)
+	}
+
+	total := len(allEips)
+	if total == 0 {
+		return "", fmt.Errorf("queried none results with %s", address)
+	} else if total > 1 {
+		return "", fmt.Errorf("queried more results with %s", address)
+	}
+
+	return allEips[0].ID, nil
 }
