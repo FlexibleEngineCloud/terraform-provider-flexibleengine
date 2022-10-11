@@ -83,7 +83,7 @@ The following arguments are supported:
 * `authenticating_proxy_ca` - (Optional) CA root certificate provided in the authenticating_proxy mode. The CA root certificate
     is encoded to the Base64 format. Changing this parameter will create a new cluster resource.
 
-* `eip` - (Optional) EIP address of the cluster. Changing this parameter will create a new cluster resource.
+* `eip` - (Optional) EIP address of the cluster.
 
 * `kube_proxy_mode` - (Optional, String, ForceNew) Service forwarding mode. Two modes are available:
 

@@ -40,6 +40,9 @@ func TestAccCCEClusterV3_basic(t *testing.T) {
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"eip",
+				},
 			},
 			{
 				Config: testAccCCEClusterV3_update(cceName),
@@ -104,30 +107,89 @@ func testAccCheckCCEClusterV3Exists(n string, cluster *clusters.Clusters) resour
 	}
 }
 
+func testAccCCEClusterV3_Base(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "test" {
+  name = "%s"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "test" {
+  name       = "%s"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+
+  //dns is required for cce node installing
+  primary_dns   = "100.125.0.41"
+  secondary_dns = "100.126.0.41"
+  vpc_id        = flexibleengine_vpc_v1.test.id
+}
+`, rName, rName)
+}
+
 func testAccCCEClusterV3_basic(cceName string) string {
 	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_vpc_eip" "test" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "test"
+    size       = 10
+    share_type = "PER"
+  }
+}
+
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name            = "%s"
-  description     = "a description"
-  cluster_type    = "VirtualMachine"
-  cluster_version = "v1.17.9-r0"
-  flavor_id       = "cce.s1.small"
-  vpc_id          = "%s"
-  subnet_id       = "%s"
+  name                   = "%s"
+  description            = "a description"
+  cluster_type           = "VirtualMachine"
+  cluster_version        = "v1.17.9-r0"
+  flavor_id              = "cce.s1.small"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
   container_network_type = "overlay_l2"
-}`, cceName, OS_VPC_ID, OS_NETWORK_ID)
+  eip                    = flexibleengine_vpc_eip.test.address
+}`, testAccCCEClusterV3_Base(cceName), cceName)
 }
 
 func testAccCCEClusterV3_update(cceName string) string {
 	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_vpc_eip" "test" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "test"
+    size       = 10
+    share_type = "PER"
+  }
+}
+
+resource "flexibleengine_vpc_eip" "update" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "test"
+    size       = 10
+    share_type = "PER"
+  }
+}
+
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name            = "%s"
-  description     = "a updated description"
-  cluster_type    = "VirtualMachine"
-  cluster_version = "v1.17.9-r0"
-  flavor_id       = "cce.s1.small"
-  vpc_id          = "%s"
-  subnet_id       = "%s"
+  name                   = "%s"
+  description            = "a updated description"
+  cluster_type           = "VirtualMachine"
+  cluster_version        = "v1.17.9-r0"
+  flavor_id              = "cce.s1.small"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
   container_network_type = "overlay_l2"
-}`, cceName, OS_VPC_ID, OS_NETWORK_ID)
+  eip                    = flexibleengine_vpc_eip.update.address
+}`, testAccCCEClusterV3_Base(cceName), cceName)
 }
