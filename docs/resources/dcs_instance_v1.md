@@ -8,24 +8,49 @@ Manages a DCS instance in the flexibleengine DCS Service.
 
 ## Example Usage
 
+### DCS instance for Redis 5.0
+
+```hcl
+variable my_password{}
+variable vpc_id {}
+variable network_id {}
+
+data "flexibleengine_dcs_product_v1" "product1" {
+  engine         = "redis"
+  engine_version = "4.0;5.0"
+  cache_mode     = "cluster"
+  capacity       = 8
+  replica_count  = 2
+}
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name            = "dcs_redis_instance"
+  engine          = "Redis"
+  engine_version  = "5.0"
+  password        = var.my_password
+  product_id      = data.flexibleengine_dcs_product_v1.product1.id
+  capacity        = 8
+  vpc_id          = var.vpc_id
+  network_id      = var.network_id
+  available_zones = ["eu-west-0a", "eu-west-0b"]
+  save_days       = 1
+  backup_type     = "manual"
+  begin_at        = "00:00-01:00"
+  period_type     = "weekly"
+  backup_at       = [1]
+}
+```
+
+
 ### DCS instance for Redis 3.0
 
 ```hcl
+variable my_password{}
+variable vpc_id {}
+variable network_id {}
+
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name        = "secgroup_1"
-  description = "secgroup_1"
-}
-
-resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = "test_vpc1"
-  cidr = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name       = "test_subnet1"
-  cidr       = "192.168.0.0/24"
-  gateway_ip = "192.168.0.1"
-  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+  name = "secgroup_for_dcs"
 }
 
 resource "flexibleengine_dcs_instance_v1" "instance_1" {
@@ -35,8 +60,8 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   password          = var.my_password
   product_id        = "dcs.master_standby-h"
   capacity          = 2
-  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
-  network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
+  vpc_id            = var.vpc_id
+  network_id        = var.network_id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
   available_zones   = ["eu-west-0a"]
   save_days         = 1
@@ -47,24 +72,34 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
 }
 ```
 
-### DCS instance for Redis 5.0
+### DCS instance for Memcached
 
 ```hcl
+variable my_password{}
+variable vpc_id {}
+variable network_id {}
+
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name = "secgroup_for_dcs"
+}
+
 resource "flexibleengine_dcs_instance_v1" "instance_1" {
-  name              = "test_dcs_instance"
-  engine            = "Redis"
-  engine_version    = "5.0"
+  name              = "%s"
+  engine            = "Memcached"
+  access_user       = "admin"
   password          = var.my_password
-  product_id        = "redis.cluster.xu1.large.r1.8-h"
-  capacity          = 8
-  vpc_id            = flexibleengine_vpc.vpc_1.id
-  subnet_id         = flexibleengine_vpc_subnet.subnet_1.id
-  available_zones   = ["eu-west-0a", "eu-west-0b"]
-  save_days         = 1
-  backup_type       = "manual"
-  begin_at          = "00:00-01:00"
-  period_type       = "weekly"
-  backup_at         = [1]
+  product_id        = "dcs.memcached.master_standby-h"
+  capacity          = 2
+  vpc_id            = var.vpc_id
+  network_id        = var.network_id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  available_zones   = ["eu-west-0a"]
+
+  save_days   = 1
+  backup_type = "manual"
+  begin_at    = "00:00-01:00"
+  period_type = "weekly"
+  backup_at   = [1]
 }
 ```
 
@@ -78,10 +113,11 @@ The following arguments are supported:
 * `description` - (Optional) Indicates the description of an instance. It is a character
     string containing not more than 1024 characters.
 
-* `engine` - (Required) Indicates a cache engine. Only Redis is supported.
+* `engine` - (Required) Indicates a cache engine. Valid values are *Redis* and *Memcached*.
     Changing this creates a new instance.
 
-* `engine_version` - (Required) Indicates the version of a cache engine, which is 3.0.7.
+* `engine_version` - (Optional) Indicates the version of a cache engine.
+    This parameter is only supported and **mandatory** for *Redis* engine.
     Changing this creates a new instance.
 
 * `capacity` - (Required) Indicates the Cache capacity. Unit: GB.
@@ -110,50 +146,16 @@ The following arguments are supported:
     on how to query AZs, see Querying AZ Information.
     Changing this creates a new instance.
 
-* `product_id` - (Optional) Product ID used to differentiate DCS instance types. For example now there are following values available:
+* `product_id` - (Optional) Product ID used to differentiate DCS instance types.
 
-    - dcs.memcached.master_standby-h
-    - dcs.memcached.master_standby-m
-    - dcs.memcached.single_node-h
-    - dcs.memcached.single_node-m
-    - dcs.master_standby-h
-    - dcs.cluster-h
-    - dcs.single_node-h
-    - redis.cluster.xu1.large.r1.4-h
-    - redis.cluster.xu1.large.r2.4-h
-    - redis.cluster.xu1.large.r1.8-h
-    - redis.cluster.xu1.large.r2.16-h
-    - redis.cluster.xu1.large.r1.16-h
-    - redis.cluster.xu1.large.r2.24-h
-    - redis.cluster.xu1.large.r2.32-h
-    - redis.cluster.xu1.large.r1.32-h
-    - redis.cluster.xu1.large.r2.48-h
-    - redis.cluster.xu1.large.r1.48-h
-    - redis.cluster.xu1.large.r2.64-h
-    - redis.cluster.xu1.large.r1.64-h
-    - redis.cluster.xu1.large.r2.96-h
-    - redis.cluster.xu1.large.r1.96-h
-    - redis.cluster.xu1.large.r2.128-h
-    - redis.cluster.xu1.large.r1.128-h
-    - redis.cluster.xu1.large.r1.192-h
-    - redis.cluster.xu1.large.r2.192-h
-    - redis.cluster.xu1.large.r2.256-h
-    - redis.cluster.xu1.large.r1.256-h
-    - redis.cluster.xu1.large.r2.384-h
-    - redis.cluster.xu1.large.r1.384-h
-    - redis.cluster.xu1.large.r1.512-h
-    - redis.cluster.xu1.large.r2.512-h
+  + For **Redis 4.0/5.0** instance, please use [flexibleengine_dcs_product_v1](https://registry.terraform.io/providers/FlexibleEngineCloud/flexibleengine/latest/docs/data-sources/dcs_product_v1)
+    to get the ID of an available product.
 
-.....
+  + For **Redis 3.0** instance, the valid values are `dcs.master_standby-h`, `dcs.single_node-h` and `dcs.cluster-h`.
 
-You can use [flexibleengine_dcs_product_v1](https://registry.terraform.io/providers/FlexibleEngineCloud/flexibleengine/latest/docs/data-sources/dcs_product_v1)
-to get the ID of an available product. Changing this creates a new instance.
+  + For **Memcached** instance, the valid values are `dcs.memcached.master_standby-h` and `dcs.memcached.single_node-h`.
 
-* `instance_type` - (Deprecated, Optional) DCS instance specification code. For example now there are following values available:
-
-    - dcs.single_node
-    - dcs.master_standby
-    - dcs.cluster
+    Changing this creates a new instance.
 
 * `maintain_begin` - (Optional) Indicates the time at which a maintenance time window starts.
     Format: HH:mm:ss.
