@@ -224,7 +224,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_s3_bucket_object":          dataSourceS3BucketObject(),
 			"flexibleengine_kms_key_v1":                dataSourceKmsKeyV1(),
 			"flexibleengine_kms_data_key_v1":           dataSourceKmsDataKeyV1(),
-			"flexibleengine_rds_flavors_v3":            dataSourceRdsFlavorV3(),
 			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
@@ -265,7 +264,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpcep_endpoints":           dataSourceVPCEPEndpoints(),
 			"flexibleengine_elb_flavors":               dataSourceElbFlavorsV3(),
 
-			// importing data source
+			// importing new data source
 			"flexibleengine_apig_environments":  apig.DataSourceEnvironments(),
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
@@ -280,6 +279,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
+
+			// importing existing data source
+			"flexibleengine_rds_flavors_v3": rds.DataSourceRdsFlavor(), // v1.34.0
 
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
