@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/chnsz/golangsdk"
@@ -11,6 +12,7 @@ import (
 	"github.com/chnsz/golangsdk/openstack/dcs/v1/products"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceDcsInstanceV1() *schema.Resource {
@@ -42,11 +44,15 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"redis", "memcached",
+				}, true),
 			},
 			"engine_version": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
+				Computed: true,
 			},
 			"capacity": {
 				Type:     schema.TypeFloat,
@@ -179,11 +185,16 @@ func resourceDcsInstanceV1() *schema.Resource {
 }
 
 func resourceDcsInstancesCheck(d *schema.ResourceData) error {
+	engine := d.Get("engine").(string)
 	engineVersion := d.Get("engine_version").(string)
 	secGroupID := d.Get("security_group_id").(string)
 
+	if strings.ToLower(engine) == "redis" && engineVersion == "" {
+		return fmt.Errorf("engine_version is mandatory for Redis instance")
+	}
+
 	// check for Memcached and Redis 3.0
-	if engineVersion == "3.0" {
+	if engineVersion == "3.0" || strings.ToLower(engine) == "memcached" {
 		if secGroupID == "" {
 			return fmt.Errorf("security_group_id is mandatory for this DCS instance")
 		}
@@ -219,7 +230,7 @@ func getDcsProductId(client *golangsdk.ServiceClient, instanceType string) (stri
 	if err != nil {
 		return "", err
 	}
-	log.Printf("[DEBUG] Dcs get products : %+v", v)
+
 	var FilteredPd []products.Product
 	for _, pd := range v.Products {
 		if instanceType != "" && pd.SpecCode != instanceType {
@@ -229,9 +240,10 @@ func getDcsProductId(client *golangsdk.ServiceClient, instanceType string) (stri
 	}
 
 	if len(FilteredPd) < 1 {
-		return "", fmt.Errorf("Your query returned no results. Please change your filters and try again.")
+		return "", fmt.Errorf("Your query returned no results. Please change your filters and try again")
 	}
 
+	log.Printf("[DEBUG] get DCS product: %+v", FilteredPd)
 	return FilteredPd[0].ProductID, nil
 }
 
@@ -317,11 +329,11 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 
 func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
 	dcsV1Client, err := config.DcsV1Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine dcs instance client: %s", err)
 	}
+
 	v, err := instances.Get(dcsV1Client, d.Id()).Extract()
 	if err != nil {
 		return CheckDeleted(d, err, "DCS instance")
@@ -351,6 +363,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_begin", v.MaintainBegin)
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
+	d.Set("available_zones", v.AvailableZones)
 
 	// set capacity by Capacity and CapacityMinor
 	var capacity float64 = float64(v.Capacity)

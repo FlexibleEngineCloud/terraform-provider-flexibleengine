@@ -16,7 +16,7 @@ func TestAccDcsInstancesV1_basic(t *testing.T) {
 	var randName = fmt.Sprintf("acc_test_%s", acctest.RandString(5))
 	resourceName := "flexibleengine_dcs_instance_v1.instance_1"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDcsV1InstanceDestroy,
@@ -27,7 +27,78 @@ func TestAccDcsInstancesV1_basic(t *testing.T) {
 					testAccCheckDcsV1InstanceExists(resourceName, instance),
 					resource.TestCheckResourceAttr(resourceName, "name", randName),
 					resource.TestCheckResourceAttr(resourceName, "engine", "Redis"),
+					resource.TestCheckResourceAttr(resourceName, "status", "RUNNING"),
 				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password", "backup_type", "backup_at", "begin_at", "save_days", "period_type",
+				},
+			},
+		},
+	})
+}
+
+func TestAccDcsInstancesV1_redisV5(t *testing.T) {
+	var instance instances.Instance
+	var randName = fmt.Sprintf("acc_test_%s", acctest.RandString(5))
+	resourceName := "flexibleengine_dcs_instance_v1.instance_1"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDcsV1InstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDcsV1Instance_basic(randName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDcsV1InstanceExists(resourceName, instance),
+					resource.TestCheckResourceAttr(resourceName, "name", randName),
+					resource.TestCheckResourceAttr(resourceName, "engine", "Redis"),
+					resource.TestCheckResourceAttr(resourceName, "status", "RUNNING"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password", "backup_type", "backup_at", "begin_at", "save_days", "period_type",
+				},
+			},
+		},
+	})
+}
+
+func TestAccDcsInstancesV1_memcached(t *testing.T) {
+	var instance instances.Instance
+	var randName = fmt.Sprintf("acc_test_%s", acctest.RandString(5))
+	resourceName := "flexibleengine_dcs_instance_v1.instance_1"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDcsV1InstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDcsV1Instance_memcached(randName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDcsV1InstanceExists(resourceName, instance),
+					resource.TestCheckResourceAttr(resourceName, "name", randName),
+					resource.TestCheckResourceAttr(resourceName, "engine", "Memcached"),
+					resource.TestCheckResourceAttr(resourceName, "status", "RUNNING"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password", "backup_type", "backup_at", "begin_at", "save_days", "period_type",
+				},
 			},
 		},
 	})
@@ -76,31 +147,37 @@ func testAccCheckDcsV1InstanceExists(n string, instance instances.Instance) reso
 		}
 
 		if v.InstanceID != rs.Primary.ID {
-			return fmt.Errorf("The Dcs instance not found.")
+			return fmt.Errorf("The DCS instance not found")
 		}
 		instance = *v
 		return nil
 	}
 }
 
-func testAccDcsV1Instance_basic(rName string) string {
+func testAccDcsV1Instance_network(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name        = "%s"
-  description = "secgroup_1"
-}
-
 resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = "%s"
+  name = "%[1]s"
   cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name       = "%s"
+  name       = "%[1]s"
   cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
   vpc_id     = flexibleengine_vpc_v1.vpc_1.id
 }
+
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name        = "%[1]s"
+  description = "secgroup_1"
+}
+`, rName)
+}
+
+func testAccDcsV1Instance_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_dcs_instance_v1" "instance_1" {
   name              = "%s"
@@ -120,5 +197,62 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   period_type = "weekly"
   backup_at   = [1]
 }
-`, rName, rName, rName, rName)
+`, testAccDcsV1Instance_network(rName), rName)
+}
+
+func testAccDcsV1Instance_redisV5(rName string) string {
+	return fmt.Sprintf(`
+data "flexibleengine_dcs_product_v1" "product_ha" {
+  engine         = "Redis"
+  engine_version = "4.0;5.0"
+  cache_mode     = "ha"
+  capacity       = 0.5
+  replica_count  = 2
+}
+
+%s
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name            = "%s"
+  engine          = "Redis"
+  engine_version  = "5.0"
+  password        = "Huawei_test"
+  product_id      = data.flexibleengine_dcs_product_v1.product_ha.id
+  capacity        = 0.5
+  vpc_id          = flexibleengine_vpc_v1.vpc_1.id
+  network_id      = flexibleengine_vpc_subnet_v1.subnet_1.id
+  available_zones = ["eu-west-0a", "eu-west-0c"]
+
+  save_days   = 1
+  backup_type = "manual"
+  begin_at    = "00:00-01:00"
+  period_type = "weekly"
+  backup_at   = [1]
+}
+`, testAccDcsV1Instance_network(rName), rName)
+}
+
+func testAccDcsV1Instance_memcached(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name              = "%s"
+  engine            = "Memcached"
+  access_user       = "admin"
+  password          = "Huawei_test"
+  product_id        = "dcs.memcached.master_standby-h"
+  capacity          = 2
+  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
+  network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  available_zones   = ["eu-west-0a"]
+
+  save_days   = 1
+  backup_type = "manual"
+  begin_at    = "00:00-01:00"
+  period_type = "weekly"
+  backup_at   = [1]
+}
+`, testAccDcsV1Instance_network(rName), rName)
 }
