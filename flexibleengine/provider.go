@@ -446,6 +446,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_account":               rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":              rds.ResourceRdsDatabase(),
 			"flexibleengine_rds_instance_v3":           rds.ResourceRdsInstance(),
+			"flexibleengine_rds_database_privilege":    rds.ResourceRdsDatabasePrivilege(),
 			"flexibleengine_swr_organization":          swr.ResourceSWROrganization(),
 			"flexibleengine_swr_organization_users":    swr.ResourceSWROrganizationPermissions(),
 			"flexibleengine_swr_repository":            swr.ResourceSWRRepository(),

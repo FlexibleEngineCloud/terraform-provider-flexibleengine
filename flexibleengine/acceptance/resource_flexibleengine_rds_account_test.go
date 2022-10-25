@@ -166,6 +166,10 @@ resource "flexibleengine_vpc_subnet_v1" "test" {
   cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
   vpc_id     = flexibleengine_vpc_v1.test.id
+
+  timeouts {
+	delete = "20m"
+  }
 }
 
 resource "flexibleengine_networking_secgroup_v2" "test" {
