@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
@@ -6,8 +6,11 @@ import (
 
 	"github.com/chnsz/golangsdk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 )
 
+// dataSourceRdsFlavorV3 is not used any more since v1.34.0
+// data.flexibleengine_rds_flavors_v3 can be imported directly
 func dataSourceRdsFlavorV3() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceRdsFlavorV3Read,
@@ -62,8 +65,8 @@ func dataSourceRdsFlavorV3() *schema.Resource {
 }
 
 func dataSourceRdsFlavorV3Read(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	client, err := config.RdsV3Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	client, err := conf.RdsV3Client(conf.GetRegion(d))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine rds client: %s", err)
 	}
