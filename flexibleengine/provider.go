@@ -415,7 +415,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_rule_web_tamper_protection":     resourceWafRuleWebTamperProtection(),
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
-			// importing resource
+			// importing new resource
 			"flexibleengine_apig_api":                         apig.ResourceApigAPIV2(),
 			"flexibleengine_apig_api_publishment":             apig.ResourceApigApiPublishment(),
 			"flexibleengine_apig_instance":                    apig.ResourceApigInstanceV2(),
@@ -445,7 +445,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_fgs_trigger":               fgs.ResourceFunctionGraphTrigger(),
 			"flexibleengine_rds_account":               rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":              rds.ResourceRdsDatabase(),
-			"flexibleengine_rds_instance_v3":           rds.ResourceRdsInstance(),
 			"flexibleengine_rds_database_privilege":    rds.ResourceRdsDatabasePrivilege(),
 			"flexibleengine_swr_organization":          swr.ResourceSWROrganization(),
 			"flexibleengine_swr_organization_users":    swr.ResourceSWROrganizationPermissions(),
@@ -453,9 +452,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_swr_repository_sharing":    swr.ResourceSWRRepositorySharing(),
 
 			"flexibleengine_tms_tags": tms.ResourceTmsTag(),
-
-			"flexibleengine_vpc_v1":        vpc.ResourceVirtualPrivateCloudV1(),
-			"flexibleengine_vpc_subnet_v1": vpc.ResourceVpcSubnetV1(),
 
 			"flexibleengine_vpc_eip_associate": eip.ResourceEIPAssociate(),
 
@@ -466,6 +462,11 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
 			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),
+
+			// importing existing resource
+			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),           // v1.29.0
+			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
+			"flexibleengine_vpc_subnet_v1":   vpc.ResourceVpcSubnetV1(),           // v1.31.0
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
