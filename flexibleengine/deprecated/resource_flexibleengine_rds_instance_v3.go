@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
@@ -7,12 +7,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/common/tags"
 	"github.com/chnsz/golangsdk/openstack/rds/v3/backups"
 	"github.com/chnsz/golangsdk/openstack/rds/v3/instances"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/common"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 // resourceRdsInstanceV3 is not used any more since v1.29.0
@@ -181,7 +185,7 @@ func resourceRdsInstanceV3() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"tags": tagsSchema(),
+			"tags": common.TagsSchema(),
 
 			"time_zone": {
 				Type:     schema.TypeString,
@@ -249,9 +253,9 @@ func resourceRdsInstanceV3() *schema.Resource {
 }
 
 func resourceRdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	region := GetRegion(d, config)
-	client, err := config.RdsV3Client(region)
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	client, err := conf.RdsV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
@@ -294,7 +298,7 @@ func resourceRdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		taglist := expandResourceTags(tagRaw)
+		taglist := utils.ExpandResourceTags(tagRaw)
 		if tagErr := tags.Create(client, "instances", instanceID, taglist).ExtractErr(); tagErr != nil {
 			return fmt.Errorf("Error setting tags of RDS instance (%s): %s", instanceID, tagErr)
 		}
@@ -304,8 +308,9 @@ func resourceRdsInstanceV3Create(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceRdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	client, err := config.RdsV3Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	client, err := conf.RdsV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s", err)
 	}
@@ -393,7 +398,7 @@ func resourceRdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("[DEBUG] Error saving nodes to RDS instance (%s): %s", instanceID, err)
 	}
 
-	d.Set("tags", tagsToMap(instance.Tags))
+	d.Set("tags", utils.TagsToMap(instance.Tags))
 
 	az1 := instance.Nodes[0].AvailabilityZone
 	if strings.HasSuffix(d.Get("flavor").(string), ".ha") {
@@ -415,8 +420,9 @@ func resourceRdsInstanceV3Read(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceRdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	client, err := config.RdsV3Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	client, err := conf.RdsV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS Client: %s", err)
 	}
@@ -448,7 +454,7 @@ func resourceRdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error
 	}
 
 	if d.HasChange("tags") {
-		tagErr := UpdateResourceTags(client, d, "instances", instanceID)
+		tagErr := utils.UpdateResourceTags(client, d, "instances", instanceID)
 		if tagErr != nil {
 			return fmt.Errorf("Error updating tags of RDS instance (%s): %s", instanceID, tagErr)
 		}
@@ -458,8 +464,9 @@ func resourceRdsInstanceV3Update(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceRdsInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	client, err := config.RdsV3Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	client, err := conf.RdsV3Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s ", err)
 	}
@@ -717,4 +724,11 @@ func rdsInstanceStateRefreshFunc(client *golangsdk.ServiceClient, instanceID str
 
 		return instance, instance.Status, nil
 	}
+}
+
+func suppressRdsVersionDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if old != "" && strings.HasPrefix(new, old) {
+		return true
+	}
+	return false
 }

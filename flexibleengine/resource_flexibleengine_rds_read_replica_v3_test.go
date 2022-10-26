@@ -21,7 +21,7 @@ func TestAccRdsReplicaInstanceV3_basic(t *testing.T) {
 		CheckDestroy: testAccCheckRdsInstanceV3Destroy(resourceType),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRdsReplicaInstanceV3_basic(acctest.RandString(10)),
+				Config: testAccRdsReplicaInstanceV3_basic(acctest.RandString(4)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRdsInstanceV3Exists(resourceName, &replica),
 					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
@@ -102,18 +102,30 @@ func testAccCheckRdsInstanceV3Exists(name string, instance *instances.RdsInstanc
 
 func testAccRdsReplicaInstanceV3_basic(val string) string {
 	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "vpc-acc-%[1]s"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name       = "subnet-acc-%[1]s"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+}
+
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name        = "sg-acc-%s"
-  description = "security group for acceptance test"
+  name        = "sg-acc-%[1]s"
+  description = "security group for rds instance"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance" {
-  name              = "rds_instance_%s"
+  name              = "rds_instance_%[1]s"
   flavor            = "rds.pg.s3.large.2"
-  availability_zone = ["%s"]
+  availability_zone = ["%[2]s"]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id            = "%s"
-  subnet_id         = "%s"
+  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.subnet_1.id
 
   db {
     password = "Huangwei!120521"
@@ -136,10 +148,10 @@ resource "flexibleengine_rds_instance_v3" "instance" {
 }
 
 resource "flexibleengine_rds_read_replica_v3" "replica_instance" {
-  name              = "replica_instance_%s"
+  name              = "replica_instance_%[1]s"
   flavor            = "rds.pg.s3.large.2.rr"
   replica_of_id     = flexibleengine_rds_instance_v3.instance.id
-  availability_zone = "%s"
+  availability_zone = "%[2]s"
 
   volume {
     type = "ULTRAHIGH"
@@ -149,6 +161,5 @@ resource "flexibleengine_rds_read_replica_v3" "replica_instance" {
     func = "readonly"
   }
 }
-
-	`, val, val, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID, val, OS_AVAILABILITY_ZONE)
+`, val, OS_AVAILABILITY_ZONE)
 }

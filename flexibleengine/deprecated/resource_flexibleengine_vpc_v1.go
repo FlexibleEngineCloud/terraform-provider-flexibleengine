@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"time"
 
-	"github.com/chnsz/golangsdk/openstack/common/tags"
-	"github.com/chnsz/golangsdk/openstack/networking/v1/vpcs"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/chnsz/golangsdk"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/chnsz/golangsdk/openstack/common/tags"
+	"github.com/chnsz/golangsdk/openstack/networking/v1/vpcs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/common"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 // resourceVirtualPrivateCloudV1 is not used any more since v1.29.0
@@ -51,7 +54,7 @@ func resourceVirtualPrivateCloudV1() *schema.Resource {
 				ForceNew:     false,
 				ValidateFunc: validateCIDR,
 			},
-			"tags": tagsSchema(),
+			"tags": common.TagsSchema(),
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -65,8 +68,9 @@ func resourceVirtualPrivateCloudV1() *schema.Resource {
 }
 
 func resourceVirtualPrivateCloudV1Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*Config)
-	vpcClient, err := config.NetworkingV1Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	vpcClient, err := conf.NetworkingV1Client(region)
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
@@ -103,11 +107,11 @@ func resourceVirtualPrivateCloudV1Create(ctx context.Context, d *schema.Resource
 	//set tags
 	tagRaw := d.Get("tags").(map[string]interface{})
 	if len(tagRaw) > 0 {
-		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := conf.NetworkingV2Client(region)
 		if err != nil {
 			return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
-		taglist := expandResourceTags(tagRaw)
+		taglist := utils.ExpandResourceTags(tagRaw)
 		if tagErr := tags.Create(vpcV2Client, "vpcs", n.ID, taglist).ExtractErr(); tagErr != nil {
 			return diag.Errorf("Error setting tags of VPC %s: %s", n.ID, tagErr)
 		}
@@ -118,8 +122,9 @@ func resourceVirtualPrivateCloudV1Create(ctx context.Context, d *schema.Resource
 }
 
 func resourceVirtualPrivateCloudV1Read(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*Config)
-	vpcClient, err := config.NetworkingV1Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	vpcClient, err := conf.NetworkingV1Client(region)
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine Vpc client: %s", err)
 	}
@@ -139,16 +144,16 @@ func resourceVirtualPrivateCloudV1Read(_ context.Context, d *schema.ResourceData
 	d.Set("cidr", n.CIDR)
 	d.Set("status", n.Status)
 	d.Set("shared", n.EnableSharedSnat)
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	// save tags
-	vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
+	vpcV2Client, err := conf.NetworkingV2Client(region)
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 	}
 	resourceTags, err := tags.Get(vpcV2Client, "vpcs", d.Id()).Extract()
 	if err == nil {
-		tagmap := tagsToMap(resourceTags.Tags)
+		tagmap := utils.TagsToMap(resourceTags.Tags)
 		d.Set("tags", tagmap)
 	} else {
 		log.Printf("[WARN] fetching VPC %s tags failed: %s", d.Id(), err)
@@ -158,8 +163,9 @@ func resourceVirtualPrivateCloudV1Read(_ context.Context, d *schema.ResourceData
 }
 
 func resourceVirtualPrivateCloudV1Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*Config)
-	vpcClient, err := config.NetworkingV1Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	vpcClient, err := conf.NetworkingV1Client(region)
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine Vpc: %s", err)
 	}
@@ -178,12 +184,12 @@ func resourceVirtualPrivateCloudV1Update(ctx context.Context, d *schema.Resource
 
 	//update tags
 	if d.HasChange("tags") {
-		vpcV2Client, err := config.NetworkingV2Client(GetRegion(d, config))
+		vpcV2Client, err := conf.NetworkingV2Client(region)
 		if err != nil {
 			return diag.Errorf("Error creating FlexibleEngine vpc client: %s", err)
 		}
 
-		tagErr := UpdateResourceTags(vpcV2Client, d, "vpcs", d.Id())
+		tagErr := utils.UpdateResourceTags(vpcV2Client, d, "vpcs", d.Id())
 		if tagErr != nil {
 			return diag.Errorf("Error updating tags of VPC %s: %s", d.Id(), tagErr)
 		}
@@ -193,8 +199,9 @@ func resourceVirtualPrivateCloudV1Update(ctx context.Context, d *schema.Resource
 }
 
 func resourceVirtualPrivateCloudV1Delete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*Config)
-	vpcClient, err := config.NetworkingV1Client(GetRegion(d, config))
+	conf := meta.(*config.Config)
+	region := conf.GetRegion(d)
+	vpcClient, err := conf.NetworkingV1Client(region)
 	if err != nil {
 		return diag.Errorf("Error creating FlexibleEngine vpc: %s", err)
 	}

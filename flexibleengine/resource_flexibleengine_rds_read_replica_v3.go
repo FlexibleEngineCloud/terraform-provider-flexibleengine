@@ -5,8 +5,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/common/tags"
 	"github.com/chnsz/golangsdk/openstack/rds/v3/instances"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -301,6 +303,103 @@ func resourceRdsReadReplicaInstanceUpdate(d *schema.ResourceData, meta interface
 	return resourceRdsReadReplicaInstanceRead(d, meta)
 }
 
+func updateRdsInstanceFlavor(d *schema.ResourceData, client *golangsdk.ServiceClient, instanceID string) error {
+	if !d.HasChange("flavor") {
+		return nil
+	}
+
+	resizeFlavor := instances.SpecCode{
+		Speccode: d.Get("flavor").(string),
+	}
+	var resizeFlavorOpts instances.ResizeFlavorOpts
+	resizeFlavorOpts.ResizeFlavor = &resizeFlavor
+
+	_, err := instances.Resize(client, resizeFlavorOpts, instanceID).Extract()
+	if err != nil {
+		return fmt.Errorf("Error updating instance Flavor from result: %s ", err)
+	}
+
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"MODIFYING"},
+		Target:       []string{"ACTIVE"},
+		Refresh:      rdsInstanceStateRefreshFunc(client, instanceID),
+		Timeout:      d.Timeout(schema.TimeoutCreate),
+		Delay:        15 * time.Second,
+		PollInterval: 15 * time.Second,
+	}
+	if _, err = stateConf.WaitForState(); err != nil {
+		return fmt.Errorf("Error waiting for instance (%s) flavor to be Updated: %s ", instanceID, err)
+	}
+	return nil
+}
+
+func resourceRdsInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*Config)
+	client, err := config.RdsV3Client(GetRegion(d, config))
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine RDS client: %s ", err)
+	}
+
+	id := d.Id()
+	log.Printf("[DEBUG] Deleting Instance %s", id)
+	result := instances.Delete(client, id)
+	if result.Err != nil {
+		return result.Err
+	}
+
+	stateConf := &resource.StateChangeConf{
+		Pending:    []string{"ACTIVE"},
+		Target:     []string{"DELETED"},
+		Refresh:    rdsInstanceStateRefreshFunc(client, id),
+		Timeout:    d.Timeout(schema.TimeoutCreate),
+		Delay:      15 * time.Second,
+		MinTimeout: 5 * time.Second,
+	}
+
+	_, err = stateConf.WaitForState()
+	if err != nil {
+		return fmt.Errorf(
+			"Error waiting for rds instance (%s) to be deleted: %s",
+			id, err)
+	}
+
+	log.Printf("[DEBUG] Successfully deleted rds instance %s", id)
+	return nil
+}
+
+func getRdsInstanceByID(client *golangsdk.ServiceClient, instanceID string) (*instances.RdsInstanceResponse, error) {
+	listOpts := instances.ListOpts{
+		Id: instanceID,
+	}
+	pages, err := instances.List(client, listOpts).AllPages()
+	if err != nil {
+		return nil, fmt.Errorf("An error occured while querying rds instance %s: %s", instanceID, err)
+	}
+
+	resp, err := instances.ExtractRdsInstances(pages)
+	if err != nil {
+		return nil, err
+	}
+
+	instanceList := resp.Instances
+	if len(instanceList) == 0 {
+		// return an empty rds instance
+		log.Printf("[WARN] can not find the specified rds instance %s", instanceID)
+		instance := new(instances.RdsInstanceResponse)
+		return instance, nil
+	}
+
+	if len(instanceList) > 1 {
+		return nil, fmt.Errorf("retrieving more than one rds instance by %s", instanceID)
+	}
+	if instanceList[0].Id != instanceID {
+		return nil, fmt.Errorf("the id of rds instance was expected %s, but got %s",
+			instanceID, instanceList[0].Id)
+	}
+
+	return &instanceList[0], nil
+}
+
 func expandAvailabilityZone(resp *instances.RdsInstanceResponse) string {
 	node := resp.Nodes[0]
 	return node.AvailabilityZone
@@ -314,4 +413,47 @@ func expandPrimaryInstanceID(resp *instances.RdsInstanceResponse) (string, error
 		}
 	}
 	return "", fmt.Errorf("Error getting primary instance id for replica %s", resp.Id)
+}
+
+func checkRDSInstanceJobFinish(client *golangsdk.ServiceClient, jobID string, timeout time.Duration) error {
+	stateConf := &resource.StateChangeConf{
+		Pending:      []string{"Running"},
+		Target:       []string{"Completed", "Failed"},
+		Refresh:      rdsInstanceJobRefreshFunc(client, jobID),
+		Timeout:      timeout,
+		Delay:        20 * time.Second,
+		PollInterval: 10 * time.Second,
+	}
+	if _, err := stateConf.WaitForState(); err != nil {
+		return fmt.Errorf("Error waiting for RDS instance (%s) job to be completed: %s ", jobID, err)
+	}
+	return nil
+}
+
+func rdsInstanceJobRefreshFunc(client *golangsdk.ServiceClient, jobID string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		jobOpts := instances.RDSJobOpts{
+			JobID: jobID,
+		}
+		jobList, err := instances.GetRDSJob(client, jobOpts).Extract()
+		if err != nil {
+			return nil, "FOUND ERROR", err
+		}
+
+		return jobList.Job, jobList.Job.Status, nil
+	}
+}
+
+func rdsInstanceStateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		instance, err := getRdsInstanceByID(client, instanceID)
+		if err != nil {
+			return nil, "FOUND ERROR", err
+		}
+		if instance.Id == "" {
+			return instance, "DELETED", nil
+		}
+
+		return instance, instance.Status, nil
+	}
 }
