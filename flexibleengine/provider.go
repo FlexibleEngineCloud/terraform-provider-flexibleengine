@@ -18,6 +18,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/drs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eip"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
@@ -444,6 +445,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
 			"flexibleengine_dds_database_role":         dds.ResourceDatabaseRole(),
 			"flexibleengine_dds_database_user":         dds.ResourceDatabaseUser(),
+			"flexibleengine_dms_kafka_user":            dms.ResourceDmsKafkaUser(),
 			"flexibleengine_drs_job":                   drs.ResourceDrsJob(),
 			"flexibleengine_fgs_dependency":            fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":              fgs.ResourceFgsFunctionV2(),
