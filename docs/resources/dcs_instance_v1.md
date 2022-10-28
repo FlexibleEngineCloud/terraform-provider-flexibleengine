@@ -157,6 +157,10 @@ The following arguments are supported:
 
     Changing this creates a new instance.
 
+* `port` - (Optional) Port customization, which is supported only by Redis 4.0 and Redis 5.0 instances and not by
+  Redis 3.0 and Memcached instances. The values ranges from **1** to **65535**. The default value is **6379**.
+  Changing this creates a new instance.
+
 * `maintain_begin` - (Optional) Indicates the time at which a maintenance time window starts.
     Format: HH:mm:ss.
     The start time and end time of a maintenance time window must indicate the time segment of
