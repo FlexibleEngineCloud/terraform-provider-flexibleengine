@@ -53,12 +53,13 @@ func TestAccDcsInstancesV1_redisV5(t *testing.T) {
 		CheckDestroy: testAccCheckDcsV1InstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDcsV1Instance_basic(randName),
+				Config: testAccDcsV1Instance_redisV5(randName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcsV1InstanceExists(resourceName, instance),
 					resource.TestCheckResourceAttr(resourceName, "name", randName),
 					resource.TestCheckResourceAttr(resourceName, "engine", "Redis"),
 					resource.TestCheckResourceAttr(resourceName, "status", "RUNNING"),
+					resource.TestCheckResourceAttr(resourceName, "port", "9999"),
 				),
 			},
 			{
@@ -222,6 +223,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   vpc_id          = flexibleengine_vpc_v1.vpc_1.id
   network_id      = flexibleengine_vpc_subnet_v1.subnet_1.id
   available_zones = ["eu-west-0a", "eu-west-0c"]
+  port            = "9999"
 
   save_days   = 1
   backup_type = "manual"
