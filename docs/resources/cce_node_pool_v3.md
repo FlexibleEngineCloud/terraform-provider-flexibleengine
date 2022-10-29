@@ -21,7 +21,7 @@ resource "flexibleengine_cce_node_pool_v3" "node_pool" {
   flavor_id                = "s3.large.4"
   availability_zone        = var.availability_zone
   key_pair                 = var.keypair
-  scall_enable             = true
+  scale_enable             = true
   min_node_count           = 1
   max_node_count           = 10
   scale_down_cooldown_time = 100
@@ -78,7 +78,7 @@ The following arguments are supported:
 * `postinstall` - (Optional, String, ForceNew) Script required after the installation. The input value can be
     a Base64 encoded string or not. Changing this parameter will create a new resource.
 
-* `scall_enable` - (Optional, Bool) Whether to enable auto scaling. If Autoscaler is enabled, install the autoscaler
+* `scale_enable` - (Optional, Bool) Whether to enable auto scaling. If Autoscaler is enabled, install the autoscaler
     add-on to use the auto scaling feature.
 
 * `min_node_count` - (Optional, Int) Minimum number of nodes allowed if auto scaling is enabled.

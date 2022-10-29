@@ -218,9 +218,15 @@ func resourceCCENodePool() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"scale_enable": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 			"scall_enable": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"min_node_count": {
 				Type:     schema.TypeInt,
@@ -314,7 +320,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				UserTags:    resourceCCENodeUserTags(d),
 			},
 			Autoscaling: nodepools.AutoscalingSpec{
-				Enable:                d.Get("scall_enable").(bool),
+				Enable:                d.Get("scale_enable").(bool) || d.Get("scall_enable").(bool),
 				MinNodeCount:          d.Get("min_node_count").(int),
 				MaxNodeCount:          d.Get("max_node_count").(int),
 				ScaleDownCooldownTime: d.Get("scale_down_cooldown_time").(int),
@@ -390,6 +396,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("billing_mode", s.Spec.NodeTemplate.BillingMode),
 		d.Set("key_pair", s.Spec.NodeTemplate.Login.SshKey),
 		d.Set("initial_node_count", s.Spec.InitialNodeCount),
+		d.Set("scale_enable", s.Spec.Autoscaling.Enable),
 		d.Set("scall_enable", s.Spec.Autoscaling.Enable),
 		d.Set("min_node_count", s.Spec.Autoscaling.MinNodeCount),
 		d.Set("max_node_count", s.Spec.Autoscaling.MaxNodeCount),
@@ -450,7 +457,7 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 		Spec: nodepools.UpdateSpec{
 			InitialNodeCount: &initialNodeCount,
 			Autoscaling: nodepools.AutoscalingSpec{
-				Enable:                d.Get("scall_enable").(bool),
+				Enable:                d.Get("scale_enable").(bool) || d.Get("scall_enable").(bool),
 				MinNodeCount:          d.Get("min_node_count").(int),
 				MaxNodeCount:          d.Get("max_node_count").(int),
 				ScaleDownCooldownTime: d.Get("scale_down_cooldown_time").(int),
