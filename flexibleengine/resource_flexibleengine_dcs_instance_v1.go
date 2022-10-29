@@ -140,6 +140,12 @@ func resourceDcsInstanceV1() *schema.Resource {
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
 			},
+			"port": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
 			"vpc_name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -154,10 +160,6 @@ func resourceDcsInstanceV1() *schema.Resource {
 			},
 			"ip": {
 				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"port": {
-				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"resource_spec_code": {
@@ -278,6 +280,7 @@ func resourceDcsInstancesV1Create(d *schema.ResourceData, meta interface{}) erro
 		AvailableZones:   getAllAvailableZones(d),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
+		Port:             d.Get("port").(int),
 	}
 
 	product_id, product_ok := d.GetOk("product_id")
