@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 1.34.0 (October 29, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_tms_tags` [GH-822]
+  - `flexibleengine_rds_database_privilege` [GH-823]
+  - `flexibleengine_dds_database_user` [GH-827]
+  - `flexibleengine_dds_database_role` [GH-827]
+  - `flexibleengine_dms_kafka_user` [GH-829]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cce_cluster_v3`: support binding or unbinding EIP without rebuild [GH-818]
+* `resource/flexibleengine_dcs_instance_v1`: support port customization [GH-830]
+* `resource/flexibleengine_dms_kafka_instance`: support enable_auto_topic in kafka instance [GH-832]
+* `data/flexibleengine_dcs_product_v1`: support more filter parameters [GH-824]
+* `data/flexibleengine_rds_flavors_v3`: support filtering flavors by group_type [GH-825]
+
 ## 1.33.0 (September 30, 2022)
 
 FEATURES:
