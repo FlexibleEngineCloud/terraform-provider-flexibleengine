@@ -30,7 +30,7 @@ func TestAccCCENodePool_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodePoolExists(resourceName, clusterName, &nodePool),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
-					resource.TestCheckResourceAttr(resourceName, "scall_enable", "false"),
+					resource.TestCheckResourceAttr(resourceName, "scale_enable", "false"),
 					resource.TestCheckResourceAttr(resourceName, "initial_node_count", "1"),
 					resource.TestCheckResourceAttr(resourceName, "min_node_count", "0"),
 					resource.TestCheckResourceAttr(resourceName, "max_node_count", "0"),
@@ -47,7 +47,7 @@ func TestAccCCENodePool_basic(t *testing.T) {
 				Config: testAccCCENodePool_update(rName, updateName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", updateName),
-					resource.TestCheckResourceAttr(resourceName, "scall_enable", "true"),
+					resource.TestCheckResourceAttr(resourceName, "scale_enable", "true"),
 					resource.TestCheckResourceAttr(resourceName, "initial_node_count", "2"),
 					resource.TestCheckResourceAttr(resourceName, "min_node_count", "2"),
 					resource.TestCheckResourceAttr(resourceName, "max_node_count", "9"),
@@ -157,6 +157,8 @@ func testAccCheckCCENodePoolExists(n string, cluster string, nodePool *nodepools
 
 func testAccCCENodePool_Base(rName string) string {
 	return fmt.Sprintf(`
+%s
+
 data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_compute_keypair_v2" "test" {
@@ -166,13 +168,15 @@ resource "flexibleengine_compute_keypair_v2" "test" {
 
 resource "flexibleengine_cce_cluster_v3" "test" {
   name                   = "%s"
+  description            = "a description"
   cluster_type           = "VirtualMachine"
+  cluster_version        = "v1.17.9-r0"
   flavor_id              = "cce.s1.small"
-  vpc_id                 = "%s"
-  subnet_id              = "%s"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
   container_network_type = "overlay_l2"
 }
-`, rName, rName, OS_VPC_ID, OS_NETWORK_ID)
+`, testAccCCEClusterV3_Base(rName), rName, rName)
 }
 
 func testAccCCENodePool_basic(rName string) string {
@@ -180,20 +184,20 @@ func testAccCCENodePool_basic(rName string) string {
 %s
 
 resource "flexibleengine_cce_node_pool_v3" "test" {
-  cluster_id         = flexibleengine_cce_cluster_v3.test.id
-  name               = "%s"
-  os                 = "EulerOS 2.5"
-  flavor_id          = "s3.large.2"
-  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
-  key_pair           = flexibleengine_compute_keypair_v2.test.name
-  scall_enable       = false
-  initial_node_count = 1
-  min_node_count     = 0
-  max_node_count     = 0
-  max_pods           = 200
+  cluster_id               = flexibleengine_cce_cluster_v3.test.id
+  name                     = "%s"
+  os                       = "EulerOS 2.5"
+  flavor_id                = "s3.large.2"
+  availability_zone        = data.flexibleengine_availability_zones.test.names[0]
+  key_pair                 = flexibleengine_compute_keypair_v2.test.name
+  scale_enable             = false
+  initial_node_count       = 1
+  min_node_count           = 0
+  max_node_count           = 0
+  max_pods                 = 200
   scale_down_cooldown_time = 0
-  priority          = 0
-  type              = "vm"
+  priority                 = 0
+  type                     = "vm"
 
   root_volume {
     size       = 40
@@ -225,19 +229,20 @@ func testAccCCENodePool_update(rName, updateName string) string {
 %s
 
 resource "flexibleengine_cce_node_pool_v3" "test" {
-  cluster_id         = flexibleengine_cce_cluster_v3.test.id
-  name               = "%s"
-  os                 = "EulerOS 2.5"
-  flavor_id          = "s3.large.2"
-  availability_zone  = data.flexibleengine_availability_zones.test.names[0]
-  key_pair           = flexibleengine_compute_keypair_v2.test.name
-  scall_enable       = true
-  initial_node_count = 2
-  min_node_count     = 2
-  max_node_count     = 9
+  cluster_id               = flexibleengine_cce_cluster_v3.test.id
+  name                     = "%s"
+  os                       = "EulerOS 2.5"
+  flavor_id                = "s3.large.2"
+  availability_zone        = data.flexibleengine_availability_zones.test.names[0]
+  key_pair                 = flexibleengine_compute_keypair_v2.test.name
+  scale_enable             = true
+  initial_node_count       = 2
+  min_node_count           = 2
+  max_node_count           = 9
+  max_pods                 = 200
   scale_down_cooldown_time = 100
-  priority          = 1
-  type              = "vm"
+  priority                 = 1
+  type                     = "vm"
 
   root_volume {
     size       = 40
