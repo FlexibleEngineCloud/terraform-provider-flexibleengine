@@ -121,6 +121,10 @@ The following arguments are supported:
 
   -> **NOTE:**  The start time and end time of a maintenance time window must be set in pairs.
 
+* `enable_auto_topic` - (Optional, Bool, ForceNew) Specifies whether to enable automatic topic creation. If automatic
+  topic creation is enabled, a topic will be automatically created with 3 partitions and 3 replicas when a message is
+  produced to or consumed from a topic that does not exist. Changing this creates a new instance resource.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
