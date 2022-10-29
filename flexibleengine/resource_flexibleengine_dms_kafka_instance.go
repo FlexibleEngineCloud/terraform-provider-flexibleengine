@@ -148,6 +148,11 @@ func resourceDmsKafkaInstances() *schema.Resource {
 				Computed:     true,
 				RequiredWith: []string{"maintain_begin"},
 			},
+			"enable_auto_topic": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+			},
 
 			"status": {
 				Type:     schema.TypeString,
@@ -215,9 +220,15 @@ func resourceDmsKafkaInstances() *schema.Resource {
 
 func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	dmsV1Client, err := config.DmsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	dmsV1Client, err := config.DmsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine DMS v1 client: %s", err)
+	}
+
+	dmsV2Client, err := config.DmsV2Client(region)
+	if err != nil {
+		return fmt.Errorf("Error creating FlexibleEngine DMS v2 client: %s", err)
 	}
 
 	sslEnable := false
@@ -225,24 +236,24 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 		sslEnable = true
 	}
 	createOpts := &instances.CreateOps{
-		Engine:          "kafka",
-		EngineVersion:   d.Get("engine_version").(string),
-		Name:            d.Get("name").(string),
-		Description:     d.Get("description").(string),
-		Specification:   d.Get("bandwidth").(string),
-		ProductID:       d.Get("product_id").(string),
-		StorageSpace:    d.Get("storage_space").(int),
-		StorageSpecCode: d.Get("storage_spec_code").(string),
-		VPCID:           d.Get("vpc_id").(string),
-		SubnetID:        d.Get("network_id").(string),
-		SecurityGroupID: d.Get("security_group_id").(string),
-		AvailableZones:  utils.ExpandToStringList(d.Get("availability_zones").([]interface{})),
-		MaintainBegin:   d.Get("maintain_begin").(string),
-		MaintainEnd:     d.Get("maintain_end").(string),
-
+		Engine:           "kafka",
+		EngineVersion:    d.Get("engine_version").(string),
+		Name:             d.Get("name").(string),
+		Description:      d.Get("description").(string),
+		Specification:    d.Get("bandwidth").(string),
+		ProductID:        d.Get("product_id").(string),
+		StorageSpace:     d.Get("storage_space").(int),
+		StorageSpecCode:  d.Get("storage_spec_code").(string),
+		VPCID:            d.Get("vpc_id").(string),
+		SubnetID:         d.Get("network_id").(string),
+		SecurityGroupID:  d.Get("security_group_id").(string),
+		AvailableZones:   utils.ExpandToStringList(d.Get("availability_zones").([]interface{})),
+		MaintainBegin:    d.Get("maintain_begin").(string),
+		MaintainEnd:      d.Get("maintain_end").(string),
 		AccessUser:       d.Get("access_user").(string),
 		KafkaManagerUser: d.Get("manager_user").(string),
 		SslEnable:        sslEnable,
+		EnableAutoTopic:  d.Get("enable_auto_topic").(bool),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -259,7 +270,7 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 	stateConf := &resource.StateChangeConf{
 		Pending:      []string{"CREATING"},
 		Target:       []string{"RUNNING"},
-		Refresh:      dmsKafkaInstancesStateRefreshFunc(dmsV1Client, v.InstanceID),
+		Refresh:      dmsKafkaInstancesStateRefreshFunc(dmsV2Client, v.InstanceID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        120 * time.Second,
 		PollInterval: 15 * time.Second,
@@ -418,7 +429,7 @@ func resourceDmsKafkaInstancesDelete(d *schema.ResourceData, meta interface{}) e
 
 func dmsKafkaInstancesStateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
-		v, err := instances.Get(client, instanceID).Extract()
+		v, err := dmsv2.Get(client, instanceID).Extract()
 		if err != nil {
 			if _, ok := err.(golangsdk.ErrDefault404); ok {
 				return v, "DELETED", nil
