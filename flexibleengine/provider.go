@@ -36,6 +36,7 @@ import (
 )
 
 const (
+	mainRegion       = "eu-west-0"
 	defaultCloud     = "prod-cloud-ocb.orange-business.com"
 	terraformVersion = "0.12+compatible"
 )
@@ -554,7 +555,7 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	if v, ok := d.GetOk("auth_url"); ok {
 		config.IdentityEndpoint = v.(string)
 	} else {
-		config.IdentityEndpoint = fmt.Sprintf("https://iam.%s.%s/v3", region, cloud)
+		config.IdentityEndpoint = fmt.Sprintf("https://iam.%s.%s/v3", mainRegion, cloud)
 	}
 
 	config.DomainID = d.Get("domain_id").(string)
