@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Check gofmt
 echo "==> Checking for unchecked errors..."
