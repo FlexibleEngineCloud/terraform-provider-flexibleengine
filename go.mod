@@ -69,3 +69,5 @@ require (
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/huaweicloud/terraform-provider-huaweicloud v1.42.1 => github.com/huaweicloud/terraform-provider-huaweicloud v1.42.1-0.20221121013909-45591bc741ea
