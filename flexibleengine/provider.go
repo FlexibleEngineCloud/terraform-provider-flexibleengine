@@ -25,6 +25,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/lb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/modelarts"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
@@ -319,7 +320,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_kms_key_v1":                         resourceKmsKeyV1(),
 			"flexibleengine_lb_loadbalancer_v2":                 resourceLoadBalancerV2(),
 			"flexibleengine_lb_listener_v2":                     resourceListenerV2(),
-			"flexibleengine_lb_pool_v2":                         resourcePoolV2(),
 			"flexibleengine_lb_member_v2":                       resourceMemberV2(),
 			"flexibleengine_lb_monitor_v2":                      resourceMonitorV2(),
 			"flexibleengine_lb_whitelist_v2":                    resourceWhitelistV2(),
@@ -475,6 +475,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),           // v1.29.0
 			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
 			"flexibleengine_vpc_subnet_v1":   vpc.ResourceVpcSubnetV1(),           // v1.31.0
+			"flexibleengine_lb_pool_v2":      lb.ResourcePoolV2(),                 // v1.35.0
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
