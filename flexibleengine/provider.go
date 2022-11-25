@@ -279,6 +279,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
 			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
+			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
@@ -462,6 +463,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_tms_tags": tms.ResourceTmsTag(),
 
 			"flexibleengine_vpc_eip_associate": eip.ResourceEIPAssociate(),
+			"flexibleengine_vpc_route_table":   vpc.ResourceVPCRouteTable(),
+			"flexibleengine_vpc_route":         vpc.ResourceVPCRouteTableRoute(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),

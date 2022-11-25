@@ -15,7 +15,7 @@ func TestAccFlexibleEngineVpcRouteV2_basic(t *testing.T) {
 	resourceName := "flexibleengine_vpc_route_v2.route_1"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckFlexibleEngineRouteV2Destroy,
 		Steps: []resource.TestStep{

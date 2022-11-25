@@ -1,8 +1,10 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 ---
 
 # Data Source: flexibleengine_vpc_route_ids_v2
+
+!> **WARNING:** It has been deprecated, use `flexibleengine_vpc_route_table` to get the route details.
 
 `flexibleengine_vpc_route_ids_v2` provides a list of route ids for a vpc_id.
 
@@ -34,4 +36,3 @@ output "route_nexthop" {
 ## Attributes Reference
 
 * `ids` - A list of all the route ids found. This data source will fail if none are found.
-

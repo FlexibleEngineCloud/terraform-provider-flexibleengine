@@ -1,8 +1,10 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 ---
 
 # Data Source: flexibleengine_vpc_route_v2
+
+!> **WARNING:** It has been deprecated, use `flexibleengine_vpc_route_table` to get the route details.
 
 `flexibleengine_vpc_route_v2` provides details about a specific VPC route.
 
