@@ -20,6 +20,7 @@ var (
 	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
 	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
 	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
+	OS_PROJECT_ID             = os.Getenv("OS_PROJECT_ID")
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")
 	OS_NETWORK_ID = os.Getenv("OS_NETWORK_ID")
@@ -30,9 +31,10 @@ var (
 	OS_KEYPAIR_NAME = os.Getenv("OS_KEYPAIR_NAME")
 	OS_FGS_BUCKET   = os.Getenv("OS_FGS_BUCKET")
 
-	OS_DEST_REGION         = os.Getenv("OS_DEST_REGION")
-	OS_DEST_PROJECT_ID     = os.Getenv("OS_DEST_PROJECT_ID")
-	OS_SWR_SHARING_ACCOUNT = os.Getenv("OS_SWR_SHARING_ACCOUNT")
+	OS_DEST_REGION            = os.Getenv("OS_DEST_REGION")
+	OS_DEST_PROJECT_ID        = os.Getenv("OS_DEST_PROJECT_ID")
+	OS_SWR_SHARING_ACCOUNT    = os.Getenv("OS_SWR_SHARING_ACCOUNT")
+	OS_DLI_FLINK_JAR_OBS_PATH = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -105,5 +107,11 @@ func testAccPreCheckSWRDomian(t *testing.T) {
 	if OS_SWR_SHARING_ACCOUNT == "" {
 		t.Skip("OS_SWR_SHARING_ACCOUNT must be set for swr domian tests, " +
 			"the value of OS_SWR_SHARING_ACCOUNT should be another IAM user name")
+	}
+}
+
+func testAccPreCheckDliJarPath(t *testing.T) {
+	if OS_DLI_FLINK_JAR_OBS_PATH == "" {
+		t.Skip("OS_DLI_FLINK_JAR_OBS_PATH must be set for DLI Flink Jar job acceptance tests.")
 	}
 }
