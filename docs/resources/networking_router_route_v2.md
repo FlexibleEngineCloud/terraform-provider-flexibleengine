@@ -1,8 +1,10 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_networking_router_route_v2
+
+!> **WARNING:** It has been deprecated, use `flexibleengine_vpc_route` instead.
 
 Creates a routing entry on a FlexibleEngine V2 router.
 
