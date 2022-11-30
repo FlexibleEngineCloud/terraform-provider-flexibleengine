@@ -16,6 +16,8 @@ func resourceNetworkingRouterRouteV2() *schema.Resource {
 		Read:   resourceNetworkingRouterRouteV2Read,
 		Delete: resourceNetworkingRouterRouteV2Delete,
 
+		DeprecationMessage: "It has been deprecated, using flexibleengine_vpc_route instead",
+
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,

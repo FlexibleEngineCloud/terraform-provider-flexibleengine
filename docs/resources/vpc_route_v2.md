@@ -1,10 +1,11 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_vpc_route_v2
 
 !> **WARNING:** It has been deprecated, use `flexibleengine_vpc_route` instead.
+
 Provides a resource to create a route.
 
 ## Example Usage
