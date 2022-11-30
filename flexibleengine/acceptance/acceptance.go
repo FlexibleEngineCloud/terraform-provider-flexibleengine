@@ -35,6 +35,7 @@ var (
 	OS_DEST_PROJECT_ID        = os.Getenv("OS_DEST_PROJECT_ID")
 	OS_SWR_SHARING_ACCOUNT    = os.Getenv("OS_SWR_SHARING_ACCOUNT")
 	OS_DLI_FLINK_JAR_OBS_PATH = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
+	OS_WAF_ENABLE_FLAG        = os.Getenv("OS_WAF_ENABLE_FLAG")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -113,5 +114,11 @@ func testAccPreCheckSWRDomian(t *testing.T) {
 func testAccPreCheckDliJarPath(t *testing.T) {
 	if OS_DLI_FLINK_JAR_OBS_PATH == "" {
 		t.Skip("OS_DLI_FLINK_JAR_OBS_PATH must be set for DLI Flink Jar job acceptance tests.")
+	}
+}
+
+func testAccPrecheckWafInstance(t *testing.T) {
+	if OS_WAF_ENABLE_FLAG == "" {
+		t.Skip("Jump the WAF acceptance tests.")
 	}
 }
