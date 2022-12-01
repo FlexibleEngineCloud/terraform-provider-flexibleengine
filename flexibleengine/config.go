@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/chnsz/golangsdk"
@@ -307,6 +308,16 @@ func drsV2Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
 		Region:       determineRegion(c, region),
 		Availability: PublicType,
 	})
+}
+
+// wafDedicatedv1Client is for dediacted waf certificate and policy
+func wafDedicatedv1Client(c *Config, region string) (*golangsdk.ServiceClient, error) {
+	wafClient, err := c.WafV1Client(region)
+	if err != nil {
+		return nil, err
+	}
+	wafClient.ResourceBase = strings.Replace(wafClient.ResourceBase, "waf", "premium-waf", 1)
+	return wafClient, nil
 }
 
 func determineRegion(c *Config, region string) string {
