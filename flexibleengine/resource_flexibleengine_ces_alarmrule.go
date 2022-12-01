@@ -137,7 +137,7 @@ func resourceAlarmRule() *schema.Resource {
 						},
 
 						"value": {
-							Type:     schema.TypeInt,
+							Type:     schema.TypeFloat,
 							Required: true,
 						},
 
