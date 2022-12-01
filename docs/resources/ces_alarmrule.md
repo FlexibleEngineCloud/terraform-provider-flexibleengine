@@ -112,7 +112,7 @@ The `condition` block supports:
 * `comparison_operator` - (Required, String) Specifies the comparison condition of alarm
     thresholds. The value can be >, =, <, >=, or <=.
 
-* `value` - (Required, String) Specifies the alarm threshold. The value ranges from
+* `value` - (Required, Float) Specifies the alarm threshold. The value ranges from
     0 to Number of 1.7976931348623157e+308.
 
 * `count` - (Required, Int) Specifies the number of consecutive occurrence times.

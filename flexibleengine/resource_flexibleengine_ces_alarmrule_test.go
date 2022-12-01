@@ -122,7 +122,7 @@ resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
     period              = 300
     filter              = "average"
     comparison_operator = ">"
-    value               = 6
+    value               = 6.5
     unit                = "B/s"
     count               = 1
   } 
@@ -166,7 +166,7 @@ resource "flexibleengine_ces_alarmrule" "alarmrule_1" {
     period              = 300
     filter              = "average"
     comparison_operator = ">"
-    value               = 6
+    value               = 6.5
     unit                = "B/s"
     count               = 1
   }
