@@ -143,6 +143,8 @@ github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.5 h1:la7+RTtSOGd7vl0u0mFueglKw
 github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.5/go.mod h1:QpZ96CRqyqd5fEODVmnzDNp3IWi5W95BFmWz1nfkq+s=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.43.0 h1:rzfPKecWovLzq58KZhhB17uMjc+6w4fbvEtrVF3uDyA=
 github.com/huaweicloud/terraform-provider-huaweicloud v1.43.0/go.mod h1:WZFdVKSDwdiprY4f6x9st4GoNN0gzluCX9V1XjF/ka0=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.43.1-0.20221201115952-e73b6e37c318 h1:GI/4PtD5ajXeyPsYj6SzgxDdORr/PMkw4NS44k5Vxi0=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.43.1-0.20221201115952-e73b6e37c318/go.mod h1:WZFdVKSDwdiprY4f6x9st4GoNN0gzluCX9V1XjF/ka0=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
