@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## 1.35.0 (December 1, 2022)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_vpc_route_table` [GH-843]
+  - `flexibleengine_vpc_route` [GH-843]
+  - `flexibleengine_dli_database` [GH-844]
+  - `flexibleengine_dli_table` [GH-844]
+  - `flexibleengine_dli_package` [GH-844]
+  - `flexibleengine_dli_flinksql_job` [GH-844]
+  - `flexibleengine_dli_spark_job` [GH-844]
+  - `flexibleengine_waf_dedicated_instance` [GH-846]
+  - `flexibleengine_waf_dedicated_domain` [GH-846]
+  - `flexibleengine_waf_dedicated_certificate` [GH-849]
+  - `flexibleengine_waf_dedicated_policy` [GH-849]
+  - `flexibleengine_lb_pool_v3` [GH-848]
+  - `flexibleengine_lb_member_v3` [GH-848]
+  - `flexibleengine_lb_monitor_v3` [GH-848]
+
+
+* **New Data Source:**
+  - `flexibleengine_vpc_route_table` [GH-843]
+  - `flexibleengine_waf_dedicated_instances` [GH-846]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_lb_pool_v2`: support setting persistence timeout [GH-821]
+* `resource/flexibleengine_lb_listener_v3`: support advanced forwarding [GH-802]
+
+BUG FIXES:
+
+* `provider`: auth_url should not use region var [GH-831]
+
+DEPRECATED:
+
+* `flexibleengine_vpc_route_v2` [GH-845]
+* `flexibleengine_networking_router_route_v2` [GH-845]
+
 ## 1.34.0 (October 29, 2022)
 
 FEATURES:
