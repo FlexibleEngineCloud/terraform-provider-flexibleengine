@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
 # flexibleengine_lb_listener_v3
@@ -85,6 +85,9 @@ The following arguments are supported:
 
 * `response_timeout` - (Optional, Int) Specifies the response timeout for the listener. Value range: 1 to 300.
   This parameter is valid when protocol is set to *HTTP* or *HTTPS*.
+
+* `advanced_forwarding_enabled` - (Optional, Bool) Specifies whether to enable advanced forwarding.
+  If advanced forwarding is enabled, more flexible forwarding policies and rules are supported.
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the listener.
 

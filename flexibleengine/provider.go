@@ -489,6 +489,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
 			"flexibleengine_vpc_subnet_v1":   vpc.ResourceVpcSubnetV1(),           // v1.31.0
 			"flexibleengine_lb_pool_v2":      lb.ResourcePoolV2(),                 // v1.35.0
+			"flexibleengine_lb_pool_v3":      elb.ResourcePoolV3(),                // v1.35.0
+			"flexibleengine_lb_monitor_v3":   elb.ResourceMonitorV3(),             // v1.35.0
+			"flexibleengine_lb_member_v3":    elb.ResourceMemberV3(),              // v1.35.0
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
