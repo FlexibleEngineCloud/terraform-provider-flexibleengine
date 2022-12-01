@@ -272,7 +272,7 @@ func getAlarmCondition(d *schema.ResourceData) alarmrule.ConditionOpts {
 		opts.Period = condition["period"].(int)
 		opts.Filter = condition["filter"].(string)
 		opts.ComparisonOperator = condition["comparison_operator"].(string)
-		opts.Value = condition["value"].(int)
+		opts.Value = condition["value"].(float64)
 		opts.Unit = condition["unit"].(string)
 		opts.Count = condition["count"].(int)
 	}

@@ -34,6 +34,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/tms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/waf"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -280,6 +281,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
 			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
 
+			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
+
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
 
@@ -470,6 +473,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_route_table":   vpc.ResourceVPCRouteTable(),
 			"flexibleengine_vpc_route":         vpc.ResourceVPCRouteTableRoute(),
 
+			"flexibleengine_waf_dedicated_instance": ResourceWafDedicatedInstance(),
+			"flexibleengine_waf_dedicated_domain":   waf.ResourceWafDedicatedDomainV1(),
+
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
 			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
@@ -611,6 +617,9 @@ func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, 
 	}
 	if _, ok := endpoints["tms"]; !ok {
 		endpoints["tms"] = fmt.Sprintf("https://tms.%s/", config.Cloud)
+	}
+	if _, ok := endpoints["waf-dedicated"]; !ok {
+		endpoints["waf-dedicated"] = fmt.Sprintf("https://premium-waf.%s.%s/", region, config.Cloud)
 	}
 
 	config.Endpoints = endpoints
