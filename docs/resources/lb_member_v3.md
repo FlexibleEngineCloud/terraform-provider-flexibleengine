@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
 # flexibleengine_lb_member_v3
@@ -58,14 +58,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `update` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
 ELB member can be imported using the pool ID and member ID separated by a slash, e.g.
 
 ```
-$ terraform import flexibleengine_lb_member_v3.member_1 e0bd694a-abbe-450e-b329-0931fd1cc5eb
+$ terraform import flexibleengine_lb_member_v3.member_1 5c20fdad-7288-11eb-b817-0255ac10158b/e0bd694a-abbe-450e-b329-0931fd1cc5eb
 ```

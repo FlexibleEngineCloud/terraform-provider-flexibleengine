@@ -107,6 +107,13 @@ resource "flexibleengine_lb_listener_v3" "test" {
   request_timeout  = 60
   response_timeout = 60
 }
+
+resource "flexibleengine_lb_pool_v3" "test" {
+  name        = "%[1]s"
+  protocol    = "HTTP"
+  lb_method   = "ROUND_ROBIN"
+  listener_id = flexibleengine_lb_listener_v3.test.id
+}
 `, rName, OS_AVAILABILITY_ZONE)
 }
 

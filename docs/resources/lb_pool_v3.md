@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
 # flexibleengine_lb_pool_v3
@@ -14,7 +14,7 @@ variable "listener_id" {}
 resource "flexibleengine_lb_pool_v3" "pool_1" {
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
-  listener_id = "listener_id"
+  listener_id = var.listener_id
   persistence {
     type        = "HTTP_COOKIE"
     cookie_name = "testCookie"
@@ -64,6 +64,11 @@ The `persistence` argument supports:
 * `cookie_name` - (Optional, String, ForceNew) Specifies the name of the cookie if persistence mode is set
   appropriately. Required if `type = APP_COOKIE`.
 
+* `timeout` - (Optional, Int, ForceNew) Specifies the sticky session timeout duration in minutes. This parameter is
+  invalid when type is set to APP_COOKIE. The value range varies depending on the protocol of the backend server group:
+  + When the protocol of the backend server group is TCP or UDP, the value ranges from 1 to 60.
+  + When the protocol of the backend server group is HTTP or HTTPS, the value ranges from 1 to 1440.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes is exported:
@@ -74,9 +79,9 @@ In addition to all arguments above, the following attributes is exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `update` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

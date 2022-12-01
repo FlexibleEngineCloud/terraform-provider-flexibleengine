@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
 # flexibleengine_lb_monitor_v3

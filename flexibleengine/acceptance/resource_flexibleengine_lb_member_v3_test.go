@@ -2,16 +2,15 @@ package acceptance
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/chnsz/golangsdk/openstack/elb/v3/pools"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/fmtp"
 )
 
 func getMemberResourceFunc(conf *config.Config, state *terraform.ResourceState) (interface{}, error) {
@@ -109,17 +108,17 @@ func testAccCheckElbV3MemberExists(n string, member *pools.Member) resource.Test
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmtp.Errorf("Not found: %s", n)
+			return fmt.Errorf("not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmtp.Errorf("No ID is set")
+			return fmt.Errorf("no ID is set")
 		}
 
 		config := acceptance.TestAccProvider.Meta().(*config.Config)
 		elbClient, err := config.ElbV3Client(OS_REGION_NAME)
 		if err != nil {
-			return fmtp.Errorf("Error creating ELB v3 client: %s", err)
+			return fmt.Errorf("error creating ELB v3 client: %s", err)
 		}
 
 		poolId := rs.Primary.Attributes["pool_id"]
@@ -129,7 +128,7 @@ func testAccCheckElbV3MemberExists(n string, member *pools.Member) resource.Test
 		}
 
 		if found.ID != rs.Primary.ID {
-			return fmtp.Errorf("Member not found")
+			return fmt.Errorf("member not found")
 		}
 
 		*member = *found
