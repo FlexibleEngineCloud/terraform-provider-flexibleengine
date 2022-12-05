@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Check gofmt
 echo "==> Checking for unchecked errors..."
@@ -14,7 +14,7 @@ err_files=$(errcheck -ignoretests \
                      -ignore 'io:Close|Write' \
                      $(go list ./...| grep -v /vendor/))
 
-if [[ -n ${err_files} ]]; then
+if [[ -n "${err_files}" ]]; then
     echo 'Unchecked errors found in the following places:'
     echo "${err_files}"
     echo "Please handle returned errors. You can check directly with \`make errcheck\`"
