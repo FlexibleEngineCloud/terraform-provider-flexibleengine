@@ -54,7 +54,7 @@ func resourceNatGatewayV2() *schema.Resource {
 				Computed:     true,
 				ExactlyOneOf: []string{"router_id"},
 			},
-			"subnet_id": {
+			"network_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
@@ -83,7 +83,7 @@ func resourceNatGatewayV2() *schema.Resource {
 				Type:       schema.TypeString,
 				Optional:   true,
 				ForceNew:   true,
-				Deprecated: "use subnet_id instead",
+				Deprecated: "use network_id instead",
 			},
 			"router_id": {
 				Type:       schema.TypeString,
@@ -108,7 +108,7 @@ func resourceNatGatewayV2Create(d *schema.ResourceData, meta interface{}) error 
 	} else {
 		vpcID = d.Get("router_id").(string)
 	}
-	if v2, ok := d.GetOk("subnet_id"); ok {
+	if v2, ok := d.GetOk("network_id"); ok {
 		subnetID = v2.(string)
 	} else {
 		subnetID = d.Get("internal_network_id").(string)
@@ -165,7 +165,7 @@ func resourceNatGatewayV2Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("description", natGateway.Description)
 	d.Set("spec", natGateway.Spec)
 	d.Set("vpc_id", natGateway.RouterID)
-	d.Set("subnet_id", natGateway.InternalNetworkID)
+	d.Set("network_id", natGateway.InternalNetworkID)
 	d.Set("status", natGateway.Status)
 	d.Set("region", GetRegion(d, config))
 
