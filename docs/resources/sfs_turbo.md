@@ -9,18 +9,33 @@ Provides an Shared File System (SFS) Turbo resource.
 ## Example Usage
 
 ```hcl
-variable "vpc_id" {}
-variable "subnet_id" {}
 variable "secgroup_id" {}
 variable "test_az" {}
+
+resource "flexibleengine_vpc_v1" "vpc1" {
+  name = "vpc1"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "vpcsubnet1" {
+  name       = "vpcsubnet1"
+  cidr       = "192.168.0.0/16"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.vpc1.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+  name        = "sg1"
+  description = "terraform security group for sfs turbo acceptance test"
+}
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo-1" {
   name        = "sfs-turbo-1"
   size        = 500
   share_proto = "NFS"
-  vpc_id      = var.vpc_id
-  subnet_id   = var.subnet_id
-  security_group_id = var.secgroup_id
+  vpc_id      = flexibleengine_vpc_v1.vpc1.id
+  network_id   = flexibleengine_vpc_subnet_v1.vpcsubnet1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   availability_zone = var.test_az
 }
 ```
@@ -44,7 +59,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) Specifies the VPC ID. Changing this will create a new resource.
 
-* `subnet_id` - (Required) Specifies the network ID of the subnet. Changing this will create a new resource.
+* `network_id` - (Required) Specifies the network ID of the subnet. Changing this will create a new resource.
 
 * `security_group_id` - (Required) Specifies the security group ID. Changing this will create a new resource.
 

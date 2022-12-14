@@ -158,7 +158,7 @@ resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
   size        = 500
   share_proto = "NFS"
   vpc_id      = flexibleengine_vpc_v1.test.id
-  subnet_id   = flexibleengine_vpc_subnet_v1.test.id
+  network_id   = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   availability_zone = "%s"
 }
@@ -174,7 +174,7 @@ resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
   size        = 600
   share_proto = "NFS"
   vpc_id      = flexibleengine_vpc_v1.test.id
-  subnet_id   = flexibleengine_vpc_subnet_v1.test.id
+  network_id   = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   availability_zone = "%s"
 }
@@ -195,7 +195,7 @@ resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
   share_proto  = "NFS"
   crypt_key_id = flexibleengine_kms_key_v1.key_1.id
   vpc_id       = flexibleengine_vpc_v1.test.id
-  subnet_id    = flexibleengine_vpc_subnet_v1.test.id
+  network_id    = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   availability_zone = "%s"
 }

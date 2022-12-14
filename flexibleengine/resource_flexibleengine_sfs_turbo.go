@@ -68,7 +68,7 @@ func resourceSFSTurbo() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"subnet_id": {
+			"network_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -117,7 +117,7 @@ func resourceSFSTurboCreate(d *schema.ResourceData, meta interface{}) error {
 		ShareProto:       d.Get("share_proto").(string),
 		ShareType:        d.Get("share_type").(string),
 		VpcID:            d.Get("vpc_id").(string),
-		SubnetID:         d.Get("subnet_id").(string),
+		SubnetID:         d.Get("network_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
 		AvailabilityZone: d.Get("availability_zone").(string),
 	}
@@ -167,7 +167,7 @@ func resourceSFSTurboRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("share_proto", n.ShareProto)
 	d.Set("share_type", n.ShareType)
 	d.Set("vpc_id", n.VpcID)
-	d.Set("subnet_id", n.SubnetID)
+	d.Set("network_id", n.SubnetID)
 	d.Set("security_group_id", n.SecurityGroupID)
 	d.Set("version", n.Version)
 	d.Set("region", GetRegion(d, config))
