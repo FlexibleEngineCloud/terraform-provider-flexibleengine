@@ -120,7 +120,7 @@ The following arguments are supported:
 
 * `auth_url` - (Optional) The Identity authentication URL.
    If omitted, the `OS_AUTH_URL` environment variable is used.
-   The default value is https://iam.{{region}}.prod-cloud-ocb.orange-business.com/v3.
+   The default value is `https://iam.{{region}}.prod-cloud-ocb.orange-business.com/v3`.
 
 * `max_retries` - (Optional) This is the maximum number of times an API
   call is retried, in the case where requests are being throttled or
