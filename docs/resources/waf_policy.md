@@ -22,18 +22,18 @@ The following arguments are supported:
   Only digits, letters, underscores(_), and hyphens(-) are allowed.
 
 * `protection_mode` - (Optional, String) Specifies the protective action after a rule is matched. Valid values are:
-  - *block*: WAF blocks and logs detected attacks.
-  - *log*: WAF logs detected attacks only.
+  + *block*: WAF blocks and logs detected attacks.
+  + *log*: WAF logs detected attacks only.
 
 * `level` - (Optional, Int) Specifies the protection level. Valid values are:
-  - *1*: low
-  - *2*: medium
-  - *3*: high
+  + *1*: low
+  + *2*: medium
+  + *3*: high
 
 * `full_detection` - (Optional, Bool) Specifies the detection mode in Precise Protection. Valid values are:
-  * *true*: full detection, Full detection finishes all threat detections before blocking requests that
+  + *true*: full detection, Full detection finishes all threat detections before blocking requests that
     meet Precise Protection specified conditions.
-  * *false*: instant detection. Instant detection immediately ends threat detection after blocking a request that
+  + *false*: instant detection. Instant detection immediately ends threat detection after blocking a request that
     meets Precise Protection specified conditions.
 
 * `domains` - (Optional, List) An array of domain IDs.

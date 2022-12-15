@@ -55,7 +55,8 @@ The following arguments are supported:
 
 * `server` - (Required, List) Specifies an array of origin web servers. The object structure is documented below.
 
-* `certificate_id` - (Optional, String) Specifies the certificate ID. This parameter is mandatory when `client_protocol` is set to HTTPS.
+* `certificate_id` - (Optional, String) Specifies the certificate ID.
+  This parameter is mandatory when `client_protocol` is set to HTTPS.
 
 * `policy_id` - (Optional, String, ForceNew) Specifies the policy ID associated with the domain.
   If not specified, a new policy will be created automatically. Changing this create a new domain.
@@ -70,10 +71,10 @@ The following arguments are supported:
 
 * `sip_header_list` - (Optional, List) Specifies an array of HTTP request header for identifying the real source IP address.
   This parameter is required only when proxy is set to true.
-  - If `sip_header_name` is *default*, the value is ["X-Forwarded-For"].
-  - If `sip_header_name` is *cloudflare*, the value is ["CF-Connecting-IP", "X-Forwarded-For"].
-  - If `sip_header_name` is *akamai*, the value is ["True-Client-IP"].
-  - If `sip_header_name` is *custom*, you can customize a value.
+  + If `sip_header_name` is *default*, the value is ["X-Forwarded-For"].
+  + If `sip_header_name` is *cloudflare*, the value is ["CF-Connecting-IP", "X-Forwarded-For"].
+  + If `sip_header_name` is *akamai*, the value is ["True-Client-IP"].
+  + If `sip_header_name` is *custom*, you can customize a value.
 
 The `server` block supports:
 
@@ -101,7 +102,9 @@ The following attributes are exported:
 
 * `protect_status` - The WAF mode. -1: bypassed, 0: disabled, 1: enabled.
 
-* `access_status` - Whether a domain name is connected to WAF. 0: The domain name is not connected to WAF, 1: The domain name is connected to WAF.
+* `access_status` - Whether a domain name is connected to WAF.
+  + 0: The domain name is not connected to WAF;
+  + 1: The domain name is connected to WAF.
 
 * `protocol` - The protocol type of the client. The options are HTTP, HTTPS, and HTTP&HTTPS.
 
