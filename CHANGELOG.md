@@ -20,7 +20,6 @@ FEATURES:
   - `flexibleengine_lb_member_v3` [GH-848]
   - `flexibleengine_lb_monitor_v3` [GH-848]
 
-
 * **New Data Source:**
   - `flexibleengine_vpc_route_table` [GH-843]
   - `flexibleengine_waf_dedicated_instances` [GH-846]
@@ -213,6 +212,7 @@ BUG FIXES:
 ## 1.27.0 (January 29, 2022)
 
 FEATURES:
+
 * **New Resource:**
   - `flexibleengine_dms_kafka_instance` [GH-682]
   - `flexibleengine_dms_kafka_topic` [GH-683]
@@ -222,11 +222,13 @@ FEATURES:
   - `flexibleengine_dms_product` [GH-681]
 
 BUG FIXES:
+
 * `resource/flexibleengine_lb_listener_v2`: avoid to request empty body when only update tags [GH-680]
 
 ## 1.26.0 (December 18, 2021)
 
 FEATURES:
+
 * **New Resource:**
   - `flexibleengine_identity_provider` [GH-553]
   - `flexibleengine_identity_provider_conversion` [GH-553]
@@ -234,29 +236,35 @@ FEATURES:
   - `flexibleengine_mrs_cluster_v2` [GH-659]
 
 ENHANCEMENTS:
+
 * `resource/flexibleengine_lb_listener_v2` - support to obtain client IP address [GH-609]
 * `resource/flexibleengine_compute_keypair_v2` - support `private_key_path` for keypair [GH-665]
 * `data/flexibleengine_dcs_product_v1` - support to filter by `cache_mode` [GH-655]
 
 BUG FIXES:
+
 * update endpoint of dnsV2Client [GH-664]
 
 DEPRECATED:
+
 * data/flexibleengine_dcs_az_v1 [GH-655]
 
 ## 1.25.1 (November 30, 2021)
 
 FEATURES:
+
 * **New Data Source:**
   - `flexibleengine_compute_instances` [GH-646]
 
 BUG FIXES:
+
 * `resource/flexibleengine_antiddos_v1`: throw an error when got a 403 response [GH-648]
 * `resource/flexibleengine_cce_node_v3`: extend delay interval to get node ID [GH-653]
 
 ## 1.25.0 (October 28, 2021)
 
 FEATURES:
+
 * **New Resurce:**
   - `flexibleengine_identity_project_v3"` [GH-625]
   - `flexibleengine_mrs_job_v2` [GH-640]
@@ -269,12 +277,14 @@ FEATURES:
 ## 1.24.2 (October 04, 2021)
 
 ENHANCEMENTS:
+
 * `data/flexibleengine_compute_bms_flavors_v2`: support to query an available BMS flavor by vcpus [GH-618]
 * `resource/flexibleengine_compute_instance_v2`: add device_type and disk_bus fields [GH-622]
 
 ## 1.24.1 (September 18, 2021)
 
 FEATURES:
+
 * **New Resurce:**
   - `flexibleengine_cce_addon_v3` [GH-612]
 
@@ -283,11 +293,13 @@ FEATURES:
   - `flexibleengine_compute_flavors_v2` [GH-615]
 
 ENHANCEMENTS:
+
 * `data/flexibleengine_rds_flavors_v3`: Add vcpus and memory arguments to get RDS flavors [GH-616]
 
 ## 1.24.0 (September 10, 2021)
 
 ENHANCEMENTS:
+
 * **provider:** Upgrade to terraform-plugin-sdk v2 [GH-587]
 * **config:** Add validation of domain name [GH-607]
 * `resource/flexibleengine_identity_user_v3`: Add email and phone fields into identity_user_v3 [GH-474]
@@ -295,6 +307,7 @@ ENHANCEMENTS:
 * `resource/flexibleengine_dli_queue`: Support to scale out/in dli queues [GH-600]
 
 BUG FIXES:
+
 * `resource/flexibleengine_as_group_v1`: Support up to six load balancers can be added to an AS group [GH-524]
 * `resource/flexibleengine_vpc_subnet_v1`: Fix subnet does not belong to the VPC error when deleting [GH-595]
 * `resource/flexibleengine_obs_bucket`: Use proxy URL from environment variables by default in obs client [GH-602]
@@ -302,6 +315,7 @@ BUG FIXES:
 ## 1.23.0 (July 27, 2021)
 
 FEATURES:
+
 * **New Resurce:**
   - `flexibleengine_lts_group` ([#583](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/583))
   - `flexibleengine_lts_topic` ([#583](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/583))
@@ -309,25 +323,27 @@ FEATURES:
   - `flexibleengine_dli_queue` ([#588](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/588))
 
 BUG FIXES:
-* `resource/flexibleengine_sfs_file_system_v2`: remove unused `host` attribute ([#420](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/420))
 
+* `resource/flexibleengine_sfs_file_system_v2`: remove unused `host` attribute ([#420](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/420))
 
 ## 1.22.1 (July 9, 2021)
 
 ENHANCEMENTS:
+
 * **provider:** Try to request more times when the API call is return 429 error code ([#527](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/527))
 * **provider:** Set default value for `tenant_name` and `auth_url` ([#569](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/569)))
 * **provider:** Unset *Connection* header when sending API requests ([#577](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/577))
 * `resource/flexibleengine_vpc_eip_v1`: Add tags support ([#564](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/564))
 
 BUG FIXES:
+
 * `resource/flexibleengine_dds_instance_v3`: fix to set port attribute of DDS instance
  ([#571](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/571))
-
 
 ## 1.22.0 (June 28, 2021)
 
 FEATURES:
+
 * **New Resurce:**
   - `flexibleengine_waf_certificate` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
   - `flexibleengine_waf_domain` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
@@ -340,6 +356,7 @@ FEATURES:
   - `flexibleengine_waf_rule_web_tamper_protection` ([#533](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/533))
 
 ENHANCEMENTS:
+
 * **provider:** add max_retries to try more times when an API call is experiencing transient failures ([#566](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/566))
 * `flexibleengine_obs_bucket`: Support default encryption ([#419](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/419))
 * `flexibleengine_obs_bucket`: Support to enable multi-AZ mode ([#505](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/505))
@@ -348,25 +365,29 @@ ENHANCEMENTS:
 * `flexibleengine_rds_instance_v3`: Omit empty if port is not specified ([#550](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/550))
 
 BUG FIXES:
+
 * `flexibleengine_rds_instance_v3`: set RegionProjectIDMap as early as possible in config
  ([#548](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/548))
-
 
 ## 1.21.0 (May 31, 2021)
 
 FEATURES:
+
 * **New Data Source:** `flexibleengine_lb_loadbalancer_v2` ([#476](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/476))
 * **New Resurce:** `flexibleengine_as_lifecycle_hook_v1` ([#525](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/525))
 
 ENHANCEMENTS:
+
 * `flexibleengine_lb_loadbalancer_v2`: Add ability to import ([#538](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/538))
 * `flexibleengine_cce_node_pool_v3`: Support tags and max_pods ([#519](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/519))
 * `flexibleengine_rds_instance_v3`: Add ability to update flavor, volume size and backup_strategy ([#522](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/522))
 
 BUG FIXES:
+
 * `flexibleengine_vpc_subnet_v1`: Allow DNS Nameservers to be cleared ([#544](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/544))
 
 DEPRECATED:
+
 * resource/flexibleengine_rds_instance_v1: ([#542](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/542))
 * data/flexibleengine_rds_flavors_v1: ([#542](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/542))
 
@@ -398,7 +419,6 @@ ENHANCEMENTS:
 * `flexibleengine_obs_bucket`: Add MaxItems in website block ([#491](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/491))
 * Update structure of website document ([#501](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/501))
 
-
 ## 1.19.0 (March 9, 2021)
 
 ENHANCEMENTS:
@@ -415,7 +435,6 @@ BUG FIXES:
 
 * `flexibleengine_vpcep_service`: fix documentation error ([#479](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/479))
 * `flexibleengine_lb_pool_v2`: Update available values of `protocol` ([#487](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/487))
-
 
 ## 1.18.1 (February 8, 2021)
 
@@ -444,7 +463,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * `flexibleengine_compute_instance_v2`: Improve on compute instance to import more attributes ([#459](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/459))
-* `flexibleengine_networking_port_v2`: Support import fixed_ip block ([#435](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/435)) 
+* `flexibleengine_networking_port_v2`: Support import fixed_ip block ([#435](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/435))
 * `flexibleengine_sfs_turbo`: Add encryption on SFS Turbo ([#443](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/433))
 * `flexibleengine_dns_recordset_v2`: Support CAA type ([#450](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/450))
 * `flexibleengine_rds_instance_v3`: Support time_zome ([#457](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/pull/457))
@@ -466,7 +485,6 @@ BUG FIXES:
 * `flexibleengine_sfs_file_system_v2`: Fix output metadata is empty ([#421](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/421))
 * `flexibleengine_cce_node_pool_v3`: Enable to create node pool with 0 nodes ([#429](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/429))
 * `flexibleengine_kms_key_v1`: Fix docs issue ([#452](https://github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/issues/452))
-
 
 ## 1.17.0 (December 18, 2020)
 
