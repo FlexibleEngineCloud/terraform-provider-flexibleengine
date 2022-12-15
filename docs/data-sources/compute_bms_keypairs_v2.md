@@ -6,7 +6,6 @@ subcategory: "Bare Metal Server (BMS)"
 
 `flexibleengine_compute_bms_keypairs_v2` used to query SSH key pairs.
 
-
 ## Example Usage
 
 ```hcl
@@ -26,7 +25,7 @@ The arguments of this data source act as filters for querying the BMSs details.
 
 ## Attributes Reference
 
-All of the argument attributes are also exported as result attributes. 
+All of the argument attributes are also exported as result attributes.
 
 * `public_key` - It gives the information about the public key in the key pair.
 

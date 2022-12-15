@@ -45,7 +45,6 @@ DDS-Community | replica | 4 | 16 | dds.mongodb.s3.xlarge.4.repset
 DDS-Community | replica | 8 | 32 | dds.mongodb.s3.2xlarge.4.repset
 DDS-Community | replica | 16 | 64 | dds.mongodb.s3.4xlarge.4.repset
 
-
 ## Attributes Reference
 
 * `region` - See Argument Reference above.

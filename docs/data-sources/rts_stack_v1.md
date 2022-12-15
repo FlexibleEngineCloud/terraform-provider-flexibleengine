@@ -8,7 +8,6 @@ The FlexibleEngine RTS Stack data source allows access to stack outputs and othe
 
 ## Example Usage
 
-
 ```hcl
 variable "stack_name" { }
 
@@ -18,11 +17,13 @@ data "flexibleengine_rts_stack_v1" "mystack" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `name` - (Required) The name of the stack.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - A unique identifier of the stack.

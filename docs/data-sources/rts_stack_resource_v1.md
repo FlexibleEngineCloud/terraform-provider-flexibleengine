@@ -19,6 +19,7 @@ data "flexibleengine_rts_stack_resource_v1" "stackresource" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `stack_name` - (Required) The unique stack name.
@@ -29,7 +30,6 @@ The following arguments are supported:
 
 * `resource_type` - (Optional) The resource type.
 
-
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
@@ -39,8 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_status` - The status of the resource.
 
 * `resource_status_reason` - The resource operation reason.
- 
+
 * `required_by` - Specifies the resource dependency.
-
-
-

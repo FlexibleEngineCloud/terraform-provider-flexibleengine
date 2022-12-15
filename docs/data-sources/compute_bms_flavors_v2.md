@@ -36,7 +36,7 @@ The arguments of this data source act as filters for querying the BMSs details.
 
 ## Attributes Reference
 
-All of the argument attributes are also exported as result attributes. 
+All of the argument attributes are also exported as result attributes.
 
 * `id` - The BMS flavor id.
 

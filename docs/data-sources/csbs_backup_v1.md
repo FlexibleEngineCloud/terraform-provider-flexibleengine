@@ -8,7 +8,6 @@ The FlexibleEngine CSBS Backup data source allows access of backup resources.
 
 ## Example Usage
 
-
 ```hcl
 variable "backup_name" { }
 
@@ -18,6 +17,7 @@ data "flexibleengine_csbs_backup_v1" "csbs" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `id` - (Optional) Specifies the ID of backup.
@@ -39,6 +39,7 @@ The following arguments are supported:
 * `vm_ip` - (Optional) Specifies the ip of VM.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `description` - Provides the backup description.
@@ -49,52 +50,48 @@ In addition to all arguments above, the following attributes are exported:
 
 * `size` - Specifies the backup capacity.
 
-* volume_backups 
+* `volume_backups` - block supports the following arguments:
 
-  * `space_saving_ratio` - Specifies the space saving rate.
+  + `status` -  Status of backup Volume.
 
-  * `volume_backups` block supports the following arguments:
+  + `space_saving_ratio` -  Specifies the space saving rate.
 
-  * `status` -  Status of backup Volume.
-    
-  * `space_saving_ratio` -  Specifies space saving rate.
+  + `name` -  It gives EVS disk backup name.
 
-  * `name` -  It gives EVS disk backup name.
+  + `bootable` -  Specifies whether the disk is bootable.
 
-  * `bootable` -  Specifies whether the disk is bootable.
+  + `average_speed` -  Specifies the average speed.
 
-  * `average_speed` -  Specifies the average speed.
+  + `source_volume_size` -  Shows source volume size in GB.
 
-  * `source_volume_size` -  Shows source volume size in GB.
+  + `source_volume_id` -  It specifies source volume ID.
 
-  * `source_volume_id` -  It specifies source volume ID.
+  + `incremental` -  Shows whether incremental backup is used.
 
-  * `incremental` -  Shows whether incremental backup is used.
+  + `snapshot_id` -  ID of snapshot.
 
-  * `snapshot_id` -  ID of snapshot.
+  + `source_volume_name` -  Specifies source volume name.
 
-  * `source_volume_name` -  Specifies source volume name.
+  + `image_type` -  It specifies backup. The default value is backup.
 
-  * `image_type` -  It specifies backup. The default value is backup.
+  + `id` -  Specifies Cinder backup ID.
 
-  * `id` -  Specifies Cinder backup ID.
+  + `size` -  Specifies accumulated size (MB) of backups.
 
-  * `size` -  Specifies accumulated size (MB) of backups.
+* `vm_metadata` - block supports the following arguments:
 
-* `vm_metadata` block supports the following arguments:
+  + `name` - Name of backup data.
 
-  * `name` - Name of backup data.
+  + `eip` - Specifies elastic IP address of the ECS.
 
-  * `eip` - Specifies elastic IP address of the ECS.
+  + `cloud_service_type` - Specifies ECS type.
 
-  * `cloud_service_type` - Specifies ECS type.
+  + `ram` - Specifies memory size of the ECS, in MB.
 
-  * `ram` - Specifies memory size of the ECS, in MB.
+  + `vcpus` - Specifies CPU cores corresponding to the ECS.
 
-  * `vcpus` - Specifies CPU cores corresponding to the ECS.
+  + `private_ip` - It specifies internal IP address of the ECS.
 
-  * `private_ip` - It specifies internal IP address of the ECS.
+  + `disk` - Shows system disk size corresponding to the ECS specifications.
 
-  * `disk` - Shows system disk size corresponding to the ECS specifications.
-
-  * `image_type` - Specifies image type.
+  + `image_type` - Specifies image type.

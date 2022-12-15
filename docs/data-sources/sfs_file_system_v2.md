@@ -21,6 +21,7 @@ Provides information about an Shared File System (SFS).
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `name` - (Optional) The name of the shared file system.
@@ -29,25 +30,25 @@ The following arguments are supported:
 
 * `status` - (Optional) The status of the shared file system.
 
-
 ## Attributes Reference
 
 The following attributes are exported:
 
 * `availability_zone` - The availability zone name.
 
-* `size` - 	The size (GB) of the shared file system.
+* `size` - The size (GB) of the shared file system.
 
-* `share_type` - The storage service type for the shared file system, such as high-performance storage (composed of SSDs) or large-capacity storage (composed of SATA disks).
+* `share_type` - The storage service type for the shared file system, such as high-performance storage (composed of SSDs)
+  or large-capacity storage (composed of SATA disks).
 
 * `status` - The status of the shared file system.
 
 * `host` - The host name of the shared file system.
 
 * `is_public` - The level of visibility for the shared file system.
- 
+
 * `share_proto` - The protocol for sharing file systems.
- 
+
 * `volume_type` - The volume type.
 
 * `metadata` - Metadata key and value pairs as a dictionary of strings.
@@ -72,5 +73,5 @@ The following attributes are exported:
 
 * `share_instance_id` - The access that the back end grants or denies.
 
-* `preferred` - Identifies which mount locations are most efficient and are used preferentially when multiple mount locations exist.
-
+* `preferred` - Identifies which mount locations are most efficient and are used preferentially
+  when multiple mount locations exist.

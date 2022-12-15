@@ -6,7 +6,6 @@ subcategory: "Volume Backup Service (VBS)"
 
 The VBS Backup Policy data source provides details about a specific VBS backup policy.
 
-
 ## Example Usage
 
  ```hcl
@@ -21,7 +20,6 @@ data "flexibleengine_vbs_backup_policy_v2" "policies" {
 }
  ```
 
-
 ## Argument Reference
 
 The arguments of this data source act as filters for querying the available VBS backup policy.
@@ -33,7 +31,6 @@ The given filters must match exactly one VBS backup policy whose data will be ex
 
 * `status` (Optional) - The status of the specific VBS backup policy to retrieve. The values can be ON or OFF
 
-
 ## Attributes Reference
 
 The following attributes are exported:
@@ -44,9 +41,9 @@ The following attributes are exported:
 
 * `status` - See Argument Reference above.
 
-* `start_time` - Specifies the start time of the backup job.The value is in the HH:mm format.                                                         
+* `start_time` - Specifies the start time of the backup job.The value is in the HH:mm format.
 
-* `retain_first_backup` - Specifies whether to retain the first backup in the current month. 
+* `retain_first_backup` - Specifies whether to retain the first backup in the current month.
 
 * `rentention_num` - Specifies number of retained backups.
 

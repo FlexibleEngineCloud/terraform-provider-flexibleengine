@@ -16,7 +16,7 @@ data "flexibleengine_identity_custom_role_v3" "role" {
 
 ## Argument Reference
 
-* `name` - (Optional) Name of the custom policy. 
+* `name` - (Optional) Name of the custom policy.
 
 * `id` - (Optional) ID of the custom policy.
 

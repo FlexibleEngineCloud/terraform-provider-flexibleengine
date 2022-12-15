@@ -73,16 +73,16 @@ The `instances` block supports:
 
 * `security_groups` - An array of one or more security group names
     to associate with the instance.
-    
+
 * `network` - An array of one or more networks to attach to the instance.
     The network object structure is documented below.
-    
+
 * `volume_attached` - An array of one or more disks to attach to the instance.
     The object structure is documented below.
-    
+
 * `scheduler_hints` - The scheduler with hints on how the instance should be launched.
     The available hints are described below.
-    
+
 * `tags` - The tags of the instance in key/value format.
 
 * `metadata` - The metadata of the instance in key/value format.

@@ -28,7 +28,6 @@ The following arguments are supported:
 
 * `flavor_id` - (Optional) Specifies the flavor ID.
 
-
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:

@@ -22,7 +22,7 @@ data "flexibleengine_cce_cluster_v3" "cluster" {
 The following arguments are supported:
 
 * `name` -  (Optional)The Name of the cluster resource.
- 
+
 * `id` - (Optional) The ID of container cluster.
 
 * `status` - (Optional) The state of the cluster.

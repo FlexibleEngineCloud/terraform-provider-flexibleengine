@@ -33,8 +33,8 @@ The following arguments are supported:
 
   + **coredns**: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS Services. Latest version: 1.17.7.
 
-  + **everest**: Everest is a cloud native container storage system based on CSI, used to support cloud storage services for Kubernetes.
-    Latest version: 1.2.9.
+  + **everest**: Everest is a cloud native container storage system based on CSI, used to support cloud storage services
+    for Kubernetes. Latest version: 1.2.9.
 
   + **metrics-server**: Metrics Server is a cluster-level resource usage data aggregator. Latest version: 1.1.2.
 
