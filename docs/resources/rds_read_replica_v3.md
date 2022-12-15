@@ -83,15 +83,14 @@ The following arguments are supported:
 The `volume` block supports:
 
 * `type` - (Required) Specifies the volume type. Its value can be any of the following
-    and is case-sensitive: 
+    and is case-sensitive:
     - ULTRAHIGH: indicates the SSD type.
     - ULTRAHIGHPRO: indicates the ultra-high I/O.
 
     Changing this parameter will create a new resource.
 
-* `disk_encryption_id` -  (Optional) Specifies the key ID for disk encryption. 
+* `disk_encryption_id` -  (Optional) Specifies the key ID for disk encryption.
     Changing this parameter will create a new resource.
-
 
 ## Attributes Reference
 
@@ -101,17 +100,17 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `status` - Indicates the instance status.
 
-* `db` - Indicates the database information. Structure is documented below. 
+* `db` - Indicates the database information. Structure is documented below.
 
-* `private_ips` - Indicates the private IP address list. 
+* `private_ips` - Indicates the private IP address list.
 
 * `public_ips` - Indicates the public IP address list.
 
 * `security_group_id` - Indicates the security group which the RDS DB instance belongs to.
 
-* `subnet_id` - Indicates the subnet id. 
+* `subnet_id` - Indicates the subnet id.
 
-* `vpc_id` - Indicates the VPC ID. 
+* `vpc_id` - Indicates the VPC ID.
 
 The `db` block supports:
 
@@ -122,7 +121,6 @@ The `db` block supports:
 * `user_name` - Indicates the default user name of database.
 
 * `version` - Indicates the database version.
-
 
 ## Import
 

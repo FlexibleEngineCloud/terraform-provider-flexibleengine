@@ -26,7 +26,7 @@ The following arguments are supported:
     A Networking client is needed to create an . If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     monitor.
-    
+
 * `pool_id` - (Required) The id of the pool that this monitor will be assigned to.
 
 * `name` - (Optional) The Name of the Monitor.
@@ -48,7 +48,7 @@ The following arguments are supported:
 * `url_path` - (Optional) Required for HTTP(S) types. URI path that will be
     accessed if monitor type is HTTP or HTTPS.
 
-*  `http_method` - (Optional) Required for HTTP(S) types. The HTTP method used
+* `http_method` - (Optional) Required for HTTP(S) types. The HTTP method used
     for requests by the monitor. If this attribute is not specified, it
     defaults to "GET".
 

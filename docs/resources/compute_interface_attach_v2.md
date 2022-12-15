@@ -50,7 +50,6 @@ resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
 
 ```
 
-
 ### Attachment Using an Existing Port
 
 ```hcl
@@ -64,7 +63,6 @@ resource "flexibleengine_networking_port_v2" "port_1" {
   network_id     = flexibleengine_networking_network_v2.network_1.id
   admin_state_up = "true"
 }
-
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name            = "instance_1"
@@ -146,19 +144,19 @@ resource "flexibleengine_compute_interface_attach_v2" "ai_2" {
 The following arguments are supported:
 
 * `region` - (Optional) The region in which to create the interface attachment.
-    If omitted, the `region` argument of the provider is used. Changing this
-    creates a new attachment.
+  If omitted, the `region` argument of the provider is used. Changing this creates a new attachment.
 
 * `instance_id` - (Required) The ID of the Instance to attach the Port or Network to.
 
 * `port_id` - (Optional) The ID of the Port to attach to an Instance.
-   _NOTE_: This option and `network_id` are mutually exclusive.
+  This option and `network_id` are mutually exclusive.
 
 * `network_id` - (Optional) The ID of the Network to attach to an Instance. A port will be created automatically.
-   _NOTE_: This option and `port_id` are mutually exclusive.
+  This option and `port_id` are mutually exclusive.
 
 * `fixed_ip` - (Optional) An IP address to assosciate with the port.
-   _NOTE_: This option cannot be used with port_id. You must specifiy a network_id. The IP address must lie in a range on the supplied network.
+  This option cannot be used with port_id. You must specifiy a network_id.
+  The IP address must lie in a range on the supplied network.
 
 ## Attributes Reference
 

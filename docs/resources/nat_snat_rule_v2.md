@@ -9,6 +9,7 @@ Manages a V2 SNAT rule resource within FlexibleEngine.
 ## Example Usage
 
 ### SNAT rule in VPC scenario
+
 ```hcl
 resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
   nat_gateway_id = var.natgw_id
@@ -18,6 +19,7 @@ resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
 ```
 
 ### SNAT rule in Direct Connect scenario
+
 ```hcl
 resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
   nat_gateway_id = var.natgw_id

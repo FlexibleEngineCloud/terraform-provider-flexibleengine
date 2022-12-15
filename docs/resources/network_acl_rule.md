@@ -45,11 +45,11 @@ The following arguments are supported:
 * `source_port` - (Optional) Specifies the source port number or port number range. The value ranges from 1 to 65535.
     For a port number range, enter two port numbers connected by a hyphen (-). For example, 1-100.
 
-* `destination_port` - (Optional) Specifies the destination port number or port number range. The value ranges from 1 to 65535.
-    For a port number range, enter two port numbers connected by a hyphen (-). For example, 1-100.
+* `destination_port` - (Optional) Specifies the destination port number or port number range.
+    The value ranges from 1 to 65535. For a port number range, enter two port numbers connected by a hyphen (-).
+    For example, 1-100.
 
 * `enabled` - (Optional) Enabled status for the network ACL rule. Defaults to true.
-
 
 ## Attributes Reference
 

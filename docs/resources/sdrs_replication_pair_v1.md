@@ -47,7 +47,6 @@ The following arguments are supported:
 * `delete_target_volume` - (Optional) Specifies whether to delete the target disk.
   The default value is `false`.
 
-
 ## Attributes Reference
 
 The following attributes are exported:

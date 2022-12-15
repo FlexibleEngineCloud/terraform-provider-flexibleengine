@@ -7,7 +7,9 @@ subcategory: "Identity and Access Management (IAM)"
 Manages an agency resource within FlexibleEngine.
 
 ## Example Usage
+
 ### Delegate another account to perform operations on your resources
+
 ```hcl
 resource "flexibleengine_identity_agency_v3" "agency" {
   name                  = "test_agency"
@@ -27,6 +29,7 @@ resource "flexibleengine_identity_agency_v3" "agency" {
 ```
 
 ### Delegate a cloud service to access your resources in other cloud services
+
 ```hcl
 resource "flexibleengine_identity_agency_v3" "agency" {
   name                   = "test_agency"
@@ -93,6 +96,7 @@ In addition to all arguments above, the following attributes are exported:
 ## Import
 
 Agencies can be imported using the `id`, e.g.
+
 ```
 $ terraform import flexibleengine_identity_agency_v3.agency 0b97661f9900f23f4fc2c00971ea4dc0
 ```

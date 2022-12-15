@@ -84,4 +84,3 @@ The following attributes are exported
   but the unique identifier calculated through the server-side encryption.
 * `size` - the size of the object in bytes.
 * `version_id` - A unique version ID value for the object, if bucket versioning is enabled.
-

@@ -54,6 +54,7 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `size` - (Required) The size (GB) of the shared file system.
@@ -81,18 +82,19 @@ The following arguments are supported:
 
 * `access_to` - (Optional) Specifies the value that defines the access rule. The value contains 1 to 255 characters.
     Changing this will create a new access rule. The value varies according to the scenario:
-    - Set the VPC ID in VPC authorization scenarios.
-    - Set this parameter in IP address authorization scenario.
+    + Set the VPC ID in VPC authorization scenarios.
+    + Set this parameter in IP address authorization scenario.
 
-        - For an NFS shared file system, the value in the format of *VPC_ID#IP_address#priority#user_permission*.
+      - For an NFS shared file system, the value in the format of *VPC_ID#IP_address#priority#user_permission*.
         For example, 0157b53f-4974-4e80-91c9-098532bcaf00#2.2.2.2/16#100#all_squash,root_squash.
 
-        - For a CIFS shared file system, the value in the format of *VPC_ID#IP_address#priority*.
+      - For a CIFS shared file system, the value in the format of *VPC_ID#IP_address#priority*.
         For example, 0157b53f-4974-4e80-91c9-098532bcaf00#2.2.2.2/16#0.
 
 -> **NOTE:** If you want to create more access rules, please using [flexibleengine_sfs_access_rule_v2](https://www.terraform.io/docs/providers/flexibleengine/r/sfs_access_rule_v2.html).
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The UUID of the shared file system.
@@ -108,11 +110,11 @@ In addition to all arguments above, the following attributes are exported:
 * `access_rules_status` - The status of the share access rule.
 
 * `access_rules` - All access rules of the shared file system. The object includes the following:
-    - `access_rule_id` - The UUID of the share access rule.
-    - `access_level` - The access level of the shared file system
-    - `access_type` - The type of the share access rule.
-    - `access_to` - The value that defines the access rule.
-    - `status` - The status of the share access rule.
+    + `access_rule_id` - The UUID of the share access rule.
+    + `access_level` - The access level of the shared file system
+    + `access_type` - The type of the share access rule.
+    + `access_to` - The value that defines the access rule.
+    + `status` - The status of the share access rule.
 
 ## Import
 

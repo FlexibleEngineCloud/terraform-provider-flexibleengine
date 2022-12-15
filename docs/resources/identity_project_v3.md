@@ -6,18 +6,19 @@ subcategory: "Identity and Access Management (IAM)"
 
 Manages a Project resource within FlexibleEngine IAM service.
 
--> You _must_ have admin privileges in your FlexibleEngine cloud to use
-this resource.
+-> You *must* have admin privileges in your FlexibleEngine cloud to use this resource.
 
 !> Project deletion is not supported by FlexibleEngine API
 
 ## Example Usage
+
 ```hcl
 resource "flexibleengine_identity_project_v3" "project_1" {
   name        = "eu-west-0_project_1"
   description = "A ACC test project"
 }
 ```
+
 ## Argument Reference
 
 The following arguments are supported:

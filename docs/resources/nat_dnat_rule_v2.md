@@ -9,6 +9,7 @@ Manages a DNAT rule resource within FlexibleEngine.
 ## Example Usage
 
 ### DNAT rule in VPC scenario
+
 ```hcl
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   ...
@@ -25,6 +26,7 @@ resource "flexibleengine_nat_dnat_rule_v2" "dnat_1" {
 ```
 
 ### DNAT rule in Direct Connect scenario
+
 ```hcl
 resource "flexibleengine_nat_dnat_rule_v2" "dnat_2" {
   nat_gateway_id        = var.natgw_id

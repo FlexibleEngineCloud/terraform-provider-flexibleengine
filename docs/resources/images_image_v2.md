@@ -78,8 +78,7 @@ The following attributes are exported:
    or the path to retrieve it.
 * `id` - A unique ID assigned by Glance.
 * `metadata` - The metadata associated with the image.
-   Image metadata allow for meaningfully define the image properties
-   and tags. See http://docs.openstack.org/developer/glance/metadefs-concepts.html.
+   Image metadata allow for meaningfully define the image properties and tags.
 * `min_disk_gb` - See Argument Reference above.
 * `min_ram_mb` - See Argument Reference above.
 * `name` - See Argument Reference above.

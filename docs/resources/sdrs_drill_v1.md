@@ -28,7 +28,6 @@ The following arguments are supported:
 
 * `drill_vpc_id` - (Required) Specifies the ID used for a DR drill. Changing this creates a new drill.
 
-
 ## Attributes Reference
 
 The following attributes are exported:

@@ -17,20 +17,25 @@ Provides an FlexibleEngine Backup of Resources.
    resource_id   = var.resource_id
    resource_type = "OS::Nova::Server"
  }
-
  ```
+
 ## Argument Reference
+
 The following arguments are supported:
 
-* `backup_name` - (Optional) Name for the backup. The value consists of 1 to 255 characters and can contain only letters, digits, underscores (_), and hyphens (-). Changing backup_name creates a new backup.
+* `backup_name` - (Optional) Name for the backup. The value consists of 1 to 255 characters and can contain
+  only letters, digits, underscores (_), and hyphens (-). Changing backup_name creates a new backup.
 
-* `description` - (Optional) Backup description. The value consists of 0 to 255 characters and must not contain a greater-than sign (>) or less-than sign (<). Changing description creates a new backup.
+* `description` - (Optional) Backup description. The value consists of 0 to 255 characters and must not contain
+  a greater-than sign (>) or less-than sign (<). Changing description creates a new backup.
 
 * `resource_id` - (Required) ID of the target to which the backup is restored. Changing this creates a new backup.
 
-* `resource_type` - (Optional) Type of the target to which the backup is restored. The default value is **OS::Nova::Server** for an ECS. Changing this creates a new backup.
+* `resource_type` - (Optional) Type of the target to which the backup is restored. The default value is
+  **OS::Nova::Server** for an ECS. Changing this creates a new backup.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `status` - It specifies the status of backup.
@@ -39,50 +44,49 @@ In addition to all arguments above, the following attributes are exported:
 
 * `volume_backups` block supports the following arguments:
 
-  * `status` -  Status of backup Volume.
-    
-  * `space_saving_ratio` -  Specifies space saving rate.
+  + `status` -  Status of backup Volume.
 
-  * `name` -  It gives EVS disk backup name.
+  + `space_saving_ratio` -  Specifies space saving rate.
 
-  * `bootable` -  Specifies whether the disk is bootable.
+  + `name` -  It gives EVS disk backup name.
 
-  * `average_speed` -  Specifies the average speed.
+  + `bootable` -  Specifies whether the disk is bootable.
 
-  * `source_volume_size` -  Shows source volume size in GB.
+  + `average_speed` -  Specifies the average speed.
 
-  * `source_volume_id` -  It specifies source volume ID.
+  + `source_volume_size` -  Shows source volume size in GB.
 
-  * `incremental` -  Shows whether incremental backup is used.
+  + `source_volume_id` -  It specifies source volume ID.
 
-  * `snapshot_id` -  ID of snapshot.
+  + `incremental` -  Shows whether incremental backup is used.
 
-  * `source_volume_name` -  Specifies source volume name.
+  + `snapshot_id` -  ID of snapshot.
 
-  * `image_type` -  It specifies backup. The default value is backup.
+  + `source_volume_name` -  Specifies source volume name.
 
-  * `id` -  Specifies Cinder backup ID.
+  + `image_type` -  It specifies backup. The default value is backup.
 
-  * `size` -  Specifies accumulated size (MB) of backups.
-    
+  + `id` -  Specifies Cinder backup ID.
+
+  + `size` -  Specifies accumulated size (MB) of backups.
+
 * `vm_metadata` block supports the following arguments:
 
-  * `name` - Name of backup data.
+  + `name` - Name of backup data.
 
-  * `eip` - Specifies elastic IP address of the ECS.
+  + `eip` - Specifies elastic IP address of the ECS.
 
-  * `cloud_service_type` - Specifies ECS type.
+  + `cloud_service_type` - Specifies ECS type.
 
-  * `ram` - Specifies memory size of the ECS, in MB.
+  + `ram` - Specifies memory size of the ECS, in MB.
 
-  * `vcpus` - Specifies CPU cores corresponding to the ECS.
+  + `vcpus` - Specifies CPU cores corresponding to the ECS.
 
-  * `private_ip` - It specifies internal IP address of the ECS.
+  + `private_ip` - It specifies internal IP address of the ECS.
 
-  * `disk` - Shows system disk size corresponding to the ECS specifications.
+  + `disk` - Shows system disk size corresponding to the ECS specifications.
 
-  * `image_type` - Specifies image type.
-
+  + `image_type` - Specifies image type.
 
 ## Import
 
@@ -91,6 +95,3 @@ Backup can be imported using  `backup_record_id`, e.g.
 ```
 $ terraform import flexibleengine_csbs_backup_v1.backup_v1.backup_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
 ```
-
-
-

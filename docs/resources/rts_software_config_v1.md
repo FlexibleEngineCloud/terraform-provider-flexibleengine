@@ -6,7 +6,7 @@ subcategory: "Resource Template Service (RTS)"
 
 Provides an RTS software config resource.
 
-# Example Usage
+## Example Usage
 
  ```hcl
 variable "config_name" {}
@@ -16,7 +16,7 @@ resource "flexibleengine_rts_software_config_v1" "myconfig" {
 }
  ```
 
-# Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -32,16 +32,16 @@ The following arguments are supported:
 
 * `options` - (Optional) The software configuration options.
 
-
-# Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The id of the software config.
- 
-# Import
+
+## Import
 
 Software Config can be imported using the `config id`, e.g.
+
 ```
  $ terraform import flexibleengine_rts_software_config_v1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
 ```

@@ -12,6 +12,7 @@ Provides a CCE addon resource within FlexibleEngine.
 ## Example Usage
 
 ### Basic Usage
+
 ```hcl
 variable "cluster_id" {}
 

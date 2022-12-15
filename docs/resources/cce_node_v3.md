@@ -103,33 +103,33 @@ The following arguments are supported:
     }
     ```
 
-**root_volume** **- (Required)** It corresponds to the system disk related configuration.
+* `root_volume` - (Required) It corresponds to the system disk related configuration.
   Changing this parameter will create a new resource.
 
-  * `size` - (Required) Specifies the disk size in GB.
-  * `volumetype` - (Required) Specifies the disk type.
-  * `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
+  + `size` - (Required) Specifies the disk size in GB.
+  + `volumetype` - (Required) Specifies the disk type.
+  + `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
 
-**data_volumes** **- (Required)** Represents the data disk to be created.
+* `data_volumes` - (Required) Represents the data disk to be created.
   Changing this parameter will create a new resource.
 
-  * `size` - (Required) Specifies the disk size in GB.
-  * `volumetype` - (Required) Specifies the disk type.
-  * `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
-  * `kms_key_id` - (Optional) Specifies the ID of a KMS key. This is used to encrypt the volume.
+  + `size` - (Required) Specifies the disk size in GB.
+  + `volumetype` - (Required) Specifies the disk type.
+  + `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
+  + `kms_key_id` - (Optional) Specifies the ID of a KMS key. This is used to encrypt the volume.
 
   -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
   The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
-**taints** **- (Optional)** You can add taints to created nodes to configure anti-affinity.
+* `taints` - (Optional) You can add taints to created nodes to configure anti-affinity.
   Changing this parameter will create a new resource.
   Each taint contains the following parameters:
 
-  * `key` - (Required) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits,
+  + `key` - (Required) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits,
     hyphens (-), underscores (_), and periods (.) are allowed. A DNS subdomain name can be used as the prefix of a key.
-  * `value` - (Required) A value must start with a letter or digit and can contain a maximum of 63 characters,
+  + `value` - (Required) A value must start with a letter or digit and can contain a maximum of 63 characters,
     including letters, digits, hyphens (-), underscores (_), and periods (.).
-  * `effect` - (Required) Available options are NoSchedule, PreferNoSchedule, and NoExecute.
+  + `effect` - (Required) Available options are NoSchedule, PreferNoSchedule, and NoExecute.
 
 ## Attributes Reference
 

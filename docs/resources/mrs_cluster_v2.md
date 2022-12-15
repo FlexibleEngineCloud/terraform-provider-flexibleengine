@@ -309,6 +309,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
 }
 ```
 
+<!--markdownlint-disable MD033-->
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -327,7 +329,7 @@ The following arguments are supported:
   `MRS 2.0.1`, and `MRS 3.1.0-LTS.1` are supported. Changing this will create a new MRS cluster resource.
 
 * `type` - (Optional, String, ForceNew) Specifies the type of the MRS cluster. The valid values are *ANALYSIS*,
-  *STREAMING*, *MIXED* and *CUSTOM* (supported in MRS 3.x only), default to *ANALYSIS*. 
+  *STREAMING*, *MIXED* and *CUSTOM* (supported in MRS 3.x only), default to *ANALYSIS*.
   Changing this will create a new MRS cluster resource.
 
 * `component_list` - (Required, List, ForceNew) Specifies the list of component names.
@@ -354,7 +356,8 @@ The following arguments are supported:
       </tr>
       <tr>
           <td>custom</td>
-          <td>Hadoop, Spark2x, HBase, Hive, Hue, HetuEngine, Loader, Kafka, Flume, Flink, Oozie, ZooKeeper, Ranger, Tez, and ClickHouse</td>
+          <td>Hadoop, Spark2x, HBase, Hive, Hue, HetuEngine, Loader, Kafka, Flume, Flink, Oozie, ZooKeeper, Ranger, Tez,
+          and ClickHouse</td>
       </tr>
       <tr>
           <td rowspan="2">MRS 2.0.1</td>

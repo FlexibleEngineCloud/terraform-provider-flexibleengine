@@ -42,17 +42,17 @@ The following arguments are supported:
     + When the protocol used by the listener is TERMINATED_HTTPS, the protocol of the backend pool must be HTTP.
   Changing this creates a new pool.
 
-* `loadbalancer_id` - (Optional, String, ForceNew) Specifies the load balancer on which to provision this pool. 
+* `loadbalancer_id` - (Optional, String, ForceNew) Specifies the load balancer on which to provision this pool.
   Changing this creates a new pool. Note:  Exactly one of LoadbalancerID or ListenerID must be provided.
 
 * `listener_id` - (Optional, String, ForceNew) Specifies the listener on which the members of the pool will be
   associated with.
   Changing this creates a new pool. Note:  Exactly one of LoadbalancerID or ListenerID must be provided.
 
-* `lb_method` - (Required, String) Specifies the load balancing algorithm to distribute traffic to the pool's members. 
+* `lb_method` - (Required, String) Specifies the load balancing algorithm to distribute traffic to the pool's members.
   Must be one of ROUND_ROBIN, LEAST_CONNECTIONS, or SOURCE_IP.
 
-* `persistence` - (Optional, List, ForceNew) Specifies the omit this field to prevent session persistence. 
+* `persistence` - (Optional, List, ForceNew) Specifies the omit this field to prevent session persistence.
   Indicates whether connections in the same session will be processed by the same Pool member or not.
   Changing this creates a new pool.
 

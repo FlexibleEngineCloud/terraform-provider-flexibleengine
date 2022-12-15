@@ -36,19 +36,19 @@ The following arguments are supported:
 
 * `protocol` = (Required) The protocol - can either be TCP, UDP or HTTP.
 
-    - When the protocol used by the listener is UDP, the protocol of the backend pool must be UDP.
-    - When the protocol used by the listener is TCP, the protocol of the backend pool must be TCP.
-    - When the protocol used by the listener is HTTP or TERMINATED_HTTPS, the protocol of the backend pool must be HTTP.
+    + When the protocol used by the listener is UDP, the protocol of the backend pool must be UDP.
+    + When the protocol used by the listener is TCP, the protocol of the backend pool must be TCP.
+    + When the protocol used by the listener is HTTP or TERMINATED_HTTPS, the protocol of the backend pool must be HTTP.
 
     Changing this creates a new pool.
 
 * `loadbalancer_id` - (Optional, String, ForceNew) The load balancer on which to provision this
     pool. Changing this creates a new pool.
-    Note:  One of LoadbalancerID or ListenerID must be provided.
+    Note: One of LoadbalancerID or ListenerID must be provided.
 
 * `listener_id` - (Optional, String, ForceNew) The Listener on which the members of the pool
     will be associated with. Changing this creates a new pool.
-	Note:  One of LoadbalancerID or ListenerID must be provided.
+    Note: One of LoadbalancerID or ListenerID must be provided.
 
 * `lb_method` - (Required, String) The load balancing algorithm to
     distribute traffic to the pool's members. Must be one of
@@ -71,6 +71,7 @@ The `persistence` argument supports:
 
 * `timeout` - (Optional, Int, ForceNew) Specifies the sticky session timeout duration in minutes. This parameter is
   invalid when type is set to APP_COOKIE. The value range varies depending on the protocol of the backend server group:
+
   + When the protocol of the backend server group is TCP or UDP, the value ranges from 1 to 60.
   + When the protocol of the backend server group is HTTP or HTTPS, the value ranges from 1 to 1440.
 
