@@ -26,6 +26,7 @@ terraform {
 ```
 
 There are some important limitations on backend configuration:
+
 * A configuration can only provide one backend block.
 * A backend block cannot refer to **named values** (like input variables, locals, or data source attributes).
 
@@ -82,7 +83,8 @@ The following arguments are supported:
 * `region` - (Required) Specifies the region where the bucket is located. This can also be sourced from the
   *AWS_DEFAULT_REGION* and *AWS_REGION* environment variables.
 
-* `endpoint` - (Required) Specifies the endpoint for FlexibleEngine OSS. The value is https://oss.{{region}}.prod-cloud-ocb.orange-business.com.
+* `endpoint` - (Required) Specifies the endpoint for FlexibleEngine OSS.
+  The value is `https://oss.{{region}}.prod-cloud-ocb.orange-business.com`.
   This can also be sourced from the *AWS_S3_ENDPOINT* environment variable.
 
 * `skip_credentials_validation` - (Required) Skip credentials validation via the STS API. It's mandatory for FlexibleEngine.
@@ -96,8 +98,8 @@ The following arguments are supported:
 
 ## For More Information
 
-- [Terraform Remote State](https://www.terraform.io/docs/language/state/remote.html)
-- [Terraform Backends](https://www.terraform.io/docs/language/settings/backends/index.html)
-- [Amazon S3 Backend](https://www.terraform.io/docs/language/settings/backends/s3.html)
-- [Workspaces](https://www.terraform.io/docs/language/state/workspaces.html)
-- [The terraform_remote_state Data Source](https://www.terraform.io/docs/language/state/remote-state-data.html)
+* [Terraform Remote State](https://www.terraform.io/docs/language/state/remote.html)
+* [Terraform Backends](https://www.terraform.io/docs/language/settings/backends/index.html)
+* [Amazon S3 Backend](https://www.terraform.io/docs/language/settings/backends/s3.html)
+* [Workspaces](https://www.terraform.io/docs/language/state/workspaces.html)
+* [The terraform_remote_state Data Source](https://www.terraform.io/docs/language/state/remote-state-data.html)
