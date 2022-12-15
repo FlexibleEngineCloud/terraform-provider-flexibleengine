@@ -23,6 +23,7 @@ resource "flexibleengine_antiddos_v1" "myantiddos" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `floating_ip_id` - (Required) The ID corresponding to the Elastic IP Address (EIP).
@@ -35,9 +36,10 @@ The following arguments are supported:
 
 * `cleaning_access_pos_id` - (Required)The position ID of access limit during cleaning. The value ranges from 1 to 8.
 
-* `app_type_id` - (Required) The application type ID. 
+* `app_type_id` - (Required) The application type ID.
 
 ## Attributes Reference
+
 All above argument parameters can be exported as attribute parameters.
 
 ## Import

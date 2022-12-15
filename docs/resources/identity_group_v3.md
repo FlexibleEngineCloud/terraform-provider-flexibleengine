@@ -6,8 +6,7 @@ subcategory: "Identity and Access Management (IAM)"
 
 Manages a User Group resource within FlexibleEngine IAM service.
 
-Note: You _must_ have admin privileges in your FlexibleEngine cloud to use
-this resource.
+-> You *must* have admin privileges in your FlexibleEngine cloud to use this resource.
 
 ## Example Usage
 
@@ -22,8 +21,7 @@ resource "flexibleengine_identity_group_v3" "group_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the group.The length is less than or equal 
-     to 64 bytes 
+* `name` - (Required) The name of the group. The length is less than or equal to 64 bytes.
 
 * `description` - (Optional) A description of the group.
 

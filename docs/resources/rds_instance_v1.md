@@ -58,6 +58,7 @@ resource "flexibleengine_rds_instance_v1" "instance" {
 ```
 
 ## Example Usage:  Creating a SQLServer RDS instance
+
 ```hcl
 data "flexibleengine_rds_flavors_v1" "flavor" {
     region = "eu-west-0"
@@ -102,6 +103,7 @@ resource "flexibleengine_rds_instance_v1" "instance" {
 ```
 
 ## Example Usage:  Creating a MySQL RDS instance
+
 ```hcl
 data "flexibleengine_rds_flavors_v1" "flavor" {
     region = "eu-west-0"
@@ -148,20 +150,21 @@ resource "flexibleengine_rds_instance_v1" "instance" {
   depends_on = [ flexibleengine_compute_secgroup_v2.secgrp_rds ]
 }
 ```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `name` - (Required) Specifies the DB instance name. The DB instance name of
     the same type is unique in the same tenant. The changes of the instance name
-	will be suppressed in HA scenario.
+    will be suppressed in HA scenario.
 
 * `datastore` - (Required) Specifies database information. The structure is
     described below.
 
 * `flavorref` - (Required) Specifies the specification ID (flavors.id in the
     response message in Obtaining All DB Instance Specifications). If you want
-	to enable ha for the rds instance, a flavor with ha speccode is required.
+    to enable ha for the rds instance, a flavor with ha speccode is required.
 
 * `volume` - (Required) Specifies the volume information. The structure is described
     below.
@@ -200,15 +203,14 @@ The `datastore` block supports:
 
 * `version` - (Required) Specifies the DB instance version.
 
-
 * Available value for attributes
 
+<!-- markdownlint-disable MD033 -->
 type | version
 ---- | ---
 PostgreSQL | 9.5.5 <br> 9.6.3 <br> 9.6.5
 MySQL| 5.6.33 <br>5.6.30  <br>5.6.34 <br>5.6.35 <br>5.7.17
 SQLServer| 2014 SP2 SE
-
 
 The `volume` block supports:
 
@@ -222,11 +224,11 @@ The `nics` block supports:
 
 * `subnetId` - (Required) Specifies the subnet ID obtained from the VPC.
 
-The `securitygroup ` block supports:
+The `securitygroup` block supports:
 
 * `id` - (Required) Specifies the ID obtained from the securitygroup.
 
-The `backupstrategy ` block supports:
+The `backupstrategy` block supports:
 
 * `starttime` - (Optional) Indicates the backup start time that has been set.
     The backup task will be triggered within one hour after the backup start time.
@@ -269,13 +271,3 @@ The following attributes are exported:
 * `type` - Indicates the DB instance type, which can be master or readreplica.
 * `created` - Indicates the creation time in the following format: yyyy-mm-dd Thh:mm:ssZ.
 * `updated` - Indicates the update time in the following format: yyyy-mm-dd Thh:mm:ssZ.
-
-## Attributes Reference
-
-The following attributes can be updated:
-
-* `volume.size` - See Argument Reference above.
-
-* `flavorref` - See Argument Reference above.
-
-* `backupstrategy` - See Argument Reference above.

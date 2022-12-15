@@ -6,8 +6,9 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 Provides a resource to manage the accepter's side of a VPC Peering Connection.
 
-When a cross-tenant (requester's tenant differs from the accepter's tenant) VPC Peering Connection is created, a VPC Peering Connection resource is automatically created in the
-accepter's account.
+When a cross-tenant (requester's tenant differs from the accepter's tenant) VPC Peering Connection is created,
+a VPC Peering Connection resource is automatically created in the accepter's account.
+
 The requester can use the `flexibleengine_vpc_peering_connection_v2` resource to manage its side of the connection
 and the accepter can use the `flexibleengine_vpc_peering_connection_accepter_v2` resource to "adopt" its side of the
 connection into management.
@@ -69,20 +70,25 @@ resource "flexibleengine_vpc_peering_connection_accepter_v2" "peer" {
 
 The following arguments are supported:
 
-* `vpc_peering_connection_id` (Required) - The VPC Peering Connection ID to manage. Changing this creates a new VPC peering connection accepter.
+* `vpc_peering_connection_id` (Required) - The VPC Peering Connection ID to manage.
+  Changing this creates a new VPC peering connection accepter.
 
 * `accept` (Optional)- Whether or not to accept the peering request. Defaults to `false`.
 
-
 ## Removing flexibleengine_vpc_peering_connection_accepter_v2 from your configuration
- 
-FlexibleEngine allows a cross-tenant VPC Peering Connection to be deleted from either the requester's or accepter's side. However, Terraform only allows the VPC Peering Connection to be deleted from the requester's side by removing the corresponding `flexibleengine_vpc_peering_connection_v2` resource from your configuration. Removing a `flexibleengine_vpc_peering_connection_accepter_v2` resource from your configuration will remove it from your state file and management, but will not destroy the VPC Peering Connection.
+
+FlexibleEngine allows a cross-tenant VPC Peering Connection to be deleted from either the requester's or accepter's side.
+However, Terraform only allows the VPC Peering Connection to be deleted from the requester's side by removing the
+corresponding `flexibleengine_vpc_peering_connection_v2` resource from your configuration.
+
+Removing a `flexibleengine_vpc_peering_connection_accepter_v2` resource from your configuration will remove it
+from your state file and management, but will not destroy the VPC Peering Connection.
 
 ## Attributes Reference
 
 All of the argument attributes except accept are also exported as result attributes.
 
-* `name` - 	The VPC peering connection name.
+* `name` - The VPC peering connection name.
 
 * `id` - The VPC peering connection ID.
 
@@ -93,5 +99,3 @@ All of the argument attributes except accept are also exported as result attribu
 * `peer_vpc_id` - The VPC ID of the accepter tenant.
 
 * `peer_tenant_id` - The Tenant Id of the accepter tenant.
-
-

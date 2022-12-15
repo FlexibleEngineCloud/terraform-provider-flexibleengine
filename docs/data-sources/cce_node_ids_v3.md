@@ -4,7 +4,8 @@ subcategory: "Cloud Container Engine (CCE)"
 
 # Data Source: flexibleengine_cce_node_ids_v3
 
-`flexibleengine_cce_node_ids_v3` provides a list of node ids for a CCE cluster. This resource can be useful for getting back a list of node ids for a CCE cluster.
+`flexibleengine_cce_node_ids_v3` provides a list of node ids for a CCE cluster.
+This data source can be useful for getting back a list of node ids for a CCE cluster.
 
 ## Example Usage
 

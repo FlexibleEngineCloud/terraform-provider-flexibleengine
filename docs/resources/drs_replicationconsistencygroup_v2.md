@@ -47,13 +47,17 @@ The following arguments are supported:
 
 * `name` - (Optional) The name of the replication consistency group. The name can contain a maximum of 255 bytes.
 
-* `description` - (Optional) The description of the replication consistency group. The description can contain a maximum of 255 bytes.
+* `description` - (Optional) The description of the replication consistency group.
+ The description can contain a maximum of 255 bytes.
 
-* `replication_ids` - (Required) An array of one or more IDs of the EVS replication pairs used to create the replication consistency group.
+* `replication_ids` - (Required) An array of one or more IDs of the EVS replication pairs used to create
+  the replication consistency group.
 
-* `priority_station` - (Required) The primary AZ of the replication consistency group. That is the AZ where the production disk belongs.
+* `priority_station` - (Required) The primary AZ of the replication consistency group. That is the AZ where
+  the production disk belongs.
 
-* `replication_model` - (Optional) The type of the created replication consistency group. Currently only type hypermetro is supported.
+* `replication_model` - (Optional) The type of the created replication consistency group.
+  Currently only type hypermetro is supported.
 
 ## Attributes Reference
 

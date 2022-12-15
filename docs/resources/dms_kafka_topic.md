@@ -32,14 +32,14 @@ The following arguments are supported:
   consists of 4 to 64 characters, and supports only letters, digits, hyphens (-) and underscores (_).
   Changing this creates a new resource.
 
-* `partitions` - (Optional, Int, ForceNew) Specifies the partition number. The value ranges from 1 to 50 and defaults to 3.
-  Changing this creates a new resource.
+* `partitions` - (Optional, Int, ForceNew) Specifies the partition number.
+  The value ranges from 1 to 50 and defaults to 3. Changing this creates a new resource.
 
 * `replicas` - (Optional, Int, ForceNew) Specifies the replica number. The value ranges from 1 to 3 and defaults to 3.
   Changing this creates a new resource.
 
-* `aging_time` - (Optional, Int, ForceNew) Specifies the aging time in hours. The value ranges from 1 to 720 and defaults to 72.
-  Changing this creates a new resource.
+* `aging_time` - (Optional, Int, ForceNew) Specifies the aging time in hours.
+  The value ranges from 1 to 720 and defaults to 72. Changing this creates a new resource.
 
 * `sync_replication` - (Optional, Bool, ForceNew) Whether or not to enable synchronous replication.
   Changing this creates a new resource.

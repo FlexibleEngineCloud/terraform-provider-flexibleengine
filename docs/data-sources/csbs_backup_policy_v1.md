@@ -8,7 +8,6 @@ The FlexibleEngine CSBS Backup Policy data source allows access of backup Policy
 
 ## Example Usage
 
-
 ```hcl
 variable "policy_id" { }
 
@@ -19,6 +18,7 @@ data "flexibleengine_csbs_backup_policy_v1" "csbs_policy" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `id` - (Optional) Specifies the ID of backup policy.
@@ -39,34 +39,35 @@ In addition to all arguments above, the following attributes are exported:
 
 * `scheduled_operation` block supports the following arguments:
 
-    * `name` - Specifies Scheduling period name.
-    
-    * `description` - Specifies Scheduling period description.
+  + `name` - Specifies Scheduling period name.
 
-    * `enabled` - Specifies whether the scheduling period is enabled.
+  + `description` - Specifies Scheduling period description.
 
-    * `max_backups` - Specifies maximum number of backups that can be automatically created for a backup object.
+  + `enabled` - Specifies whether the scheduling period is enabled.
 
-    * `retention_duration_days` - Specifies duration of retaining a backup, in days.
+  + `max_backups` - Specifies maximum number of backups that can be automatically created for a backup object.
 
-    * `permanent` - Specifies whether backups are permanently retained.
+  + `retention_duration_days` - Specifies duration of retaining a backup, in days.
 
-    * `trigger_pattern` - Specifies Scheduling policy of the scheduler.
+  + `permanent` - Specifies whether backups are permanently retained.
 
-    * `operation_type` - Specifies Operation type, which can be backup.
+  + `trigger_pattern` - Specifies Scheduling policy of the scheduler.
 
-    * `id` -  Specifies Scheduling period ID.
+  + `operation_type` - Specifies Operation type, which can be backup.
 
-    * `trigger_id` -  Specifies Scheduler ID.
+  + `id` -  Specifies Scheduling period ID.
 
-    * `trigger_name` -  Specifies Scheduler name.
+  + `trigger_id` -  Specifies Scheduler ID.
 
-    * `trigger_type` -  Specifies Scheduler type.
+  + `trigger_name` -  Specifies Scheduler name.
+
+  + `trigger_type` -  Specifies Scheduler type.
 
 * `resource` block supports the following arguments:
 
-    * `id` - Specifies the ID of the object to be backed up.
-    
-    * `type` - Entity object type of the backup object. 
+  + `id` - Specifies the ID of the object to be backed up.
 
-    * `name` - Specifies backup object name.
+  + `type` - Entity object type of the backup object.
+
+  + `name` - Specifies backup object name.
+  

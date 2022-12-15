@@ -39,7 +39,7 @@ The following arguments are supported:
     Changing this creates a new VPC endpoint service.
 
 * `port_id` (Required) - Specifies the ID for identifying the backend resource of the VPC endpoint service.
-    - If the `server_type` is **VM**, the value is the NIC ID of the ECS where the VPC endpoint service is deployed. 
+    - If the `server_type` is **VM**, the value is the NIC ID of the ECS where the VPC endpoint service is deployed.
     - If the `server_type` is **VIP**, the value is the NIC ID of the physical server where virtual resources are created.
     - If the `server_type` is **LB**, the value is the ID of the port bound to the private IP address of the load balancer.
 
@@ -56,7 +56,7 @@ The following arguments are supported:
 The `port_mapping` block supports:
 
 * `protocol` - (Optional) Specifies the protocol used in port mappings.
-    The value can be _TCP_ or _UDP_. The default value is _TCP_.
+    The value can be *TCP* or *UDP*. The default value is *TCP*.
 
 * `service_port` - (Optional) Specifies the port for accessing the VPC endpoint service.
     This port is provided by the backend service to provide services. The value ranges from 1 to 65535.

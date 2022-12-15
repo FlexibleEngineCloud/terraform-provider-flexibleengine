@@ -96,6 +96,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 }
 ```
 
+<!--markdownlint-disable MD033-->
 ## Argument Reference
 
 The following arguments are supported:
@@ -126,7 +127,8 @@ The following arguments are supported:
 * `http2_enable` - (Optional, Bool) Specifies whether to use HTTP/2. The default value is false.
     This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
 
-* `transparent_client_ip_enable` - (Optional, Bool) Specifies whether to pass source IP addresses of the clients to backend servers.
+* `transparent_client_ip_enable` - (Optional, Bool) Specifies whether to pass source IP addresses of the clients to
+  backend servers.
   + For TCP and UDP listeners, the value can be true or false, and the default value is false.
   + For HTTP and HTTPS listeners, the value can only be true.
 

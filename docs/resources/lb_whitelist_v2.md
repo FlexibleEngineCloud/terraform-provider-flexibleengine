@@ -26,11 +26,11 @@ The following arguments are supported:
 * `enable_whitelist` - (Optional) Specify whether to enable access control.
 
 * `whitelist` - (Optional) Specifies the IP addresses in the whitelist. Use commas(,) to separate
-	the multiple IP addresses.
+  the multiple IP addresses.
 
 * `tenant_id` - (Optional) The UUID of the tenant who owns the whitelist.
-    Only administrative users can specify a tenant UUID other than their own.
-    Changing this creates a new whitelist.
+  Only administrative users can specify a tenant UUID other than their own.
+  Changing this creates a new whitelist.
 
 ## Attributes Reference
 

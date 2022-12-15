@@ -37,9 +37,8 @@ The following arguments are supported:
   characters (including "\<|>/?) are not allowed.
   Changing this parameter will create a new resource.
 
-* `description` - (Optional) Specifies the description of a snapshot. The value contains 0 to 256 characters, and angle brackets (<) and (>) are not allowed.
-  Changing this parameter will create a new resource.
-
+* `description` - (Optional) Specifies the description of a snapshot. The value contains 0 to 256 characters,
+  and angle brackets (<) and (>) are not allowed. Changing this parameter will create a new resource.
 
 ## Attributes Reference
 
@@ -50,7 +49,6 @@ In addition to the arguments listed above, the following computed attributes are
 * `cluster_name` - Indicates the CSS cluster name.
 
 * `backup_type` - Indicates the snapshot creation mode, the value should be "manual" or "automated".
-
 
 ## Import
 

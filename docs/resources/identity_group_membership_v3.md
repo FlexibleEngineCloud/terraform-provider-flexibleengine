@@ -6,8 +6,7 @@ subcategory: "Identity and Access Management (IAM)"
 
 Manages a User Group Membership resource within FlexibleEngine IAM service.
 
-Note: You _must_ have admin privileges in your FlexibleEngine cloud to use
-this resource.
+-> You *must* have admin privileges in your FlexibleEngine cloud to use this resource.
 
 ## Example Usage
 
@@ -42,7 +41,7 @@ resource "flexibleengine_identity_group_membership_v3" "membership_1" {
 
 The following arguments are supported:
 
-* `group` - (Required) The group ID of this membership. 
+* `group` - (Required) The group ID of this membership.
 
 * `users` - (Required) A List of user IDs to associate to the group.
 
@@ -53,4 +52,3 @@ The following attributes are exported:
 * `group` - See Argument Reference above.
 
 * `users` - See Argument Reference above.
-

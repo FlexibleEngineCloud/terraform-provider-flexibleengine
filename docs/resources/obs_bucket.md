@@ -141,12 +141,12 @@ The following arguments are supported:
 
 * `bucket` - (Required) Specifies the name of the bucket. Changing this parameter will create a new resource.
   A bucket must be named according to the globally applied DNS naming regulations as follows:
-  * The name must be globally unique in OBS.
-  * The name must contain 3 to 63 characters. Only lowercase letters, digits, hyphens (-), and periods (.) are allowed.
-  * The name cannot start or end with a period (.) or hyphen (-), and cannot contain two consecutive periods (.) or
+  + The name must be globally unique in OBS.
+  + The name must contain 3 to 63 characters. Only lowercase letters, digits, hyphens (-), and periods (.) are allowed.
+  + The name cannot start or end with a period (.) or hyphen (-), and cannot contain two consecutive periods (.) or
     contain a period (.) and a hyphen (-) adjacent to each other.
-  * The name cannot be an IP address.
-  * If the name contains any periods (.), a security certificate verification message may appear when you access
+  + The name cannot be an IP address.
+  + If the name contains any periods (.), a security certificate verification message may appear when you access
     the bucket or its objects by entering a domain name.
 
 * `storage_class` - (Optional) Specifies the storage class of the bucket. OBS provides three storage classes:
@@ -155,8 +155,8 @@ The following arguments are supported:
 * `acl` - (Optional) Specifies the ACL policy for a bucket. The predefined common policies are as follows:
     "private", "public-read", "public-read-write" and "log-delivery-write". Defaults to `private`.
 
-* `versioning` - (Optional) Whether enable versioning. Once you version-enable a bucket, it can never return to an unversioned state.
-  You can, however, suspend versioning on that bucket.
+* `versioning` - (Optional) Whether enable versioning. Once you version-enable a bucket,
+  it can never return to an unversioned state. You can, however, suspend versioning on that bucket.
 
 * `encryption` - (Optional) Whether enable default server-side encryption of the bucket in SSE-KMS mode.
 
@@ -185,16 +185,20 @@ The `logging` object supports the following:
 
 The `website` object supports the following:
 
-* `index_document` - (Required, unless using `redirect_all_requests_to`) Specifies the default homepage of the static website, only HTML web pages are supported.
+* `index_document` - (Required, unless using `redirect_all_requests_to`) Specifies the default homepage of
+  the static website, only HTML web pages are supported.
   OBS only allows files such as `index.html` in the root directory of a bucket to function as the default homepage.
   That is to say, do not set the default homepage with a multi-level directory structure (for example, /page/index.html).
 
 * `error_document` - (Optional) Specifies the error page returned when an error occurs during static website access.
   Only HTML, JPG, PNG, BMP, and WEBP files under the root directory are supported.
 
-* `redirect_all_requests_to` - (Optional) A hostname to redirect all website requests for this bucket to. Hostname can optionally be prefixed with a protocol (`http://` or `https://`) to use when redirecting requests. The default is the protocol that is used in the original request.
+* `redirect_all_requests_to` - (Optional) A hostname to redirect all website requests for this bucket to.
+  Hostname can optionally be prefixed with a protocol (`http://` or `https://`) to use when redirecting requests.
+  The default is the protocol that is used in the original request.
 
-* `routing_rules` - (Optional) A JSON or XML format containing routing rules describing redirect behavior and when redirects are applied.
+* `routing_rules` - (Optional) A JSON or XML format containing routing rules describing redirect behavior and
+  when redirects are applied.
   Each rule contains a `Condition` and a `Redirect` as shown in the following table:
 
   Parameter | Key
@@ -226,12 +230,20 @@ The `lifecycle_rule` object supports the following:
 
 * `prefix` - (Optional) Object key prefix identifying one or more objects to which the rule applies.
   If omitted, all objects in the bucket will be managed by the lifecycle rule.
-  The prefix cannot start or end with a slash (/), cannot have consecutive slashes (/), and cannot contain the following special characters: \:*?"<>|.
+  The prefix cannot start or end with a slash (/), cannot have consecutive slashes (/),
+  and cannot contain the following special characters: \:*?"<>|.
 
-* `expiration` - (Optional) Specifies a period when objects that have been last updated are automatically deleted. (documented below).
-* `transition` - (Optional) Specifies a period when objects that have been last updated are automatically transitioned to `STANDARD_IA` or `GLACIER` storage class (documented below).
-* `noncurrent_version_expiration` - (Optional) Specifies a period when noncurrent object versions are automatically deleted. (documented below).
-* `noncurrent_version_transition` - (Optional) Specifies a period when noncurrent object versions are automatically transitioned to `STANDARD_IA` or `GLACIER` storage class (documented below).
+* `expiration` - (Optional) Specifies a period when objects that have been last updated are automatically deleted.
+  The object structure is documented below.
+
+* `transition` - (Optional) Specifies a period when objects that have been last updated are automatically transitioned
+  to `STANDARD_IA` or `GLACIER` storage class. The object structure is documented below.
+
+* `noncurrent_version_expiration` - (Optional) Specifies a period when noncurrent object versions are automatically deleted.
+  The object structure is documented below.
+
+* `noncurrent_version_transition` - (Optional) Specifies a period when noncurrent object versions are automatically
+  transitioned to `STANDARD_IA` or `GLACIER` storage class. The object structure is documented below.
 
 At least one of `expiration`, `transition`, `noncurrent_version_expiration`, `noncurrent_version_transition` must be specified.
 
@@ -261,7 +273,9 @@ The `noncurrent_version_transition` object supports the following
 The following attributes are exported:
 
 * `id` - The name of the bucket.
+
 * `bucket_domain_name` - The bucket domain name. Will be of format `bucketname.oss.region.prod-cloud-ocb.orange-business.com`.
+
 * `region` - The region this bucket resides in.
 
 ## Import
@@ -276,6 +290,7 @@ Note that the imported state may not be identical to your resource definition, d
 missing from the API response. The missing attributes include `acl` and `force_destroy`.
 It is generally recommended running `terraform plan` after importing an OBS bucket.
 Also you can ignore changes as below.
+
 ```
 resource "flexibleengine_obs_bucket" "bucket" {
     ...

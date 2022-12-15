@@ -6,8 +6,7 @@ subcategory: "Identity and Access Management (IAM)"
 
 Manages a V3 Role assignment within group on FlexibleEngine IAM Service.
 
-Note: You _must_ have admin privileges in your FlexibleEngine cloud to use
-this resource. 
+-> You *must* have admin privileges in your FlexibleEngine cloud to use this resource.
 
 ## Example Usage: Assign Role On Project Level
 

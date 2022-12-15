@@ -72,13 +72,16 @@ resource "flexibleengine_rts_stack_v1" "mystack" {
 STACK
  }
  ```
+
 ## Argument Reference
+
 The following arguments are supported:
 
+* `name` - (Required) A unique name for the stack. The value must meet the regular expression rule (`^[a-zA-Z][a-zA-Z0-9_.-]{0,254}$`).
+  Changing this creates a new stack.
 
-* `name` - (Required) A unique name for the stack. The value must meet the regular expression rule (`^[a-zA-Z][a-zA-Z0-9_.-]{0,254}$`). Changing this creates a new stack.
-
-* `template_body` - (Optional; Required if `template_url` is empty) Structure containing the template body. The template content must use the yaml syntax.
+* `template_body` - (Optional; Required if `template_url` is empty) Structure containing the template body.
+  The template content must use the yaml syntax.
 
 * `template_url` - (Optional; Required if `template_body` is empty) Location of a file containing the template body.
 
@@ -93,9 +96,8 @@ The following arguments are supported:
 * `timeout_mins` - (Optional) Specifies the timeout duration.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
-
-
 
 * `outputs` - A map of outputs from the stack.
 
@@ -105,7 +107,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - Specifies the stack status.
 
-
 ## Import
 
 RTS Stacks can be imported using the `name`, e.g.
@@ -114,14 +115,11 @@ RTS Stacks can be imported using the `name`, e.g.
 $ terraform import flexibleengine_rts_stack_v1.mystack rts-stack
 ```
 
-
-<a id="timeouts"></a>
 ## Timeouts
 
 `flexibleengine_rts_stack_v1` provides the following
 [Timeouts](/docs/configuration/resources.html#timeouts) configuration options:
 
-- `create` - (Default `30 minutes`) Used for Creating Stacks
-- `update` - (Default `30 minutes`) Used for Stack modifications
-- `delete` - (Default `30 minutes`) Used for destroying stacks.
-
+* `create` - (Default `30 minutes`) Used for Creating Stacks
+* `update` - (Default `30 minutes`) Used for Stack modifications
+* `delete` - (Default `30 minutes`) Used for destroying stacks.

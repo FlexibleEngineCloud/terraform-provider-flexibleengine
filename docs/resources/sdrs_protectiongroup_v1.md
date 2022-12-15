@@ -42,10 +42,10 @@ The following arguments are supported:
 * `source_vpc_id` - (Required) Specifies the ID of the source VPC. Changing this creates a new group.
 
 * `dr_type` - (Optional) Specifies the deployment model. The default value is migration indicating migration within a VPC.
-	Changing this creates a new group.
+  Changing this creates a new group.
 
-* `enable` - (Optional) Enable protection or not. It can only be set to true when there's replication pairs within the protection group.
-
+* `enable` - (Optional) Enable protection or not. It can only be set to true when there's replication pairs within
+  the protection group.
 
 ## Attributes Reference
 

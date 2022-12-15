@@ -22,7 +22,8 @@ data "flexibleengine_lb_certificate_v2" "by_name" {
 
 ## Argument Reference
 
-The arguments of this data source act as filters for querying the available Certificates in the current region. The given filters must match exactly one Certificate whose data will be exported as attributes.
+The arguments of this data source act as filters for querying the available Certificates in the current region.
+The given filters must match exactly one Certificate whose data will be exported as attributes.
 
 * `id` - (Optional) The id of the specific Certificate to retrieve.
 
@@ -32,7 +33,6 @@ The arguments of this data source act as filters for querying the available Cert
 * `description` - (Optional) Human-readable description for the Certificate.
 
 * `domain` - (Optional) The domain of the Certificate.
-
 
 ## Attributes Reference
 

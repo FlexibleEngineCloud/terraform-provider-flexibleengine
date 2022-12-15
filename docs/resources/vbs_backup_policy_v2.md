@@ -69,13 +69,12 @@ The following arguments are supported:
 * `resources` - (Optional) Specifies one or more volumes associated with the backup policy.
     Any previously associated backup policy will no longer apply.
 
-
 ## Attributes Reference
 
 All of the argument attributes are also exported as result attributes:
 
 * `id` - Specifies a backup policy ID.
- 
+
 * `policy_resource_count` - Specifies the number of volumes associated with the backup policy.
 
 ## Import

@@ -35,8 +35,8 @@ The following arguments are supported:
 * `region` - (Optional, String, ForceNew) The region in which to create the VPC flow log resource.
   If omitted, the provider-level region will be used. Changing this creates a new VPC flow log.
 
-* `name` - (Required, String) Specifies the VPC flow log name.
-  The value is a string of 1 to 64 characters that can contain letters, digits, underscores (_), hyphens (-) and periods (.).
+* `name` - (Required, String) Specifies the VPC flow log name. The value is a string of 1 to 64 characters
+  that can contain letters, digits, underscores (_), hyphens (-) and periods (.).
 
 * `resource_id` - (Required, String, ForceNew) Specifies the network port ID.
   Changing this creates a new VPC flow log.

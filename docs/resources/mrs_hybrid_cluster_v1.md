@@ -8,7 +8,7 @@ Manages a MRS hybrid cluster resource cluster within FlexibleEngine.
 
 !> **Warning:** It will be deprecated, using `flexibleengine_mrs_cluster_v2` instead.
 
-## Example Usage:
+## Example Usage
 
 ```hcl
 resource "flexibleengine_vpc_v1" "vpc_1" {
@@ -76,17 +76,17 @@ The following arguments are supported:
 
 * `subnet_id` - (Required) Specifies the id of the subnet.
 
-* `safe_mode` - (Optional) MRS cluster running mode 
+* `safe_mode` - (Optional) MRS cluster running mode
     - 0: common mode
 
-        The value indicates that the Kerberos authentication is disabled. 
-        Users can use all functions provided by the cluster. 
+        The value indicates that the Kerberos authentication is disabled.
+        Users can use all functions provided by the cluster.
     - 1: safe mode (by default)
 
-        The value indicates that the Kerberos authentication is enabled. 
-        Common users cannot use the file management or job management functions of an MRS cluster 
-        and cannot view cluster resource usage or the job records of Hadoop and Spark. To use these 
-        functions, the users must obtain the relevant permissions from the MRS Manager administrator. 
+        The value indicates that the Kerberos authentication is enabled.
+        Common users cannot use the file management or job management functions of an MRS cluster
+        and cannot view cluster resource usage or the job records of Hadoop and Spark. To use these
+        functions, the users must obtain the relevant permissions from the MRS Manager administrator.
         The request has the cluster_admin_secret parameter only when safe_mode is set to 1.
 
 * `cluster_admin_secret` - (Required) Indicates the password of the MRS Manager administrator.
@@ -112,9 +112,9 @@ The following arguments are supported:
 
 * `component_list` - (Required) Component name
     - Presto, Hadoop, Spark, HBase, Hive, Tez, Hue, Loader, Flume, Kafka and Storm are supported by MRS 2.0.1 or later.
-    - Presto, Hadoop, Spark, HBase, Opentsdb, Hive, Hue, Loader, Flink, Flume, Kafka, KafkaManager and Storm are supported by MRS 1.8.9.
+    - Presto, Hadoop, Spark, HBase, Opentsdb, Hive, Hue, Loader, Flink, Flume, Kafka, KafkaManager and Storm are
+      supported by MRS 1.8.9.
     - Hadoop, Spark, HBase, Hive, Hue, Loader, Flume, Kafka and Storm are supported by versions earlier than MRS 1.8.9.
-
 
 * `master_nodes` - (Required) Specifies the master nodes information.
 
@@ -126,15 +126,18 @@ The following arguments are supported:
 
 * `streaming_task_nodes` - (Optional) Specifies the streaming task nodes information.
 
-
 The `master_nodes`, `analysis_core_nodes`, `streaming_core_nodes`, `analysis_task_nodes`, `streaming_task_nodes` block supports:
 
 * `flavor` - (Required) Best match based on several years of commissioning
     experience. MRS supports specifications of hosts, and host specifications are
     determined by CPUs, memory, and disks space.
-    - Master nodes support s1.4xlarge and s1.8xlarge, c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
-    - Core nodes of a streaming cluster support s1.xlarge, c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
-    - Core nodes of an analysis cluster support all specifications c2.2xlarge, s1.xlarge, s1.4xlarge, s1.8xlarge, d1.xlarge, d1.2xlarge, d1.4xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
+    - Master nodes support s1.4xlarge and s1.8xlarge, c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4,
+      c3.8xlarge.4, c3.15xlarge.4.
+    - Core nodes of a streaming cluster support s1.xlarge, c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge, d1.8xlarge,
+      c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
+    - Core nodes of an analysis cluster support all specifications c2.2xlarge, s1.xlarge, s1.4xlarge, s1.8xlarge,
+      d1.xlarge, d1.2xlarge, d1.4xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2,
+      c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
 
     The following provides specification details.
 
@@ -159,7 +162,7 @@ The `master_nodes`, `analysis_core_nodes`, `streaming_core_nodes`, `analysis_tas
     d2.2xlarge.linux.mrs | 8 | 64 | 40 | -
     d2.4xlarge.linux.mrs | 16 | 128 | 40 | 1.8TB*8HDDs
     d2.8xlarge.linux.mrs | 32 | 256 | 40 | 1.8TB*16HDDs
-* `node_number` - (Required) Number of nodes. The value ranges from 0 to 500 and the default value is 0. 
+* `node_number` - (Required) Number of nodes. The value ranges from 0 to 500 and the default value is 0.
     The total number of Core and Task nodes cannot exceed 500.
 * `data_volume_type` - (Required) Data disk storage type of the node, supporting SATA and SSD currently
     - SATA: common I/O
@@ -168,7 +171,6 @@ The `master_nodes`, `analysis_core_nodes`, `streaming_core_nodes`, `analysis_tas
     Value range: 100 GB to 32000 GB
 * `data_volume_count` - (Required) Number of data disks of the node
     Value range: 0 to 10
-
 
 ## Attributes Reference
 

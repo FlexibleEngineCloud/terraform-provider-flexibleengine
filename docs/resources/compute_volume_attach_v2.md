@@ -67,8 +67,8 @@ The following arguments are supported:
 * `volume_id` - (Required) The ID of the Volume to attach to an Instance.
 
 * `device` - (Optional) The device of the volume attachment (ex: `/dev/vdc`).
-  _NOTE_: Being able to specify a device is dependent upon the hypervisor in
-  use. There is a chance that the device specified in Terraform will not be
+  Being able to specify a device is dependent upon the hypervisor in use.
+  There is a chance that the device specified in Terraform will not be
   the same device the hypervisor chose. If this happens, Terraform will wish
   to update the device upon subsequent applying which will cause the volume
   to be detached and reattached indefinitely. Please use with caution.
@@ -80,7 +80,7 @@ The following attributes are exported:
 * `region` - See Argument Reference above.
 * `instance_id` - See Argument Reference above.
 * `volume_id` - See Argument Reference above.
-* `device` - See Argument Reference above. _NOTE_: The correctness of this
+* `device` - See Argument Reference above. The correctness of this
   information is dependent upon the hypervisor in use. In some cases, this
   should not be used as an authoritative piece of information.
 

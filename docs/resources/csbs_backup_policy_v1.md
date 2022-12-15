@@ -26,14 +26,17 @@ Provides an FlexibleEngine Backup Policy of Resources.
      trigger_pattern = "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nRRULE:FREQ=WEEKLY;BYDAY=TH;BYHOUR=12;BYMINUTE=27\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
    }
  }
-
  ```
+
 ## Argument Reference
+
 The following arguments are supported:
 
-* `name` - (Required) Specifies the name of backup policy. The value consists of 1 to 255 characters and can contain only letters, digits, underscores (_), and hyphens (-).
+* `name` - (Required) Specifies the name of backup policy. The value consists of 1 to 255 characters and
+  can contain only letters, digits, underscores (_), and hyphens (-).
 
-* `description` - (Optional) Backup policy description. The value consists of 0 to 255 characters and must not contain a greater-than sign (>) or less-than sign (<).
+* `description` - (Optional) Backup policy description. The value consists of 0 to 255 characters and
+  must not contain a greater-than sign (>) or less-than sign (<).
 
 * `provider_id` - (Required) Specifies backup provider ID. Default value is **fc4d5750-22e7-4798-8a46-f48f62c4c1da**
 
@@ -41,31 +44,34 @@ The following arguments are supported:
 
 * `scheduled_operation` block supports the following arguments:
 
-    * `name` - (Optional) Specifies Scheduling period name.The value consists of 1 to 255 characters and can contain only letters, digits, underscores (_), and hyphens (-).
-    
-    * `description` - (Optional) Specifies Scheduling period description.The value consists of 0 to 255 characters and must not contain a greater-than sign (>) or less-than sign (<).
+    + `name` - (Optional) Specifies Scheduling period name.The value consists of 1 to 255 characters and
+      can contain only letters, digits, underscores (_), and hyphens (-).
 
-    * `enabled` - (Optional) Specifies whether the scheduling period is enabled. Default value is **true**
+    + `description` - (Optional) Specifies Scheduling period description.The value consists of 0 to 255 characters and
+      must not contain a greater-than sign (>) or less-than sign (<).
 
-    * `max_backups` - (Optional) Specifies maximum number of backups that can be automatically created for a backup object.
+    + `enabled` - (Optional) Specifies whether the scheduling period is enabled. Default value is **true**
 
-    * `retention_duration_days` - (Optional) Specifies duration of retaining a backup, in days.
+    + `max_backups` - (Optional) Specifies maximum number of backups that can be automatically created for a backup object.
 
-    * `permanent` - (Optional) Specifies whether backups are permanently retained.
+    + `retention_duration_days` - (Optional) Specifies duration of retaining a backup, in days.
 
-    * `trigger_pattern` - (Required) Specifies Scheduling policy of the scheduler.
+    + `permanent` - (Optional) Specifies whether backups are permanently retained.
 
-    * `operation_type` - (Required) Specifies Operation type, which can be backup.
+    + `trigger_pattern` - (Required) Specifies Scheduling policy of the scheduler.
+
+    + `operation_type` - (Required) Specifies Operation type, which can be backup.
 
 * `resource` block supports the following arguments:
 
-    * `id` - (Required) Specifies the ID of the object to be backed up.
-    
-    * `type` - (Required) Entity object type of the backup object. If the type is VMs, the value is **OS::Nova::Server**.
+    + `id` - (Required) Specifies the ID of the object to be backed up.
 
-    * `name` - (Required) Specifies backup object name.
+    + `type` - (Required) Entity object type of the backup object. If the type is VMs, the value is **OS::Nova::Server**.
+
+    + `name` - (Required) Specifies backup object name.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `status` - Status of Backup Policy.
@@ -74,14 +80,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * scheduled_operation - Backup plan information
 
-    * `id` -  Specifies Scheduling period ID.
+    + `id` -  Specifies Scheduling period ID.
 
-    * `trigger_id` -  Specifies Scheduler ID.
+    + `trigger_id` -  Specifies Scheduler ID.
 
-    * `trigger_name` -  Specifies Scheduler name.
+    + `trigger_name` -  Specifies Scheduler name.
 
-    * `trigger_type` -  Specifies Scheduler type.
-
+    + `trigger_type` -  Specifies Scheduler type.
 
 ## Import
 
@@ -90,7 +95,3 @@ Backup Policy can be imported using  `id`, e.g.
 ```
 $ terraform import flexibleengine_csbs_backup_policy_v1.backup_policy_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
 ```
-
-
-
-

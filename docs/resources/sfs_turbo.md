@@ -26,6 +26,7 @@ resource "flexibleengine_sfs_turbo" "sfs-turbo-1" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `name` - (Required) Specifies the name of an SFS Turbo file system. The value contains 4 to 64
@@ -57,6 +58,7 @@ The following arguments are supported:
   and *20048* in the security group you specified.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The UUID of the SFS Turbo file system.
@@ -70,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 * `export_location` - Tthe mount point of the SFS Turbo file system.
 
 * `available_capacity` - The available capacity of the SFS Turbo file system in the unit of GB.
-
 
 ## Import
 

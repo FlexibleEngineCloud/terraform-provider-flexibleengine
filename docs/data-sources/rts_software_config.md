@@ -8,7 +8,6 @@ The RTS Software Config data source provides details about a specific RTS Softwa
 
 ## Example Usage
 
-
 ```hcl
 variable "config_name" {}
 
@@ -25,6 +24,7 @@ resource "flexibleengine_rts_software_deployment_v1" "mydeployment" {
 ```
 
 ## Argument Reference
+
 The following arguments are supported:
 
 * `id` - (Optional) The id of the software configuration.
@@ -32,6 +32,7 @@ The following arguments are supported:
 * `name` - (Optional) The name of the software configuration.
 
 ## Attributes Reference
+
 In addition to all arguments above, the following attributes are exported:
 
 * `group` - The namespace that groups this software configuration by when it is delivered to a server.
@@ -43,4 +44,3 @@ In addition to all arguments above, the following attributes are exported:
 * `config` - The software configuration code.
 
 * `options` - The software configuration options.
-

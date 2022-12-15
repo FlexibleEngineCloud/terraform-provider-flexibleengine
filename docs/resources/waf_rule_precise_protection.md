@@ -9,6 +9,7 @@ Manages a WAF Precise Protection Rule resource within FlexibleEngine.
 ## Example Usage
 
 ### A rule takes effect immediately
+
 ```hcl
 resource "flexibleengine_waf_rule_precise_protection" "rule_1" {
   policy_id = var.policy_id
@@ -24,6 +25,7 @@ resource "flexibleengine_waf_rule_precise_protection" "rule_1" {
 ```
 
 ### A rule takes effect at the scheduled time
+
 ```hcl
 resource "flexibleengine_waf_rule_precise_protection" "rule_1" {
   policy_id = var.policy_id
@@ -38,8 +40,6 @@ resource "flexibleengine_waf_rule_precise_protection" "rule_1" {
     logic   = "equal"
     content = "192.168.1.1"
   }
-}
-
 }
 ```
 
@@ -68,7 +68,6 @@ The following arguments are supported:
 * `end_time` - (Optional, String) Specifies the UTC time when the precise protection rule expires.
   The time must be in "yyyy-MM-dd HH:mm:ss" format.
 
-
 The `conditions` block supports:
 
 * `field` - (Required, String) Specifies the matched field. The value can be *path*, *user-agent*, *ip*,
@@ -84,7 +83,6 @@ The `conditions` block supports:
   If `field` is set to *ip*, `logic` can only be *equal* or *not_equal*.
 
 * `content` - (Required, String) Specifies the content matching the condition.
-
 
 ## Attributes Reference
 

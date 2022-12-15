@@ -42,12 +42,11 @@ The arguments of this data source act as filters for querying the BMSs details.
 
 * `image_id` (Optional) - The BMS image.
 
-
 ## Attributes Reference
 
-All of the argument attributes are also exported as result attributes. 
+All of the argument attributes are also exported as result attributes.
 
-* `host_id` - 	It is the host ID of the BMS.
+* `host_id` - It is the host ID of the BMS.
 
 * `progress` - This is a reserved attribute.
 

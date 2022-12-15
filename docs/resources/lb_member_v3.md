@@ -44,7 +44,7 @@ The following arguments are supported:
 * `protocol_port` - (Required, Int, ForceNew) Specifies the port on which to listen for client traffic.
   Changing this creates a new member.
 
-* `weight` - (Optional, Int)  Specifies the positive integer value that indicates the relative portion of traffic 
+* `weight` - (Optional, Int)  Specifies the positive integer value that indicates the relative portion of traffic
   that this member should receive from the pool. For example, a member with a weight of 10 receives five times as
   much traffic as a member with a weight of 2.
 

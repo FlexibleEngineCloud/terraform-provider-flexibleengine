@@ -40,20 +40,24 @@ The following arguments are supported:
 
 * `description` - (Optional) The description of a protected instance. Changing this creates a new instance.
 
-* `group_id` - (Required) Specifies the ID of the protection group where a protected instance is added. Changing this creates a new instance.
+* `group_id` - (Required) Specifies the ID of the protection group where a protected instance is added.
+  Changing this creates a new instance.
 
 * `server_id` - (Required) Specifies the ID of the source server. Changing this creates a new instance.
 
 * `cluster_id` - (Optional) Specifies the ID of a storage pool. Changing this creates a new instance.
 
-* `primary_subnet_id` - (Optional) Specifies the subnet ID of the primary NIC on the target server. Changing this creates a new instance.
+* `primary_subnet_id` - (Optional) Specifies the subnet ID of the primary NIC on the target server.
+  Changing this creates a new instance.
 
-* `primary_ip_address` - (Optional) Specifies the IP address of the primary NIC on the target server. Changing this creates a new instance.
+* `primary_ip_address` - (Optional) Specifies the IP address of the primary NIC on the target server.
+  Changing this creates a new instance.
 
-* `delete_target_server` - (Optional) Specifies whether to delete the target server. The default value is false.. Changing this creates a new instance.
+* `delete_target_server` - (Optional) Specifies whether to delete the target server. The default value is false.
+  Changing this creates a new instance.
 
-* `delete_target_eip` - (Optional) Specifies whether to delete the EIP of the target server. The default value is false. Changing this creates a new instance.
-
+* `delete_target_eip` - (Optional) Specifies whether to delete the EIP of the target server. The default value is false.
+  Changing this creates a new instance.
 
 ## Attributes Reference
 

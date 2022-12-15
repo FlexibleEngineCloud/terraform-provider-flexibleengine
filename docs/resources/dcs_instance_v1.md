@@ -41,7 +41,6 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
 }
 ```
 
-
 ### DCS instance for Redis 3.0
 
 ```hcl

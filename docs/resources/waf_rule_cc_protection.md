@@ -34,7 +34,7 @@ The following arguments are supported:
 
 * `policy_id` - (Required, String, ForceNew) Specifies the WAF policy ID. Changing this creates a new rule.
 
-* `path` - (Required, String) Specifies the URL to which the rule applies. The path ending with * indicates
+* `path` - (Required, String) Specifies the URL to which the rule applies. The path ending with \* indicates
   that the path is used as a prefix. For example, if the path to be protected is /admin/test.php or /adminabc,
   set Path to /admin*.
 
@@ -44,18 +44,19 @@ The following arguments are supported:
 * `limit_period` - (Required, Int) Specifies the rate limiting period. The value ranges from 0 seconds to 2^32 seconds.
 
 * `mode` - (Required, String) Specifies the rate limit mode. Valid Options are:
-  * *ip* - A web visitor is identified by the IP address.
-  * *cookie* - A web visitor is identified by the cookie key value.
-  * *other* - A web visitor is identified by the Referer field(user-defined request source).
+  + *ip* - A web visitor is identified by the IP address.
+  + *cookie* - A web visitor is identified by the cookie key value.
+  + *other* - A web visitor is identified by the Referer field(user-defined request source).
 
 * `cookie` - (Optional, String) Specifies the cookie name. This field is mandatory when `mode` is set to *cookie*.
 
-* `content` - (Optional, String) Specifies the category content. The format is as follows: http://www.example.com/path.
+* `content` - (Optional, String) Specifies the category content. The format is as follows: "http://www.example.com/path".
   This field is mandatory when `mode` is set to *other*.
 
 * `action` - (Required, String) Specifies the action when the number of requests reaches the upper limit. Valid Options are:
-  * *block* - block the requests.
-  * *captcha* - Verification code. The user needs to enter the correct verification code after blocking to restore the correct access page.
+  + *block* - block the requests.
+  + *captcha* - Verification code. The user needs to enter the correct verification code after blocking to
+    restore the correct access page.
 
   If `mode` is set to *other*, this parameter value can only be *block*.
 
@@ -65,7 +66,6 @@ The following arguments are supported:
   The options are `application/json`, `text/html`, and `text/xml`.
 
 * `block_page_content` - (Optional, String) Specifies the content of the returned page.
-
 
 ## Attributes Reference
 

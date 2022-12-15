@@ -7,7 +7,7 @@ subcategory: "Object Storage Service (OSS)"
 Manages an OBS bucket **Cross-Region Replication** resource within FlexibleEngine.
 
 [Cross-Region replication](https://docs.prod-cloud-ocb.orange-business.com/usermanual/obs/obs_03_0002.html)
-provides the capability for data disaster recovery across regions, catering to your needs for off-site data backup. 
+provides the capability for data disaster recovery across regions, catering to your needs for off-site data backup.
 
 ## Example Usage
 
@@ -53,7 +53,7 @@ The following arguments are supported:
 
 * `agency` - (Required) Specifies the IAM agency applied to the cross-region replication function.
 
-  -> The IAM agency is a cloud service agency of OBS. The OBS project must have the **OBS FullAccess** permissions. 
+  -> The IAM agency is a cloud service agency of OBS. The OBS project must have the **OBS FullAccess** permissions.
 
 * `rule` - (Optional) A configuration of object cross-region replication management. The object supports the following:
 
@@ -66,7 +66,6 @@ The following arguments are supported:
   + `storage_class` - (Optional) Specifies the storage class for replicated objects. Valid values are "STANDARD",
     "WARM" (Infrequent Access) and "COLD" (Archive).
     If omitted, the storage class of object copies is the same as that of objects in the source bucket.
-
 
 ## Attributes Reference
 

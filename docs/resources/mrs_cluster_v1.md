@@ -64,9 +64,13 @@ The following arguments are supported:
 * `master_node_size` - (Required) Best match based on several years of commissioning
     experience. MRS supports specifications of hosts, and host specifications are
     determined by CPUs, memory, and disks space.
-    - Master nodes support s1.4xlarge and s1.8xlarge, c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
-    - Core nodes of a streaming cluster support s1.xlarge, c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
-    - Core nodes of an analysis cluster support all specifications c2.2xlarge, s1.xlarge, s1.4xlarge, s1.8xlarge, d1.xlarge, d1.2xlarge, d1.4xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
+    + Master nodes support s1.4xlarge and s1.8xlarge, c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4,
+      c3.8xlarge.4, c3.15xlarge.4.
+    + Core nodes of a streaming cluster support s1.xlarge, c2.2xlarge, s1.2xlarge, s1.4xlarge, s1.8xlarge, d1.8xlarge,
+      c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2, c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4.
+    + Core nodes of an analysis cluster support all specifications c2.2xlarge, s1.xlarge, s1.4xlarge, s1.8xlarge,
+      d1.xlarge, d1.2xlarge, d1.4xlarge, d1.8xlarge, , c3.2xlarge.2, c3.xlarge.4, c3.2xlarge.4, c3.4xlarge.2,
+      c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
 
     The following provides specification details.
 
@@ -170,11 +174,13 @@ The `component_list` block supports:
       - The analysis cluster contains the following components: Presto, Hadoop, Spark, HBase, Hive, Hue, Loader, and Tez
       - The streaming cluster contains the following components: Kafka, Storm, and Flume.
     + MRS 1.8.9 supports the following components:
-      - The analysis cluster contains the following components: Presto, Hadoop, Spark, HBase, Opentsdb, Hive, Hue, Loader, and Flink
+      - The analysis cluster contains the following components: Presto, Hadoop, Spark, HBase, Opentsdb, Hive, Hue, Loader,
+        and Flink.
       - The streaming cluster contains the following components: Kafka, KafkaManager, Storm, and Flume.
 
 The `add_jobs` block supports:
-* `job_type` - (Required) Job type 1: MapReduce 2: Spark 3: Hive Script 4: HiveQL
+
+* `job_type` - (Required) Job type. 1: MapReduce 2: Spark 3: Hive Script 4: HiveQL
     (not supported currently) 5: DistCp, importing and exporting data (not supported
     in this API currently). 6: Spark Script 7: Spark SQL, submitting Spark SQL statements
     (not supported in this API currently). NOTE: Spark and Hive jobs can be added
@@ -262,6 +268,7 @@ In addition to all arguments above, the following attributes are exported:
 * `component_list` - See Argument Reference below.
 
 The component_list attributes:
+
 * `component_id` - Component ID. For example, component_id of Hadoop is MRS 3.1.0-LTS.1_001, MRS 2.1.0_001,
     MRS 2.0.1_001, and MRS 1.8.9_001.
 * `component_name` - Component name.

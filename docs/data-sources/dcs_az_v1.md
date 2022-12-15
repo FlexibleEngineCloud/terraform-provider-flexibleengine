@@ -27,7 +27,6 @@ data "flexibleengine_dcs_az_v1" "az1" {
 
 * `port` - (Optional) Indicates the port number of an AZ.
 
-
 ## Attributes Reference
 
 `id` is set to the ID of the found az. In addition, the following attributes

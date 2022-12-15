@@ -10,7 +10,7 @@ Manages a V2 subscription resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_smn_topic_v2" "topic_1" {
-  name		= "topic_1"
+  name         = "topic_1"
   display_name = "The display name of topic_1"
 }
 
@@ -56,7 +56,6 @@ The following arguments are supported:
      0 indicates that the subscription is not confirmed.
      1 indicates that the subscription is confirmed.
      3 indicates that the subscription is canceled.
-
 
 ## Attributes Reference
 

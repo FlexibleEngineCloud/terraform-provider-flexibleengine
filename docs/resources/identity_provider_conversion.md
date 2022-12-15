@@ -54,9 +54,9 @@ The `conversion_rules` block supports:
 
 * `remote` - (Required, List) Specifies Federated user information in the IDP system.
 
-  -> **NOTE:** 
+  -> **NOTE:**
     If the protocol of identity provider is SAML, this field is an expression consisting of assertion
-    attributes and operators.<br/>
+    attributes and operators.  
     If the protocol of identity provider is OIDC, the value of this field is determined by the ID token.
 
 The `local` block supports:

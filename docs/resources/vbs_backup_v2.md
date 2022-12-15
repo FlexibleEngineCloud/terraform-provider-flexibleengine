@@ -5,8 +5,8 @@ subcategory: "Volume Backup Service (VBS)"
 # flexibleengine_vbs_backup_v2
 
 Provides an VBS Backup resource.
- 
-# Example Usage
+
+## Example Usage
 
  ```hcl
 variable "backup_name" {}
@@ -19,7 +19,7 @@ resource "flexibleengine_vbs_backup_v2" "mybackup" {
 }
  ```
 
-# Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -31,8 +31,7 @@ The following arguments are supported:
 
 * `description` - (Optional) The description of the vbs backup. Changing the parameter will create new resource.
 
-
-# Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -48,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `service_metadata` - The metadata of the vbs backup.
 
-# Import
+## Import
 
 VBS Backup can be imported using the `backup id`, e.g.
 

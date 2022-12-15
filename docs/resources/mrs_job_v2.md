@@ -56,24 +56,24 @@ The following arguments are supported:
   + The program support OBS or DHFS to storage program file or package. For OBS, starts with (OBS:) **s3a://** and end
       with **.jar** or **.py**. For DHFS, starts with (DHFS:) **/user**.
 
-  Required if `type` is __MapReduce__ or __SparkSubmit__. Changing this will create a new MRS job resource.
+  Required if `type` is **MapReduce** or **SparkSubmit**. Changing this will create a new MRS job resource.
 
 * `parameters` - (Optional, String, ForceNew) Specifies the parameters for the MRS job. Add an at sign (@) before
   each parameter can prevent the parameters being saved in plaintext format. Each parameters are separated with spaces.
-  This parameter can be set when `type` is __Flink__, __MRS__ or __SparkSubmit__. Changing this will create a new
+  This parameter can be set when `type` is **Flink**, **MRS** or **SparkSubmit**. Changing this will create a new
   MRS job resource.
 
 * `program_parameters` - (Optional, Map, ForceNew) Specifies the the key/value pairs of the program parameters, such as
   thread, memory, and vCPUs, are used to optimize resource usage and improve job execution performance. This parameter
-  can be set when `type` is __Flink__, __SparkSubmit__, __SparkSql__, __SparkScript__, __HiveSql__ or
-  __HiveScript__. Changing this will create a new MRS job resource.
+  can be set when `type` is **Flink**, **SparkSubmit**, **SparkSql**, **SparkScript**, **HiveSql** or
+  **HiveScript**. Changing this will create a new MRS job resource.
 
 * `service_parameters` - (Optional, Map, ForceNew) Specifies the key/value pairs used to modify service configuration.
   Parameter configurations of services are available on the Service Configuration tab page of MRS Manager.
   Changing this will create a new MRS job resource.
 
-* `sql` - (Optional, String, ForceNew) Specifies the SQL command or file path. Only required if `type` is __HiveSql__
-  or __SparkSql__. Changing this will create a new MRS job resource.
+* `sql` - (Optional, String, ForceNew) Specifies the SQL command or file path. Only required if `type` is **HiveSql**
+  or **SparkSql**. Changing this will create a new MRS job resource.
 
 ## Attributes Reference
 
