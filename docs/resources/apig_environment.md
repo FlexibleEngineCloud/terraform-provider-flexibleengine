@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Environments can be imported using their `id` and the ID of the APIG instance to which the environment belongs,
+Environments can be imported using the ID of the APIG instance to which the environment belongs and environment ID,
 separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_environment.test <instance ID>/<id>
+```shell
+terraform import flexibleengine_apig_environment.test <instance_id>/<id>
 ```

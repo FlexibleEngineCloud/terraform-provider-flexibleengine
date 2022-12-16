@@ -59,6 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Keypairs can be imported using the `name`, e.g.
 
-```
-$ terraform import flexibleengine_compute_keypair_v2.my-keypair test-keypair
+```shell
+terraform import flexibleengine_compute_keypair_v2.my-keypair test-keypair
 ```

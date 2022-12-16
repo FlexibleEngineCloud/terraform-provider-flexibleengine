@@ -236,6 +236,6 @@ The following attributes are exported:
 
 S3 bucket can be imported using the `bucket`, e.g.
 
-```
-$ terraform import flexibleengine_s3_bucket.bucket bucket-name
+```shell
+terraform import flexibleengine_s3_bucket.bucket bucket-name
 ```

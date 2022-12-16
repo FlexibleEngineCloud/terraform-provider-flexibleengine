@@ -104,5 +104,5 @@ Database roles can be imported using their `id` (combination of `instance_id`, `
 slash (/), e.g.
 
 ```
-terraform import flexibleengine_dds_database_role.test &ltinstance_id&gt/&ltdb_name&gt/&ltname&gt
+terraform import flexibleengine_dds_database_role.test <instance_id>/<db_name>/<name>
 ```

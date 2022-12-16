@@ -108,6 +108,6 @@ In addition to all arguments above, the following attributes are exported:
 
 VPC endpoint can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vpcep_endpoint.test 828907cc-40c9-42fe-8206-ecc1bdd30060
+```shell
+terraform import flexibleengine_vpcep_endpoint.test 828907cc-40c9-42fe-8206-ecc1bdd30060
 ```

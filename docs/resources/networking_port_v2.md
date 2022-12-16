@@ -125,8 +125,8 @@ The following attributes are exported:
 
 Ports can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
+```shell
+terraform import flexibleengine_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
 ```
 
 ## Notes

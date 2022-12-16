@@ -111,6 +111,6 @@ This resource provides the following timeouts configuration options:
 
 ELB listener can be imported using the listener ID, e.g.
 
-```
-$ terraform import flexibleengine_lb_listener_v3.listener_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```shell
+terraform import flexibleengine_lb_listener_v3.listener_1 5c20fdad-7288-11eb-b817-0255ac10158b
 ```

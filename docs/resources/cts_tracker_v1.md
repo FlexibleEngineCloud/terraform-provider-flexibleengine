@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 CTS tracker can be imported using  `tracker_name`, e.g.
 
-```
-$ terraform import flexibleengine_cts_tracker_v1.tracker system
+```shell
+terraform import flexibleengine_cts_tracker_v1.tracker system
 ```

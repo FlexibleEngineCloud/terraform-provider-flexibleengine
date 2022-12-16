@@ -152,8 +152,8 @@ In addition to all arguments above, the following attributes are exported:
 
 DMS Kafka instance can be imported using the instance id, e.g.
 
-```
-$ terraform import flexibleengine_dms_kafka_instance.instance_1 8d3c7938-dc47-4937-a30f-c80de381c5e3
+```shell
+terraform import flexibleengine_dms_kafka_instance.instance_1 8d3c7938-dc47-4937-a30f-c80de381c5e3
 ```
 
 Note that the imported state may not be identical to your resource definition, because of `access_user`, `password`,
@@ -162,7 +162,7 @@ It is generally recommended running `terraform plan` after importing a DMS Kafka
 You can then decide if changes should be applied to the instance, or the resource
 definition should be updated to align with the instance. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_dms_kafka_instance" "instance_1" {
     ...
 

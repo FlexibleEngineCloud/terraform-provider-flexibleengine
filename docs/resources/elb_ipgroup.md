@@ -58,6 +58,6 @@ This resource provides the following timeouts configuration options:
 
 ELB IP group can be imported using the IP group ID, e.g.
 
-```
-$ terraform import flexibleengine_elb_ipgroup.group_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```shell
+terraform import flexibleengine_elb_ipgroup.group_1 5c20fdad-7288-11eb-b817-0255ac10158b
 ```

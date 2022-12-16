@@ -249,6 +249,6 @@ This resource provides the following timeouts configuration options:
 
 Functions can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_fgs_function.my-func 7117d38e-4c8f-4624-a505-bd96b97d024c
+```shell
+terraform import flexibleengine_fgs_function.my-func 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```

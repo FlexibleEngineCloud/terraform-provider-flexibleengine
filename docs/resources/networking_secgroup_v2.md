@@ -72,6 +72,6 @@ is moot).
 
 Security Groups can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
+```shell
+terraform import flexibleengine_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
 ```

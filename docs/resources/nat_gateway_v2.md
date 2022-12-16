@@ -64,6 +64,6 @@ This resource provides the following timeouts configuration options:
 
 Nat gateway can be imported using the following format:
 
-```
-$ terraform import flexibleengine_nat_gateway_v2.nat_1 d126fb87-43ce-4867-a2ff-cf34af3765d9
+```shell
+terraform import flexibleengine_nat_gateway_v2.nat_1 d126fb87-43ce-4867-a2ff-cf34af3765d9
 ```

@@ -67,7 +67,7 @@ terraform import flexibleengine_waf_dedicated_certificate.certificate_2 3ebd3201
 Note that the imported state is not identical to your resource definition, due to security reason. The missing
 attributes include `certificate`, and `private_key`. You can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_waf_dedicated_certificate" "certificate_2" {
     ...
   lifecycle {

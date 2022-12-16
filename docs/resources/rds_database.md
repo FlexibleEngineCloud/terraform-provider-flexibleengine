@@ -47,6 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 
 RDS database can be imported using the `instance id` and `database name`, e.g.
 
-```
-$ terraform import flexibleengine_rds_database.database_1 instance_id/database_name
+```shell
+terraform import flexibleengine_rds_database.database_1 instance_id/database_name
 ```

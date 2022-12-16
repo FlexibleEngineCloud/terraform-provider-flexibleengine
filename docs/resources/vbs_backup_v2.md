@@ -53,6 +53,6 @@ In addition to all arguments above, the following attributes are exported:
 
 VBS Backup can be imported using the `backup id`, e.g.
 
-```
- $ terraform import flexibleengine_vbs_backup_v2.mybackup 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
+```shell
+terraform import flexibleengine_vbs_backup_v2.mybackup 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
 ```

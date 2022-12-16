@@ -99,6 +99,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Agencies can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_identity_agency_v3.agency 0b97661f9900f23f4fc2c00971ea4dc0
+```shell
+terraform import flexibleengine_identity_agency_v3.agency 0b97661f9900f23f4fc2c00971ea4dc0
 ```

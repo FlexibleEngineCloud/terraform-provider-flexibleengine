@@ -78,6 +78,6 @@ The following attributes are exported:
 This resource can be imported by specifying the zone ID and recordset ID,
 separated by a forward slash.
 
-```
-$ terraform import flexibleengine_dns_recordset_v2.recordset_1 {zone_id}/{recordset_id}
+```shell
+terraform import flexibleengine_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
 ```

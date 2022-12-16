@@ -79,6 +79,6 @@ In addition to all arguments above, the following attributes are exported:
 
 SFS Turbo can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_sfs_turbo 1e3d5306-24c9-4316-9185-70e9787d71ab
+```shell
+terraform import flexibleengine_sfs_turbo 1e3d5306-24c9-4316-9185-70e9787d71ab
 ```

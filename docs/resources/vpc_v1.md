@@ -72,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 
 VPCs can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vpc_v1.vpc_v1 7117d38e-4c8f-4624-a505-bd96b97d024c
+```shell
+terraform import flexibleengine_vpc_v1.vpc_v1 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```

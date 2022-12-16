@@ -284,8 +284,8 @@ The following attributes are exported:
 
 OBS bucket can be imported using the `bucket`, e.g.
 
-```
-$ terraform import flexibleengine_obs_bucket.bucket bucket-name
+```shell
+terraform import flexibleengine_obs_bucket.bucket bucket-name
 ```
 
 Note that the imported state may not be identical to your resource definition, due to some attrubutes
@@ -293,7 +293,7 @@ missing from the API response. The missing attributes include `acl` and `force_d
 It is generally recommended running `terraform plan` after importing an OBS bucket.
 Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_obs_bucket" "bucket" {
     ...
 

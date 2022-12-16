@@ -80,6 +80,6 @@ The following attributes are exported:
 
 OBS bucket cross-region replication can be imported using the *source bucket name*, e.g.
 
-```
-$ terraform import flexibleengine_obs_bucket_replication.replica my-source-bucket
+```shell
+terraform import flexibleengine_obs_bucket_replication.replica my-source-bucket
 ```

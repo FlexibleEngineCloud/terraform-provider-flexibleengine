@@ -94,6 +94,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Backup can be imported using  `backup_record_id`, e.g.
 
-```
-$ terraform import flexibleengine_csbs_backup_v1.backup_v1.backup_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
+```shell
+terraform import flexibleengine_csbs_backup_v1.backup_v1.backup_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
 ```

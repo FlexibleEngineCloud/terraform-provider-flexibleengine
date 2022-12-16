@@ -164,6 +164,6 @@ This resource provides the following timeouts configuration options:
 
 API can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_api_gateway_api.api "774438a28a574ac8a496325d1bf51807"
+```shell
+terraform import flexibleengine_api_gateway_api.api 774438a28a574ac8a496325d1bf51807
 ```

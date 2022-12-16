@@ -111,7 +111,7 @@ Database users can be imported using their `id` (combination of `instance_id`, `
 slash (/), e.g.
 
 ```
-terraform import flexibleengine_dds_database_user.test &ltinstance_id&gt/&ltdb_name&gt/&ltname&gt
+terraform import flexibleengine_dds_database_user.test <instance_id>/<db_name>/<name>
 ```
 
 Due to security reason, the imported state may not be identical to your resource definition (`password` parameter).
@@ -119,7 +119,7 @@ It is generally recommended running `terraform plan` after importing a user reso
 You can then decide if changes should be applied to the user, or the resource definition should be updated to align with
 the user. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_dds_database_user" "test" {
   ...
 

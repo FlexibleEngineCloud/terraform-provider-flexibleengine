@@ -68,8 +68,9 @@ This resource provides the following timeouts configuration options:
 
 ## Import
 
-CCE namespace can be imported using the cluster ID and namespace name separated by a slash, e.g.:
+CCE namespace can be imported using the cluster ID and namespace `name` separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_cce_namespace.test bb6923e4-b16e-11eb-b0cd-0255ac101da1/test-namespace
+```shell
+terraform import flexibleengine_cce_namespace.test <cluster_id>/<id>
+terraform import flexibleengine_cce_namespace.test bb6923e4-b16e-11eb-b0cd-0255ac101da1/test-namespace
 ```

@@ -68,6 +68,6 @@ In addition to all arguments above, the following attributes are exported:
 
 PTR records can be imported using region and floatingip/eip ID, separated by a colon(:), e.g.
 
-```
-$ terraform import flexibleengine_dns_ptrrecord_v2.ptr_1 eu-west-0:d90ce693-5ccf-4136-a0ed-152ce412b6b9
+```shell
+terraform import flexibleengine_dns_ptrrecord_v2.ptr_1 eu-west-0:d90ce693-5ccf-4136-a0ed-152ce412b6b9
 ```

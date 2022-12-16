@@ -122,8 +122,8 @@ In addition to all arguments above, the following attributes are exported:
 
 SFS can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_sfs_file_system_v2 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
+```shell
+terraform import flexibleengine_sfs_file_system_v2 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
 ```
 
 **NOTE:** The `access_to`, `access_type` and `access_level` will not be imported.

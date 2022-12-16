@@ -153,8 +153,8 @@ This resource provides the following timeouts configuration options:
 
 ELB loadbalancer can be imported using the loadbalancer ID, e.g.
 
-```
-$ terraform import flexibleengine_lb_loadbalancer_v3.loadbalancer_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```shell
+terraform import flexibleengine_lb_loadbalancer_v3.loadbalancer_1 5c20fdad-7288-11eb-b817-0255ac10158b
 ```
 
 Note that the imported state may not be identical to your resource definition, due to some attrubutes missing from the
@@ -164,7 +164,7 @@ It is generally recommended running `terraform plan` after importing a loadbalan
 You can then decide if changes should be applied to the loadbalancer, or the resource
 definition should be updated to align with the loadbalancer. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_lb_loadbalancer_v3" "loadbalancer_1" {
     ...
   lifecycle {

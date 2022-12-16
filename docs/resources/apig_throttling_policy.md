@@ -133,9 +133,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-API Throttling Policies of APIG can be imported using their `name` and the ID of the APIG instances to which the
-environment belongs, separated by a slash, e.g.
+API Throttling Policies of APIG can be imported using the ID of the APIG instances to which the
+environment belongs and `name`, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_throttling_policy.test <instance ID>/<name>
+```shell
+terraform import flexibleengine_apig_throttling_policy.test <instance_id>/<name>
 ```

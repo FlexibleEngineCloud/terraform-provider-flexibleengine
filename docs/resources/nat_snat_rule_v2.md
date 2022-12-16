@@ -75,6 +75,6 @@ This resource provides the following timeouts configuration options:
 
 SNAT rules can be imported using the following format:
 
-```
-$ terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
+```shell
+terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
 ```

@@ -101,6 +101,6 @@ The following attributes are exported:
 
 Images can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_images_image_v2.rancheros 89c60255-9bd6-460c-822a-e2b959ede9d2
+```shell
+terraform import flexibleengine_images_image_v2.rancheros 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

@@ -366,9 +366,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-APIs can be imported using their `name` and ID of the APIG dedicated instance to which the API belongs, separated by a
+APIs can be imported using the ID of the APIG dedicated instance to which the API belongs and API `name`, separated by a
 slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_api.test <instance_id>/<name>
+```shell
+terraform import flexibleengine_apig_api.test <instance_id>/<name>
 ```

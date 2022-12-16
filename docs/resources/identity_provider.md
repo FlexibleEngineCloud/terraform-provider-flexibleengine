@@ -152,6 +152,6 @@ The `remote` block supports:
 
 Identity provider can be imported using the `name`, e.g.
 
-```
-$ terraform import flexibleengine_identity_provider.provider_1 example_com_provider_saml
+```shell
+terraform import flexibleengine_identity_provider.provider_1 example_com_provider_saml
 ```

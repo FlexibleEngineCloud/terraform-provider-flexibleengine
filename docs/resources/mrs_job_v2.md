@@ -98,6 +98,6 @@ This resource provides the following timeouts configuration options:
 MRS jobs can be imported using their `id` and the IDs of the MRS cluster to which the job belongs, separated
 by a slash, e.g.
 
-```
-$ terraform import flexibleengine_mrs_job_v2.test {cluster_id}/{id}
+```shell
+terraform import flexibleengine_mrs_job_v2.test <cluster_id>/<id>
 ```

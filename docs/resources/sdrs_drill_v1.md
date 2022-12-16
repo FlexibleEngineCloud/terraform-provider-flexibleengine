@@ -45,6 +45,6 @@ The following attributes are exported:
 
 DR drill can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_sdrs_drill_v1.drill_1 22fce838-4bfb-4a92-b9aa-fc80a583eb59
+```shell
+terraform import flexibleengine_sdrs_drill_v1.drill_1 22fce838-4bfb-4a92-b9aa-fc80a583eb59
 ```

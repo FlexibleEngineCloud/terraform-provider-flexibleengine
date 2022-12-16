@@ -52,6 +52,6 @@ The following attributes are exported:
 
 Floating IP associations can be imported using the `id` of the floating IP, e.g.
 
-```
-$ terraform import flexibleengine_networking_floatingip_associate_v2.fip 2c7f39f3-702b-48d1-940c-b50384177ee1
+```shell
+terraform import flexibleengine_networking_floatingip_associate_v2.fip 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```

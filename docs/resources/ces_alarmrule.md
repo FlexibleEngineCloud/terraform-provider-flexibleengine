@@ -164,6 +164,6 @@ In addition to all arguments above, the following attributes are exported:
 
 CES alarm rules can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_ces_alarmrule.alarm_rule al1619678242900OxEaaODM2
+```shell
+terraform import flexibleengine_ces_alarmrule.alarm_rule al1619678242900OxEaaODM2
 ```

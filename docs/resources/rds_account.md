@@ -48,6 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 
 RDS account can be imported using the `instance id` and `account name`, e.g.:
 
-```
-$ terraform import flexibleengine_rds_account.user_1 instance_id/account_name
+```shell
+terraform import flexibleengine_rds_account.user_1 instance_id/account_name
 ```

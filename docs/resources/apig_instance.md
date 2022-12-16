@@ -99,6 +99,6 @@ This resource provides the following timeouts configuration options:
 
 APIG Dedicated Instances can be imported by their `id`, e.g.
 
-```
-$ terraform import flexibleengine_apig_instance.test de379eed30aa4d31a84f426ea3c7ef4e
+```shell
+terraform import flexibleengine_apig_instance.test de379eed30aa4d31a84f426ea3c7ef4e
 ```

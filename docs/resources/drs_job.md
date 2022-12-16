@@ -240,7 +240,7 @@ API response, security or some other reason. The missing attributes include: `en
 `terraform plan` after importing a job. You can then decide if changes should be applied to the job, or the resource
 definition should be updated to align with the job. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_drs_job" "test" {
     ...
 

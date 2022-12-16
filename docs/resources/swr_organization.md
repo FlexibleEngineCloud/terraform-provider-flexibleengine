@@ -42,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Organizations can be imported using the `name`, e.g.
 
-```
-$ terraform import flexibleengine_swr_organization.test org-name
+```shell
+terraform import flexibleengine_swr_organization.test org-name
 ```

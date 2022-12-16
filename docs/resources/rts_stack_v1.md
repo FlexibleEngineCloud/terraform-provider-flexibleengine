@@ -113,8 +113,8 @@ In addition to all arguments above, the following attributes are exported:
 
 RTS Stacks can be imported using the `name`, e.g.
 
-```
-$ terraform import flexibleengine_rts_stack_v1.mystack rts-stack
+```shell
+terraform import flexibleengine_rts_stack_v1.mystack rts-stack
 ```
 
 ## Timeouts

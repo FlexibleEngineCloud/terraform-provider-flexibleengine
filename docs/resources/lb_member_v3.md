@@ -68,6 +68,6 @@ This resource provides the following timeouts configuration options:
 
 ELB member can be imported using the pool ID and member ID separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_lb_member_v3.member_1 5c20fdad-7288-11eb-b817-0255ac10158b/e0bd694a-abbe-450e-b329-0931fd1cc5eb
+```shell
+terraform import flexibleengine_lb_member_v3.member_1 5c20fdad-7288-11eb-b817-0255ac10158b/e0bd694a-abbe-450e-b329-0931fd1cc5eb
 ```

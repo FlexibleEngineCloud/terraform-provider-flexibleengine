@@ -58,6 +58,6 @@ The following attributes are exported:
 
 Floating IPs can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_networking_floatingip_v2.floatip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
+```shell
+terraform import flexibleengine_networking_floatingip_v2.floatip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```

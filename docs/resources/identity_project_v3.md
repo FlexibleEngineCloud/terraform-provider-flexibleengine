@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Projects can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_identity_project_v3.project_1 <ID>
+```shell
+terraform import flexibleengine_identity_project_v3.project_1 <ID>
 ```
