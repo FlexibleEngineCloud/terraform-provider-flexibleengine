@@ -1,8 +1,10 @@
 ---
 subcategory: "Identity and Access Management (IAM)"
+description: ""
+page_title: "flexibleengine_identity_role_v3"
 ---
 
-# flexibleengine\_identity\_role\_v3
+# flexibleengine_identity_role_v3
 
 custom role management in FlexibleEngine
 
@@ -68,8 +70,8 @@ In addition to the arguments listed above, the following computed attributes are
 
 ## Import
 
-Role can be imported using the following format:
+Role can be imported using their `id`:
 
-```
-$ terraform import flexibleengine_identity_role_v3.default {{ resource id}}
+```shell
+terraform import flexibleengine_identity_role_v3.default <id>
 ```

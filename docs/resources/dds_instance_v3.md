@@ -1,8 +1,10 @@
 ---
 subcategory: "Document Database Service (DDS)"
+description: ""
+page_title: "flexibleengine_dds_instance_v3"
 ---
 
-# flexibleengine\_dds\_instance\_v3
+# flexibleengine_dds_instance_v3
 
 Manages dds instance resource within FlexibleEngine
 

@@ -1,5 +1,7 @@
 ---
 subcategory: "Storage Disaster Recovery Service (SDRS)"
+description: ""
+page_title: "flexibleengine_sdrs_replication_pair_v1"
 ---
 
 # flexibleengine_sdrs_replication_pair_v1
@@ -65,6 +67,6 @@ The following attributes are exported:
 
 Replication pairs can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_sdrs_replication_pair_v1.replication_1 43b28b66-770b-4e9e-b5c6-cfc43f0593d9
+```shell
+terraform import flexibleengine_sdrs_replication_pair_v1.replication_1 43b28b66-770b-4e9e-b5c6-cfc43f0593d9
 ```

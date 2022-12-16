@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_throttling_policy_associate"
 ---
 
 # flexibleengine_apig_throttling_policy_associate
@@ -48,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Associate resources can be imported using their `policy_id` and the APIG dedicated instance ID to which the policy
-belongs, separated by a slash, e.g.
+Associate resources can be imported using the APIG dedicated instance ID to which the policy
+belongs and `policy_id`, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_throttling_policy_associate.test &ltinstance id&gt/&ltpolicy_id&gt
+```shell
+terraform import flexibleengine_apig_throttling_policy_associate.test <instance_id>/<policy_id>
 ```

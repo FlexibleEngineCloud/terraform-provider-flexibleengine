@@ -2,7 +2,7 @@
 subcategory: "Storage Disaster Recovery Service (SDRS)"
 ---
 
-# flexibleengine\_sdrs\_domain_v1
+# flexibleengine_sdrs_domain_v1
 
 Use this data source to get the ID of an available FlexibleEngine SDRS domain.
 

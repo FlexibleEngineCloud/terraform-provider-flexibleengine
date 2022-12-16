@@ -1,8 +1,10 @@
 ---
 subcategory: "Network ACL"
+description: ""
+page_title: "flexibleengine_fw_rule_v2"
 ---
 
-# flexibleengine\_fw\_rule_v2
+# flexibleengine_fw_rule_v2
 
 Manages a v2 firewall rule resource within FlexibleEngine.
 
@@ -92,6 +94,6 @@ The following attributes are exported:
 
 Firewall Rules can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_fw_rule_v2.rule_1 8dbc0c28-e49c-463f-b712-5c5d1bbac327
+```shell
+terraform import flexibleengine_fw_rule_v2.rule_1 8dbc0c28-e49c-463f-b712-5c5d1bbac327
 ```

@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (ELB)"
+description: ""
+page_title: "flexibleengine_lb_loadbalancer_v2"
 ---
 
 # flexibleengine_lb_loadbalancer_v2
@@ -75,6 +77,6 @@ The following attributes are exported:
 
 Loadbalancers can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_lb_loadbalancer_v2.loadbalancer_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
+```shell
+terraform import flexibleengine_lb_loadbalancer_v2.loadbalancer_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
 ```

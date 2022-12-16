@@ -1,5 +1,7 @@
 ---
 subcategory: "Data Lake Insight (DLI)"
+description: ""
+page_title: "flexibleengine_dli_database"
 ---
 
 # flexibleengine_dli_database
@@ -48,6 +50,6 @@ In addition to all arguments above, the following attributes are exported:
 
 DLI SQL databases can be imported by their `name`, e.g.
 
-```
-$ terraform import flexibleengine_dli_database.test terraform_test
+```shell
+terraform import flexibleengine_dli_database.test terraform_test
 ```

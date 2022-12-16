@@ -1,8 +1,10 @@
 ---
 subcategory: "Cloud Search Service (CSS)"
+description: ""
+page_title: "flexibleengine_css_cluster_v1"
 ---
 
-# flexibleengine\_css\_cluster\_v1
+# flexibleengine_css_cluster_v1
 
 CSS cluster snapshot management
 
@@ -55,6 +57,6 @@ In addition to the arguments listed above, the following computed attributes are
 This resource can be imported by specifying the CSS cluster ID and snapshot ID
 separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_css_snapshot_v1.snapshot_1 {cluster_id}/{snapshot_id}
+```shell
+terraform import flexibleengine_css_snapshot_v1.snapshot_1 <cluster_id>/<snapshot_id>
 ```

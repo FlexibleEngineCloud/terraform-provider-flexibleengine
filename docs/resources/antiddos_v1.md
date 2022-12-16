@@ -1,5 +1,7 @@
 ---
 subcategory: "Anti-DDoS"
+description: ""
+page_title: "flexibleengine_antiddos_v1"
 ---
 
 # flexibleengine_antiddos_v1
@@ -44,8 +46,8 @@ All above argument parameters can be exported as attribute parameters.
 
 ## Import
 
-Antiddos can be imported using the floating_ip_id, e.g.
+Antiddos can be imported using the `floating_ip_id`, e.g.
 
-```
-$ terraform import flexibleengine_antiddos_v1.myantiddos c1881895-cdcb-4d23-96cb-032e6a3ee667
+```shell
+terraform import flexibleengine_antiddos_v1.myantiddos c1881895-cdcb-4d23-96cb-032e6a3ee667
 ```

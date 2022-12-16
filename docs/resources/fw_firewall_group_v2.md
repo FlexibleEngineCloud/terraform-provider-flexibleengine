@@ -1,8 +1,10 @@
 ---
 subcategory: "Network ACL"
+description: ""
+page_title: "flexibleengine_fw_firewall_group_v2"
 ---
 
-# flexibleengine\_fw\_firewall_group_v2
+# flexibleengine_fw_firewall_group_v2
 
 Manages a v2 firewall group resource within FlexibleEngine.
 
@@ -92,6 +94,6 @@ The following attributes are exported:
 
 Firewall Groups can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
+```shell
+terraform import flexibleengine_fw_firewall_group_v2.firewall_group_1 c9e39fb2-ce20-46c8-a964-25f3898c7a97
 ```

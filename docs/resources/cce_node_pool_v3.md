@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Container Engine (CCE)"
+description: ""
+page_title: "flexibleengine_cce_node_pool_v3"
 ---
 
 # flexibleengine_cce_node_pool_v3
@@ -153,8 +155,8 @@ This resource provides the following timeouts configuration options:
 
 ## Import
 
-Node_pool can be imported using the cluster and node_pool id, e.g.
+Node_pool can be imported using the cluster ID and node_pool ID, e.g.
 
-```
-terraform import flexibleengine_cce_node_pool_v3.node_pool_1 {cluster-id}/{node_pool-id}
+```shell
+terraform import flexibleengine_cce_node_pool_v3.node_pool_1 <cluster_id>/<id>
 ```

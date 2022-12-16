@@ -1,8 +1,10 @@
 ---
 subcategory: "Domain Name Service (DNS)"
+description: ""
+page_title: "flexibleengine_dns_zone_v2"
 ---
 
-# flexibleengine\_dns\_zone_v2
+# flexibleengine_dns_zone_v2
 
 Manages a DNS zone in the FlexibleEngine DNS Service.
 
@@ -87,6 +89,6 @@ The following attributes are exported:
 
 This resource can be imported by specifying the zone ID:
 
-```
-$ terraform import flexibleengine_dns_zone_v2.zone_1 <zone_id>
+```shell
+terraform import flexibleengine_dns_zone_v2.zone_1 <zone_id>
 ```

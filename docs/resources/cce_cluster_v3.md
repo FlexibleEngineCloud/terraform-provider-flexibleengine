@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Container Engine (CCE)"
+description: ""
+page_title: "flexibleengine_cce_cluster_v3"
 ---
 
 # flexibleengine_cce_cluster_v3
@@ -136,8 +138,8 @@ All above argument parameters can be exported as attribute parameters along with
 
 ## Import
 
-Cluster can be imported using the cluster id, e.g.
+Cluster can be imported using their `id`, e.g.
 
-```
-$ terraform import flexibleengine_cce_cluster_v3.cluster_1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d  
+```shell
+terraform import flexibleengine_cce_cluster_v3.cluster_1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d  
 ```

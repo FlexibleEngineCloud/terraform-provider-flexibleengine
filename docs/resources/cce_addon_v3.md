@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Container Engine (CCE)"
+description: ""
+page_title: "flexibleengine_cce_addon_v3"
 ---
 
 # flexibleengine_cce_addon_v3
@@ -97,6 +99,7 @@ This resource provides the following timeouts configuration options:
 
 CCE addon can be imported using the cluster ID and addon ID separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_cce_addon_v3.my_addon bb6923e4-b16e-11eb-b0cd-0255ac101da1/c7ecb230-b16f-11eb-b3b6-0255ac1015a3
+```shell
+terraform import flexibleengine_cce_addon_v3.my_addon <cluster_id>/<id>
+terraform import flexibleengine_cce_addon_v3.my_addon bb6923e4-b16e-11eb-b0cd-0255ac101da1/c7ecb230-b16f-11eb-b3b6-0255ac1015a3
 ```

@@ -2,7 +2,7 @@
 subcategory: "Identity and Access Management (IAM)"
 ---
 
-# flexibleengine\_identity\_role\_v3
+# flexibleengine_identity_role_v3
 
 Use this data source to get the ID of an IAM **system-defined** role or policy.
 

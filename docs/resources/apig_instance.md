@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_instance"
 ---
 
 # flexibleengine_apig_instance
@@ -58,7 +60,7 @@ The following arguments are supported:
 * `security_group_id` - (Required, String) Specifies an ID of the security group to which the APIG dedicated instance
   belongs to.
 
-* `available_zones` - (Optional, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
+* `available_zones` - (Required, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
   instance. Changing this will create a new APIG dedicated instance resource.
 
 * `description` - (Optional, String) Specifies the description about the APIG dedicated instance. The description
@@ -97,6 +99,6 @@ This resource provides the following timeouts configuration options:
 
 APIG Dedicated Instances can be imported by their `id`, e.g.
 
-```
-$ terraform import flexibleengine_apig_instance.test de379eed30aa4d31a84f426ea3c7ef4e
+```shell
+terraform import flexibleengine_apig_instance.test de379eed30aa4d31a84f426ea3c7ef4e
 ```

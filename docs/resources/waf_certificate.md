@@ -1,5 +1,7 @@
 ---
 subcategory: "Web Application Firewall (WAF)"
+description: ""
+page_title: "flexibleengine_waf_certificate"
 ---
 
 # flexibleengine_waf_certificate
@@ -61,7 +63,7 @@ terraform import flexibleengine_waf_certificate.cert_1 9251a0ed5aa640b68a35cf2eb
 Note that the imported state is not identical to your resource definition, due to security reason.
 The missing attributes include `certificate`, and `private_key`. You can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_waf_certificate" "cert_1" {
     ...
 

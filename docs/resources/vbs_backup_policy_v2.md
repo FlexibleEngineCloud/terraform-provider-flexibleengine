@@ -1,5 +1,7 @@
 ---
 subcategory: "Volume Backup Service (VBS)"
+description: ""
+page_title: "flexibleengine_vbs_backup_policy_v2"
 ---
 
 # flexibleengine_vbs_backup_policy_v2
@@ -81,6 +83,6 @@ All of the argument attributes are also exported as result attributes:
 
 Backup Policy can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vbs_backup_policy_v2.vbs 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
+```shell
+terraform import flexibleengine_vbs_backup_policy_v2.vbs 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
 ```

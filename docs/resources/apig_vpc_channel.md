@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_vpc_channel"
 ---
 
 # flexibleengine_apig_vpc_channel
@@ -108,9 +110,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-VPC Channels can be imported using their `name` and ID of the APIG dedicated instance to which the channel
-belongs, separated by a slash, e.g.
+VPC Channels can be imported using the ID of the APIG dedicated instance to which the channel
+belongs and `name`, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_vpc_channel.test <instance id>/<channel name>
+```shell
+terraform import flexibleengine_apig_vpc_channel.test <instance_id>/<name>
 ```

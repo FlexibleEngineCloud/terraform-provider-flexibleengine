@@ -1,5 +1,7 @@
 ---
 subcategory: "Relational Database Service (RDS)"
+description: ""
+page_title: "flexibleengine_rds_parametergroup_v3"
 ---
 
 # flexibleengine_rds_parametergroup_v3
@@ -71,6 +73,6 @@ The following attributes are exported:
 
 Parameter groups can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_rds_parametergroup_v3.pg_1 7117d38e-4c8f-4624-a505-bd96b97d024c
+```shell
+terraform import flexibleengine_rds_parametergroup_v3.pg_1 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```

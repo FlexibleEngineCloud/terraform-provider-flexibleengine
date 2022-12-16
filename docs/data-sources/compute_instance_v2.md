@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_instance
+# flexibleengine_compute_instance
 
 Use this data source to get the details of a specified compute instance.
 

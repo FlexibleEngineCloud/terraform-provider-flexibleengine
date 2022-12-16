@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Service Engine (CSE)"
+description: ""
+page_title: "flexibleengine_cse_microservice_engine"
 ---
 
 # flexibleengine_cse_microservice_engine
@@ -117,8 +119,8 @@ This resource provides the following timeouts configuration options:
 
 Engines can be imported using their `id`, e.g.
 
-```
-$ terraform import flexibleengine_cse_microservice_engine.test eddc5d42-f9d5-4f8e-984b-d6f3e088561c
+```shell
+terraform import flexibleengine_cse_microservice_engine.test eddc5d42-f9d5-4f8e-984b-d6f3e088561c
 ```
 
 Note that the imported state may not be identical to your resource definition, due to some attributes missing from the
@@ -127,7 +129,7 @@ It is generally recommended running `terraform plan` after importing an instance
 You can then decide if changes should be applied to the instance, or the resource definition should be updated to
 align with the instance. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_cse_microservice_engine" "test" {
   ...
   lifecycle {

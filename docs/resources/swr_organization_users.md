@@ -1,5 +1,7 @@
 ---
 subcategory: "Software Repository for Container (SWR)"
+description: ""
+page_title: "flexibleengine_swr_organization_users"
 ---
 
 # flexibleengine_swr_organization_users
@@ -74,6 +76,6 @@ The `self_permission` block supports:
 
 Organization Permissions can be imported using the `id` (organization name), e.g.
 
-```
-$ terraform import flexibleengine_swr_organization_users.test org-test
+```shell
+terraform import flexibleengine_swr_organization_users.test org-test
 ```

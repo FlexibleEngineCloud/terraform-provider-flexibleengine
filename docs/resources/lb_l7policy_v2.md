@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (ELB)"
+description: ""
+page_title: "flexibleengine_lb_l7policy_v2"
 ---
 
 # flexibleengine_lb_l7policy_v2
@@ -52,8 +54,8 @@ The following arguments are supported:
 
 * `description` - (Optional) Human-readable description for the L7 Policy.
 
-* `action` - (Required) The L7 Policy action - can either be REDIRECT\_TO\_POOL,
-    or REDIRECT\_TO\_LISTENER. Changing this creates a new L7 Policy.
+* `action` - (Required) The L7 Policy action - can either be REDIRECT_TO_POOL,
+    or REDIRECT_TO_LISTENER. Changing this creates a new L7 Policy.
 
 * `listener_id` - (Required) The Listener on which the L7 Policy will be associated with.
     Changing this creates a new L7 Policy.
@@ -62,10 +64,10 @@ The following arguments are supported:
     Changing this creates a new L7 Policy.
 
 * `redirect_pool_id` - (Optional) Requests matching this policy will be redirected to
-    the pool with this ID. Only valid if action is REDIRECT\_TO\_POOL.
+    the pool with this ID. Only valid if action is REDIRECT_TO_POOL.
 
 * `redirect_listener_id` - (Optional) Requests matching this policy will be redirected to
-    the listener with this ID. Only valid if action is REDIRECT\_TO\_LISTENER.
+    the listener with this ID. Only valid if action is REDIRECT_TO_LISTENER.
 
 * `admin_state_up` - (Optional) The administrative state of the L7 Policy.
     This value can only be true (UP).
@@ -94,6 +96,6 @@ The following attributes are exported:
 
 Load Balancer L7 Policy can be imported using the L7 Policy ID, e.g.:
 
-```
-$ terraform import flexibleengine_lb_l7policy_v2.l7policy_1 8a7a79c2-cf17-4e65-b2ae-ddc8bfcf6c74
+```shell
+terraform import flexibleengine_lb_l7policy_v2.l7policy_1 8a7a79c2-cf17-4e65-b2ae-ddc8bfcf6c74
 ```

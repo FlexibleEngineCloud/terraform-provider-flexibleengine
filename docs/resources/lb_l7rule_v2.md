@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (ELB)"
+description: ""
+page_title: "flexibleengine_lb_l7rule_v2"
 ---
 
 # flexibleengine_lb_l7rule_v2
@@ -56,11 +58,11 @@ The following arguments are supported:
 
 * `description` - (Optional) Human-readable description for the L7 Rule.
 
-* `type` - (Required) The L7 Rule type - can either be HOST\_NAME or PATH.
+* `type` - (Required) The L7 Rule type - can either be HOST_NAME or PATH.
     Changing this creates a new L7 Rule.
 
 * `compare_type` - (Required) The comparison type for the L7 rule - can either be
-    STARTS\_WITH, EQUAL_TO or REGEX
+    STARTS_WITH, EQUAL_TO or REGEX
 
 * `l7policy_id` - (Required) The ID of the L7 Policy to query. Changing this creates a new
     L7 Rule.
@@ -99,6 +101,6 @@ The following attributes are exported:
 Load Balancer L7 Rule can be imported using the L7 Policy ID and L7 Rule ID
 separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_lb_l7rule_v2.l7rule_1 e0bd694a-abbe-450e-b329-0931fd1cc5eb/4086b0c9-b18c-4d1c-b6b8-4c56c3ad2a9e
+```shell
+terraform import flexibleengine_lb_l7rule_v2.l7rule_1 e0bd694a-abbe-450e-b329-0931fd1cc5eb/4086b0c9-b18c-4d1c-b6b8-4c56c3ad2a9e
 ```

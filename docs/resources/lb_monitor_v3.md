@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (Dedicated ELB)"
+description: ""
+page_title: "flexibleengine_lb_monitor_v3"
 ---
 
 # flexibleengine_lb_monitor_v3
@@ -59,6 +61,6 @@ In addition to all arguments above, the following attributes are exported:
 
 ELB monitor can be imported using the monitor ID, e.g.
 
-```
-$ terraform import flexibleengine_lb_monitor_v3.monitor_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```shell
+terraform import flexibleengine_lb_monitor_v3.monitor_1 5c20fdad-7288-11eb-b817-0255ac10158b
 ```

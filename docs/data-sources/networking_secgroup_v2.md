@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_secgroup\_v2
+# flexibleengine_networking_secgroup_v2
 
 Use this data source to get the ID of an available FlexibleEngine security group.
 

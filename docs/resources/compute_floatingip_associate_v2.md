@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Cloud Server (ECS)"
+description: ""
+page_title: "flexibleengine_compute_floatingip_associate_v2"
 ---
 
 # flexibleengine_compute_floatingip_associate_v2
@@ -115,9 +117,9 @@ The following attributes are exported:
 
 ## Import
 
-This resource can be imported by specifying all three arguments, separated
+This resource can be imported by specifying `floating_ip`, `instance_id` and `fixed_ip`, separated
 by a forward slash:
 
-```
-$ terraform import flexibleengine_compute_floatingip_associate_v2.fip_1 {floating_ip}/{instance_id}/{fixed_ip}
+```shell
+terraform import flexibleengine_compute_floatingip_associate_v2.fip_1 <floating_ip>/<instance_id>/<fixed_ip>
 ```

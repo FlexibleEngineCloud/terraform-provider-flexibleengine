@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_api_publishment"
 ---
 
 # flexibleengine_apig_api_publishment
@@ -85,7 +87,7 @@ The `histories` block supports:
 
 APIs can be imported using their `instance_id`, `env_id` and `api_id`, separated by slashes, e.g.
 
-```
-$ terraform import flexibleengine_apig_api_publishment.test
+```shell
+terraform import flexibleengine_apig_api_publishment.test
 9b0a0a2f97aa43afbf7d852e3ba6a6f9/c5b32727186c4fe6b60408a8a297be09/9a3b3484c08545f9b9b0dcb2de0f5b8a
 ```

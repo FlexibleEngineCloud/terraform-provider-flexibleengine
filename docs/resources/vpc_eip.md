@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic IP (EIP)"
+description: ""
+page_title: "flexibleengine_vpc_eip"
 ---
 
 # flexibleengine_vpc_eip
@@ -86,6 +88,6 @@ In addition to all arguments above, the following attributes are exported:
 
 EIPs can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vpc_eip.eip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
+```shell
+terraform import flexibleengine_vpc_eip.eip_1 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```

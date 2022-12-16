@@ -1,5 +1,7 @@
 ---
 subcategory: "Relational Database Service (RDS)"
+description: ""
+page_title: "flexibleengine_rds_read_replica_v3"
 ---
 
 # flexibleengine_rds_read_replica_v3
@@ -126,6 +128,6 @@ The `db` block supports:
 
 RDS instance can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_rds_read_replica_v3.instance_1 7117d38e-4c8f-4624-a505-bd96b97d024c
+```shell
+terraform import flexibleengine_rds_read_replica_v3.instance_1 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```

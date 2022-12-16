@@ -1,5 +1,7 @@
 ---
 subcategory: "Virtual Private Cloud (VPC)"
+description: ""
+page_title: "flexibleengine_vpc_subnet_v1"
 ---
 
 # flexibleengine_vpc_subnet_v1
@@ -93,6 +95,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Subnets can be imported using the subnet `Network ID`, e.g.
 
-```
- $ terraform import flexibleengine_vpc_subnet_v1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
+```shell
+terraform import flexibleengine_vpc_subnet_v1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d
 ```

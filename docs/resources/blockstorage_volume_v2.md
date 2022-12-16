@@ -1,8 +1,10 @@
 ---
 subcategory: "Elastic Volume Service (EVS)"
+description: ""
+page_title: "flexibleengine_blockstorage_volume_v2"
 ---
 
-# flexibleengine\_blockstorage\_volume_v2
+# flexibleengine_blockstorage_volume_v2
 
 Manages a V2 volume resource within FlexibleEngine.
 
@@ -93,6 +95,6 @@ The following attributes are exported:
 
 Volumes can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_blockstorage_volume_v2.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
+```shell
+terraform import flexibleengine_blockstorage_volume_v2.volume_1 ea257959-eeb1-4c10-8d33-26f0409a755d
 ```

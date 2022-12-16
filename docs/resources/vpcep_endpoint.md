@@ -1,8 +1,10 @@
 ---
 subcategory: "VPC Endpoint (VPCEP)"
+description: ""
+page_title: "flexibleengine_vpcep_endpoint"
 ---
 
-# flexibleengine\_vpcep\_endpoint
+# flexibleengine_vpcep_endpoint
 
 Provides a resource to manage a VPC endpoint resource.
 
@@ -106,6 +108,6 @@ In addition to all arguments above, the following attributes are exported:
 
 VPC endpoint can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vpcep_endpoint.test 828907cc-40c9-42fe-8206-ecc1bdd30060
+```shell
+terraform import flexibleengine_vpcep_endpoint.test 828907cc-40c9-42fe-8206-ecc1bdd30060
 ```

@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic IP (EIP)"
+description: ""
+page_title: "flexibleengine_vpc_eip_associate"
 ---
 
 # flexibleengine_vpc_eip_associate
@@ -86,6 +88,6 @@ This resource provides the following timeouts configuration options:
 
 EIP associations can be imported using the `id` of the EIP, e.g.
 
-```
-$ terraform import flexibleengine_vpc_eip_associate.eip 2c7f39f3-702b-48d1-940c-b50384177ee1
+```shell
+terraform import flexibleengine_vpc_eip_associate.eip 2c7f39f3-702b-48d1-940c-b50384177ee1
 ```

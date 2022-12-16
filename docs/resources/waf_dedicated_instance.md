@@ -1,5 +1,7 @@
 ---
 subcategory: "Web Application Firewall (WAF)"
+description: ""
+page_title: "flexibleengine_waf_dedicated_instance"
 ---
 
 # flexibleengine_waf_dedicated_instance

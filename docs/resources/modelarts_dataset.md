@@ -1,5 +1,7 @@
 ---
 subcategory: "AI Development Platform (ModelArts)"
+description: ""
+page_title: "flexibleengine_modelarts_dataset"
 ---
 
 # flexibleengine_modelarts_dataset
@@ -189,7 +191,7 @@ API response, security or some other reason. The missing attributes include: `da
 importing a dataset. You can then decide if changes should be applied to the dataset, or the resource definition
 should be updated to align with the dataset. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_modelarts_dataset" "test" {
     ...
 

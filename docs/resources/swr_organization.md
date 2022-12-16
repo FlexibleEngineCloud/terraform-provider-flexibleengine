@@ -1,5 +1,7 @@
 ---
 subcategory: "Software Repository for Container (SWR)"
+description: ""
+page_title: "flexibleengine_swr_organization"
 ---
 
 # flexibleengine_swr_organization
@@ -40,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Organizations can be imported using the `name`, e.g.
 
-```
-$ terraform import flexibleengine_swr_organization.test org-name
+```shell
+terraform import flexibleengine_swr_organization.test org-name
 ```

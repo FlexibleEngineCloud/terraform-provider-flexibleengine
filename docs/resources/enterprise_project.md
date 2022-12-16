@@ -1,5 +1,7 @@
 ---
 subcategory: "Enterprise Project Management Service (EPS)"
+description: ""
+page_title: "flexibleengine_enterprise_project"
 ---
 
 # flexibleengine_enterprise_project
@@ -47,6 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Enterprise projects can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_enterprise_project.test 88f889c7-270e-4e77-8230-bf7db08d9b0e
+```shell
+terraform import flexibleengine_enterprise_project.test 88f889c7-270e-4e77-8230-bf7db08d9b0e
 ```

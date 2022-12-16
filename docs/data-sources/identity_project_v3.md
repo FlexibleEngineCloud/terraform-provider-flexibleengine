@@ -2,7 +2,7 @@
 subcategory: "Identity and Access Management (IAM)"
 ---
 
-# flexibleengine\_identity\_project_v3
+# flexibleengine_identity_project_v3
 
 Use this data source to get the ID of a FlexibleEngine project.
 

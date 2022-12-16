@@ -1,5 +1,7 @@
 ---
 subcategory: "Auto Scaling (AS)"
+description: ""
+page_title: "flexibleengine_as_lifecycle_hook_v1"
 ---
 
 # flexibleengine_as_lifecycle_hook_v1
@@ -69,6 +71,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Lifecycle hooks can be imported using the AS group ID and hook ID separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_as_lifecycle_hook_v1.test {AS group ID}/{Lifecycle hook ID}
+```shell
+terraform import flexibleengine_as_lifecycle_hook_v1.test <as_group_id>/<id>
 ```

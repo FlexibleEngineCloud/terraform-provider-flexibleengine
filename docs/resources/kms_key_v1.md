@@ -1,5 +1,7 @@
 ---
 subcategory: "Key Management Service (KMS)"
+description: ""
+page_title: "flexibleengine_kms_key_v1"
 ---
 
 # flexibleengine_kms_key_v1
@@ -55,6 +57,6 @@ In addition to all arguments above, the following attributes are exported:
 
 KMS Keys can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_kms_key_v1.key_1 7056d636-ac60-4663-8a6c-82d3c32c1c64
+```shell
+terraform import flexibleengine_kms_key_v1.key_1 7056d636-ac60-4663-8a6c-82d3c32c1c64
 ```

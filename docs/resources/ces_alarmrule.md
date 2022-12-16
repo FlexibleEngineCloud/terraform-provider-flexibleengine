@@ -1,8 +1,10 @@
 ---
 subcategory: "Cloud Eye (CES)"
+description: ""
+page_title: "flexibleengine_ces_alarmrule"
 ---
 
-# flexibleengine\_ces\_alarmrule
+# flexibleengine_ces_alarmrule
 
 Manages a Cloud Eye alarm rule resource within FlexibleEngine.
 
@@ -162,6 +164,6 @@ In addition to all arguments above, the following attributes are exported:
 
 CES alarm rules can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_ces_alarmrule.alarm_rule al1619678242900OxEaaODM2
+```shell
+terraform import flexibleengine_ces_alarmrule.alarm_rule al1619678242900OxEaaODM2
 ```

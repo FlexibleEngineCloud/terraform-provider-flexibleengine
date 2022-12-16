@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (Dedicated ELB)"
+description: ""
+page_title: "flexibleengine_elb_certificate"
 ---
 
 # flexibleengine_elb_certificate
@@ -115,6 +117,6 @@ This resource provides the following timeouts configuration options:
 
 ELB certificate can be imported using the certificate ID, e.g.
 
-```
-$ terraform import flexibleengine_elb_certificate.certificate_1 5c20fdad-7288-11eb-b817-0255ac10158b
+```shell
+terraform import flexibleengine_elb_certificate.certificate_1 5c20fdad-7288-11eb-b817-0255ac10158b
 ```

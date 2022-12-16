@@ -1,8 +1,10 @@
 ---
 subcategory: "Elastic Cloud Server (ECS)"
+description: ""
+page_title: "flexibleengine_compute_servergroup_v2"
 ---
 
-# flexibleengine\_compute\_servergroup_v2
+# flexibleengine_compute_servergroup_v2
 
 Manages a V2 Server Group resource within FlexibleEngine.
 
@@ -45,6 +47,6 @@ The following attributes are exported:
 
 Server Groups can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_compute_servergroup_v2.test-sg 1bc30ee9-9d5b-4c30-bdd5-7f1e663f5edf
+```shell
+terraform import flexibleengine_compute_servergroup_v2.test-sg 1bc30ee9-9d5b-4c30-bdd5-7f1e663f5edf
 ```

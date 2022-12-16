@@ -1,5 +1,7 @@
 ---
 subcategory: "Virtual Private Cloud (VPC)"
+description: ""
+page_title: "flexibleengine_vpc_route_table"
 ---
 
 # flexibleengine_vpc_route_table
@@ -120,6 +122,6 @@ This resource provides the following timeouts configuration options:
 
 vpc route tables can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_vpc_route_table.demo e1b3208a-544b-42a7-84e6-5d70371dd982
+```shell
+terraform import flexibleengine_vpc_route_table.demo e1b3208a-544b-42a7-84e6-5d70371dd982
 ```

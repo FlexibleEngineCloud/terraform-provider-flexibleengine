@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Backup and Recovery (CBR)"
+description: ""
+page_title: "flexibleengine_cbr_vault"
 ---
 
 # flexibleengine_cbr_vault
@@ -157,6 +159,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Vaults can be imported by their `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_cbr_vault.test 01c33779-7c83-4182-8b6b-24a671fcedf8
 ```

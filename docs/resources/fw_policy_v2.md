@@ -1,8 +1,10 @@
 ---
 subcategory: "Network ACL"
+description: ""
+page_title: "flexibleengine_fw_policy_v2"
 ---
 
-# flexibleengine\_fw\_policy_v2
+# flexibleengine_fw_policy_v2
 
 Manages a v2 firewall policy resource within FlexibleEngine.
 
@@ -84,6 +86,6 @@ The following attributes are exported:
 
 Firewall Policies can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
+```shell
+terraform import flexibleengine_fw_policy_v2.policy_1 07f422e6-c596-474b-8b94-fe2c12506ce0
 ```

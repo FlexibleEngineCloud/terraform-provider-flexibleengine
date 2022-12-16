@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_application"
 ---
 
 # flexibleengine_apig_application
@@ -62,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-APIG Applications can be imported using their `id` and ID of the APIG dedicated instance to which the application
-belongs, separated by a slash, e.g.
+APIG Applications can be imported using the ID of the APIG dedicated instance to which the application
+belongs and APIG Application ID, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_application.test <instance id>/<id>
+```shell
+terraform import flexibleengine_apig_application.test <instance_id>/<id>
 ```

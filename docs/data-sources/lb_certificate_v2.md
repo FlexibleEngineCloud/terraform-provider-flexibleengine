@@ -2,7 +2,7 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_certificate\_v2
+# flexibleengine_lb_certificate_v2
 
 flexibleengine_lb_certificate_v2 provides details about a specific Certificate.
 

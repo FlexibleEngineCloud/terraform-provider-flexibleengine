@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Cloud Server (ECS)"
+description: ""
+page_title: "flexibleengine_compute_floatingip_v2"
 ---
 
 # flexibleengine_compute_floatingip_v2
@@ -43,6 +45,6 @@ The following attributes are exported:
 
 Floating IPs can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_compute_floatingip_v2.floatip_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+```shell
+terraform import flexibleengine_compute_floatingip_v2.floatip_1 89c60255-9bd6-460c-822a-e2b959ede9d2
 ```

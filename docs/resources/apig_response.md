@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_response"
 ---
 
 # flexibleengine_apig_response
@@ -78,9 +80,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-API Responses can be imported using their `name` and IDs of the APIG dedicated instances and API groups to which the API
-response belongs, separated by a slash, e.g.
+API Responses can be imported using the ID of the APIG dedicated instances and API groups to which the API
+response belongs and API Response `name`, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_response.test <instance id>/<group id>/<name>
+```shell
+terraform import flexibleengine_apig_response.test <instance_id>/<group_id>/<name>
 ```

@@ -1,5 +1,7 @@
 ---
 subcategory: "NAT Gateway (NAT)"
+description: ""
+page_title: "flexibleengine_nat_dnat_rule_v2"
 ---
 
 # flexibleengine_nat_dnat_rule_v2
@@ -84,6 +86,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 DNAT can be imported using the following format:
 
-```
-$ terraform import flexibleengine_nat_dnat_rule_v2.dnat_1 f4f783a7-b908-4215-b018-724960e5df4a
+```shell
+terraform import flexibleengine_nat_dnat_rule_v2.dnat_1 f4f783a7-b908-4215-b018-724960e5df4a
 ```

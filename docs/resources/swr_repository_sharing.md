@@ -1,5 +1,7 @@
 ---
 subcategory: "Software Repository for Container (SWR)"
+description: ""
+page_title: "flexibleengine_swr_repository_sharing"
 ---
 
 # flexibleengine_swr_repository_sharing
@@ -64,6 +66,6 @@ In addition to all arguments above, the following attributes are exported:
 Repository sharing can be imported using the organization name, repository name and sharing account
 separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_swr_repository_sharing.test org-name/repo-name/sharing-account
+```shell
+terraform import flexibleengine_swr_repository_sharing.test org-name/repo-name/sharing-account
 ```

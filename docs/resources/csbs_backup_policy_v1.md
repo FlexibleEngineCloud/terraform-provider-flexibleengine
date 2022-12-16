@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Server Backup Service (CSBS)"
+description: ""
+page_title: "flexibleengine_csbs_backup_policy_v1"
 ---
 
 # flexibleengine_csbs_backup_policy_v1
@@ -92,6 +94,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Backup Policy can be imported using  `id`, e.g.
 
-```
-$ terraform import flexibleengine_csbs_backup_policy_v1.backup_policy_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
+```shell
+terraform import flexibleengine_csbs_backup_policy_v1.backup_policy_v1 7056d636-ac60-4663-8a6c-82d3c32c1c64
 ```

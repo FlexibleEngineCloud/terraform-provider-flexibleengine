@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Cloud Server (ECS)"
+description: ""
+page_title: "flexibleengine_compute_instance_v2"
 ---
 
 # flexibleengine_compute_instance_v2
@@ -428,7 +430,7 @@ The `volume_attached` block supports:
 
 Instances can be imported by their `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_compute_instance_v2.my_instance b11b407c-e604-4e8d-8bc4-92398320b847
 ```
 
@@ -440,7 +442,7 @@ missing from the API response, security or some other reason. The missing attrib
 be applied to the instance, or the resource definition should be updated to align
 with the instance. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_compute_instance_v2" "my_instance" {
     ...
 
@@ -464,7 +466,7 @@ equal to what the chosen flavor supports.
 The following example shows how to create an instance with multiple ephemeral
 disks:
 
-```
+```hcl
 resource "flexibleengine_compute_instance_v2" "foo" {
   name            = "terraform-test"
   security_groups = ["default"]

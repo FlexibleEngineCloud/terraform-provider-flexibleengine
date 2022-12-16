@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Service Engine (CSE)"
+description: ""
+page_title: "flexibleengine_cse_microservice_instance"
 ---
 
 # flexibleengine_cse_microservice_instance
@@ -165,14 +167,14 @@ In addition to all arguments above, the following attributes are exported:
 Microservices can be imported using related `connect_address`, `microservice_id` and their `id`, separated by a
 slash (/), e.g.
 
-```
-$ terraform import flexibleengine_cse_microservice_instance.test https://124.70.26.32:30100/f14960ba495e03f59f85aacaaafbdef3fbff3f0d/336e7428dd9411eca913fa163e7364b7
+```shell
+terraform import flexibleengine_cse_microservice_instance.test https://124.70.26.32:30100/f14960ba495e03f59f85aacaaafbdef3fbff3f0d/336e7428dd9411eca913fa163e7364b7
 ```
 
 If you enabled the **RBAC** authorization, you also need to provide the account name and password, e.g.
 
-```
-$ terraform import flexibleengine_cse_microservice_instance.test 'https://124.70.26.32:30100/f14960ba495e03f59f85aacaaafbdef3fbff3f0d/336e7428dd9411eca913fa163e7364b7/root/Test!123'
+```shell
+terraform import flexibleengine_cse_microservice_instance.test 'https://124.70.26.32:30100/f14960ba495e03f59f85aacaaafbdef3fbff3f0d/336e7428dd9411eca913fa163e7364b7/root/Test!123'
 ```
 
 The single quotes can help you solve the problem of special characters reporting errors on bash.

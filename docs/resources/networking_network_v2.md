@@ -1,5 +1,7 @@
 ---
 subcategory: "Virtual Private Cloud (VPC)"
+description: ""
+page_title: "flexibleengine_networking_network_v2"
 ---
 
 # flexibleengine_networking_network_v2
@@ -102,6 +104,6 @@ The following attributes are exported:
 
 Networks can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_networking_network_v2.network_1 d90ce693-5ccf-4136-a0ed-152ce412b6b9
+```shell
+terraform import flexibleengine_networking_network_v2.network_1 d90ce693-5ccf-4136-a0ed-152ce412b6b9
 ```

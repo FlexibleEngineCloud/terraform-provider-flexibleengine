@@ -1,5 +1,7 @@
 ---
 subcategory: "Data Replication Service (DRS)"
+description: ""
+page_title: "flexibleengine_drs_job"
 ---
 
 # flexibleengine_drs_job
@@ -68,7 +70,7 @@ The following arguments are supported:
   provider-level region will be used. Changing this parameter will create a new resource.
 
 * `name` - (Required, String) Specifies the job name. The name consists of 4 to 50 characters, starting with
- a letter. Only letters, digits, underscores (\_) and hyphens (-) are allowed.
+ a letter. Only letters, digits, underscores (_) and hyphens (-) are allowed.
 
 * `type` - (Required, String, ForceNew) Specifies the job type. Changing this parameter will create a new
  resource. The options are as follows:
@@ -238,7 +240,7 @@ API response, security or some other reason. The missing attributes include: `en
 `terraform plan` after importing a job. You can then decide if changes should be applied to the job, or the resource
 definition should be updated to align with the job. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_drs_job" "test" {
     ...
 

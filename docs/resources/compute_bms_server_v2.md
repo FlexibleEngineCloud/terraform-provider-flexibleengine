@@ -1,5 +1,7 @@
 ---
 subcategory: "Bare Metal Server (BMS)"
+description: ""
+page_title: "flexibleengine_compute_bms_server_v2"
 ---
 
 # flexibleengine_compute_bms_server_v2

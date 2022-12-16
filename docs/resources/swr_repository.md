@@ -1,5 +1,7 @@
 ---
 subcategory: "Software Repository for Container (SWR)"
+description: ""
+page_title: "flexibleengine_swr_repository"
 ---
 
 # flexibleengine_swr_repository
@@ -59,6 +61,6 @@ In addition to all arguments above, the following attributes are exported:
 
 Repository can be imported using the organization name and repository name separated by a slash, e.g.:
 
-```
-$ terraform import flexibleengine_swr_repository.test org-name/repo-name
+```shell
+terraform import flexibleengine_swr_repository.test org-name/repo-name
 ```

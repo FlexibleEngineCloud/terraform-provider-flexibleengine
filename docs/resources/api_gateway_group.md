@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway"
+description: ""
+page_title: "flexibleengine_api_gateway_group"
 ---
 
 # flexibleengine_api_gateway_group
@@ -39,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 API groups can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_api_gateway_group.apigw_group "c8738f7c-a4b0-4c5f-a202-bda7dc4018a4"
+```shell
+terraform import flexibleengine_api_gateway_group.apigw_group c8738f7c-a4b0-4c5f-a202-bda7dc4018a4
 ```

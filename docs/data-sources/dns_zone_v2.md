@@ -2,7 +2,7 @@
 subcategory: "Domain Name Service (DNS)"
 ---
 
-# flexibleengine\_dns\_zone\_v2
+# flexibleengine_dns_zone_v2
 
 Use this data source to get the ID of an available FlexibleEngine DNS zone.
 

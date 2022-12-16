@@ -1,8 +1,10 @@
 ---
 subcategory: "Object Storage Service (OSS)"
+description: ""
+page_title: "flexibleengine_s3_bucket"
 ---
 
-# flexibleengine\_s3\_bucket
+# flexibleengine_s3_bucket
 
 Provides a S3 bucket resource.
 
@@ -234,6 +236,6 @@ The following attributes are exported:
 
 S3 bucket can be imported using the `bucket`, e.g.
 
-```
-$ terraform import flexibleengine_s3_bucket.bucket bucket-name
+```shell
+terraform import flexibleengine_s3_bucket.bucket bucket-name
 ```

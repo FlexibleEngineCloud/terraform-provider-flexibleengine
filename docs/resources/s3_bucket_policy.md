@@ -1,8 +1,10 @@
 ---
 subcategory: "Object Storage Service (OSS)"
+description: ""
+page_title: "flexibleengine_s3_bucket_policy"
 ---
 
-# flexibleengine\_s3\_bucket\_policy
+# flexibleengine_s3_bucket_policy
 
 Attaches a policy to an S3 bucket resource.
 

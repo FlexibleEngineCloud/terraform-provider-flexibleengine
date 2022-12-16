@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_custom_authorizer"
 ---
 
 # flexibleengine_apig_custom_authorizer
@@ -89,9 +91,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Custom Authorizers of the APIG can be imported using their `name` and the ID of the APIG instance to which the group belongs,
-separated by a slash, e.g.
+Custom Authorizers of the APIG can be imported using the ID of the APIG instance to which the group belongs and
+Custom Authorizer `name`, separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_custom_authorizer.test <instance id>/<name>
+```shell
+terraform import flexibleengine_apig_custom_authorizer.test <instance_id>/<name>
 ```

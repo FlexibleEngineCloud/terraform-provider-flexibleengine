@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Container Engine (CCE)"
+description: ""
+page_title: "flexibleengine_cce_pvc"
 ---
 
 # flexibleengine_cce_pvc
@@ -128,10 +130,11 @@ This resource provides the following timeouts configuration options:
 
 ## Import
 
-CCE PVC can be imported using the cluster ID, namespace and name separated by a slash, e.g.
+CCE PVC can be imported using the cluster ID, namespace name and `name` separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_cce_pvc.test 5c20fdad-7288-11eb-b817-0255ac10158b/default/pvc_name
+```shell
+terraform import flexibleengine_cce_pvc.test <cluster_id>/<namespace_name>/<name>
+terraform import flexibleengine_cce_pvc.test 5c20fdad-7288-11eb-b817-0255ac10158b/default/pvc_name
 ```
 
 Note that the imported state may not be identical to your resource definition, due to some attributes missing from the
@@ -140,7 +143,7 @@ It is generally recommended running `terraform plan` after importing a PVC.
 You can then decide if changes should be applied to the PVC, or the resource
 definition should be updated to align with the PVC. Also you can ignore changes as below.
 
-```
+```hcl
 resource "flexibleengine_cce_pvc" "test" {
     ...
 

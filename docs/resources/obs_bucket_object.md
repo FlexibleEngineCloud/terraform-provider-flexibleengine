@@ -1,8 +1,10 @@
 ---
 subcategory: "Object Storage Service (OSS)"
+description: ""
+page_title: "flexibleengine_obs_bucket_object"
 ---
 
-# flexibleengine\_obs\_bucket\_object
+# flexibleengine_obs_bucket_object
 
 Manages an OBS bucket object resource within FlexibleEngine.
 

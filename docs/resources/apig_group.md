@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_group"
 ---
 
 # flexibleengine_apig_group
@@ -80,9 +82,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-API groups of the APIG can be imported using their `id` and the ID of the APIG instance to which the group belongs,
+API groups of the APIG can be imported using the ID of the APIG instance to which the group belongs and API group ID,
 separated by a slash, e.g.
 
-```
-$ terraform import flexibleengine_apig_group.test <instance id>/<id>
+```shell
+terraform import flexibleengine_apig_group.test <instance_id>/<id>
 ```

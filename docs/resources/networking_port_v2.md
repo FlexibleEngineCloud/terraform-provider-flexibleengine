@@ -1,8 +1,10 @@
 ---
 subcategory: "Virtual Private Cloud (VPC)"
+description: ""
+page_title: "flexibleengine_networking_port_v2"
 ---
 
-# flexibleengine\_networking\_port_v2
+# flexibleengine_networking_port_v2
 
 Manages a V2 port resource within FlexibleEngine.
 
@@ -123,8 +125,8 @@ The following attributes are exported:
 
 Ports can be imported using the `id`, e.g.
 
-```
-$ terraform import flexibleengine_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
+```shell
+terraform import flexibleengine_networking_port_v2.port_1 eae26a3e-1c33-4cc1-9c31-0cd729c438a1
 ```
 
 ## Notes

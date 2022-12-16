@@ -1,5 +1,7 @@
 ---
 subcategory: "NAT Gateway (NAT)"
+description: ""
+page_title: "flexibleengine_nat_snat_rule_v2"
 ---
 
 # flexibleengine_nat_snat_rule_v2
@@ -47,7 +49,7 @@ The following arguments are supported:
     This parameter and `cidr` are alternative. Changing this creates a new snat rule.
 
 * `cidr` - (Optional) Specifies CIDR, which can be in the format of a network segment or a host IP address.
-    This parameter and `network_id` are alternative. Changing this creates a new snat rule.
+    This parameter and `subnet_id` are alternative. Changing this creates a new snat rule.
 
 * `source_type` - (Optional) Specifies the scenario. The valid value is 0 (VPC scenario) and 1 (Direct Connect scenario).
     Only `cidr` can be specified over a Direct Connect connection.
@@ -73,6 +75,6 @@ This resource provides the following timeouts configuration options:
 
 SNAT rules can be imported using the following format:
 
-```
-$ terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
+```shell
+terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
 ```
