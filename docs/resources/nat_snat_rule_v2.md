@@ -49,7 +49,7 @@ The following arguments are supported:
     This parameter and `cidr` are alternative. Changing this creates a new snat rule.
 
 * `cidr` - (Optional) Specifies CIDR, which can be in the format of a network segment or a host IP address.
-    This parameter and `network_id` are alternative. Changing this creates a new snat rule.
+    This parameter and `subnet_id` are alternative. Changing this creates a new snat rule.
 
 * `source_type` - (Optional) Specifies the scenario. The valid value is 0 (VPC scenario) and 1 (Direct Connect scenario).
     Only `cidr` can be specified over a Direct Connect connection.
