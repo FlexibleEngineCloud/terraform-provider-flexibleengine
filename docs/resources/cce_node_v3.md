@@ -142,3 +142,11 @@ All above argument parameters can be exported as attribute parameters along with
 * `server_id` - ID of the ECS instance associated with the node.
 * `private_ip` - Private IP of the CCE node.
 * `public_ip` - Public IP of the CCE node.
+
+## Import
+
+CCE node can be imported using the `cluster_id` and the `id` of the node separated by `/`, e.g.
+
+```shell
+terraform import flexibleengine_cce_node_v3.node_1 1c4a7f7c-5b8f-11e8-9c2d-525400bd8000/1c4a7f7c-5b8f-11e8-9c2d-525400bd8000
+```
