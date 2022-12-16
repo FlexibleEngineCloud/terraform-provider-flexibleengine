@@ -112,3 +112,11 @@ The `public_endpoints` block supports:
 
 * `jdbc_url` - JDBC URL. The following is the default format:
     jdbc:postgresql://< public_connect_info>/<YOUR_DATABASE_NAME>
+
+## Import
+
+DWS cluster can be imported using the `id`, e.g.
+
+```shell
+$ terraform import flexibleengine_dws_cluster_v1.cluster 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+```
