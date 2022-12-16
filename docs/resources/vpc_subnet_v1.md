@@ -81,7 +81,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - The status of the subnet. The value can be ACTIVE, DOWN, UNKNOWN, or ERROR.
 
-* `subnet_id` - The subnet (Native OpenStack API) ID.
+* `ipv4_subnet_id` - The ID of the IPv4 subnet (Native OpenStack API).
 
 * `ipv6_subnet_id` - The ID of the IPv6 subnet (Native OpenStack API).
 
@@ -91,7 +91,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Subnets can be imported using the `subnet id`, e.g.
+Subnets can be imported using the subnet `Network ID`, e.g.
 
 ```
  $ terraform import flexibleengine_vpc_subnet_v1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d

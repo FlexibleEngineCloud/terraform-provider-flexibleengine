@@ -57,7 +57,7 @@ the selected subnet.
 
 * `dhcp_enable` - DHCP function for the subnet.
 
-* `subnet_id` - Specifies the subnet (Native OpenStack API) ID.
+* `ipv4_subnet_id` - The ID of the IPv4 subnet (Native OpenStack API).
 
 * `ipv6_enable` - Whether the IPv6 is enabled.
 

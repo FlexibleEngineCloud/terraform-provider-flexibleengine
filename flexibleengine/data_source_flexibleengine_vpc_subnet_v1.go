@@ -68,6 +68,11 @@ func dataSourceVpcSubnetV1() *schema.Resource {
 				Optional: true,
 			},
 			"subnet_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "schema: Deprecated",
+			},
+			"ipv4_subnet_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -142,6 +147,7 @@ func dataSourceVpcSubnetV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("availability_zone", Subnets.AvailabilityZone)
 	d.Set("vpc_id", Subnets.VPC_ID)
 	d.Set("subnet_id", Subnets.SubnetId)
+	d.Set("ipv4_subnet_id", Subnets.SubnetId)
 	d.Set("ipv6_enable", Subnets.EnableIPv6)
 	d.Set("ipv6_subnet_id", Subnets.IPv6SubnetId)
 	d.Set("ipv6_cidr", Subnets.IPv6CIDR)
