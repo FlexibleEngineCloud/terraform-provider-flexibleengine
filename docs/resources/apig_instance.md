@@ -60,7 +60,7 @@ The following arguments are supported:
 * `security_group_id` - (Required, String) Specifies an ID of the security group to which the APIG dedicated instance
   belongs to.
 
-* `available_zones` - (Optional, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
+* `available_zones` - (Required, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
   instance. Changing this will create a new APIG dedicated instance resource.
 
 * `description` - (Optional, String) Specifies the description about the APIG dedicated instance. The description
