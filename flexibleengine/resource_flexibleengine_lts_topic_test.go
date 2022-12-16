@@ -2,17 +2,16 @@ package flexibleengine
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
-	"github.com/chnsz/golangsdk/openstack/lts/v2/logtopics"
+	"github.com/chnsz/golangsdk/openstack/lts/huawei/logstreams"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccLTSTopicV2_basic(t *testing.T) {
-	var topic logtopics.LogTopic
+	var topic logstreams.LogStream
 	rand := acctest.RandString(5)
 	resourceName := "flexibleengine_lts_topic.topic_1"
 
@@ -44,7 +43,6 @@ func testAccCheckLTSTopicV2Destroy(s *terraform.State) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	ltsclient.ResourceBase = strings.Replace(ltsclient.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "flexibleengine_lts_topic" {
@@ -52,15 +50,15 @@ func testAccCheckLTSTopicV2Destroy(s *terraform.State) error {
 		}
 
 		groupID := rs.Primary.Attributes["group_id"]
-		_, err = logtopics.Get(ltsclient, groupID, rs.Primary.ID).Extract()
+		_, err = logstreams.List(ltsclient, groupID).Extract()
 		if err == nil {
-			return fmt.Errorf("LTS topic still exists")
+			return fmt.Errorf("LTS topic %s still exists", rs.Primary.ID)
 		}
 	}
 	return nil
 }
 
-func testAccCheckLTSTopicV2Exists(n string, topic *logtopics.LogTopic) resource.TestCheckFunc {
+func testAccCheckLTSTopicV2Exists(n string, topic *logstreams.LogStream) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -76,16 +74,20 @@ func testAccCheckLTSTopicV2Exists(n string, topic *logtopics.LogTopic) resource.
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 		}
-		ltsclient.ResourceBase = strings.Replace(ltsclient.ResourceBase, "/v2/", "/v2.0/", 1)
 
 		groupID := rs.Primary.Attributes["group_id"]
-		found, err := logtopics.Get(ltsclient, groupID, rs.Primary.ID).Extract()
+		streams, err := logstreams.List(ltsclient, groupID).Extract()
 		if err != nil {
-			return err
+			return fmt.Errorf("LTS topic get list err: %s", err)
+		}
+		for _, logstream := range streams.LogStreams {
+			if logstream.ID == rs.Primary.ID {
+				*topic = logstream
+				return nil
+			}
 		}
 
-		*topic = *found
-		return nil
+		return fmt.Errorf("resource not found: lts topic %s", rs.Primary.ID)
 	}
 }
 
@@ -110,7 +112,7 @@ func testAccLTSTopicV2ImportStateIDFunc(name string) resource.ImportStateIdFunc 
 func testAccLTSTopicV2_basic(name string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_lts_group" "group_1" {
-  group_name  = "testacc_group-%s"
+  group_name = "testacc_group-%s"
 }
 
 resource "flexibleengine_lts_topic" "topic_1" {

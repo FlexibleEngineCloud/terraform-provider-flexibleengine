@@ -3,9 +3,8 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
-	"strings"
 
-	"github.com/chnsz/golangsdk/openstack/lts/v2/loggroups"
+	"github.com/chnsz/golangsdk/openstack/lts/huawei/loggroups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -44,7 +43,6 @@ func resourceLTSGroupV2Create(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	createOpts := &loggroups.CreateOpts{
 		LogGroupName: d.Get("group_name").(string),
@@ -63,23 +61,31 @@ func resourceLTSGroupV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceLTSGroupV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.LtsV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	client, err := config.LtsV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
-	group, err := loggroups.Get(client, d.Id()).Extract()
+	groups, err := loggroups.List(client).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "Error querying log group")
+		return fmt.Errorf("Error querying log group list: %s", err)
 	}
 
-	d.Set("group_name", group.Name)
-	d.Set("ttl_in_days", group.TTLinDays)
-	d.Set("region", GetRegion(d, config))
+	resourceID := d.Id()
+	for _, group := range groups.LogGroups {
+		if group.ID == resourceID {
+			d.SetId(group.ID)
+			d.Set("region", region)
+			d.Set("group_name", group.Name)
+			d.Set("ttl_in_days", group.TTLinDays)
+			return nil
+		}
+	}
 
+	log.Printf("[WARN] log group %s: resource is gone and will be removed in Terraform state", resourceID)
+	d.SetId("")
 	return nil
-
 }
 
 func resourceLTSGroupV2Delete(d *schema.ResourceData, meta interface{}) error {
@@ -88,7 +94,6 @@ func resourceLTSGroupV2Delete(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	err = loggroups.Delete(client, d.Id()).ExtractErr()
 	if err != nil {

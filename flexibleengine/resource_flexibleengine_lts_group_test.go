@@ -2,10 +2,9 @@ package flexibleengine
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
-	"github.com/chnsz/golangsdk/openstack/lts/v2/loggroups"
+	"github.com/chnsz/golangsdk/openstack/lts/huawei/loggroups"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -44,16 +43,20 @@ func testAccCheckLTSGroupV2Destroy(s *terraform.State) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	ltsclient.ResourceBase = strings.Replace(ltsclient.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "flexibleengine_lts_group" {
 			continue
 		}
 
-		_, err := loggroups.Get(ltsclient, rs.Primary.ID).Extract()
-		if err == nil {
-			return fmt.Errorf("LTS group still exists")
+		groups, err := loggroups.List(ltsclient).Extract()
+		if err != nil {
+			return fmt.Errorf("Log group get list err: %s", err.Error())
+		}
+		for _, group := range groups.LogGroups {
+			if group.ID == rs.Primary.ID {
+				return fmt.Errorf("Log group (%s) still exists.", rs.Primary.ID)
+			}
 		}
 	}
 	return nil
@@ -75,15 +78,20 @@ func testAccCheckLTSGroupV2Exists(n string, group *loggroups.LogGroup) resource.
 		if err != nil {
 			return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 		}
-		ltsclient.ResourceBase = strings.Replace(ltsclient.ResourceBase, "/v2/", "/v2.0/", 1)
 
-		found, err := loggroups.Get(ltsclient, rs.Primary.ID).Extract()
+		var founds *loggroups.LogGroups
+		founds, err = loggroups.List(ltsclient).Extract()
 		if err != nil {
 			return err
 		}
+		for _, loggroup := range founds.LogGroups {
+			if rs.Primary.ID == loggroup.ID {
+				*group = loggroup
+				return nil
+			}
+		}
 
-		*group = *found
-		return nil
+		return fmt.Errorf("resource not found: lts group %s", rs.Primary.ID)
 	}
 }
 

@@ -5,7 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/chnsz/golangsdk/openstack/lts/v2/logtopics"
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/lts/huawei/logstreams"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -35,9 +36,15 @@ func resourceLTSTopicV2() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"index_enabled": {
-				Type:     schema.TypeBool,
+
+			"filter_count": {
+				Type:     schema.TypeInt,
 				Computed: true,
+			},
+			"index_enabled": {
+				Type:       schema.TypeBool,
+				Computed:   true,
+				Deprecated: "it's deprecated",
 			},
 		},
 	}
@@ -49,15 +56,14 @@ func resourceLTSTopicV2Create(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	groupID := d.Get("group_id").(string)
-	createOpts := &logtopics.CreateOpts{
-		LogTopicName: d.Get("topic_name").(string),
+	createOpts := &logstreams.CreateOpts{
+		LogStreamName: d.Get("topic_name").(string),
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
-	topicCreate, err := logtopics.Create(client, groupID, createOpts).Extract()
+	topicCreate, err := logstreams.Create(client, groupID, createOpts).Extract()
 	if err != nil {
 		return fmt.Errorf("Error creating log topic: %s", err)
 	}
@@ -68,22 +74,38 @@ func resourceLTSTopicV2Create(d *schema.ResourceData, meta interface{}) error {
 
 func resourceLTSTopicV2Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.LtsV2Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	client, err := config.LtsV2Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
+	topicID := d.Id()
 	groupID := d.Get("group_id").(string)
-	topic, err := logtopics.Get(client, groupID, d.Id()).Extract()
+	streams, err := logstreams.List(client, groupID).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "Error querying log topic")
+		if _, ok := err.(golangsdk.ErrDefault400); ok {
+			log.Printf("[WARN] log group topic %s: the log group %s is gone", topicID, groupID)
+			d.SetId("")
+			return nil
+		}
+
+		return fmt.Errorf("Error querying log topic %s: %s", topicID, err)
 	}
 
-	log.Printf("[DEBUG] Retrieved log topic %s: %#v", d.Id(), topic)
-	d.Set("topic_name", topic.Name)
-	d.Set("index_enabled", topic.IndexEnabled)
-	d.Set("region", GetRegion(d, config))
+	for _, stream := range streams.LogStreams {
+		if stream.ID == topicID {
+			log.Printf("[DEBUG] Retrieved log topic %s: %#v", topicID, stream)
+			d.SetId(stream.ID)
+			d.Set("region", region)
+			d.Set("topic_name", stream.Name)
+			d.Set("filter_count", stream.FilterCount)
+			return nil
+		}
+	}
+
+	log.Printf("[WARN] log group topic %s: resource is gone and will be removed in Terraform state", topicID)
+	d.SetId("")
 
 	return nil
 }
@@ -94,10 +116,9 @@ func resourceLTSTopicV2Delete(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine LTS client: %s", err)
 	}
-	client.ResourceBase = strings.Replace(client.ResourceBase, "/v2/", "/v2.0/", 1)
 
 	groupID := d.Get("group_id").(string)
-	err = logtopics.Delete(client, groupID, d.Id()).ExtractErr()
+	err = logstreams.Delete(client, groupID, d.Id()).ExtractErr()
 	if err != nil {
 		return CheckDeleted(d, err, "Error deleting log topic")
 	}
