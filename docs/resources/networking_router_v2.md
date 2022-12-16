@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# flexibleengine\_networking\_router_v2
+# flexibleengine_networking_router_v2
 
 Manages a V2 router resource within FlexibleEngine. The router is the top-level resource for the VPC within FlexibleEngine.
 

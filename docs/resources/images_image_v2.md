@@ -2,7 +2,7 @@
 subcategory: "Image Management Service (IMS)"
 ---
 
-# flexibleengine\_images\_image_v2
+# flexibleengine_images_image_v2
 
 Manages a V2 Image resource within FlexibleEngine Glance.
 

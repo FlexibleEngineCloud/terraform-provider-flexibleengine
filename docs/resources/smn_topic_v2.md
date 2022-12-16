@@ -2,7 +2,7 @@
 subcategory: "Simple Message Notification (SMN)"
 ---
 
-# flexibleengine\_smn\_topic\_v2
+# flexibleengine_smn_topic_v2
 
 Manages a V2 topic resource within FlexibleEngine.
 

@@ -2,7 +2,7 @@
 subcategory: "Elastic Volume Service (EVS)"
 ---
 
-# flexibleengine\_blockstorage\_volume_v2
+# flexibleengine_blockstorage_volume_v2
 
 Manages a V2 volume resource within FlexibleEngine.
 

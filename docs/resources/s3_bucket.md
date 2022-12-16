@@ -2,7 +2,7 @@
 subcategory: "Object Storage Service (OSS)"
 ---
 
-# flexibleengine\_s3\_bucket
+# flexibleengine_s3_bucket
 
 Provides a S3 bucket resource.
 

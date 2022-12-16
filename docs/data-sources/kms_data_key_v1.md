@@ -2,7 +2,7 @@
 subcategory: "Key Management Service (KMS)"
 ---
 
-# flexibleengine\_kms\_data_key_v1
+# flexibleengine_kms_data_key_v1
 
 Use this data source to get the plaintext and the ciphertext of an available
 FlexibleEngine KMS DEK (data encryption key).

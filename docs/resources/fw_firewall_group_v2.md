@@ -2,7 +2,7 @@
 subcategory: "Network ACL"
 ---
 
-# flexibleengine\_fw\_firewall_group_v2
+# flexibleengine_fw_firewall_group_v2
 
 Manages a v2 firewall group resource within FlexibleEngine.
 

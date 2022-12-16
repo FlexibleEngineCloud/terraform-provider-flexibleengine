@@ -2,7 +2,7 @@
 subcategory: "Simple Message Notification (SMN)"
 ---
 
-# flexibleengine\_smn\_subscription\_v2
+# flexibleengine_smn_subscription_v2
 
 Manages a V2 subscription resource within FlexibleEngine.
 

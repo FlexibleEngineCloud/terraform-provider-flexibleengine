@@ -2,7 +2,7 @@
 subcategory: "VPC Endpoint (VPCEP)"
 ---
 
-# flexibleengine\_vpcep\_public\_services
+# flexibleengine_vpcep_public_services
 
 Use this data source to get available public VPC endpoint services.
 

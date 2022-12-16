@@ -2,7 +2,7 @@
 subcategory: "Cloud Search Service (CSS)"
 ---
 
-# flexibleengine\_css\_cluster\_v1
+# flexibleengine_css_cluster_v1
 
 CSS cluster snapshot management
 

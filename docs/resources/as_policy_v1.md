@@ -2,7 +2,7 @@
 subcategory: "Auto Scaling (AS)"
 ---
 
-# flexibleengine\_as\_policy_v1
+# flexibleengine_as_policy_v1
 
 Manages a V1 AS Policy resource within flexibleengine.
 

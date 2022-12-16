@@ -2,7 +2,7 @@
 subcategory: "Domain Name Service (DNS)"
 ---
 
-# flexibleengine\_dns\_recordset_v2
+# flexibleengine_dns_recordset_v2
 
 Manages a DNS record set in the FlexibleEngine DNS Service.
 

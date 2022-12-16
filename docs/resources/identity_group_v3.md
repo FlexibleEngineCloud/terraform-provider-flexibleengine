@@ -2,7 +2,7 @@
 subcategory: "Identity and Access Management (IAM)"
 ---
 
-# flexibleengine\_identity\_group_v3
+# flexibleengine_identity_group_v3
 
 Manages a User Group resource within FlexibleEngine IAM service.
 

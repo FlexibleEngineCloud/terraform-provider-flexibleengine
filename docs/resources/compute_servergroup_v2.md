@@ -2,7 +2,7 @@
 subcategory: "Elastic Cloud Server (ECS)"
 ---
 
-# flexibleengine\_compute\_servergroup_v2
+# flexibleengine_compute_servergroup_v2
 
 Manages a V2 Server Group resource within FlexibleEngine.
 

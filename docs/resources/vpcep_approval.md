@@ -2,7 +2,7 @@
 subcategory: "VPC Endpoint (VPCEP)"
 ---
 
-# flexibleengine\_vpcep\_approval
+# flexibleengine_vpcep_approval
 
 Provides a resource to manage the VPC endpoint connections.
 

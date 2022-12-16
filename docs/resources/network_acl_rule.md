@@ -2,7 +2,7 @@
 subcategory: "Network ACL"
 ---
 
-# flexibleengine\_network\_acl\_rule
+# flexibleengine_network_acl_rule
 
 Manages a network ACL rule resource within FlexibleEngine.
 

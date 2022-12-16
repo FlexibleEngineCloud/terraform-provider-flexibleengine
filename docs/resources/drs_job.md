@@ -68,7 +68,7 @@ The following arguments are supported:
   provider-level region will be used. Changing this parameter will create a new resource.
 
 * `name` - (Required, String) Specifies the job name. The name consists of 4 to 50 characters, starting with
- a letter. Only letters, digits, underscores (\_) and hyphens (-) are allowed.
+ a letter. Only letters, digits, underscores (_) and hyphens (-) are allowed.
 
 * `type` - (Required, String, ForceNew) Specifies the job type. Changing this parameter will create a new
  resource. The options are as follows:

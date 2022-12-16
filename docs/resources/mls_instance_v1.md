@@ -2,7 +2,7 @@
 subcategory: "Machine Learning Service (MLS)"
 ---
 
-# flexibleengine\_mls\_instance\_v1
+# flexibleengine_mls_instance_v1
 
 Manages mls instance resource within FlexibleEngine
 

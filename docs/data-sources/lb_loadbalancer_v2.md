@@ -2,7 +2,7 @@
 subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine\_lb\_loadbalancer\_v2
+# flexibleengine_lb_loadbalancer_v2
 
 Use this data source to get a specific elb loadbalancer within FlexibleEngine.
 

@@ -2,7 +2,7 @@
 subcategory: "VPC Endpoint (VPCEP)"
 ---
 
-# flexibleengine\_vpcep\_endpoints
+# flexibleengine_vpcep_endpoints
 
 Use this data source to get VPC endpoints.
 

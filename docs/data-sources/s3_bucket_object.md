@@ -3,7 +3,7 @@ subcategory: "Object Storage Service (OSS)"
 ---
 
 
-# flexibleengine\_s3\_bucket\_object
+# flexibleengine_s3_bucket_object
 
 The S3 object data source allows access to the metadata and
 *optionally* (see below) content of an object stored inside S3 bucket.

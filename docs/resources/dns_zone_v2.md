@@ -2,7 +2,7 @@
 subcategory: "Domain Name Service (DNS)"
 ---
 
-# flexibleengine\_dns\_zone_v2
+# flexibleengine_dns_zone_v2
 
 Manages a DNS zone in the FlexibleEngine DNS Service.
 

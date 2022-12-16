@@ -2,7 +2,7 @@
 subcategory: "VPC Endpoint (VPCEP)"
 ---
 
-# flexibleengine\_vpcep\_service
+# flexibleengine_vpcep_service
 
 Provides a resource to manage a VPC endpoint service resource.
 

@@ -2,7 +2,7 @@
 subcategory: "Cloud Eye (CES)"
 ---
 
-# flexibleengine\_ces\_alarmrule
+# flexibleengine_ces_alarmrule
 
 Manages a Cloud Eye alarm rule resource within FlexibleEngine.
 

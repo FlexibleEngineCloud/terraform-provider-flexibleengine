@@ -2,7 +2,7 @@
 subcategory: "Identity and Access Management (IAM)"
 ---
 
-# flexibleengine\_identity\_role\_assignment_v3
+# flexibleengine_identity_role_assignment_v3
 
 Manages a V3 Role assignment within group on FlexibleEngine IAM Service.
 

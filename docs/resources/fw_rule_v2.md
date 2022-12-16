@@ -2,7 +2,7 @@
 subcategory: "Network ACL"
 ---
 
-# flexibleengine\_fw\_rule_v2
+# flexibleengine_fw_rule_v2
 
 Manages a v2 firewall rule resource within FlexibleEngine.
 
