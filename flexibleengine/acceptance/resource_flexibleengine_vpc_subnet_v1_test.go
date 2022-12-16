@@ -36,6 +36,7 @@ func TestAccVpcSubnetV1_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ipv6_enable", "false"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
+					resource.TestCheckResourceAttrSet(resourceName, "ipv4_subnet_id"),
 				),
 			},
 			{

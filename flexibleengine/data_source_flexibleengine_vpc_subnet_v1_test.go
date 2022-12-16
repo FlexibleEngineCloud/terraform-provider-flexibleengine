@@ -34,6 +34,8 @@ func TestAccVpcSubnetV1DataSource_basic(t *testing.T) {
 						"data.flexibleengine_vpc_subnet_v1.by_id", "dhcp_enable", "true"),
 					resource.TestCheckResourceAttr(
 						"data.flexibleengine_vpc_subnet_v1.by_id", "ipv6_enable", "false"),
+					resource.TestCheckResourceAttrSet(
+						"data.flexibleengine_vpc_subnet_v1.by_id", "ipv4_subnet_id"),
 				),
 			},
 		},
