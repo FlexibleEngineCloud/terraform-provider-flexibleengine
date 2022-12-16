@@ -217,3 +217,11 @@ In addition to all arguments above, the following attributes are exported:
 * `max_memory` - Overall memory size. Unit: MB.
 * `used_memory` - Size of the used memory. Unit: MB.
 * `user_id` - Indicates a user ID.
+
+## Import
+
+DCS instances can be imported using the `id`, e.g.
+
+```shell
+terraform import flexibleengine_dcs_instance_v1.instance_1 8a1b2c3d-4e5f-6g7h-8i9j-0k1l2m3n4o5p
+```
