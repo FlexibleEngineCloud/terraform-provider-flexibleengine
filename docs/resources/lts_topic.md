@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - The log topic ID in UUID format.
 
-* `index_enabled` - Indicates the search switch. When index is enabled, the topic allows you to search for logs by keyword.
+* `filter_count` - The Number of metric filter.
 
 ## Import
 
