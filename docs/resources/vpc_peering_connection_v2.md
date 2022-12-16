@@ -50,6 +50,6 @@ result attributes:
 
 VPC Peering resources can be imported using the `vpc peering id`, e.g.
 
-```
+```shell
 terraform import flexibleengine_vpc_peering_connection_v2.test_connection 22b76469-08e3-4937-8c1d-7aad34892be1
 ```

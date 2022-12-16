@@ -230,7 +230,7 @@ This resource provides the following timeouts configuration options:
 
 The DRS job can be imported by `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_drs_job.test b11b407c-e604-4e8d-8bc4-92398320b847
 ```
 

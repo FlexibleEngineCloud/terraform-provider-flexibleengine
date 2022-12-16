@@ -544,7 +544,7 @@ This resource provides the following timeouts configuration options:
 
 Clusters can be imported by their `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_mrs_cluster_v2.test b11b407c-e604-4e8d-8bc4-92398320b847
 ```
 
