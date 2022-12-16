@@ -1,5 +1,7 @@
 ---
 subcategory: "Scalable File Service (SFS)"
+description: ""
+page_title: "flexibleengine_sfs_file_system_v2"
 ---
 
 # flexibleengine_sfs_file_system_v2

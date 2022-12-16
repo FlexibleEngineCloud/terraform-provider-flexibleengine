@@ -1,5 +1,7 @@
 ---
 subcategory: "Scalable File Service (SFS)"
+description: ""
+page_title: "flexibleengine_sfs_access_rule_v2"
 ---
 
 # flexibleengine_sfs_access_rule_v2

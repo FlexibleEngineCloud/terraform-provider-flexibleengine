@@ -1,5 +1,7 @@
 ---
 subcategory: "Data Warehouse Service (DWS)"
+description: ""
+page_title: "flexibleengine_dws_cluster_v1"
 ---
 
 # flexibleengine_dws_cluster_v1

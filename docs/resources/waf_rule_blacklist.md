@@ -1,5 +1,7 @@
 ---
 subcategory: "Web Application Firewall (WAF)"
+description: ""
+page_title: "flexibleengine_waf_rule_blacklist"
 ---
 
 # flexibleengine_waf_rule_blacklist

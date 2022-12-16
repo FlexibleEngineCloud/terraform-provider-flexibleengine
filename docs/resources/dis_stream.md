@@ -1,5 +1,7 @@
 ---
 subcategory: "Data Ingestion Service (DIS)"
+description: ""
+page_title: "flexibleengine_dis_stream"
 ---
 
 # flexibleengine_dis_stream

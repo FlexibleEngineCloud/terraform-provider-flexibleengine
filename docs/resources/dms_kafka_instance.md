@@ -1,5 +1,7 @@
 ---
 subcategory: "Distributed Message Service (DMS)"
+description: ""
+page_title: "flexibleengine_dms_kafka_instance"
 ---
 
 # flexibleengine_dms_kafka_instance

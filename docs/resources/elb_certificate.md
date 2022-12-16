@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Load Balance (Dedicated ELB)"
+description: ""
+page_title: "flexibleengine_elb_certificate"
 ---
 
 # flexibleengine_elb_certificate

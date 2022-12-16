@@ -1,5 +1,7 @@
 ---
 subcategory: "Web Application Firewall (WAF)"
+description: ""
+page_title: "flexibleengine_waf_rule_web_tamper_protection"
 ---
 
 # flexibleengine_waf_rule_web_tamper_protection

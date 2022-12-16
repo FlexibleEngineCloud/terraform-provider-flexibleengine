@@ -1,5 +1,7 @@
 ---
 subcategory: "MapReduce Service (MRS)"
+description: ""
+page_title: "flexibleengine_mrs_cluster_v2"
 ---
 
 # flexibleengine_mrs_cluster_v2

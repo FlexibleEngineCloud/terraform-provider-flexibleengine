@@ -1,5 +1,7 @@
 ---
 subcategory: "Data Lake Insight (DLI)"
+description: ""
+page_title: "flexibleengine_dli_table"
 ---
 
 # flexibleengine_dli_table

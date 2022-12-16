@@ -1,5 +1,7 @@
 ---
 subcategory: "Object Storage Service (OSS)"
+description: ""
+page_title: "flexibleengine_obs_bucket_object"
 ---
 
 # flexibleengine_obs_bucket_object

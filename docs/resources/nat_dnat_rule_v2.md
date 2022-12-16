@@ -1,5 +1,7 @@
 ---
 subcategory: "NAT Gateway (NAT)"
+description: ""
+page_title: "flexibleengine_nat_dnat_rule_v2"
 ---
 
 # flexibleengine_nat_dnat_rule_v2

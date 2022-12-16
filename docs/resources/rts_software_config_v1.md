@@ -1,5 +1,7 @@
 ---
 subcategory: "Resource Template Service (RTS)"
+description: ""
+page_title: "flexibleengine_rts_software_config_v1"
 ---
 
 # flexibleengine_rts_software_config_v1

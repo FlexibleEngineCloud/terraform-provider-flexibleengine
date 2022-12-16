@@ -1,5 +1,7 @@
 ---
 subcategory: "Storage Disaster Recovery Service (SDRS)"
+description: ""
+page_title: "flexibleengine_sdrs_replication_pair_v1"
 ---
 
 # flexibleengine_sdrs_replication_pair_v1

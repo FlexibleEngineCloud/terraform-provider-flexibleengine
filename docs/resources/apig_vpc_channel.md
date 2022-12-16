@@ -1,5 +1,7 @@
 ---
 subcategory: "API Gateway (Dedicated APIG)"
+description: ""
+page_title: "flexibleengine_apig_vpc_channel"
 ---
 
 # flexibleengine_apig_vpc_channel

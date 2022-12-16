@@ -1,5 +1,7 @@
 ---
 subcategory: "Cloud Container Engine (CCE)"
+description: ""
+page_title: "flexibleengine_cce_namespace"
 ---
 
 # flexibleengine_cce_namespace
