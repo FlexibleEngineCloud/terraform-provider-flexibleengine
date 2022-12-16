@@ -54,3 +54,11 @@ The following attributes are exported:
 * `group` - See Argument Reference above.
 
 * `users` - See Argument Reference above.
+
+## Import
+
+A group membership can be imported using the `id`, e.g.
+
+```shell
+terraform import flexibleengine_identity_group_membership_v3.membership_1 5e6f7e8d-9c0b-4a1a-8b2c-3d4e5f6a7b8c
+```
