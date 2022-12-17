@@ -69,8 +69,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Lifecycle hooks can be imported using the AS group ID and hook ID separated by a slash, e.g.
+Lifecycle hooks can be imported using the Auto Scalling group ID `scaling_group_id` and hook Name `name` separated by a
+slash `/`, e.g.
 
 ```shell
-terraform import flexibleengine_as_lifecycle_hook_v1.test <as_group_id>/<id>
+terraform import flexibleengine_as_lifecycle_hook_v1.test <scaling_group_id>/<name>
 ```
