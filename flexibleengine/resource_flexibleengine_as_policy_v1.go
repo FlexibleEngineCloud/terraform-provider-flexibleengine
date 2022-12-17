@@ -17,6 +17,9 @@ func resourceASPolicy() *schema.Resource {
 		Read:   resourceASPolicyRead,
 		Update: resourceASPolicyUpdate,
 		Delete: resourceASPolicyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"region": {
