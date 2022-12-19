@@ -104,7 +104,7 @@ All of the argument attributes except accept are also exported as result attribu
 
 ## Import
 
-VPC Peering Connection Accepter can be imported using the `id`, e.g.
+VPC Peering Connection Accepter can be imported using the VPC Peering Connection ID `vpc_peering_connection_id`, e.g.
 
  ```shell
 terraform import flexibleengine_vpc_peering_connection_accepter_v2.peer 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
