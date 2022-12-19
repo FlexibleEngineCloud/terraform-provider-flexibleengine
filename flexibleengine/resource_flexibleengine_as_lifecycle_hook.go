@@ -221,7 +221,7 @@ func setASLifecycleHookType(d *schema.ResourceData, hook *lifecyclehooks.Hook) e
 func resourceASLifecycleHookImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	parts := strings.SplitN(d.Id(), "/", 2)
 	if len(parts) != 2 {
-		return nil, fmt.Errorf("Invalid format specified for lifecycle hook, must be <scaling_group_id>/<hook_id>")
+		return nil, fmt.Errorf("Invalid format specified for lifecycle hook, must be <scaling_group_id>/<hook_name>")
 	}
 	d.SetId(parts[1])
 	d.Set("scaling_group_id", parts[0])
