@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 1.35.1 (December 19, 2022)
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_vpc_subnet_v1`: add `ipv4_subnet_id` and deprecate `subnet_id` attribute [GH-858]
+* `resource/flexibleengine_networking_vip_v2`: use ip_version instead of subnet_id [GH-868]
+
+BUG FIXES:
+
+* `resource/flexibleengine_lts_group`: update the API version [GH-859]
+
+DEPRECATED:
+
+* `data.flexibleengine_networking_network_v2` [GH-869]
+* `flexibleengine_networking_floatingip_associate_v2` [GH-869]
+* `flexibleengine_networking_floatingip_v2` [GH-869]
+* `flexibleengine_networking_network_v2` [GH-869]
+* `flexibleengine_networking_subnet_v2` [GH-869]
+* `flexibleengine_networking_router_interface_v2` [GH-869]
+* `flexibleengine_networking_router_v2` [GH-869]
+
 ## 1.35.0 (December 1, 2022)
 
 FEATURES:
