@@ -1,10 +1,12 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_networking_network_v2
 
 Use this data source to get the ID of an available FlexibleEngine network.
+
+!> **Warning:** It has been deprecated, using `data.flexibleengine_vpc_subent_v1` instead.
 
 ## Example Usage
 

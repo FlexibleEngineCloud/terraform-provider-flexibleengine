@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_networking_subnet_v2"
 ---
@@ -7,6 +7,8 @@ page_title: "flexibleengine_networking_subnet_v2"
 # flexibleengine_networking_subnet_v2
 
 Manages a V2 Neutron subnet resource within FlexibleEngine.
+
+!> **Warning:** It has been deprecated, use `flexibleengine_vpc_subnet_v1` instead.
 
 ## Example Usage
 
