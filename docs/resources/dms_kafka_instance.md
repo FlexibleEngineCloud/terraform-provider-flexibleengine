@@ -11,10 +11,6 @@ Manage a DMS Kafka instance resources within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-variable vpc_id {}
-variable subnet_id {}
-variable security_group_id {}
-
 data "flexibleengine_dms_product" "test" {
   bandwidth = "100MB"
 }
@@ -28,9 +24,9 @@ resource "flexibleengine_dms_kafka_instance" "product_1" {
   storage_space      = data.flexibleengine_dms_product.test.storage_space
   storage_spec_code  = "dms.physical.storage.ultra"
 
-  vpc_id            = var.vpc_id
-  network_id        = var.subnet_id
-  security_group_id = var.security_group_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  network_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
 
   manager_user     = "admin"
   manager_password = "AdminTest@123"
@@ -74,7 +70,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) Specifies the ID of a VPC.
   Changing this creates a new instance resource.
 
-* `network_id` - (Required, String, ForceNew) Specifies the ID of a subnet.
+* `network_id` - (Required, String, ForceNew) Specifies the ID of a VPC subnet.
   Changing this creates a new instance resource.
 
 * `security_group_id` - (Required, String) Specifies the ID of a security group.

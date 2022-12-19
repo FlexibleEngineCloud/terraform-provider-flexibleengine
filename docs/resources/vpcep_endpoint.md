@@ -13,17 +13,14 @@ Provides a resource to manage a VPC endpoint resource.
 ### Access to the public service
 
 ```hcl
-variable "vpc_id" {}
-variable "network_id" {}
-
 data "flexibleengine_vpcep_public_services" "cloud_service" {
   service_name = "dns"
 }
 
 resource "flexibleengine_vpcep_endpoint" "myendpoint" {
   service_id       = data.flexibleengine_vpcep_public_services.cloud_service.services[0].id
-  vpc_id           = var.vpc_id
-  network_id       = var.network_id
+  vpc_id           = flexibleengine_vpc_v1.example_vpc.id
+  network_id       = flexibleengine_vpc_subnet_v1.example_subnet.id
   enable_dns       = true
   enable_whitelist = true
   whitelist        = ["192.168.0.0/24"]
@@ -33,15 +30,12 @@ resource "flexibleengine_vpcep_endpoint" "myendpoint" {
 ### Access to the private service
 
 ```hcl
-variable "service_vpc_id" {}
 variable "vm_port" {}
-variable "vpc_id" {}
-variable "network_id" {}
 
 resource "flexibleengine_vpcep_service" "demo" {
   name        = "demo-service"
   server_type = "VM"
-  vpc_id      = var.service_vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc_service.id
   port_id     = var.vm_port
 
   port_mapping {
@@ -52,8 +46,8 @@ resource "flexibleengine_vpcep_service" "demo" {
 
 resource "flexibleengine_vpcep_endpoint" "demo" {
   service_id  = flexibleengine_vpcep_service.demo.id
-  vpc_id      = var.vpc_id
-  network_id  = var.network_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
+  network_id  = flexibleengine_vpc_subnet_v1.example_subnet.id
   enable_dns  = true
 }
 ```

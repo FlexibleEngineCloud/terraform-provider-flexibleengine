@@ -19,7 +19,7 @@ resource "flexibleengine_as_group_v1" "my_as_group" {
   min_instance_number      = 0
   max_instance_number      = 10
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "yes"
 
@@ -41,7 +41,7 @@ resource "flexibleengine_as_group_v1" "my_as_group_only_remove_members" {
   min_instance_number      = 0
   max_instance_number      = 10
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "no"
 
@@ -75,7 +75,7 @@ resource "flexibleengine_as_group_v1" "my_as_group_with_elb" {
   max_instance_number      = 10
   lb_listener_id           = flexibleengine_elb_listener.my_listener.id
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "yes"
 

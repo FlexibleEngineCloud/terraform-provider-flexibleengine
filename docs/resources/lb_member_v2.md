@@ -11,11 +11,11 @@ Manages an **enhanced** load balancer member resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_member_v2" "member_1" {
+resource "flexibleengine_lb_member_v2" "example_member" {
   address       = "192.168.199.23"
   protocol_port = 8080
-  pool_id       = POOL_ID
-  subnet_id     = SUBNET_ID
+  pool_id       = flexibleengine_lb_pool_v2.example_pool.id
+  subnet_id     = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 ```
 
@@ -31,7 +31,8 @@ The following arguments are supported:
 * `pool_id` - (Required) The id of the pool that this member will be
     assigned to.
 
-* `subnet_id` - (Required) The subnet in which to access the member
+* `subnet_id` - (Required) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
+    VPC Subnet in which to access the member
 
 * `name` - (Optional) Human-readable name for the member.
 

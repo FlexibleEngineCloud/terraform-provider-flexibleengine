@@ -11,43 +11,42 @@ Manages mls instance resource within FlexibleEngine
 ## Example Usage:  Creating a MLS instance
 
 ```hcl
-
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
-  cluster_name = "mrs-cluster-acc"
-  region = "eu-west-0"
-  billing_type = 12
-  master_node_num = 2
-  core_node_num = 3
-  master_node_size = "s1.4xlarge.linux.mrs"
-  core_node_size = "s1.xlarge.linux.mrs"
-  available_zone_id = "eu-west-0a"
-  vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
-  cluster_version = "MRS 1.3.0"
-  volume_type = "SATA"
-  volume_size = 100
-  safe_mode = 0
-  cluster_type = 0
+  cluster_name          = "mrs-cluster-acc"
+  region                = "eu-west-0"
+  billing_type          = 12
+  master_node_num       = 2
+  core_node_num         = 3
+  master_node_size      = "s1.4xlarge.linux.mrs"
+  core_node_size        = "s1.xlarge.linux.mrs"
+  available_zone_id     = "eu-west-0a"
+  vpc_id                = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id             = flexibleengine_vpc_subnet_v1.example_subnet.id
+  cluster_version       = "MRS 1.3.0"
+  volume_type           = "SATA"
+  volume_size           = 100
+  safe_mode             = 0
+  cluster_type          = 0
   node_public_cert_name = "KeyPair-ci"
-  cluster_admin_secret = ""
+  cluster_admin_secret  = ""
   component_list {
-      component_name = "Hadoop"
+    component_name = "Hadoop"
   }
   component_list {
-      component_name = "Spark"
+    component_name = "Spark"
   }
   component_list {
-      component_name = "Hive"
+    component_name = "Hive"
   }
 }
 
 resource "flexibleengine_mls_instance_v1" "instance" {
-  name = "terraform-mls-instance"
+  name    = "terraform-mls-instance"
   version = "1.2.0"
-  flavor = "mls.c2.2xlarge.common"
+  flavor  = "mls.c2.2xlarge.common"
   network {
-    vpc_id = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-    subnet_id = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
+    vpc_id         = flexibleengine_vpc_v1.example_vpc.id
+    subnet_id      = flexibleengine_vpc_subnet_v1.example_subnet.id
     available_zone = "eu-west-0a"
     public_ip {
       bind_type = "not_use"
@@ -57,6 +56,7 @@ resource "flexibleengine_mls_instance_v1" "instance" {
     id = flexibleengine_mrs_cluster_v1.cluster1.id
   }
 }
+
 ```
 
 ## Argument Reference
@@ -96,7 +96,7 @@ The `network` block supports:
 * `vpc_id` - (Required) Specifies the ID of the virtual private cloud (VPC) where the
   instance resides. Changing this creates a new instance.
 
-* `subnet_id` - (Required) Specifies the ID of the subnet where the instance resides.
+* `subnet_id` - (Required) Specifies the ID of the VPC Subnet where the instance resides.
   Changing this creates a new instance.
 
 * `security_group` - (Optional) Specifies the ID of the security group of the instance.

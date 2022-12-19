@@ -12,23 +12,19 @@ Manages an APIG dedicated instance resource within Flexibleengine.
 
 ```hcl
 variable "instance_name" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
-variable "security_group_id" {}
-variable "eip_id" {}
 
 data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_apig_instance" "test" {
   name                  = var.instance_name
   edition               = "BASIC"
-  vpc_id                = var.vpc_id
-  subnet_id             = var.subnet_id
-  security_group_id     = var.security_group_id
+  vpc_id                = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id             = flexibleengine_vpc_subnet_v1.example_subnet.id
+  security_group_id     = flexibleengine_networking_secgroup_v2.example_secgroup.id
   maintain_begin        = "06:00:00"
   description           = "Created by script"
   bandwidth_size        = 3
-  eip_id                = var.eip_id
+  eip_id                = flexibleengine_vpc_eip.example_eip.id
 
   available_zones = [
     data.flexibleengine_availability_zones.test.names[0],
@@ -51,13 +47,13 @@ The following arguments are supported:
   are as follows: BASIC, PROFESSIONAL, ENTERPRISE, PLATINUM. Changing this will create a new APIG dedicated instance
   resource.
 
-* `vpc_id` - (Required, String, ForceNew) Specifies an ID of the VPC used to create the APIG dedicated instance.
+* `vpc_id` - (Required, String, ForceNew) Specifies the ID of the VPC used to create the APIG dedicated instance.
   Changing this will create a new APIG dedicated instance resource.
 
-* `subnet_id` - (Required, String, ForceNew) Specifies an ID of the VPC subnet used to create the APIG dedicated
+* `subnet_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet used to create the APIG dedicated
   instance. Changing this will create a new APIG dedicated instance resource.
 
-* `security_group_id` - (Required, String) Specifies an ID of the security group to which the APIG dedicated instance
+* `security_group_id` - (Required, String) Specifies the ID of the security group to which the APIG dedicated instance
   belongs to.
 
 * `available_zones` - (Required, List, ForceNew) Specifies an array of available zone names for the APIG dedicated

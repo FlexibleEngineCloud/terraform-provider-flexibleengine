@@ -15,14 +15,13 @@ Provides an Shared File System (SFS) resource.
 ```hcl
 variable "share_name" {}
 variable "share_description" {}
-variable "vpc_id" {}
 
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name         = var.share_name
   size         = 100
   share_proto  = "NFS"
   access_level = "rw"
-  access_to    = var.vpc_id
+  access_to    = flexibleengine_vpc_v1.example_vpc.id
   description  = var.share_description
 }
 ```
@@ -32,7 +31,6 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
 ```hcl
 variable "share_name" {}
 variable "share_description" {}
-variable "vpc_id" {}
 
 resource "flexibleengine_kms_key_v1" "mykey" {
   key_alias    = "kms_sfs"
@@ -44,7 +42,7 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
   size         = 100
   share_proto  = "NFS"
   access_level = "rw"
-  access_to    = var.vpc_id
+  access_to    = flexibleengine_vpc_v1.example_vpc.id
   description  = var.share_description
 
   metadata = {

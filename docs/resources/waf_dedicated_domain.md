@@ -28,7 +28,7 @@ resource "flexibleengine_waf_dedicated_domain" "domain_1" {
     address         = "192.168.1.100"
     port            = 8080
     type            = "ipv4"
-    vpc_id          = var.vpc_id
+    vpc_id          = flexibleengine_vpc_v1.example_vpc.id
   }
 }
 ```

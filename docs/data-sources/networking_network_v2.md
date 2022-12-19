@@ -6,7 +6,7 @@ subcategory: "Deprecated"
 
 Use this data source to get the ID of an available FlexibleEngine network.
 
-!> **Warning:** It has been deprecated, using `data.flexibleengine_vpc_subent_v1` instead.
+!> **Warning:** It has been deprecated, using `data.flexibleengine_vpc_subnet_v1` instead.
 
 ## Example Usage
 

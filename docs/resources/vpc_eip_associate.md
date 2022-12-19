@@ -13,12 +13,9 @@ Associates an EIP to a specified IP address or port.
 ### Associate with a fixed IP
 
 ```hcl
-variable "public_address" {}
-variable "network_id" {}
-
-resource "flexibleengine_vpc_eip_associate" "associated" {
-  public_ip  = var.public_address
-  network_id = var.network_id
+resource "flexibleengine_vpc_eip_associate" "example_eip_associated" {
+  public_ip  = flexibleengine_vpc_eip.example_eip.address
+  network_id = flexibleengine_vpc_subnet_v1.example_subnet.id
   fixed_ip   = "192.168.0.100"
 }
 ```
@@ -26,14 +23,12 @@ resource "flexibleengine_vpc_eip_associate" "associated" {
 ### Associate with a port
 
 ```hcl
-variable "network_id" {}
-
-data "flexibleengine_networking_port" "myport" {
-  network_id = var.network_id
+data "flexibleengine_networking_port" "example_port" {
+  network_id = flexibleengine_vpc_subnet_v1.example_subnet.id
   fixed_ip   = "192.168.0.100"
 }
 
-resource "flexibleengine_vpc_eip" "myeip" {
+resource "flexibleengine_vpc_eip" "example_eip" {
   publicip {
     type = "5_bgp"
   }
@@ -46,8 +41,8 @@ resource "flexibleengine_vpc_eip" "myeip" {
 }
 
 resource "flexibleengine_vpc_eip_associate" "associated" {
-  public_ip = flexibleengine_vpc_eip.myeip.address
-  port_id   = data.flexibleengine_networking_port.myport.id
+  public_ip = flexibleengine_vpc_eip.example_eip.address
+  port_id   = data.flexibleengine_networking_port.example_port.id
 }
 ```
 
@@ -63,7 +58,7 @@ The following arguments are supported:
 * `fixed_ip` - (Optional, String, ForceNew) Specifies a private IP address to associate with the EIP.
   Changing this creates a new resource.
 
-* `network_id` - (Optional, String, ForceNew) Specifies the ID of the network to which the **fixed_ip** belongs.
+* `network_id` - (Optional, String, ForceNew) Specifies the ID of the VPC Subnet to which the **fixed_ip** belongs.
   It is mandatory when `fixed_ip` is set. Changing this creates a new resource.
 
 * `port_id` - (Optional, String, ForceNew) Specifies an existing port ID to associate with the EIP.

@@ -11,8 +11,8 @@ Manages a Security Group resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
-  name        = "secgroup_1"
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
   description = "My neutron security group"
 }
 ```

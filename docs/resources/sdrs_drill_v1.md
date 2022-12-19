@@ -13,8 +13,8 @@ Manages a Disaster Recovery Drill resource within FlexibleEngine.
 ```hcl
 resource "flexibleengine_sdrs_drill_v1" "drill_1" {
   name         = "drill_1"
-  group_id     = "{{ protectiongroup_id }}"
-  drill_vpc_id = "{{ drill_vpc_id }}"
+  group_id     = flexibleengine_sdrs_protectiongroup_v1.group_1.id
+  drill_vpc_id = flexibleengine_vpc_v1.example_vpc.id
 }
 ```
 

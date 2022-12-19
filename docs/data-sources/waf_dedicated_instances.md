@@ -52,7 +52,7 @@ The `instances` block supports:
 
 * `vpc_id` - The VPC id of WAF dedicated instance.
 
-* `subnet_id` - The subnet id of WAF dedicated instance VPC.
+* `subnet_id` - The ID of the VPC Subnet of WAF dedicated instance VPC.
 
 * `security_group` - The security group of the instance. This is an array of security group ids.
 

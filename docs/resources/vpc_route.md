@@ -13,11 +13,10 @@ Manages a VPC route resource within Flexibleengine.
 ### Add route to the default route table
 
 ```hcl
-variable "vpc_id" {}
 variable "nexthop" {}
 
 resource "flexibleengine_vpc_route" "vpc_route" {
-  vpc_id      = var.vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   destination = "192.168.0.0/16"
   type        = "peering"
   nexthop     = var.nexthop
@@ -27,16 +26,15 @@ resource "flexibleengine_vpc_route" "vpc_route" {
 ### Add route to a custom route table
 
 ```hcl
-variable "vpc_id" {}
 variable "nexthop" {}
 
 data "flexibleengine_vpc_route_table" "rtb" {
-  vpc_id = var.vpc_id
+  vpc_id = flexibleengine_vpc_v1.example_vpc.id
   name   = "demo"
 }
 
 resource "flexibleengine_vpc_route" "vpc_route" {
-  vpc_id         = var.vpc_id
+  vpc_id         = flexibleengine_vpc_v1.example_vpc.id
   route_table_id = data.flexibleengine_vpc_route_table.rtb.id
   destination    = "172.16.8.0/24"
   type           = "ecs"

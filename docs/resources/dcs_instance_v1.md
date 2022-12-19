@@ -14,7 +14,6 @@ Manages a DCS instance in the flexibleengine DCS Service.
 
 ```hcl
 variable my_password{}
-variable vpc_id {}
 variable network_id {}
 
 data "flexibleengine_dcs_product_v1" "product1" {
@@ -32,8 +31,8 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   password        = var.my_password
   product_id      = data.flexibleengine_dcs_product_v1.product1.id
   capacity        = 8
-  vpc_id          = var.vpc_id
-  network_id      = var.network_id
+  vpc_id          = flexibleengine_vpc_v1.example_vpc.id
+  network_id      = flexibleengine_vpc_subnet_v1.example_subnet.id
   available_zones = ["eu-west-0a", "eu-west-0b"]
   save_days       = 1
   backup_type     = "manual"
@@ -61,8 +60,8 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   password          = var.my_password
   product_id        = "dcs.master_standby-h"
   capacity          = 2
-  vpc_id            = var.vpc_id
-  network_id        = var.network_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  network_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
   available_zones   = ["eu-west-0a"]
   save_days         = 1
@@ -77,8 +76,6 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
 
 ```hcl
 variable my_password{}
-variable vpc_id {}
-variable network_id {}
 
 resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
   name = "secgroup_for_dcs"
@@ -91,8 +88,8 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   password          = var.my_password
   product_id        = "dcs.memcached.master_standby-h"
   capacity          = 2
-  vpc_id            = var.vpc_id
-  network_id        = var.network_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  network_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
   available_zones   = ["eu-west-0a"]
 
@@ -138,7 +135,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) Specifies the id of the VPC. Changing this creates a new instance.
 
-* `network_id` - (Required) Specifies the network id of the subnet. Changing this creates a new instance.
+* `network_id` - (Required) Specifies the ID of the VPC subnet. Changing this creates a new instance.
 
 * `security_group_id` - (Optional) Specifies the id of the security group which the instance belongs to.
     This parameter is only supported and **mandatory** for Memcached and Redis 3.0 versions.

@@ -23,8 +23,8 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   flavor            = "rds.pg.s3.medium.4"
   availability_zone = [var.primary_az]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   db {
     type     = "PostgreSQL"
@@ -57,8 +57,8 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   ha_replication_mode = "async"
   availability_zone   = [var.primary_az, var.standby_az]
   security_group_id   = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id              = var.vpc_id
-  subnet_id           = var.subnet_id
+  vpc_id              = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id           = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   db {
     type     = "PostgreSQL"
@@ -96,8 +96,8 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   flavor            = "rds.pg.s3.medium.4"
   availability_zone = [var.primary_az]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   db {
     type     = "PostgreSQL"
@@ -137,7 +137,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required, String, ForceNew) Specifies the VPC ID. Changing this parameter will create a new resource.
 
-* `subnet_id` - (Required, String, ForceNew) Specifies the network ID of a subnet.
+* `subnet_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet.
   Changing this parameter will create a new resource.
 
 * `security_group_id` - (Required, String) Specifies the security group which the RDS DB instance belongs to.

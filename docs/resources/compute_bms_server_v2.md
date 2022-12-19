@@ -16,7 +16,6 @@ Manages a BMS Server resource within FlexibleEngine.
 variable "image_id" {}
 variable "flavor_id" {}
 variable "keypair_name" {}
-variable "network_id" {}
 variable "availability_zone" {}
 
 resource "flexibleengine_compute_bms_server_v2" "basic" {
@@ -32,7 +31,7 @@ resource "flexibleengine_compute_bms_server_v2" "basic" {
   }
 
   network {
-    uuid = var.network_id
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 }
 ```

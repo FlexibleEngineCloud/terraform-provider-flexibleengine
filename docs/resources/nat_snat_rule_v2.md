@@ -14,9 +14,9 @@ Manages a V2 SNAT rule resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
-  nat_gateway_id = var.natgw_id
+  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
   floating_ip_id = var.publicip_id
-  subnet_id      = var.subent_id
+  subnet_id      = flexibleengine_vpc_subnet_v1.example_subnet.id
 }
 ```
 
@@ -24,7 +24,7 @@ resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
 
 ```hcl
 resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
-  nat_gateway_id = var.natgw_id
+  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
   floating_ip_id = var.publicip_id
   source_type    = 1
   cidr           = "192.168.10.0/24"
@@ -45,7 +45,7 @@ The following arguments are supported:
 * `floating_ip_id` - (Required) ID of the floating ip this snat rule connets to.
     Changing this creates a new snat rule.
 
-* `subnet_id` - (Optional) ID of the subnet this snat rule connects to.
+* `subnet_id` - (Optional) ID of the VPC Subnet this snat rule connects to.
     This parameter and `cidr` are alternative. Changing this creates a new snat rule.
 
 * `cidr` - (Optional) Specifies CIDR, which can be in the format of a network segment or a host IP address.

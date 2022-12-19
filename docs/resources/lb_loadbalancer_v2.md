@@ -12,7 +12,7 @@ Manages an **enhanced** load balancer resource within FlexibleEngine.
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
-  vip_subnet_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
+  vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
   tags = {
     key = "value"
@@ -28,9 +28,10 @@ The following arguments are supported:
     If omitted, the `region` argument of the provider is used.
     Changing this creates a new loadbalancer.
 
-* `vip_subnet_id` - (Required) The network on which to allocate the
-    loadbalancer's address. A tenant can only create Loadbalancers on networks
-    authorized by policy (e.g. networks that belong to them or networks that
+* `vip_subnet_id` - (Required) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
+    VPC Subnet on which to allocate the loadbalancer's address.
+    A tenant can only create Loadbalancers on networks authorized
+    by policy (e.g. networks that belong to them or networks that
     are shared).  Changing this creates a new loadbalancer.
 
 * `name` - (Optional) Human-readable name for the loadbalancer. Does not have

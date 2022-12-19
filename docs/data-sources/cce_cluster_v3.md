@@ -51,7 +51,7 @@ All above argument parameters can be exported as attribute parameters along with
 
 * `vpc_id` - The ID of the VPC used to create the node.
 
-* `subnet_id` - The ID of the subnet used to create the node.
+* `subnet_id` - The ID of the VPC Subnet used to create the node.
 
 * `security_group_id` - Security group ID of the cluster.
 

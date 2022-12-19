@@ -21,8 +21,8 @@ resource "flexibleengine_rds_instance_v3" "instance_1" {
   flavor            = "rds.pg.s1.medium"
   availability_zone = [var.primary_az]
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   db {
     password = var.db_password

@@ -171,7 +171,7 @@ The `db_info` block supports:
 * `instance_id` - (Optional, String, ForceNew) Specifies the instance id of database when it is a RDS database.
  Changing this parameter will create a new resource.
 
-* `subnet_id` - (Optional, String, ForceNew) Specifies subnet ID of database when it is a RDS database.
+* `subnet_id` - (Optional, String, ForceNew) Specifies the ID of the VPC Subnet of database when it is a RDS database.
  It is mandatory when `direction` is `down`. Changing this parameter will create a new resource.
 
 * `region` - (Optional, String, ForceNew) Specifies the region which the database belongs when it is a RDS database.

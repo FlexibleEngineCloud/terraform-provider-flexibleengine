@@ -13,8 +13,6 @@ Provides a resource to manage the VPC endpoint connections.
 ```hcl
 variable "service_vpc_id" {}
 variable "vm_port" {}
-variable "vpc_id" {}
-variable "network_id" {}
 
 resource "flexibleengine_vpcep_service" "demo" {
   name        = "demo-service"
@@ -31,8 +29,8 @@ resource "flexibleengine_vpcep_service" "demo" {
 
 resource "flexibleengine_vpcep_endpoint" "demo" {
   service_id  = flexibleengine_vpcep_service.demo.id
-  vpc_id      = var.vpc_id
-  network_id  = var.network_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
+  network_id  = flexibleengine_vpc_subnet_v1.example_subnet.id
   enable_dns  = true
 
   lifecycle {

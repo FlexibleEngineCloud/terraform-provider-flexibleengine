@@ -19,7 +19,7 @@ Provides a resource to manage a VPC Peering Connection resource.
  ```hcl
 resource "flexibleengine_vpc_peering_connection_v2" "peering" {
   name        = var.peer_conn_name
-  vpc_id      = var.vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   peer_vpc_id = var.accepter_vpc_id
 }
  ```

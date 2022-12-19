@@ -11,26 +11,20 @@ Manages a V2 vip resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-variable vpc_name{}
-variable vpc_cidr{}
-variable subnet_name{}
-variable subnet_cidr{}
-variable subnet_gateway_ip{}
-
-resource "flexibleengine_vpc_v1" "vpc_1" {
-  name = var.vpc_name
-  cidr = var.vpc_cidr
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
-  name       = var.subnet_name
-  cidr       = var.subnet_cidr
-  gateway_ip = var.subnet_gateway_ip
-  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
 
 resource "flexibleengine_networking_vip_v2" "vip_1" {
-  network_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+  network_id = flexibleengine_vpc_subnet_v1.example_subnet.id
 }
 ```
 
@@ -41,7 +35,7 @@ The following arguments are supported:
 * `region` - (Optional, String, ForceNew) Specifies the region in which to create the VIP.
   If omitted, the provider-level region will be used. Changing this will create a new VIP resource.
 
-* `network_id` - (Required, String, ForceNew) Specifies the *ID* of the VPC subnet to which the VIP belongs.
+* `network_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet to which the VIP belongs.
   Changing this will create a new VIP resource.
 
 * `ip_version` - (Optional, Int, ForceNew) Specifies the IP version, either `4` (default) or `6`.

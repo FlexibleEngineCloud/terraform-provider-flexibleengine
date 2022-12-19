@@ -13,24 +13,19 @@ CSS cluster management
 ### create a cluster
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name        = "terraform_test_security_group"
-  description = "terraform security group acceptance test"
-}
-
 resource "flexibleengine_css_cluster_v1" "cluster" {
   name           = "terraform_test_cluster"
   engine_version = "7.1.1"
   node_number    = 1
 
   node_config {
-    availability_zone = "{{ availability_zone }}"
+    availability_zone = "eu-west-0a"
     flavor            = "ess.spec-4u16g"
 
     network_info {
-      vpc_id            = "{{ vpc_id }}"
-      subnet_id         = "{{ network_id }}"
-      security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+      vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+      subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
+      security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
     }
     volume {
       volume_type = "COMMON"
@@ -113,8 +108,8 @@ The `network_info` block supports:
   VPC ID, which is used for configuring cluster network. Changing this parameter will create a new resource.
 
 * `subnet_id` -(Required)
-  Subnet ID. All instances in a cluster must have the same subnet which should be configured with a **DNS address**.
-  Changing this parameter will create a new resource.
+  The ID of the VPC Subnet. All instances in a cluster must have the same subnet which should be configured
+  with a **DNS address**. Changing this parameter will create a new resource.
 
 * `security_group_id` - (Required)
   Security group ID. All instances in a cluster must have the same security group.

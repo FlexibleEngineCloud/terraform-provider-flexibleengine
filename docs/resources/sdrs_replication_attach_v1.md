@@ -21,7 +21,7 @@ resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
   source_availability_zone = "eu-west-0a"
   target_availability_zone = "eu-west-0b"
   domain_id     = data.flexibleengine_sdrs_domain_v1.domain_1.id
-  source_vpc_id = "{{ vpc_id }}"
+  source_vpc_id = flexibleengine_vpc_v1.example_vpc.id
   dr_type       = "migration"
 }
 

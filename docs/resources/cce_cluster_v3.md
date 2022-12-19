@@ -12,8 +12,6 @@ Provides a cluster resource (CCE).
 
  ```hcl
 variable "flavor_id" { }
-variable "vpc_id" { }
-variable "subnet_id" { }
 
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   name                   = "cluster"
@@ -21,8 +19,8 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   authentication_mode    = "rbac"
   description            = "new cluster"
   flavor_id              = var.flavor_id
-  vpc_id                 = var.vpc_id
-  subnet_id              = var.subnet_id
+  vpc_id                 = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.example_subnet.id
   container_network_type = "overlay_l2"
 }
 ```
@@ -69,7 +67,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) The ID of the VPC used to create the node. Changing this parameter will create a new cluster resource.
 
-* `subnet_id` - (Required) The NETWORK ID of the subnet used to create the node.
+* `subnet_id` - (Required) The ID of the VPC Subnet used to create the node.
   Changing this parameter will create a new cluster resource.
 
 * `highway_subnet_id` - (Optional) The ID of the high speed network used to create bare metal nodes.

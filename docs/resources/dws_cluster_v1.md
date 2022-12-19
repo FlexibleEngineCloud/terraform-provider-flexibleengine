@@ -17,10 +17,10 @@ resource "flexibleengine_dws_cluster_v1" "cluster" {
   number_of_node    = 3
   user_name         = "cluster_admin"
   user_pwd          = "Cluster123@!"
-  vpc_id            = "{{ vpc_id }}"
-  subnet_id         = "{{ subnet_id }}"
-  security_group_id = "{{ security_group_id }}"
-  availability_zone = "{{ availability_zone }}"
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
+  availability_zone = "eu-west-0a"
 }
 ```
 
@@ -53,7 +53,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) VPC ID, which is used for configuring cluster network.
 
-* `subnet_id` - (Required) Subnet ID, which is used for configuring cluster network.
+* `subnet_id` - (Required) The ID of the VPC Subnet, which is used for configuring cluster network.
 
 * `security_group_id` - (Required) ID of a security group. The ID is used for
     configuring cluster network.
@@ -118,5 +118,5 @@ The `public_endpoints` block supports:
 DWS cluster can be imported using the `id`, e.g.
 
 ```shell
-$ terraform import flexibleengine_dws_cluster_v1.cluster 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+terraform import flexibleengine_dws_cluster_v1.cluster 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
 ```

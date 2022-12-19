@@ -21,7 +21,7 @@ resource "flexibleengine_compute_instance_v2" "basic" {
   security_groups = ["default"]
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 
   tags = {
@@ -47,7 +47,7 @@ resource "flexibleengine_compute_instance_v2" "myinstance" {
   security_groups = ["default"]
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 }
 
@@ -77,7 +77,7 @@ resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
   }
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 }
 ```
@@ -106,7 +106,7 @@ resource "flexibleengine_compute_instance_v2" "boot-from-volume" {
   }
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 }
 ```
@@ -187,11 +187,11 @@ resource "flexibleengine_compute_instance_v2" "multi-net" {
   security_groups = ["default"]
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 
   network {
-    uuid = "55534eaa-533a-419d-9b40-ec427ea7195a"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet_2.id
   }
 }
 
@@ -250,7 +250,7 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   user_data       = "#cloud-config\nhostname: instance_1.example.com\nfqdn: instance_1.example.com"
 
   network {
-    uuid = "3c4a0d74-24b9-46cf-9d7f-8b7a4dc2f65c"
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
 }
 ```
@@ -519,7 +519,7 @@ via it's network Port, customize the `connection` information:
 resource "flexibleengine_networking_port_v2" "port_1" {
   name           = "port_1"
   admin_state_up = "true"
-  network_id     = "0a1d0a27-cffa-4de3-92c5-9d3fd3f2e74d"
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   security_group_ids = [
     "2f02d20a-8dca-49b7-b26f-b6ce9fddaf4f",

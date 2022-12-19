@@ -11,13 +11,12 @@ Provides a resource to manage a VPC endpoint service resource.
 ## Example Usage
 
 ```hcl
-variable "vpc_id" {}
 variable "vm_port" {}
 
 resource "flexibleengine_vpcep_service" "demo" {
   name        = "demo-service"
   server_type = "VM"
-  vpc_id      = var.vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   port_id     = var.vm_port
 
   port_mapping {
