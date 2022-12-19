@@ -13,51 +13,40 @@ Manages a V2 port resource within FlexibleEngine.
 ### Basic Usage
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
+variable subnet_id{}
 
 resource "flexibleengine_networking_port_v2" "port_1" {
-  name           = "port_1"
-  network_id     = flexibleengine_networking_network_v2.network_1.id
-  admin_state_up = "true"
+  name       = "port_1"
+  network_id = var.subnet_id
 }
 ```
 
 ### Port With allowed_address_pairs
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
+variable subnet_id{}
 
 resource "flexibleengine_networking_port_v2" "port_1" {
-  name           = "port_1"
-  network_id     = flexibleengine_networking_network_v2.net.id
-  admin_state_up = "true"
+  name       = "port_1"
+  network_id = var.subnet_id
 
   allowed_address_pairs {
     ip_address = "192.168.0.0/24"
   }
 }
-
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 networking client.
-    A networking client is needed to create a port. If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    port.
+* `region` - (Optional) The region in which to allocate the port. If omitted, the
+    `region` argument of the provider is used. Changing this creates a new port.
 
 * `name` - (Optional) A unique name for the port. Changing this
     updates the `name` of an existing port.
 
-* `network_id` - (Required) The ID of the network to attach the port to. Changing
+* `network_id` - (Required) The ID of the VPC subnet to attach the port to. Changing
     this creates a new port.
 
 * `admin_state_up` - (Optional) Administrative up/down status for the port
@@ -90,7 +79,7 @@ The following arguments are supported:
 
 The `fixed_ip` block supports:
 
-* `subnet_id` - (Required) Subnet in which to allocate IP address for this port.
+* `subnet_id` - (Required) The **IPv4 or IPv6 subnet ID** of the VPC subnet in which to allocate IP address for this port.
 
 * `ip_address` - (Optional) IP address desired in the subnet for this port. If
     you don't specify `ip_address`, an available IP address from the specified
@@ -118,7 +107,7 @@ The following attributes are exported:
 * `security_group_ids` - See Argument Reference above.
 * `device_id` - See Argument Reference above.
 * `fixed_ip` - See Argument Reference above.
-* `all fixed_ips` - The collection of Fixed IP addresses on the port in the
+* `all_fixed_ips` - The collection of Fixed IP addresses on the port in the
   order returned by the Network v2 API.
 
 ## Import
