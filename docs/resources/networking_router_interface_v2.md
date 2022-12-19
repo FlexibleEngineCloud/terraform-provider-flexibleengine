@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_networking_router_interface_v2"
 ---

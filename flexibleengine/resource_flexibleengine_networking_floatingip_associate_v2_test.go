@@ -15,7 +15,7 @@ func TestAccNetworkingV2FloatingIPAssociate_basic(t *testing.T) {
 	var fip floatingips.FloatingIP
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckNetworkingV2FloatingIPAssociateDestroy,
 		Steps: []resource.TestStep{
