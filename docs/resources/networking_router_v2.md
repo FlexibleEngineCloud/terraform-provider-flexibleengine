@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_networking_router_v2"
 ---
@@ -7,6 +7,8 @@ page_title: "flexibleengine_networking_router_v2"
 # flexibleengine_networking_router_v2
 
 Manages a V2 router resource within FlexibleEngine. The router is the top-level resource for the VPC within FlexibleEngine.
+
+!> **Warning:** It has been deprecated, use `flexibleengine_vpc_v1` instead.
 
 ## Example Usage
 

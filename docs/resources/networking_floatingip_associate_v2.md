@@ -1,10 +1,12 @@
 ---
-subcategory: "Virtual Private Cloud (VPC)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_networking_floatingip_associate_v2"
 ---
 
 # flexibleengine_networking_floatingip_associate_v2
+
+!> **Warning:** It will be deprecated, using `flexibleengine_vpc_eip_associate` instead.
 
 Associates a floating IP to a port. This is useful for situations where you have
 a pre-allocated floating IP or are unable to use the `flexibleengine_vpc_eip`
