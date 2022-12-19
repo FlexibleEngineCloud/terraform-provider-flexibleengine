@@ -40,27 +40,6 @@ resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
 }
 ```
 
-### Automatically detect the correct network
-
-```hcl
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  image_id        = "ad091b52-742f-469e-8f3c-fd81cadf0743"
-  flavor_id       = 3
-  key_pair        = "my_key_pair_name"
-  security_groups = ["default"]
-}
-
-resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-  pool = "admin_external_net"
-}
-
-resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-}
-```
-
 ### Explicitly set the network to attach to
 
 ```hcl
@@ -80,12 +59,20 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 
-resource "flexibleengine_networking_floatingip_v2" "fip_1" {
-  pool = "admin_external_net"
+esource "flexibleengine_vpc_eip" "eip_1" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name = "test"
+    size = 8
+    share_type = "PER"
+    charge_mode = "traffic"
+  }
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "fip_1" {
-  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  floating_ip = flexibleengine_vpc_eip.eip_1.publicip.0.ip_address
   instance_id = flexibleengine_compute_instance_v2.instance_1.id
   fixed_ip    = flexibleengine_compute_instance_v2.instance_1.network.1.fixed_ip_v4
 }

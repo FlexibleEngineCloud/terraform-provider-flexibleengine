@@ -175,8 +175,15 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 ### Instance With Multiple Networks
 
 ```hcl
-resource "flexibleengine_networking_floatingip_v2" "myip" {
-  pool = "admin_external_net"
+resource "flexibleengine_vpc_eip" "eip_1" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "test"
+    size       = 10
+    share_type = "PER"
+  }
 }
 
 resource "flexibleengine_compute_instance_v2" "multi-net" {
@@ -196,7 +203,7 @@ resource "flexibleengine_compute_instance_v2" "multi-net" {
 }
 
 resource "flexibleengine_compute_floatingip_associate_v2" "myip" {
-  floating_ip = flexibleengine_networking_floatingip_v2.myip.address
+  floating_ip = flexibleengine_vpc_eip.eip_1.publicip.0.ip_address
   instance_id = flexibleengine_compute_instance_v2.multi-net.id
   fixed_ip    = flexibleengine_compute_instance_v2.multi-net.network.1.fixed_ip_v4
 }
