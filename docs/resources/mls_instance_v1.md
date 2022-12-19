@@ -147,3 +147,11 @@ The following attributes are exported:
   from the Internet. The URL is created only after the instance is bound to an EIP.
 * `created` - Indicates the creation time in the following format: yyyy-mm-dd Thh:mm:ssZ.
 * `updated` - Indicates the update time in the following format: yyyy-mm-dd Thh:mm:ssZ.
+
+## Import
+
+MLS Instance can be imported using the `id`, e.g.
+
+```shell
+terraform import flexibleengine_mls_instance_v1.instance 1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+```
