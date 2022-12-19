@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -13,9 +14,8 @@ import (
 )
 
 func TestAccNetworkingV2Port_basic(t *testing.T) {
-	var network networks.Network
 	var port ports.Port
-	var subnet subnets.Subnet
+	rName := fmt.Sprintf("tf_test_%s", acctest.RandString(5))
 	resourceName := "flexibleengine_networking_port_v2.port_1"
 
 	resource.Test(t, resource.TestCase{
@@ -24,15 +24,13 @@ func TestAccNetworkingV2Port_basic(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2PortDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Port_basic,
+				Config: testAccNetworkingV2Port_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2PortExists(resourceName, &port),
 					resource.TestCheckResourceAttr(resourceName, "name", "port_1"),
-					resource.TestCheckResourceAttr(resourceName, "admin_state_up", "true"),
 					resource.TestCheckResourceAttr(resourceName, "fixed_ip.#", "1"),
-					resource.TestCheckResourceAttrPtr(resourceName, "network_id", &network.ID),
+					resource.TestCheckResourceAttrPair(resourceName, "network_id",
+						"flexibleengine_vpc_subnet_v1.subnet_1", "id"),
 				),
 			},
 			{
@@ -45,9 +43,8 @@ func TestAccNetworkingV2Port_basic(t *testing.T) {
 }
 
 func TestAccNetworkingV2Port_fixedip(t *testing.T) {
-	var network networks.Network
 	var port ports.Port
-	var subnet subnets.Subnet
+	rName := fmt.Sprintf("tf_test_%s", acctest.RandString(5))
 	resourceName := "flexibleengine_networking_port_v2.port_1"
 
 	resource.Test(t, resource.TestCase{
@@ -56,19 +53,17 @@ func TestAccNetworkingV2Port_fixedip(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2PortDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Port_fixedip,
+				Config: testAccNetworkingV2Port_fixedip(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
-					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
 					testAccCheckNetworkingV2PortExists(resourceName, &port),
 					resource.TestCheckResourceAttr(resourceName, "name", "port_1"),
-					resource.TestCheckResourceAttr(resourceName, "admin_state_up", "true"),
 					resource.TestCheckResourceAttr(resourceName, "fixed_ip.#", "1"),
-					resource.TestCheckResourceAttrPtr(resourceName, "network_id", &network.ID),
+					resource.TestCheckResourceAttrPair(resourceName, "network_id",
+						"flexibleengine_vpc_subnet_v1.subnet_1", "id"),
 				),
 			},
 			{
-				Config: testAccNetworkingV2Port_fixedip_update,
+				Config: testAccNetworkingV2Port_fixedip_update(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "fixed_ip.#", "3"),
 				),
@@ -114,7 +109,7 @@ func TestAccNetworkingV2Port_securityGroup(t *testing.T) {
 		CheckDestroy: testAccCheckNetworkingV2PortDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkingV2Port_basic,
+				Config: testAccNetworkingV2Port_legacy,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkingV2SubnetExists("flexibleengine_networking_subnet_v2.subnet_1", &subnet),
 					testAccCheckNetworkingV2NetworkExists("flexibleengine_networking_network_v2.network_1", &network),
@@ -191,6 +186,74 @@ func testAccCheckNetworkingV2PortExists(n string, port *ports.Port) resource.Tes
 	}
 }
 
+func testAccNetworkingV2Port_base(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "%[1]s"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name       = "%[1]s"
+  cidr       = "192.168.199.0/24"
+  gateway_ip = "192.168.199.1"
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+}
+`, rName)
+}
+
+func testAccNetworkingV2Port_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_networking_port_v2" "port_1" {
+  name       = "port_1"
+  network_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+}
+`, testAccNetworkingV2Port_base(rName))
+}
+
+func testAccNetworkingV2Port_fixedip(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_networking_port_v2" "port_1" {
+  name       = "port_1"
+  network_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+
+  fixed_ip {
+    subnet_id = flexibleengine_vpc_subnet_v1.subnet_1.ipv4_subnet_id
+  }
+}
+`, testAccNetworkingV2Port_base(rName))
+}
+
+func testAccNetworkingV2Port_fixedip_update(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_networking_port_v2" "port_1" {
+  name       = "port_1"
+  network_id = flexibleengine_vpc_subnet_v1.subnet_1.id
+
+  fixed_ip {
+    subnet_id  = flexibleengine_vpc_subnet_v1.subnet_1.ipv4_subnet_id
+    ip_address = "192.168.199.20"
+  }
+
+  fixed_ip {
+    subnet_id  = flexibleengine_vpc_subnet_v1.subnet_1.ipv4_subnet_id
+    ip_address = "192.168.199.23"
+  }
+
+  fixed_ip {
+    subnet_id  = flexibleengine_vpc_subnet_v1.subnet_1.ipv4_subnet_id
+    ip_address = "192.168.199.40"
+  }
+}
+`, testAccNetworkingV2Port_base(rName))
+}
+
 const testAccNetworkingV2Port_preCondition string = `
 resource "flexibleengine_networking_network_v2" "network_1" {
   name           = "network_1"
@@ -205,7 +268,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
 }
 `
 
-var testAccNetworkingV2Port_basic string = fmt.Sprintf(`
+var testAccNetworkingV2Port_legacy string = fmt.Sprintf(`
 %s
 
 resource "flexibleengine_networking_port_v2" "port_1" {
@@ -216,45 +279,6 @@ resource "flexibleengine_networking_port_v2" "port_1" {
   fixed_ip {
     subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
     ip_address = "192.168.199.23"
-  }
-}
-`, testAccNetworkingV2Port_preCondition)
-
-var testAccNetworkingV2Port_fixedip string = fmt.Sprintf(`
-%s
-
-resource "flexibleengine_networking_port_v2" "port_1" {
-  name           = "port_1"
-  admin_state_up = true
-  network_id     = flexibleengine_networking_network_v2.network_1.id
-
-  fixed_ip {
-    subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
-  }
-}
-`, testAccNetworkingV2Port_preCondition)
-
-var testAccNetworkingV2Port_fixedip_update string = fmt.Sprintf(`
-%s
-
-resource "flexibleengine_networking_port_v2" "port_1" {
-  name           = "port_1"
-  admin_state_up = true
-  network_id     = flexibleengine_networking_network_v2.network_1.id
-
-  fixed_ip {
-    subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
-    ip_address = "192.168.199.20"
-  }
-
-  fixed_ip {
-    subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
-    ip_address = "192.168.199.23"
-  }
-
-  fixed_ip {
-    subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
-    ip_address = "192.168.199.40"
   }
 }
 `, testAccNetworkingV2Port_preCondition)
