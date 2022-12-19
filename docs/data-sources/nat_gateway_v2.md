@@ -23,8 +23,8 @@ data "flexibleengine_nat_gateway_v2" "natgateway" {
 
 * `vpc_id` - (Optional, String) Specifies the ID of the VPC this NAT gateway belongs to.
 
-* `subnet_id` - (Optional, String) Specifies the ID of the VPC Subnet of the downstream interface (the next hop of the DVR) of the
-  NAT gateway.
+* `subnet_id` - (Optional, String) Specifies the ID of the VPC Subnet of the downstream interface
+  (the next hop of the DVR) of the NAT gateway.
 
 * `spec` - (Optional, String) The NAT gateway type. The value can be:
   + `1`: small type, which supports up to 10,000 SNAT connections.
