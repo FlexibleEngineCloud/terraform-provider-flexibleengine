@@ -404,7 +404,7 @@ func resourceVolumeMetadataV2(d *schema.ResourceData) map[string]string {
 }
 
 // VolumeV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
-// an FlexibleEngine volume.
+// a FlexibleEngine volume.
 func VolumeV2StateRefreshFunc(client *golangsdk.ServiceClient, volumeID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		v, err := volumes.Get(client, volumeID).Extract()

@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// FirewallGroup is an FlexibleEngine firewall group.
+// FirewallGroup is a FlexibleEngine firewall group.
 type FirewallGroup struct {
 	firewall_groups.FirewallGroup
 	routerinsertion.FirewallGroupExt
