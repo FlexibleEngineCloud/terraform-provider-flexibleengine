@@ -120,7 +120,7 @@ func resourceAntiDdosV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	n, err := antiddos.Get(antiddosClient, d.Id()).Extract()
 	if err != nil {
-		return CheckDeleted(d, err, "Error retrieving AntiDdos")
+		return checkNotConfig(d, err, "Error retrieving AntiDdos")
 	}
 
 	d.Set("floating_ip_id", d.Id())
@@ -198,7 +198,6 @@ func resourceAntiDdosV1Delete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error deleting AntiDdos: %s", err)
 	}
 
-	// time.Sleep(3 * time.Minute)
 	d.SetId("")
 	return nil
 }
@@ -212,4 +211,15 @@ func waitForAntiDdosStatus(antiddosClient *golangsdk.ServiceClient, antiddosId s
 
 		return s, s.Status, nil
 	}
+}
+
+// checkNotConfig checks the error returned from the API call to see if it is a
+// 403 error, which means the resource is not configured.
+func checkNotConfig(d *schema.ResourceData, err error, msg string) error {
+	if _, ok := err.(golangsdk.ErrDefault403); ok {
+		d.SetId("")
+		return nil
+	}
+
+	return fmt.Errorf("%s: %s", msg, err)
 }
