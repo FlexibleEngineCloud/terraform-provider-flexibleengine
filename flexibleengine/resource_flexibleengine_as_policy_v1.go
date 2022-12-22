@@ -236,6 +236,7 @@ func resourceASPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[DEBUG] Retrieved ASPolicy %q: %+v", d.Id(), asPolicy)
+	d.Set("scaling_group_id", asPolicy.ID)
 	d.Set("scaling_policy_name", asPolicy.Name)
 	d.Set("scaling_policy_type", asPolicy.Type)
 	d.Set("alarm_id", asPolicy.AlarmID)

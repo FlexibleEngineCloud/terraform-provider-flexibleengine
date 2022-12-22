@@ -28,9 +28,7 @@ func TestAccASV1Policy_basic(t *testing.T) {
 				ResourceName:      "flexibleengine_as_policy_v1.hth_as_policy",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"scaling_group_id",
-				}},
+			},
 		},
 	})
 }
