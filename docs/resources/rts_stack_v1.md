@@ -6,7 +6,7 @@ page_title: "flexibleengine_rts_stack_v1"
 
 # flexibleengine_rts_stack_v1
 
-Provides an FlexibleEngine Stack.
+Provides a FlexibleEngine Stack.
 
 ## Example Usage
 

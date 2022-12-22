@@ -1,12 +1,12 @@
 ### FlexibleEngine Credentials
-variable "username" {
+variable "access_key" {
   # If you don't fill this in, you will be prompted for it
-  #default = "your_username"
+  #default = "your_access_key"
 }
 
-variable "password" {
+variable "secret_key" {
   # If you don't fill this in, you will be prompted for it
-  #default = "your_password'
+  #default = "your_secret_key'
 }
 
 variable "domain_name" {
@@ -18,13 +18,8 @@ variable "tenant_name" {
   default = "eu-west-0"
 }
 
-variable "endpoint" {
-  default = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
-}
-
-### OTC Specific Settings
-variable "external_network" {
-  default = "admin_external_net"
+variable "region" {
+  default = "eu-west-0"
 }
 
 ### Project Settings
@@ -32,21 +27,20 @@ variable "project" {
   default = "terraform"
 }
 
+variable "vpc_cidr" {
+  default = "192.168.10.0/24"
+}
+
 variable "subnet_cidr" {
   default = "192.168.10.0/24"
 }
 
+variable "gateway_ip" {
+  default = "192.168.10.1"
+}
+
 variable "ssh_pub_key" {
   default = "~/.ssh/id_rsa.pub"
-}
-
-### DNS Settings
-variable "dnszone" {
-  default = ""
-}
-
-variable "dnsname" {
-  default = "webserver"
 }
 
 ### VM (Instance) Settings
@@ -59,9 +53,9 @@ variable "disk_size_gb" {
 }
 
 variable "flavor_name" {
-  default = "s1.medium"
+  default = "s6.medium.2"
 }
 
 variable "image_name" {
-  default = "Standard_CentOS_7_latest"
+  default = "OBS Ubuntu 22.04"
 }
