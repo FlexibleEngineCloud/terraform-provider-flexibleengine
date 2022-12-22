@@ -6,7 +6,7 @@ page_title: "flexibleengine_csbs_backup_v1"
 
 # flexibleengine_csbs_backup_v1
 
-Provides an FlexibleEngine Backup of Resources.
+Provides a FlexibleEngine Backup of Resources.
 
 ## Example Usage
 

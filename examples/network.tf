@@ -1,14 +1,13 @@
-resource "flexibleengine_networking_network_v2" "network" {
-  count          = "${var.instance_count}"
-  name           = "${var.project}-network"
-  admin_state_up = "true"
+resource "flexibleengine_vpc_v1" "vpc" {
+  name = "${var.project}-vpc"
+  cidr = var.vpc_cidr
 }
 
-resource "flexibleengine_networking_subnet_v2" "subnet" {
-  name            = "${var.project}-subnet"
-  count           = "${var.instance_count}"
-  network_id      = "${flexibleengine_networking_network_v2.network.id}"
-  cidr            = "${var.subnet_cidr}"
-  ip_version      = 4
-  dns_nameservers = ["8.8.8.8", "8.8.4.4"]
+resource "flexibleengine_vpc_subnet_v1" "subnet" {
+  name       = "${var.project}-subnet"
+  cidr       = var.subnet_cidr
+  gateway_ip = var.gateway_ip
+  vpc_id     = flexibleengine_vpc_v1.vpc.id
+  dns_list   = ["1.1.1.1", "9.9.9.9"]
+
 }

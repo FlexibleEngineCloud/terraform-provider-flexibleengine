@@ -235,7 +235,7 @@ func setBMSImageInfo(client *golangsdk.ServiceClient, server *bms.Server, d *sch
 }
 
 // computeV2StateRefreshFunc returns a resource.StateRefreshFunc that is used to watch
-// an FlexibleEngine instance.
+// a FlexibleEngine instance.
 func computeV2StateRefreshFunc(client *golangsdk.ServiceClient, instanceID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		s, err := servers.Get(client, instanceID).Extract()

@@ -1,5 +1,5 @@
 // This set of code handles all functions required to configure addresses
-// on an flexibleengine_compute_bms_server_v2 datasource.
+// on a flexibleengine_compute_bms_server_v2 datasource.
 //
 // This is a complicated task because it's not possible to obtain all
 // information in a single API call. In fact, it even traverses multiple
@@ -53,7 +53,7 @@ type ServerNetwork struct {
 // This would be simple, except we have ensure both the network name and
 // network ID have been determined. This isn't just for the convenience of a
 // user specifying a human-readable network name, but the network information
-// returned by an Flexibleengine instance only has the network name set! So if a
+// returned by a Flexibleengine instance only has the network name set! So if a
 // user specified a network ID, there's no way to correlate it to the instance
 // unless we know both the name and ID.
 //

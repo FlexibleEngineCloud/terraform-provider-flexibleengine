@@ -6,7 +6,7 @@ page_title: "flexibleengine_csbs_backup_policy_v1"
 
 # flexibleengine_csbs_backup_policy_v1
 
-Provides an FlexibleEngine Backup Policy of Resources.
+Provides a FlexibleEngine Backup Policy of Resources.
 
 ## Example Usage
 
