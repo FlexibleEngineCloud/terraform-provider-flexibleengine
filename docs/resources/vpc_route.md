@@ -15,6 +15,11 @@ Manages a VPC route resource within Flexibleengine.
 ```hcl
 variable "nexthop" {}
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_vpc_route" "vpc_route" {
   vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   destination = "192.168.0.0/16"
@@ -27,6 +32,11 @@ resource "flexibleengine_vpc_route" "vpc_route" {
 
 ```hcl
 variable "nexthop" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
 data "flexibleengine_vpc_route_table" "rtb" {
   vpc_id = flexibleengine_vpc_v1.example_vpc.id

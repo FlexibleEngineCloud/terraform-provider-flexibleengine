@@ -14,6 +14,23 @@ Manages a WAF dedicated instance resource within Flexibleengine.
 variable az_name {}
 variable ecs_flavor_id {}
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
+  description = "My neutron security group"
+}
+
 resource "flexibleengine_waf_dedicated_instance" "instance_1" {
   name               = "instance_1"
   available_zone     = var.az_name

@@ -11,6 +11,11 @@ Manages a SDRS replication pair resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 data "flexibleengine_sdrs_domain_v1" "domain_1" {
   name = "SDRS_HypeDomain01"
 }

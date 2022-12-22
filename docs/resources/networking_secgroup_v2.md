@@ -52,13 +52,13 @@ separate security group rules such as the following:
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v4" {
   direction = "egress"
   ethertype = "IPv4"
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
 }
 
 resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_v6" {
   direction = "egress"
   ethertype = "IPv6"
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
 }
 ```
 
@@ -73,5 +73,5 @@ is moot).
 Security Groups can be imported using the `id`, e.g.
 
 ```shell
-terraform import flexibleengine_networking_secgroup_v2.secgroup_1 38809219-5e8a-4852-9139-6f461c90e8bc
+terraform import flexibleengine_networking_secgroup_v2.example_secgroup 38809219-5e8a-4852-9139-6f461c90e8bc
 ```

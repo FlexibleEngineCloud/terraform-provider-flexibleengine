@@ -13,6 +13,11 @@ Provides a resource to manage a VPC endpoint service resource.
 ```hcl
 variable "vm_port" {}
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_vpcep_service" "demo" {
   name        = "demo-service"
   server_type = "VM"

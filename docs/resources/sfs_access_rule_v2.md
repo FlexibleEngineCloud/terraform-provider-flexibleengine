@@ -15,6 +15,11 @@ Provides an access rule resource of Scalable File Resource (SFS).
 ```hcl
 variable "share_name" { }
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name        = var.share_name
   size        = 100
@@ -31,6 +36,11 @@ resource "flexibleengine_sfs_access_rule_v2" "rule_1" {
 
 ```hcl
 variable "share_name" { }
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name        = var.share_name

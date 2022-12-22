@@ -13,6 +13,26 @@ Manages a **Dedicated** Load Balancer resource within FlexibleEngine.
 ### Basic Loadbalancer
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"
@@ -34,6 +54,26 @@ resource "flexibleengine_lb_loadbalancer_v3" "basic" {
 ### Loadbalancer With Existing EIP
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"
@@ -59,6 +99,26 @@ resource "flexibleengine_lb_loadbalancer_v3" "basic" {
 ### Loadbalancer With EIP
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"

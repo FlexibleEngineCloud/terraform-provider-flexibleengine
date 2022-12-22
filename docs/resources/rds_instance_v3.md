@@ -13,7 +13,19 @@ Manage RDS instance resource within FlexibleEngine.
 ### create a single db instance
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
@@ -22,7 +34,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   name              = "terraform_test_rds_instance"
   flavor            = "rds.pg.s3.medium.4"
   availability_zone = [var.primary_az]
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 
@@ -46,7 +58,19 @@ resource "flexibleengine_rds_instance_v3" "instance" {
 ### create a primary/standby db instance
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
@@ -56,7 +80,7 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   flavor              = "rds.pg.s3.large.4.ha"
   ha_replication_mode = "async"
   availability_zone   = [var.primary_az, var.standby_az]
-  security_group_id   = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id   = flexibleengine_networking_secgroup_v2.example_secgroup.id
   vpc_id              = flexibleengine_vpc_v1.example_vpc.id
   subnet_id           = flexibleengine_vpc_subnet_v1.example_subnet.id
 
@@ -86,16 +110,27 @@ resource "flexibleengine_kms_key_v1" "key" {
   is_enabled      = true
 }
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup" {
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name        = "terraform_test_security_group"
   description = "terraform security group acceptance test"
 }
-
 resource "flexibleengine_rds_instance_v3" "instance" {
   name              = "terraform_test_rds_instance"
   flavor            = "rds.pg.s3.medium.4"
   availability_zone = [var.primary_az]
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 

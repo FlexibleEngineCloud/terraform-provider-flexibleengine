@@ -15,6 +15,13 @@ Manages a VPC custom route table resource within Flexibleengine.
 ### Basic Custom Route Table
 
 ```hcl
+variable "vpc_peering_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_vpc_route_table" "demo" {
   name        = "demo"
   vpc_id      = flexibleengine_vpc_v1.example_vpc.id
@@ -23,7 +30,7 @@ resource "flexibleengine_vpc_route_table" "demo" {
   route {
     destination = "172.16.0.0/16"
     type        = "peering"
-    nexthop     = flexibleengine_vpc_v1.example_vpc_peering.id
+    nexthop     = var.vpc_peering_id
   }
 }
 ```
@@ -31,6 +38,13 @@ resource "flexibleengine_vpc_route_table" "demo" {
 ### Associating Subnets with a Route Table
 
 ```hcl
+variable "vpc_peering_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 data "flexibleengine_vpc_subnet_ids_v1" "subnet_ids" {
   vpc_id = flexibleengine_vpc_v1.example_vpc.id
 }
@@ -43,7 +57,7 @@ resource "flexibleengine_vpc_route_table" "demo" {
   route {
     destination = "172.16.0.0/16"
     type        = "peering"
-    nexthop     = flexibleengine_vpc_v1.example_vpc_peering.id
+    nexthop     = var.vpc_peering_id
   }
   route {
     destination = "192.168.100.0/24"

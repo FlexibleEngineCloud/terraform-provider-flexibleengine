@@ -16,6 +16,11 @@ Provides an Shared File System (SFS) resource.
 variable "share_name" {}
 variable "share_description" {}
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name         = var.share_name
   size         = 100
@@ -31,6 +36,11 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
 ```hcl
 variable "share_name" {}
 variable "share_description" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
 resource "flexibleengine_kms_key_v1" "mykey" {
   key_alias    = "kms_sfs"

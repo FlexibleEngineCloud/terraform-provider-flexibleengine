@@ -16,6 +16,7 @@ variable "group_id" {}
 variable "api_name" {}
 variable "custom_response_id" {}
 variable "custom_auth_id" {}
+variable "vpc_channel_id" {}
 
 resource "flexibleengine_apig_api" "test" {
   instance_id             = var.instance_id
@@ -40,7 +41,7 @@ resource "flexibleengine_apig_api" "test" {
 
   web {
     path             = "/backend/users"
-    vpc_channel_id   = flexibleengine_vpc_v1.example_vpc_channel.id
+    vpc_channel_id   = var.vpc_channel_id
     request_method   = "POST"
     request_protocol = "HTTP"
     timeout          = 5000

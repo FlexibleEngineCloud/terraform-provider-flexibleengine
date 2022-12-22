@@ -15,6 +15,11 @@ data "flexibleengine_sdrs_domain_v1" "domain_1" {
   name = "SDRS_HypeDomain01"
 }
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
   name = "group_1"
   description = "test description"

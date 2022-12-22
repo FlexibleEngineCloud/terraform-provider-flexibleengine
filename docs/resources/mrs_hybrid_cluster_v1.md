@@ -24,6 +24,7 @@ resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
   gateway_ip = "192.168.0.1"
   vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
+
 resource "flexibleengine_mrs_hybrid_cluster_v1" "cluster1" {
   available_zone  = "eu-west-0a"
   cluster_name    = "mrs-hybrid-cluster-acc"

@@ -14,7 +14,18 @@ Manages a DCS instance in the flexibleengine DCS Service.
 
 ```hcl
 variable my_password{}
-variable network_id {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 data "flexibleengine_dcs_product_v1" "product1" {
   engine         = "redis"
@@ -49,7 +60,7 @@ variable my_password{}
 variable vpc_id {}
 variable network_id {}
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name = "secgroup_for_dcs"
 }
 
@@ -62,7 +73,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   capacity          = 2
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   network_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   available_zones   = ["eu-west-0a"]
   save_days         = 1
   backup_type       = "manual"
@@ -77,7 +88,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
 ```hcl
 variable my_password{}
 
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name = "secgroup_for_dcs"
 }
 
@@ -90,7 +101,7 @@ resource "flexibleengine_dcs_instance_v1" "instance_1" {
   capacity          = 2
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   network_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   available_zones   = ["eu-west-0a"]
 
   save_days   = 1

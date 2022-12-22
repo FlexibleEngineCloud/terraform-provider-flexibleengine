@@ -16,13 +16,20 @@ Provides a resource to manage a VPC Peering Connection resource.
 
 ## Example Usage
 
- ```hcl
+```hcl
+variable "accepter_vpc_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_vpc_peering_connection_v2" "peering" {
   name        = var.peer_conn_name
   vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   peer_vpc_id = var.accepter_vpc_id
 }
- ```
+```
 
 ## Argument Reference
 

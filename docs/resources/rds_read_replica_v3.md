@@ -11,16 +11,28 @@ RDS read replica management
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name        = "test_security_group"
-  description = "security group acceptance test"
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "terraform_test_security_group"
+  description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_rds_instance_v3" "instance_1" {
   name              = "terraform_test_rds_instance"
   flavor            = "rds.pg.s1.medium"
   availability_zone = [var.primary_az]
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
 

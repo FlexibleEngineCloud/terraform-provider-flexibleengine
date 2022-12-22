@@ -11,6 +11,23 @@ Manages a DWS cluster resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
+  description = "My neutron security group"
+}
+
 resource "flexibleengine_dws_cluster_v1" "cluster" {
   name              = "dws_cluster_test"
   node_type         = "dws.d1.xlarge"

@@ -13,9 +13,37 @@ Manages an APIG dedicated instance resource within Flexibleengine.
 ```hcl
 variable "instance_name" {}
 
-data "flexibleengine_availability_zones" "test" {}
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
-resource "flexibleengine_apig_instance" "test" {
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
+  description = "My neutron security group"
+}
+
+resource "flexibleengine_vpc_eip" "example_eip" {
+  publicip {
+    type = "5_bgp"
+  }
+  bandwidth {
+    name       = "test"
+    size       = 10
+    share_type = "PER"
+  }
+}
+
+data "flexibleengine_availability_zones" "az" {}
+
+resource "flexibleengine_apig_instance" "example_apig_instance" {
   name                  = var.instance_name
   edition               = "BASIC"
   vpc_id                = flexibleengine_vpc_v1.example_vpc.id
@@ -27,8 +55,8 @@ resource "flexibleengine_apig_instance" "test" {
   eip_id                = flexibleengine_vpc_eip.example_eip.id
 
   available_zones = [
-    data.flexibleengine_availability_zones.test.names[0],
-    data.flexibleengine_availability_zones.test.names[1],
+    data.flexibleengine_availability_zones.az.names[0],
+    data.flexibleengine_availability_zones.az.names[1],
   ]
 }
 ```
