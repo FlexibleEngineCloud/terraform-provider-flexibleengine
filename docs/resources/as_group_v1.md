@@ -13,18 +13,30 @@ Manages a V1 Autoscaling Group resource within flexibleengine.
 ### Basic Autoscaling Group
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_as_group_v1" "my_as_group" {
   scaling_group_name       = "my_as_group"
   desire_instance_number   = 2
   min_instance_number      = 0
   max_instance_number      = 10
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "yes"
 
   networks {
-    id = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+    id = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
   security_groups {
     id = "45e4c6de-6bf0-4843-8953-2babde3d4810"
@@ -35,18 +47,30 @@ resource "flexibleengine_as_group_v1" "my_as_group" {
 ### Autoscaling Group Only Remove Members When Scaling Down
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_as_group_v1" "my_as_group_only_remove_members" {
   scaling_group_name       = "my_as_group_only_remove_members"
   desire_instance_number   = 2
   min_instance_number      = 0
   max_instance_number      = 10
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "no"
 
   networks {
-    id = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+    id = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
   security_groups {
     id = "45e4c6de-6bf0-4843-8953-2babde3d4810"
@@ -57,15 +81,26 @@ resource "flexibleengine_as_group_v1" "my_as_group_only_remove_members" {
 ### Autoscaling Group With ELB Listener
 
 ```hcl
-resource "flexibleengine_elb_listener" "my_listener" {
-  name             = "my_listener"
-  description      = "my test listener"
-  protocol         = "TCP"
-  backend_protocol = "TCP"
-  port             = 12345
-  backend_port     = 21345
-  lb_algorithm     = "roundrobin"
-  loadbalancer_id  = "cba48790-baf5-4446-adb3-02069a916e97"
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
+  vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
+}
+
+resource "flexibleengine_lb_listener_v2" "listener_1" {
+  protocol        = "HTTP"
+  protocol_port   = 8080
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.lb_1.id
 }
 
 resource "flexibleengine_as_group_v1" "my_as_group_with_elb" {
@@ -73,14 +108,14 @@ resource "flexibleengine_as_group_v1" "my_as_group_with_elb" {
   desire_instance_number   = 2
   min_instance_number      = 0
   max_instance_number      = 10
-  lb_listener_id           = flexibleengine_elb_listener.my_listener.id
+  lb_listener_id           = flexibleengine_lb_listener_v2.listener_1.id
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
-  vpc_id                   = "1d8f7e7c-fe04-4cf5-85ac-08b478c290e9"
+  vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true
   delete_instances         = "yes"
 
   networks {
-    id = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+    id = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
   security_groups {
     id = "45e4c6de-6bf0-4843-8953-2babde3d4810"

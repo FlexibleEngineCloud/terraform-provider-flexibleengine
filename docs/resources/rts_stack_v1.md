@@ -12,7 +12,6 @@ Provides a FlexibleEngine Stack.
 
  ```hcl
  variable "name" { }
- variable "network_id" { }
  variable "instance_type" { }
  variable "image_id" { }
  
@@ -21,7 +20,7 @@ resource "flexibleengine_rts_stack_v1" "mystack" {
   disable_rollback = true
   timeout_mins     =60
   parameters = {
-      "network_id"    = var.network_id
+      "network_id"    = flexibleengine_vpc_subnet_v1.example_subnet.id
       "instance_type" = var.instance_type
       "image_id"      = var.image_id
     }

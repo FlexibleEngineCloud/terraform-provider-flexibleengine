@@ -63,6 +63,6 @@ The `partitions` block contains:
 
 Dis stream can be imported by `name`. For example,
 
-```
+```shell
 terraform import flexibleengine_dis_stream.example dis-demo
 ```

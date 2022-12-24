@@ -68,7 +68,7 @@ The following arguments are supported:
 * `password` - (Optional, String, ForceNew) root password when logging in to select the password mode.
     This parameter must be **salted** and alternative to `key_pair`. Changing this parameter will create a new resource.
 
-* `subnet_id` - (Optional, String, ForceNew) The ID of the subnet to which the NIC belongs.
+* `subnet_id` - (Optional, String, ForceNew) The ID of the VPC Subnet to which the NIC belongs.
     Changing this parameter will create a new resource.
 
 * `max_pods` - (Optional, Int, ForceNew) The maximum number of instances a node is allowed to create.

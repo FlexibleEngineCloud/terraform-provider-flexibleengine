@@ -68,6 +68,6 @@ The `turbos` block supports:
 
 * `vpc_id` - The ID of the VPC to which the SFS turbo belongs.
 
-* `subnet_id` - The **network ID** of the subnet to which the SFS turbo belongs.
+* `subnet_id` - The ID of the VPC Subnet to which the SFS turbo belongs.
 
 * `security_group_id` - The ID of the security group to which the SFS turbo belongs.

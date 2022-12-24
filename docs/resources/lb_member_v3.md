@@ -13,13 +13,12 @@ Manages an ELB member resource within FlexibleEngine.
 ```hcl
 variable "address" {}
 variable "pool_id" {}
-variable "subnet_id" {}
 
-resource "flexibleengine_lb_member_v3" "member_1" {
+resource "flexibleengine_lb_member_v3" "example_member" {
   address       = var.address
   protocol_port = 8080
-  pool_id       = var.pool_id
-  subnet_id     = var.subnet_id
+  pool_id       = flexibleengine_lb_pool_v3.example_pool.id
+  subnet_id     = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 ```
 
@@ -32,7 +31,8 @@ The following arguments are supported:
 
 * `pool_id` - (Required, String, ForceNew) Specifies the id of the pool that this member will be assigned to.
 
-* `subnet_id` - (Optional, String, ForceNew) Specifies the subnet in which to access the member.
+* `subnet_id` - (Optional, String, ForceNew) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
+  VPC Subnet in which to access the member.
   The IPv4 or IPv6 subnet must be in the same VPC as the subnet of the load balancer.
   If this parameter is not passed, cross-VPC backend has been enabled for the load balancer. In this case,
   cross-VPC backend servers must use private IPv4 addresses, and the protocol of the backend server group

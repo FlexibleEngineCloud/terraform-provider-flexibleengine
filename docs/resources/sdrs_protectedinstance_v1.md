@@ -15,13 +15,18 @@ data "flexibleengine_sdrs_domain_v1" "domain_1" {
   name = "SDRS_HypeDomain01"
 }
 
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
   name = "group_1"
   description = "test description"
   source_availability_zone = "eu-west-0a"
   target_availability_zone = "eu-west-0b"
   domain_id = data.flexibleengine_sdrs_domain_v1.domain_1.id
-  source_vpc_id = "{{ vpc_id }}"
+  source_vpc_id = flexibleengine_vpc_v1.example_vpc.id
   dr_type = "migration"
 }
 
@@ -49,8 +54,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Optional) Specifies the ID of a storage pool. Changing this creates a new instance.
 
-* `primary_subnet_id` - (Optional) Specifies the subnet ID of the primary NIC on the target server.
-  Changing this creates a new instance.
+* `primary_subnet_id` - (Optional) Specifies the `ipv4_subnet_id` or `ipv6_subnet_id` of the
+  VPC Subnet of the primary NIC on the target server. Changing this creates a new instance.
 
 * `primary_ip_address` - (Optional) Specifies the IP address of the primary NIC on the target server.
   Changing this creates a new instance.

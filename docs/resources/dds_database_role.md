@@ -103,6 +103,6 @@ This resource provides the following timeouts configuration options:
 Database roles can be imported using their `id` (combination of `instance_id`, `db_name` and `name`), separated by a
 slash (/), e.g.
 
-```
+```shell
 terraform import flexibleengine_dds_database_role.test <instance_id>/<db_name>/<name>
 ```

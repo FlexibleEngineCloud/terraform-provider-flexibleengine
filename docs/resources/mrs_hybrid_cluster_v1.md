@@ -13,24 +13,25 @@ Manages a MRS hybrid cluster resource cluster within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_vpc_v1" "vpc_1" {
+resource "flexibleengine_vpc_v1" "example_vpc" {
   name = "terraform_provider_vpc"
   cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
   name       = "flexibleengine_subnet"
   cidr       = "192.168.0.0/24"
   gateway_ip = "192.168.0.1"
-  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
+
 resource "flexibleengine_mrs_hybrid_cluster_v1" "cluster1" {
   available_zone  = "eu-west-0a"
   cluster_name    = "mrs-hybrid-cluster-acc"
   cluster_version = "MRS 2.0.1"
   component_list  = ["Hadoop", "Storm", "Spark", "Hive"]
-  vpc_id          = flexibleengine_vpc_v1.vpc_1.id
-  subnet_id       = flexibleengine_vpc_subnet_v1.subnet_1.id
+  vpc_id          = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id       = flexibleengine_vpc_subnet_v1.example_subnet.id
   cluster_admin_secret = "Cluster@123"
   master_node_key_pair = "KeyPair-ci"
 
@@ -76,7 +77,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) Specifies the id of the VPC.
 
-* `subnet_id` - (Required) Specifies the id of the subnet.
+* `subnet_id` - (Required) Specifies the ID of the VPC Subnet.
 
 * `safe_mode` - (Optional) MRS cluster running mode
     - 0: common mode

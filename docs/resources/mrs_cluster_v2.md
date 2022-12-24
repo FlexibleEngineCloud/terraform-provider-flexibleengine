@@ -17,8 +17,18 @@ variable "mrs_az" {}
 variable "cluster_name" {}
 variable "password" {}
 variable "keypair" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
   availability_zone  = var.mrs_az
@@ -28,8 +38,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
   component_list     = ["Hadoop", "Spark", "Hive", "Tez"]
   manager_admin_pwd  = var.password
   node_key_pair      = var.keypair
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   master_nodes {
     flavor            = "c6.4xlarge.4.linux.mrs"
@@ -64,8 +74,18 @@ variable "mrs_az" {}
 variable "cluster_name" {}
 variable "password" {}
 variable "keypair" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
   availability_zone  = var.mrs_az
@@ -74,8 +94,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
   version            = "MRS 3.1.0-LTS.1"
   manager_admin_pwd  = var.password
   node_key_pair      = var.keypair
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
   component_list     = ["Ranger", "Kafka", "ZooKeeper"]
 
   master_nodes {
@@ -111,8 +131,18 @@ variable "mrs_az" {}
 variable "cluster_name" {}
 variable "password" {}
 variable "keypair" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
   availability_zone  = var.mrs_az
@@ -122,8 +152,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
   component_list     = ["Hadoop", "Spark", "Hive", "Tez", "Storm"]
   manager_admin_pwd  = var.password
   node_key_pair      = var.keypair
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   master_nodes {
     flavor            = "c6.4xlarge.4.linux.mrs"
@@ -185,8 +215,18 @@ variable "mrs_az" {}
 variable "cluster_name" {}
 variable "password" {}
 variable "keypair" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
   availability_zone  = var.mrs_az
@@ -196,8 +236,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
   safe_mode          = true
   manager_admin_pwd  = var.password
   node_key_pair      = var.keypair
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
   template_id        = "mgmt_control_combined_v4"
   component_list     = ["DBService", "Hadoop", "ZooKeeper", "Ranger"]
 
@@ -260,9 +300,19 @@ variable "mrs_az" {}
 variable "cluster_name" {}
 variable "password" {}
 variable "keypair" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
 variable "public_ip" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_mrs_cluster_v2" "test" {
   availability_zone  = var.mrs_az
@@ -272,8 +322,8 @@ resource "flexibleengine_mrs_cluster_v2" "test" {
   component_list     = ["Hadoop", "Hive", "Tez"]
   manager_admin_pwd  = var.password
   node_key_pair      = var.keypair
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
   public_ip          = var.public_ip
 
   master_nodes {
@@ -389,7 +439,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) Specifies the ID of the VPC which bound to the MRS cluster.
   Changing this will create a new MRS cluster resource.
 
-* `subnet_id` - (Required, String, ForceNew) Specifies the network ID of a subnet which bound to the MRS cluster.
+* `subnet_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet which bound to the MRS cluster.
   Changing this will create a new MRS cluster resource.
 
 * `manager_admin_pwd` - (Required, String, ForceNew) Specifies the administrator password, which is used to login to
@@ -544,7 +594,7 @@ This resource provides the following timeouts configuration options:
 
 Clusters can be imported by their `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_mrs_cluster_v2.test b11b407c-e604-4e8d-8bc4-92398320b847
 ```
 

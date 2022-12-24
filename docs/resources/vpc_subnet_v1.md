@@ -11,23 +11,23 @@ Provides a VPC subnet resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_vpc_v1" "vpc_v1" {
-  name = var.vpc_name
-  cidr = var.vpc_cidr
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_vpc_subnet_v1" "subnet_v1" {
-  name       = var.subnet_name
-  cidr       = var.subnet_cidr
-  gateway_ip = var.subnet_gateway_ip
-  vpc_id     = flexibleengine_vpc_v1.vpc_v1.id
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
 
-resource "flexibleengine_vpc_subnet_v1" "subnet_with_tags" {
-  name       = var.subnet_name
-  cidr       = var.subnet_cidr
-  gateway_ip = var.subnet_gateway_ip
-  vpc_id     = flexibleengine_vpc_v1.vpc_v1.id
+resource "flexibleengine_vpc_subnet_v1" "example_subnet_with_tags" {
+  name       = "example-vpc-subnet-with-tags"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 
   tags = {
     foo = "bar"
@@ -93,7 +93,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Subnets can be imported using the subnet `Network ID`, e.g.
+Subnets can be imported using the VPC subnet ID, e.g.
 
 ```shell
 terraform import flexibleengine_vpc_subnet_v1 4779ab1c-7c1a-44b1-a02e-93dfc361b32d

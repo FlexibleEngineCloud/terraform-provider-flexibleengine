@@ -11,13 +11,30 @@ Manages dds instance resource within FlexibleEngine
 ## Example Usage: Creating a Cluster Community Edition
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
+  description = "My neutron security group"
+}
+
 resource "flexibleengine_dds_instance_v3" "instance" {
   name              = "dds-instance"
   region            = "eu-west-0"
   availability_zone = "eu-west-0a"
-  vpc_id            = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  subnet_id         = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   password          = "Test@123"
   mode              = "Sharding"
 
@@ -59,9 +76,9 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   name              = "dds-instance"
   region            = "eu-west-0"
   availability_zone = "eu-west-0a"
-  vpc_id            = "c1095fe7-03df-4205-ad2d-6f4c181d436e"
-  subnet_id         = "b65f8d25-c533-47e2-8601-cfaa265a3e3e"
-  security_group_id = "e28c7982-ecf0-4498-852d-9683cfc364f2"
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
   password          = "Test@123"
   mode              = "ReplicaSet"
 
@@ -102,7 +119,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required) Specifies the VPC ID. Changing this creates a new instance.
 
-* `subnet_id` - (Required) Specifies the subnet Network ID. Changing this creates a new instance.
+* `subnet_id` - (Required) Specifies the ID of the VPC Subnet. Changing this creates a new instance.
 
 * `security_group_id` - (Required) Specifies the security group ID of the DDS instance.
   Changing this creates a new instance.

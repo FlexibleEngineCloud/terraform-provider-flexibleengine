@@ -13,16 +13,36 @@ Manages a **Dedicated** Load Balancer resource within FlexibleEngine.
 ### Basic Loadbalancer
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"
   cross_vpc_backend = true
 
-  vpc_id         = "{{ vpc_id }}"
-  ipv4_subnet_id = "{{ subnet_id }}"
+  vpc_id         = flexibleengine_vpc_v1.example_vpc.id
+  ipv4_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
-  l4_flavor_id = "{{ l4_flavor_id }}"
-  l7_flavor_id = "{{ l7_flavor_id }}"
+  l4_flavor_id = data.flexibleengine_elb_flavors.l4_flavors.ids[0]
+  l7_flavor_id = data.flexibleengine_elb_flavors.l7_flavors.ids[0]
 
   availability_zone = [
     "eu-west-0a",
@@ -34,43 +54,83 @@ resource "flexibleengine_lb_loadbalancer_v3" "basic" {
 ### Loadbalancer With Existing EIP
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"
   cross_vpc_backend = true
 
-  vpc_id            = "{{ vpc_id }}"
-  ipv6_network_id   = "{{ ipv6_network_id }}"
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  ipv6_network_id   = flexibleengine_vpc_subnet_v1.example_subnet_ipv6.id
   ipv6_bandwidth_id = "{{ ipv6_bandwidth_id }}"
-  ipv4_subnet_id    = "{{ subnet_id }}"
+  ipv4_subnet_id    = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
-  l4_flavor_id = "{{ l4_flavor_id }}"
-  l7_flavor_id = "{{ l7_flavor_id }}"
+  l4_flavor_id = data.flexibleengine_elb_flavors.l4_flavors.ids[0]
+  l7_flavor_id = data.flexibleengine_elb_flavors.l7_flavors.ids[0]
 
   availability_zone = [
     "eu-west-0a",
     "eu-west-0b",
   ]
 
-  ipv4_eip_id = "{{ eip_id }}"
+  ipv4_eip_id = flexibleengine_vpc_eip.example_eip.id
 }
 ```
 
 ### Loadbalancer With EIP
 
 ```hcl
+data "flexibleengine_elb_flavors" "l7_flavors" {
+  type            = "L7"
+}
+
+data "flexibleengine_elb_flavors" "l4_flavors" {
+  type            = "L4"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_lb_loadbalancer_v3" "basic" {
   name              = "basic"
   description       = "basic example"
   cross_vpc_backend = true
 
-  vpc_id            = "{{ vpc_id }}"
-  ipv6_network_id   = "{{ ipv6_network_id }}"
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
+  ipv6_network_id   = flexibleengine_vpc_subnet_v1.example_subnet_ipv6.id
   ipv6_bandwidth_id = "{{ ipv6_bandwidth_id }}"
-  ipv4_subnet_id    = "{{ subnet_id }}"
+  ipv4_subnet_id    = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
-  l4_flavor_id = "{{ l4_flavor_id }}"
-  l7_flavor_id = "{{ l7_flavor_id }}"
+  l4_flavor_id = data.flexibleengine_elb_flavors.l4_flavors.ids[0]
+  l7_flavor_id = data.flexibleengine_elb_flavors.l7_flavors.ids[0]
 
   availability_zone = [
     "eu-west-0a",
@@ -104,7 +164,8 @@ The following arguments are supported:
 * `vpc_id` - (Optional, String, ForceNew) The vpc on which to create the loadbalancer. Changing this creates a new
   loadbalancer.
 
-* `ipv4_subnet_id` - (Optional, String) The subnet on which to allocate the loadbalancer's ipv4 address.
+* `ipv4_subnet_id` - (Optional, String) The `ipv4_subnet_id` of the
+    VPC Subnet on which to allocate the loadbalancer's ipv4 address.
 
 * `ipv6_network_id` - (Optional, String) The network on which to allocate the loadbalancer's ipv6 address.
 

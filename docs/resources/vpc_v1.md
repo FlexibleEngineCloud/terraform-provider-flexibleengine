@@ -11,23 +11,14 @@ Manages a VPC resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-
-variable "vpc_name" {
-  default = "flexibleengine_vpc"
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
 }
 
-variable "vpc_cidr" {
-  default = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_v1" "vpc_v1" {
-  name = var.vpc_name
-  cidr = var.vpc_cidr
-}
-
-resource "flexibleengine_vpc_v1" "vpc_with_tags" {
-  name = var.vpc_name
-  cidr = var.vpc_cidr
+resource "flexibleengine_vpc_v1" "example_vpc_with_tags" {
+  name = "example-vpc-with-tags"
+  cidr = "192.168.0.0/16"
 
   tags = {
     foo = "bar"

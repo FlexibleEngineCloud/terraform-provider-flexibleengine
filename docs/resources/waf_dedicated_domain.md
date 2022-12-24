@@ -14,9 +14,32 @@ used. The dedicated mode domain name resource can be used in Dedicated Mode and 
 ## Example Usage
 
 ```hcl
-variable certificated_id {}
-variable vpc_id {}
-variable dedicated_engine_id {}
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_waf_certificate" "certificate_1" {
+  name        = "cert_1"
+  certificate = <<EOT
+-----BEGIN CERTIFICATE-----
+MIIFazCCA1OgAwIBAgIUN3w1KX8/T/HWVxZIOdHXPhUOnsAwDQYJKoZIhvcNAQEL
+BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
+...
+dKvZbPEsygYRIjwyhHHUh/YXH8KDI/uu6u6AxDckQ3rP1BkkKXr5NPBGjVgM3ZI=
+-----END CERTIFICATE-----
+EOT
+  private_key = <<EOT
+-----BEGIN PRIVATE KEY-----
+MIIJQQIBADANBgkqhkiG9w0BAQEFAASCCSswggknAgEAAoICAQC+9uwFVenCdPD9
+5LWSWMuy4riZW718wxBpYV5Y9N8nM7N0qZLLdpImZrzBbaBldTI+AZGI3Nupuurw
+...
+s9urs/Kk/tbQhsEvu0X8FyGwo0zH6rG8apTFTlac+v4mJ4vlpxSvT5+FW2lgLISE
++4sM7kp0qO3/p+45HykwBY5iHq3H
+-----END PRIVATE KEY-----
+EOT
+}
+
 
 resource "flexibleengine_waf_dedicated_domain" "domain_1" {
   domain         = "www.example.com"
@@ -28,7 +51,7 @@ resource "flexibleengine_waf_dedicated_domain" "domain_1" {
     address         = "192.168.1.100"
     port            = 8080
     type            = "ipv4"
-    vpc_id          = var.vpc_id
+    vpc_id          = flexibleengine_vpc_v1.example_vpc.id
   }
 }
 ```

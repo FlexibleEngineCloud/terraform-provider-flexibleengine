@@ -14,7 +14,11 @@ Provides an access rule resource of Scalable File Resource (SFS).
 
 ```hcl
 variable "share_name" { }
-variable "vpc_id" { }
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name        = var.share_name
@@ -24,7 +28,7 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
 
 resource "flexibleengine_sfs_access_rule_v2" "rule_1" {
   sfs_id    = flexibleengine_sfs_file_system_v2.share-file.id
-  access_to = var.vpc_id
+  access_to = flexibleengine_vpc_v1.example_vpc.id
 }
 ```
 
@@ -32,7 +36,11 @@ resource "flexibleengine_sfs_access_rule_v2" "rule_1" {
 
 ```hcl
 variable "share_name" { }
-variable "vpc_id" { }
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
 
 resource "flexibleengine_sfs_file_system_v2" "share-file" {
   name        = var.share_name
@@ -42,7 +50,7 @@ resource "flexibleengine_sfs_file_system_v2" "share-file" {
 
 resource "flexibleengine_sfs_access_rule_v2" "rule_1" {
   sfs_id    = flexibleengine_sfs_file_system_v2.share-file.id
-  access_to = join("#", [var.vpc_id, "192.168.10.0/24", "0", "no_all_squash,no_root_squash"])
+  access_to = join("#", [flexibleengine_vpc_v1.example_vpc.id, "192.168.10.0/24", "0", "no_all_squash,no_root_squash"])
 }
 ```
 

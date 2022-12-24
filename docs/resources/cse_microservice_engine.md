@@ -11,18 +11,14 @@ Manages a dedicated microservice engine resource within Flexibleengine.
 ## Example Usage
 
 ```hcl
-variable "engine_name" {}
-variable "network_id" {}
-variable "az1" {}
-
-resource "flexibleengine_cse_microservice_engine" "test" {
-  name       = var.engine_name
+resource "flexibleengine_cse_microservice_engine" "example_cse" {
+  name       = "example-cse"
   flavor     = "cse.s1.small"
-  network_id = var.network_id
+  network_id = flexibleengine_vpc_subnet_v1.example_subnet.id
   auth_type  = "NONE"
 
   availability_zones = [
-    var.az1,
+    "eu-west-0a",
   ]
 }
 ```
@@ -45,7 +41,7 @@ The following arguments are supported:
 * `availability_zones` - (Required, List, ForceNew) Specifies the list of availability zone.
   Changing this will create a new engine.
 
-* `network_id` - (Required, String, ForceNew) Specifies the network ID of the subnet to which the dedicated microservice
+* `network_id` - (Required, String, ForceNew) Specifies the ID of VPC the subnet to which the dedicated microservice
   engine belongs. Changing this will create a new engine.
 
 * `auth_type` - (Required, String, ForceNew) Specifies the authentication method for the dedicated microservice engine.

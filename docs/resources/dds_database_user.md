@@ -110,7 +110,7 @@ This resource provides the following timeouts configuration options:
 Database users can be imported using their `id` (combination of `instance_id`, `db_name` and `name`), separated by a
 slash (/), e.g.
 
-```
+```shell
 terraform import flexibleengine_dds_database_user.test <instance_id>/<db_name>/<name>
 ```
 

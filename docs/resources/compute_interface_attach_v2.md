@@ -14,19 +14,26 @@ Compute (Nova) v2 API.
 ### Basic Attachment
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_compute_instance_v2" "example_instance" {
+  name            = "example-instance"
   security_groups = ["default"]
 }
 
-resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  network_id  = flexibleengine_networking_port_v2.network_1.id
+resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach" {
+  instance_id = flexibleengine_compute_instance_v2.example_instance.id
+  network_id  = flexibleengine_vpc_subnet_v1.example_subnet.id
 }
 
 ```
@@ -34,19 +41,9 @@ resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
 ### Attachment Specifying a Fixed IP
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
-}
-
-resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  network_id  = flexibleengine_networking_port_v2.network_1.id
+resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach" {
+  instance_id = flexibleengine_compute_instance_v2.example_instance.id
+  network_id  = flexibleengine_vpc_subnet_v1.example_subnet.id
   fixed_ip    = "10.0.10.10"
 }
 
@@ -55,25 +52,15 @@ resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
 ### Attachment Using an Existing Port
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_port_v2" "port_1" {
+resource "flexibleengine_networking_port_v2" "example_port" {
   name           = "port_1"
-  network_id     = flexibleengine_networking_network_v2.network_1.id
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
   admin_state_up = "true"
 }
 
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
-}
-
-resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  port_id     = flexibleengine_networking_port_v2.port_1.id
+resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach" {
+  instance_id = flexibleengine_compute_instance_v2.example_instance.id
+  port_id     = flexibleengine_networking_port_v2.example_port.id
 }
 
 ```
@@ -81,27 +68,17 @@ resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
 ### Attaching Multiple Interfaces
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_port_v2" "ports" {
+resource "flexibleengine_networking_port_v2" "example_ports" {
   count          = 2
   name           = format("port-%02d", count.index + 1)
-  network_id     = flexibleengine_networking_network_v2.network_1.id
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
   admin_state_up = "true"
 }
 
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
-}
-
-resource "flexibleengine_compute_interface_attach_v2" "attachments" {
+resource "flexibleengine_compute_interface_attach_v2" "example_attachments" {
   count          = 2
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  port_id     = flexibleengine_networking_port_v2.ports.*.id[count.index]
+  instance_id = flexibleengine_compute_instance_v2.example_instance.id
+  port_id     = flexibleengine_networking_port_v2.example_ports.*.id[count.index]
 }
 ```
 
@@ -113,31 +90,21 @@ If you want to ensure that the ports are attached in a given order, create
 explicit dependencies between the ports, such as:
 
 ```hcl
-resource "flexibleengine_networking_network_v2" "network_1" {
-  name           = "network_1"
-  admin_state_up = "true"
-}
-
-resource "flexibleengine_networking_port_v2" "ports" {
+resource "flexibleengine_networking_port_v2" "example_ports" {
   count          = 2
   name           = format("port-%02d", count.index + 1)
-  network_id     = flexibleengine_networking_network_v2.network_1.id
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
   admin_state_up = "true"
 }
 
-resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
+resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach_1" {
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id     = flexibleengine_networking_port_v2.example_ports.*.id[0]
 }
 
-resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
+resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach_2" {
   instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  port_id     = flexibleengine_networking_port_v2.ports.*.id[0]
-}
-
-resource "flexibleengine_compute_interface_attach_v2" "ai_2" {
-  instance_id = flexibleengine_compute_instance_v2.instance_1.id
-  port_id     = flexibleengine_networking_port_v2.ports.*.id[1]
+  port_id     = flexibleengine_networking_port_v2.example_ports.*.id[1]
 }
 ```
 

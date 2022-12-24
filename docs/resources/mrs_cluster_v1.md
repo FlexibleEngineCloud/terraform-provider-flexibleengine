@@ -13,6 +13,18 @@ Manages a MRS cluster resource within FlexibleEngine.
 ## Example Usage:  Creating a MRS cluster
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   region            = "eu-west-0"
   available_zone_id = "eu-west-0a"
@@ -26,8 +38,8 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
   core_node_size   = "s3.xlarge.4.linux.mrs"
   volume_type      = "SATA"
   volume_size      = 100
-  vpc_id           = "51edfb75-f9f0-4bbc-b4dc-21466b93f60d"
-  subnet_id        = "1d7a8646-43ee-455a-a3ab-40da87a1304c"
+  vpc_id           = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id        = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   safe_mode             = 0
   cluster_admin_secret  = "{{password_of_mrs_manager}}"
@@ -112,10 +124,8 @@ The following arguments are supported:
     Cloud from the left list. On the Virtual Private Cloud page, obtain the VPC
     ID from the list.
 
-* `subnet_id` - (Required) Subnet ID Obtain the subnet ID from the management
-    console as follows: Register an account and log in to the management console.
-    Click Virtual Private Cloud and select Virtual Private Cloud from the left list.
-    On the Virtual Private Cloud page, obtain the subnet ID from the list.
+* `subnet_id` - (Required) Specifies the ID of the VPC Subnet which bound to the MRS cluster.
+    Changing this will create a new MRS cluster resource.
 
 * `volume_type` - (Required) Type of disks SATA and SSD are supported. SATA:
     common I/O SSD: super high-speed I/O
