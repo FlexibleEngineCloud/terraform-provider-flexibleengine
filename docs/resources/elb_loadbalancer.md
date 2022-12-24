@@ -15,11 +15,16 @@ Manages a **classic** load balancer resource within FlexibleEngine.
 ### External Load Balancer
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_elb_loadbalancer" "elb" {
   type        = "External"
   name        = "elb-external"
   description = "external elb"
-  vpc_id      = var.vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   bandwidth   = 5
 }
 ```
@@ -27,12 +32,17 @@ resource "flexibleengine_elb_loadbalancer" "elb" {
 ### Internal Load Balancer
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_elb_loadbalancer" "elb" {
   type              = "Internal"
   name              = "elb-internal"
   description       = "internal elb"
   az                = "eu-west-0"
-  vpc_id            = var.vpc_id
+  vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   vip_subnet_id     = var.subnet_id
   security_group_id = var.sec_group
 }

@@ -59,13 +59,13 @@ EOF
 ### With agency, vpc, subnet and func_mounts
 
 ```hcl
-resource "flexibleengine_vpc_v1" "test" {
-  name = vpc_1
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
   cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_vpc_subnet_v1" "test" {
-  name       = "subnet_1"
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-subnet"
   cidr       = "192.168.1.0/24"
   gateway_ip = "192.168.1.1"
   vpc_id     = flexibleengine_vpc_v1.test.id

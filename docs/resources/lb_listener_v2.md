@@ -11,10 +11,18 @@ Manages an **enhanced** lb listener resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
+  vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
+
+  tags = {
+    key = "value"
+  }
+}
+
 resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
+  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.lb_1.id
 
   tags = {
     key = "value"
@@ -27,7 +35,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name          = "loadbalancer_cert"
-  vip_subnet_id = "2c0a74a9-4395-4e62-a17b-e3e86fbf66b7"
+  vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 
 resource "flexibleengine_lb_certificate_v2" "certificate_1" {

@@ -16,13 +16,20 @@ Provides a resource to manage a VPC Peering Connection resource.
 
 ## Example Usage
 
- ```hcl
+```hcl
+variable "accepter_vpc_id" {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
 resource "flexibleengine_vpc_peering_connection_v2" "peering" {
   name        = var.peer_conn_name
-  vpc_id      = var.vpc_id
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
   peer_vpc_id = var.accepter_vpc_id
 }
- ```
+```
 
 ## Argument Reference
 
@@ -50,6 +57,6 @@ result attributes:
 
 VPC Peering resources can be imported using the `vpc peering id`, e.g.
 
-```
+```shell
 terraform import flexibleengine_vpc_peering_connection_v2.test_connection 22b76469-08e3-4937-8c1d-7aad34892be1
 ```

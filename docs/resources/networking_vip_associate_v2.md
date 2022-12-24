@@ -16,7 +16,7 @@ variable subnet_id{}
 resource "flexibleengine_compute_instance_v2" "server_1" {
   name = "instance_1"
   network {
-    uuid = var.subnet_id
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
   ...
 }
@@ -24,13 +24,13 @@ resource "flexibleengine_compute_instance_v2" "server_1" {
 resource "flexibleengine_compute_instance_v2" "server_2" {
   name = "instance_2"
   network {
-    uuid = var.subnet_id
+    uuid = flexibleengine_vpc_subnet_v1.example_subnet.id
   }
   ...
 }
 
 resource "flexibleengine_networking_vip_v2" "vip_1" {
-  network_id = var.subnet_id
+  network_id = flexibleengine_vpc_subnet_v1.example_subnet.id
 }
 
 resource "flexibleengine_networking_vip_associate_v2" "vip_associate_1" {

@@ -13,22 +13,32 @@ Manages a V2 port resource within FlexibleEngine.
 ### Basic Usage
 
 ```hcl
-variable subnet_id{}
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
 
 resource "flexibleengine_networking_port_v2" "port_1" {
-  name       = "port_1"
-  network_id = var.subnet_id
+  name           = "port_1"
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
+  admin_state_up = "true"
 }
 ```
 
 ### Port With allowed_address_pairs
 
 ```hcl
-variable subnet_id{}
-
 resource "flexibleengine_networking_port_v2" "port_1" {
-  name       = "port_1"
-  network_id = var.subnet_id
+  name           = "port_1"
+  network_id     = flexibleengine_vpc_subnet_v1.example_subnet.id
+  admin_state_up = "true"
 
   allowed_address_pairs {
     ip_address = "192.168.0.0/24"
@@ -46,7 +56,7 @@ The following arguments are supported:
 * `name` - (Optional) A unique name for the port. Changing this
     updates the `name` of an existing port.
 
-* `network_id` - (Required) The ID of the VPC subnet to attach the port to. Changing
+* `network_id` - (Required) The ID of the VPC Subnet to attach the port to. Changing
     this creates a new port.
 
 * `admin_state_up` - (Optional) Administrative up/down status for the port
@@ -79,7 +89,8 @@ The following arguments are supported:
 
 The `fixed_ip` block supports:
 
-* `subnet_id` - (Required) The **IPv4 or IPv6 subnet ID** of the VPC subnet in which to allocate IP address for this port.
+* `subnet_id` - (Required) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
+    VPC Subnet in which to allocate IP address for this port.
 
 * `ip_address` - (Optional) IP address desired in the subnet for this port. If
     you don't specify `ip_address`, an available IP address from the specified

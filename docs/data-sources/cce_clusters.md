@@ -82,7 +82,7 @@ The `clusters` block supports:
 
 * `vpc_id` - The vpc ID of the cluster.
 
-* `subnet_id` - The ID of the subnet used to create the node.
+* `subnet_id` - The ID of the VPC Subnet used to create the node.
 
 * `highway_subnet_id` - The ID of the high speed network used to create bare metal nodes.
 

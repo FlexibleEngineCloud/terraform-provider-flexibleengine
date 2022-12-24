@@ -139,6 +139,6 @@ This resource provides the following timeouts configuration options:
 DLI table can be imported by `id`. It is composed of the name of database which table belongs and the name of table,
  separated by a slash. For example,
 
-```
+```shell
 terraform import flexibleengine_dli_table.example <database_name>/<table_name>
 ```

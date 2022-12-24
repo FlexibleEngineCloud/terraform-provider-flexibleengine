@@ -11,10 +11,34 @@ Manages a Disaster Recovery Drill resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+data "flexibleengine_sdrs_domain_v1" "domain_1" {
+  name = "SDRS_HypeDomain01"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/24"
+}
+
+resource "flexibleengine_vpc_v1" "example_vpc_drill" {
+  name = "example-vpc"
+  cidr = "192.168.1.0/24"
+}
+
+resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
+  name = "group_1"
+  description = "test description"
+  source_availability_zone = "eu-west-0a"
+  target_availability_zone = "eu-west-0b"
+  domain_id = data.flexibleengine_sdrs_domain_v1.domain_1.id
+  source_vpc_id = flexibleengine_vpc_v1.example_vpc.id
+  dr_type = "migration"
+}
+
 resource "flexibleengine_sdrs_drill_v1" "drill_1" {
   name         = "drill_1"
-  group_id     = "{{ protectiongroup_id }}"
-  drill_vpc_id = "{{ drill_vpc_id }}"
+  group_id     = flexibleengine_sdrs_protectiongroup_v1.group_1.id
+  drill_vpc_id = flexibleengine_vpc_v1.example_vpc_drill.id
 }
 ```
 

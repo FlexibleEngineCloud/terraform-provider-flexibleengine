@@ -13,20 +13,34 @@ Manages a WAF dedicated instance resource within Flexibleengine.
 ```hcl
 variable az_name {}
 variable ecs_flavor_id {}
-variable vpc_id {}
-variable subnet_id {}
-variable security_group_id {}
+
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
+  name        = "example-secgroup"
+  description = "My neutron security group"
+}
 
 resource "flexibleengine_waf_dedicated_instance" "instance_1" {
   name               = "instance_1"
   available_zone     = var.az_name
   specification_code = "waf.instance.professional"
   ecs_flavor         = var.ecs_flavor_id
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id          = flexibleengine_vpc_subnet_v1.example_subnet.id
 
   security_group = [
-    var.security_group_id
+    flexibleengine_networking_secgroup_v2.example_secgroup.id
   ]
 }
 ```
@@ -58,8 +72,8 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) The VPC id of WAF dedicated instance. Changing this will create a new
   instance.
 
-* `subnet_id` - (Required, String, ForceNew) The subnet id of WAF dedicated instance VPC. Changing this will create a
-  new instance.
+* `subnet_id` - (Required, String, ForceNew) The ID of the VPC Subnet.
+  Changing this will create a new instance.
 
 * `security_group` - (Required, List, ForceNew) The security group of the instance. This is an array of security group
   ids. Changing this will create a new instance.

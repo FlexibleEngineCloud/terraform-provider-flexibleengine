@@ -152,7 +152,7 @@ debugging.
 To enable these logs, set the `TF_LOG=DEBUG` environment variable:
 
 ```shell
-$ TF_LOG=DEBUG terraform apply
+TF_LOG=DEBUG terraform apply
 ```
 
 If you submit these logs with a bug report, please ensure any sensitive

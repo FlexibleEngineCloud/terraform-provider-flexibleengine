@@ -11,12 +11,24 @@ Manages a V2 nat gateway resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+resource "flexibleengine_vpc_v1" "example_vpc" {
+  name = "example-vpc"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
+  name       = "example-vpc-subnet"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.example_vpc.id
+}
+
 resource "flexibleengine_nat_gateway_v2" "nat_1" {
   name        = "nat_test"
   description = "test for terraform"
   spec        = "3"
-  vpc_id      = "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75"
-  subnet_id   = "dc8632e2-d9ff-41b1-aa0c-d455557314a0"
+  vpc_id      = flexibleengine_vpc_v1.example_vpc.id
+  subnet_id   = flexibleengine_vpc_subnet_v1.example_subnet.id
 }
 ```
 
@@ -39,7 +51,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) Specifies the ID of the VPC this nat gateway belongs to.
   Changing this creates a new nat gateway.
 
-* `subnet_id` - (Required, String, ForceNew) Specifies the subnet ID of the downstream interface
+* `subnet_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet of the downstream interface
   (the next hop of the DVR) of the NAT gateway. Changing this creates a new nat gateway.
 
 * `description` - (Optional, String) Specifies the description of the nat gateway.

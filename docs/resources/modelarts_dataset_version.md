@@ -91,7 +91,7 @@ This resource provides the following timeouts configuration options:
 
 The dataset versions can be imported by dataset ID and version ID, separated by a slash, e.g.
 
-```
+```shell
 terraform import flexibleengine_modelarts_dataset_version.test yiROKoTTjtwjvP71yLG/wieeeoTrtrtjvn67yLm
 ```
 

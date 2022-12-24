@@ -180,7 +180,7 @@ This resource provides the following timeouts configuration options:
 
 The datasets can be imported by `id`.
 
-```
+```shell
 terraform import flexibleengine_modelarts_dataset.test yiROKoTTjtwjvP71yLG
 ```
 

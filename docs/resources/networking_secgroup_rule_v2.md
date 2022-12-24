@@ -11,7 +11,7 @@ Manages a Security Group Rule resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
   name        = "secgroup_1"
   description = "My neutron security group"
 }
@@ -23,7 +23,7 @@ resource "flexibleengine_networking_secgroup_rule_v2" "secgroup_rule_1" {
   port_range_min    = 22
   port_range_max    = 22
   remote_ip_prefix  = "0.0.0.0/0"
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
+  security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
 }
 ```
 

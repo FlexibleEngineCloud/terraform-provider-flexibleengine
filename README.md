@@ -99,26 +99,26 @@ Building the Provider
   with `go get` or `git clone`.
 
     ```sh
-    $ go get github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
+    go get github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
     ```
 
     ```sh
-    $ cd $GOPATH/src/github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
-    $ git clone git@github.com:FlexibleEngineCloud/terraform-provider-flexibleengine.git
+    cd $GOPATH/src/github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
+    git clone git@github.com:FlexibleEngineCloud/terraform-provider-flexibleengine.git
     ```
 
 2. Enter the provider directory and build the provider, run `make build`. This will build the provider and
   put the provider binary in the `$GOPATH/bin` directory.
 
     ```sh
-    $ cd $GOPATH/src/github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
-    $ make build
+    cd $GOPATH/src/github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
+    make build
     ```
 
 3. In order to test the provider, you can simply run `make test`.
 
     ```sh
-    $ make test
+    make test
     ```
 
 Acceptance Testing
@@ -141,7 +141,7 @@ export OS_NETWORK_ID=xxx
 Then we can run the acceptance tests with `make testacc`.
 
 ```sh
-$ make testacc TEST='./flexibleengine' TESTARGS='-run TestAccXXXX'
+make testacc TEST='./flexibleengine' TESTARGS='-run TestAccXXXX'
 ```
 
 **Note:** Acceptance tests create real resources, and often cost money to run.
@@ -153,8 +153,8 @@ Add the `TF_LOG` and `TF_LOG_PATH` environment variables to the system, and then
 For example, in a Linux operating system, run the following commands:
 
 ```sh
-$ export TF_LOG=TRACE
-$ export TF_LOG_PATH="./terraform.log"
+export TF_LOG=TRACE
+export TF_LOG_PATH="./terraform.log"
 ```
 
 License

@@ -13,7 +13,7 @@ Manages an **enhanced** load balancer L7 Rule resource within FlexibleEngine.
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   name          = "loadbalancer_1"
-  vip_subnet_id = var.subnet_id
+  vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 
 resource "flexibleengine_lb_listener_v2" "listener_1" {
