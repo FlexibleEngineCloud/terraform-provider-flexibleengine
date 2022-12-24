@@ -24,6 +24,11 @@ func TestAccASV1Policy_basic(t *testing.T) {
 					testAccCheckASV1PolicyExists("flexibleengine_as_policy_v1.hth_as_policy", &asPolicy),
 				),
 			},
+			{
+				ResourceName:      "flexibleengine_as_policy_v1.hth_as_policy",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
