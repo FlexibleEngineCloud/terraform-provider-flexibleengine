@@ -86,11 +86,11 @@ The following arguments are supported:
   The available types and related specifications are as follows, default to minimum configuration (type **A**).
   Changing this parameter will submit a new spark job.
 
-  | type | resource | driver cores | excutor cores | driver memory | executor memory | num executor |
-  | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-  | A | 8 vCPUs, 32-GB memory | 2 | 1 | 7G | 4G | 6 |
-  | B | 16 vCPUs, 64-GB memory | 2 | 2 | 7G | 8G | 7 |
-  | C | 32 vCPUs, 128-GB memory | 4 | 2 | 12G | 8G | 14 |
+  | type | resource                | driver cores | excutor cores | driver memory | executor memory | num executor |
+  | ---- | ----------------------- | ------------ | ------------- | ------------- | --------------- | ------------ |
+  | A    | 8 vCPUs, 32-GB memory   | 2            | 1             | 7G            | 4G              | 6            |
+  | B    | 16 vCPUs, 64-GB memory  | 2            | 2             | 7G            | 8G              | 7            |
+  | C    | 32 vCPUs, 128-GB memory | 4            | 2             | 12G           | 8G              | 14           |
 
 * `executor_memory` - (Optional, String, ForceNew) Specifies the executor memory of the spark application.
   application. The default value of this value corresponds to the configuration of the selected `specification`.
@@ -141,3 +141,9 @@ In addition to all arguments above, the following attributes are exported:
 * `created_at` - Time of the DLI spark job submit.
 
 * `owner` - The owner of the spark job.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `Delete` - Default is 5 minute.

@@ -137,6 +137,6 @@ This resource provides the following timeouts configuration options:
 
 Clusters can be imported by their `id`. For example,
 
-```
+```shell
 terraform import flexibleengine_dli_flinksql_job.test 12345
 ```

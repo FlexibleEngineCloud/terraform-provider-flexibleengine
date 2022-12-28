@@ -72,6 +72,6 @@ This resource provides the following timeouts configuration options:
 
 DLI queue can be imported by  `id`. For example,
 
-```
-terraform import flexibleengine_dli_queue.example  abc123
+```shell
+terraform import flexibleengine_dli_queue.example abc123
 ```

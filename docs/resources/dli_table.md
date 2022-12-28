@@ -125,7 +125,7 @@ The `column` block supports:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - A resource ID in format of **database_name/table_name**. It is composed of the name of database which table
+* `id` - A resource ID in format of `database_name/table_name`. It is composed of the name of database which table
  belongs and the name of table, separated by a slash.
 
 ## Timeouts
@@ -139,6 +139,6 @@ This resource provides the following timeouts configuration options:
 DLI table can be imported by `id`. It is composed of the name of database which table belongs and the name of table,
  separated by a slash. For example,
 
-```
-terraform import flexibleengine_dli_table.example <database_name>/<table_name>
+```shell
+terraform import flexibleengine_dli_table.example database_name/table_name
 ```
