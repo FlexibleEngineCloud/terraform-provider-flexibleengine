@@ -35,7 +35,7 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
   security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
-  password          = "Test@123"
+  password          = "Examp1e!Pa88w0rd"
   mode              = "Sharding"
 
   datastore {
@@ -79,7 +79,7 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   vpc_id            = flexibleengine_vpc_v1.example_vpc.id
   subnet_id         = flexibleengine_vpc_subnet_v1.example_subnet.id
   security_group_id = flexibleengine_networking_secgroup_v2.example_secgroup.id
-  password          = "Test@123"
+  password          = "Examp1e!Pa88w0rd"
   mode              = "ReplicaSet"
 
   datastore {
@@ -168,24 +168,24 @@ The `flavor` block supports:
 
 * `spec_code` - (Required) Specifies the resource specification code. Valid values:
 
-engine_name | type | vcpus | ram | speccode
----- | --- | ---
-DDS-Community | mongos | 1 | 4 | dds.mongodb.s3.medium.4.mongos
-DDS-Community | mongos | 2 | 8 | dds.mongodb.s3.large.4.mongos
-DDS-Community | mongos | 4 | 16 | dds.mongodb.s3.xlarge.4.mongos
-DDS-Community | mongos | 8 | 32 | dds.mongodb.s3.2xlarge.4.mongos
-DDS-Community | mongos | 16 | 64 | dds.mongodb.s3.4xlarge.4.mongos
-DDS-Community | shard | 1 | 4 | dds.mongodb.s3.medium.4.shard
-DDS-Community | shard | 2 | 8 | dds.mongodb.s3.large.4.shard
-DDS-Community | shard | 4 | 16 | dds.mongodb.s3.xlarge.4.shard
-DDS-Community | shard | 8 | 32 | dds.mongodb.s3.2xlarge.4.shard
-DDS-Community | shard | 16 | 64 | dds.mongodb.s3.4xlarge.4.shard
-DDS-Community | config | 2 | 4 | dds.mongodb.s3.large.2.config
-DDS-Community | replica | 1 | 4 | dds.mongodb.s3.medium.4.repset
-DDS-Community | replica | 2 | 8 | dds.mongodb.s3.large.4.repset
-DDS-Community | replica | 4 | 16 | dds.mongodb.s3.xlarge.4.repset
-DDS-Community | replica | 8 | 32 | dds.mongodb.s3.2xlarge.4.repset
-DDS-Community | replica | 16 | 64 | dds.mongodb.s3.4xlarge.4.repset
+| engine_name   | type    | vcpus | ram | speccode                        |
+| ------------- | ------- | ----- |
+| DDS-Community | mongos  | 1     | 4   | dds.mongodb.s3.medium.4.mongos  |
+| DDS-Community | mongos  | 2     | 8   | dds.mongodb.s3.large.4.mongos   |
+| DDS-Community | mongos  | 4     | 16  | dds.mongodb.s3.xlarge.4.mongos  |
+| DDS-Community | mongos  | 8     | 32  | dds.mongodb.s3.2xlarge.4.mongos |
+| DDS-Community | mongos  | 16    | 64  | dds.mongodb.s3.4xlarge.4.mongos |
+| DDS-Community | shard   | 1     | 4   | dds.mongodb.s3.medium.4.shard   |
+| DDS-Community | shard   | 2     | 8   | dds.mongodb.s3.large.4.shard    |
+| DDS-Community | shard   | 4     | 16  | dds.mongodb.s3.xlarge.4.shard   |
+| DDS-Community | shard   | 8     | 32  | dds.mongodb.s3.2xlarge.4.shard  |
+| DDS-Community | shard   | 16    | 64  | dds.mongodb.s3.4xlarge.4.shard  |
+| DDS-Community | config  | 2     | 4   | dds.mongodb.s3.large.2.config   |
+| DDS-Community | replica | 1     | 4   | dds.mongodb.s3.medium.4.repset  |
+| DDS-Community | replica | 2     | 8   | dds.mongodb.s3.large.4.repset   |
+| DDS-Community | replica | 4     | 16  | dds.mongodb.s3.xlarge.4.repset  |
+| DDS-Community | replica | 8     | 32  | dds.mongodb.s3.2xlarge.4.repset |
+| DDS-Community | replica | 16    | 64  | dds.mongodb.s3.4xlarge.4.repset |
 
 The `backup_strategy` block supports:
 
@@ -223,3 +223,18 @@ The `nodes` block contains:
   mongos nodes of cluster instances, primary nodes and secondary nodes of replica set instances,
   and single node instances.
 * `status` - Indicates the node status.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default 30 minutes.
+* `delete` - Default 30 minutes.
+
+## Import
+
+DDS instance can be imported using the `id`, e.g.
+  
+```shell
+terraform import flexibleengine_dds_instance.instance 1a2b3c4d-5e6f-7g8h-9i0j-1a2b3c4d5e6f
+```

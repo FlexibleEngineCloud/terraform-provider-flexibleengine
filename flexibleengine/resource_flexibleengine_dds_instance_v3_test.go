@@ -31,6 +31,16 @@ func TestAccDDSV3Instance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+					"availability_zone",
+					"flavor",
+				},
+			},
 		},
 	})
 }
@@ -116,7 +126,7 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   vpc_id            = "%s"
   subnet_id         = "%s"
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
-  password          = "Test@123"
+  password          = "j4!GBzt9"
   mode              = "Sharding"
 
   datastore {
