@@ -1,12 +1,13 @@
-package acceptance
+package flexibleengine
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/dli/v1/tables"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dli"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/fmtp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -19,34 +20,27 @@ func getDliTableResourceFunc(config *config.Config, state *terraform.ResourceSta
 	if err != nil {
 		return nil, fmtp.Errorf("error creating Dli v1 client, err=%s", err)
 	}
-	databaseName, tableName := dli.ParseTableInfoFromId(state.Primary.ID)
+	databaseName, tableName := ParseTableInfoFromId(state.Primary.ID)
 	return tables.Get(client, databaseName, tableName)
 }
 
 func TestAccResourceDliTable_basic(t *testing.T) {
-	var TableObj tables.CreateTableOpts
 	resourceName := "flexibleengine_dli_table.test"
 	name := acceptance.RandomAccResourceName()
 	obsBucketName := acceptance.RandomAccResourceNameWithDash()
 
-	rc := acceptance.InitResourceCheck(
-		resourceName,
-		&TableObj,
-		getDliTableResourceFunc,
-	)
-
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckOBS(t)
+			testAccPreCheckS3(t)
 		},
-		ProviderFactories: TestAccProviderFactories,
-		CheckDestroy:      rc.CheckResourceDestroy(),
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDliTableV1Destroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDliTableResource_basic(name, obsBucketName),
 				Check: resource.ComposeTestCheckFunc(
-					rc.CheckResourceExists(),
+					testAccCheckDliTableV1Exists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "database_name", name),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "data_location", tables.TableTypeOBS),
@@ -105,4 +99,52 @@ resource "flexibleengine_dli_table" "test" {
 
 }
 `, obsBucketName, name, name)
+}
+
+func testAccCheckDliTableV1Destroy(s *terraform.State) error {
+	config := testAccProvider.Meta().(*Config)
+	client, err := config.DliV1Client(OS_REGION_NAME)
+	if err != nil {
+		return fmt.Errorf("error creating dli client, err=%s", err)
+	}
+
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "flexibleengine_dli_table" {
+			continue
+		}
+
+		result, err := fetchDliTableV1ByTableNameOnTest(rs.Primary.Attributes["name"], rs.Primary.Attributes["database_name"], client)
+		if err == nil && result != nil {
+			return fmt.Errorf("dli table still exists: %s,%+v,%+v", rs.Primary.ID, err, result)
+		}
+	}
+
+	return nil
+}
+
+func testAccCheckDliTableV1Exists(resourceName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		config := testAccProvider.Meta().(*Config)
+		client, err := config.DliV1Client(OS_REGION_NAME)
+		if err != nil {
+			return fmt.Errorf("error creating dli client, err=%s", err)
+		}
+
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("Error checking flexibleengine_dli_table.test exist, err=not found this resource")
+		}
+		_, err = fetchDliTableV1ByTableNameOnTest(rs.Primary.Attributes["name"], rs.Primary.Attributes["database_name"], client)
+		if err != nil {
+			if strings.Contains(err.Error(), "Error finding the resource by list api") {
+				return fmt.Errorf("flexibleengine_dli_table is not exist")
+			}
+			return fmt.Errorf("error checking flexibleengine_dli_table.test exist, err=%s", err)
+		}
+		return nil
+	}
+}
+
+func fetchDliTableV1ByTableNameOnTest(tableName, databaseName string, client *golangsdk.ServiceClient) (*tables.Table, error) {
+	return tables.Get(client, databaseName, tableName)
 }
