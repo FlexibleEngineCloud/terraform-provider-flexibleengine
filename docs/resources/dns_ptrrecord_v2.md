@@ -39,7 +39,7 @@ resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the PTR record.
+* `region` - (Optional, ForceNew) The region in which to create the PTR record.
     If omitted, the `region` argument of the provider is used.
     Changing this creates a new PTR record.
 
@@ -48,7 +48,7 @@ The following arguments are supported:
 
 * `description` - (Optional) Description of the PTR record.
 
-* `floatingip_id` - (Required) The ID of the FloatingIP/EIP.
+* `floatingip_id` - (Required, ForceNew) The ID of the FloatingIP/EIP.
   Changing this creates a new PTR record.
 
 * `ttl` - (Optional) The time to live (TTL) of the record set (in seconds). The value

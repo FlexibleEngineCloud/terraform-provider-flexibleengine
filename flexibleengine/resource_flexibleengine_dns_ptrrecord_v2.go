@@ -54,6 +54,7 @@ func resourceDNSPtrRecordV2() *schema.Resource {
 			"ttl": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      300,
 				ValidateFunc: validation.IntBetween(1, 2147483647),
 			},
 			"tags": tagsSchema(),
