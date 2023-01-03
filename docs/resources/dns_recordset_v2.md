@@ -35,30 +35,26 @@ resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the DNS record set.
+* `region` - (Optional, ForceNew) The region in which to create the DNS record set.
     If omitted, the `region` argument of the provider is used.
-    Changing this creates a new DNS record set.
 
-* `zone_id` - (Required) The ID of the zone in which to create the record set.
-  Changing this creates a new DNS  record set.
+* `zone_id` - (Required, ForceNew) The ID of the zone in which to create the record set.
 
-* `name` - (Required) The name of the record set. Note the `.` at the end of the name.
-  Changing this creates a new DNS record set.
+* `name` - (Required, ForceNew) The name of the record set. Note the `.` at the end of the name.
 
-* `type` - (Required) The type of record set. The options include `A`, `AAAA`, `MX`,
-  `CNAME`, `TXT`, `NS`, `SRV`, `CAA`, and `PTR`. Changing this creates a new DNS record set.
+* `type` - (Required, ForceNew) The type of record set. The options include `A`, `AAAA`, `MX`,
+  `CNAME`, `TXT`, `NS`, `SRV`, `CAA`, and `PTR`.
 
 * `records` - (Required) An array of DNS records.
 
 * `ttl` - (Optional) The time to live (TTL) of the record set (in seconds). The value
-  range is 300–2147483647. The default value is 300.
+  range is 300–2147483647. The default value is `300`.
 
-* `description` - (Optional) A description of the record set.
+* `description` - (Optional) A description of the record set. Max length is `255` characters.
 
 * `tags` - (Optional) The key/value pairs to associate with the record set.
 
-* `value_specs` - (Optional) Map of additional options. Changing this creates a
-  new record set.
+* `value_specs` - (Optional, ForceNew) Map of additional options.
 
 ## Attributes Reference
 
@@ -75,8 +71,8 @@ The following attributes are exported:
 
 ## Import
 
-This resource can be imported by specifying the zone ID and recordset ID,
-separated by a forward slash.
+This resource can be imported by specifying the zone ID (`zone_id`) and recordset ID (`id`),
+separated by a forward slash `/`.
 
 ```shell
 terraform import flexibleengine_dns_recordset_v2.recordset_1 <zone_id>/<recordset_id>
