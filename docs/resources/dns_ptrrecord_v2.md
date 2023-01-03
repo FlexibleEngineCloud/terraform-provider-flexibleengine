@@ -40,8 +40,8 @@ resource "flexibleengine_dns_ptrrecord_v2" "ptr_1" {
 The following arguments are supported:
 
 * `region` - (Optional, ForceNew) The region in which to create the PTR record.
-    If omitted, the `region` argument of the provider is used.
-    Changing this creates a new PTR record.
+  If omitted, the `region` argument of the provider is used.
+  Changing this creates a new PTR record.
 
 * `name` - (Required) Domain name of the PTR record. A domain name is case insensitive.
   Uppercase letters will also be converted into lowercase letters.

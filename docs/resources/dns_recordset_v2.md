@@ -36,14 +36,18 @@ resource "flexibleengine_dns_recordset_v2" "rs_example_com" {
 The following arguments are supported:
 
 * `region` - (Optional, ForceNew) The region in which to create the DNS record set.
-    If omitted, the `region` argument of the provider is used.
+  If omitted, the `region` argument of the provider is used.
+  Changing this creates a new DNS record set.
 
 * `zone_id` - (Required, ForceNew) The ID of the zone in which to create the record set.
+  Changing this creates a new DNS record set.
 
 * `name` - (Required, ForceNew) The name of the record set. Note the `.` at the end of the name.
+  Changing this creates a new DNS record set.
 
 * `type` - (Required, ForceNew) The type of record set. The options include `A`, `AAAA`, `MX`,
   `CNAME`, `TXT`, `NS`, `SRV`, `CAA`, and `PTR`.
+  Changing this creates a new DNS record set.
 
 * `records` - (Required) An array of DNS records.
 
@@ -55,6 +59,7 @@ The following arguments are supported:
 * `tags` - (Optional) The key/value pairs to associate with the record set.
 
 * `value_specs` - (Optional, ForceNew) Map of additional options.
+  Changing this creates a new DNS record set.
 
 ## Attributes Reference
 
