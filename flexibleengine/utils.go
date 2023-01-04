@@ -15,6 +15,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// ErrorResp is the response when API failed
+type ErrorResp struct {
+	ErrorCode string `json:"error_code"`
+	ErrorMsg  string `json:"error_msg"`
+}
+
+// ParseErrorMsg is used to unmarshal the error body to ErrorResp
+// usage: resp, pErr := ParseErrorMsg(err.Body)
+func ParseErrorMsg(body []byte) (ErrorResp, error) {
+	resp := ErrorResp{}
+	err := json.Unmarshal(body, &resp)
+	return resp, err
+}
+
 // CheckDeleted checks the error to see if it's a 404 (Not Found) and, if so,
 // sets the resource ID to the empty string instead of throwing an error.
 func CheckDeleted(d *schema.ResourceData, err error, msg string) error {
