@@ -21,12 +21,28 @@ type ErrorResp struct {
 	ErrorMsg  string `json:"error_msg"`
 }
 
-// ParseErrorMsg is used to unmarshal the error body to ErrorResp
-// usage: resp, pErr := ParseErrorMsg(err.Body)
-func ParseErrorMsg(body []byte) (ErrorResp, error) {
-	resp := ErrorResp{}
-	err := json.Unmarshal(body, &resp)
-	return resp, err
+// ParseErrorMap parses the error message from the API and returns a map
+func ParseErrorMsg(data interface{}) (ErrorResp, error) {
+
+	var (
+		err             error
+		errCode, errMsg interface{}
+	)
+
+	errCode, err = navigateValue(data, []string{"error_code"}, nil)
+	if err != nil {
+		return ErrorResp{}, err
+	}
+
+	errMsg, err = navigateValue(data, []string{"error_msg"}, nil)
+	if err != nil {
+		return ErrorResp{}, err
+	}
+
+	return ErrorResp{
+		ErrorCode: errCode.(string),
+		ErrorMsg:  errMsg.(string),
+	}, nil
 }
 
 // CheckDeleted checks the error to see if it's a 404 (Not Found) and, if so,
