@@ -216,21 +216,25 @@ func waitForAntiDdosStatus(antiddosClient *golangsdk.ServiceClient, antiddosId s
 // checkNotConfig checks the error returned from the API
 func checkNotConfig(d *schema.ResourceData, err error, msg string) error {
 
-	errResp, nErr := ParseErrorMsg(err)
-	if nErr != nil {
-		return fmt.Errorf("%s: %s", msg, err)
-	}
+	if sdkErr, ok := err.(golangsdk.ErrDefault400); ok {
 
-	// https://docs.prod-cloud-ocb.orange-business.com/api/antiddos/antiddos_02_0032.html
-	// 10000016 - VPC cannot be accessed or the EIP does not exist.
-	// 10001020 - ID of the IP address is invalid.
-	listOfCodes := []string{"10000016", "10001020"}
-
-	for _, code := range listOfCodes {
-		if errResp.ErrorCode == code {
-			d.SetId("")
-			return nil
+		errResp, parseErr := ParseErrorMsg(sdkErr.Body)
+		if parseErr != nil {
+			return fmt.Errorf("%s: %s", msg, err)
 		}
+
+		// https://docs.prod-cloud-ocb.orange-business.com/api/antiddos/antiddos_02_0032.html
+		// 10000016 - VPC cannot be accessed or the EIP does not exist.
+		// 10001020 - ID of the IP address is invalid.
+		listOfCodes := []string{"10000016", "10001020"}
+
+		for _, code := range listOfCodes {
+			if errResp.ErrorCode == code {
+				d.SetId("")
+				return nil
+			}
+		}
+
 	}
 
 	return fmt.Errorf("%s: %s", msg, err)
