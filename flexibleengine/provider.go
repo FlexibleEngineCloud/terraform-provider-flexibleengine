@@ -453,6 +453,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_fgs_dependency":            fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":              fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":               fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_identity_acl":              iam.ResourceIdentityACL(),
 			"flexibleengine_rds_account":               rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":              rds.ResourceRdsDatabase(),
 			"flexibleengine_rds_database_privilege":    rds.ResourceRdsDatabasePrivilege(),
