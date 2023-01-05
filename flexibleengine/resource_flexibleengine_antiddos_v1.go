@@ -213,10 +213,17 @@ func waitForAntiDdosStatus(antiddosClient *golangsdk.ServiceClient, antiddosId s
 	}
 }
 
-// checkNotConfig checks the error returned from the API call to see if it is a
-// 403 error, which means the resource is not configured.
+// checkNotConfig checks the error returned from the API
 func checkNotConfig(d *schema.ResourceData, err error, msg string) error {
-	if _, ok := err.(golangsdk.ErrDefault403); ok {
+
+	errResp, nErr := ParseErrorMsg(err)
+	if nErr != nil {
+		return fmt.Errorf("%s: %s", msg, err)
+	}
+
+	// 10000016 - VPC cannot be accessed or the EIP does not exist.
+	// https://docs.prod-cloud-ocb.orange-business.com/api/antiddos/antiddos_02_0032.html
+	if errResp.ErrorCode == "10000016" {
 		d.SetId("")
 		return nil
 	}
