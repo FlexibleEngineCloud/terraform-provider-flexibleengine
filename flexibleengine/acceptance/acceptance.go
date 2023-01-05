@@ -36,6 +36,7 @@ var (
 	OS_SWR_SHARING_ACCOUNT    = os.Getenv("OS_SWR_SHARING_ACCOUNT")
 	OS_DLI_FLINK_JAR_OBS_PATH = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
 	OS_WAF_ENABLE_FLAG        = os.Getenv("OS_WAF_ENABLE_FLAG")
+	OS_SMS_SOURCE_SERVER      = os.Getenv("OS_SMS_SOURCE_SERVER")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -120,5 +121,10 @@ func testAccPreCheckDliJarPath(t *testing.T) {
 func testAccPrecheckWafInstance(t *testing.T) {
 	if OS_WAF_ENABLE_FLAG == "" {
 		t.Skip("Jump the WAF acceptance tests.")
+	}
+}
+func testAccPreCheckSms(t *testing.T) {
+	if OS_SMS_SOURCE_SERVER == "" {
+		t.Skip("OS_SMS_SOURCE_SERVER must be set for SMS acceptance tests")
 	}
 }
