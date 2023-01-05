@@ -81,15 +81,6 @@ The following arguments are supported:
 * `region` - (Required) The region of the FlexibleEngine cloud to use. It must be provided,
   but it can also be sourced from the `OS_REGION_NAME` environment variables.
 
-* `domain_id` - (Optional; Required if not using `domain_name`) The ID of the Domain to scope to.
-  If omitted, the following environment variables are checked (in this order):
-  `OS_USER_DOMAIN_ID`, `OS_PROJECT_DOMAIN_ID`, `OS_DOMAIN_ID`.
-
-* `domain_name` - (Optional; Required if not using `domain_id`) The Name of the Domain to scope to.
-  If omitted, the following environment variables are checked (in this order):
-  `OS_USER_DOMAIN_NAME`, `OS_PROJECT_DOMAIN_NAME`, `OS_DOMAIN_NAME`,
-  `DEFAULT_DOMAIN`.
-
 * `access_key` - (Optional) The access key of the FlexibleEngine cloud to use.
   If omitted, the `OS_ACCESS_KEY` environment variable is used.
 
@@ -104,6 +95,14 @@ The following arguments are supported:
 
 * `password` - (Optional) The Password to login with. If omitted, the
   `OS_PASSWORD` environment variable is used.
+
+* `domain_id` - (Optional) The ID of the Domain to scope to.
+  If omitted, the following environment variables are checked (in this order):
+  `OS_USER_DOMAIN_ID`, `OS_PROJECT_DOMAIN_ID`, `OS_DOMAIN_ID`.
+
+* `domain_name` - (Optional) The Name of the Domain to scope to.
+  If omitted, the following environment variables are checked (in this order):
+  `OS_USER_DOMAIN_NAME`, `OS_PROJECT_DOMAIN_NAME`, `OS_DOMAIN_NAME`, `DEFAULT_DOMAIN`.
 
 * `tenant_id` - (Optional) The ID of the Project to login with.
   If omitted, the `OS_TENANT_ID` or `OS_PROJECT_ID` environment variables are used.
