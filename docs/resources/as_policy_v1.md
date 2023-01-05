@@ -146,5 +146,5 @@ The following attributes are exported:
 Auto Scaling policy can be imported using the `id`, e.g.
 
 ```shell
-$ terraform import flexibleengine_as_policy_v1.hth_aspolicy 5f3b5f5e-1b5f-4b5a-8f32-53dcb9d9053a
+terraform import flexibleengine_as_policy_v1.hth_aspolicy 5f3b5f5e-1b5f-4b5a-8f32-53dcb9d9053a
 ```
