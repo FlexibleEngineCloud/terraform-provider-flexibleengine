@@ -447,6 +447,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dds_database_role":         dds.ResourceDatabaseRole(),
 			"flexibleengine_dds_database_user":         dds.ResourceDatabaseUser(),
 			"flexibleengine_dms_kafka_user":            dms.ResourceDmsKafkaUser(),
+			"flexibleengine_dms_rocketmq_instance":     dms.ResourceDmsRocketMQInstance(),
 			"flexibleengine_dli_database":              dli.ResourceDliSqlDatabaseV1(),
 			"flexibleengine_dli_package":               dli.ResourceDliPackageV2(),
 			"flexibleengine_dli_spark_job":             dli.ResourceDliSparkJobV2(),
