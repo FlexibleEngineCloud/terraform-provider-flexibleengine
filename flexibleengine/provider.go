@@ -21,6 +21,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dli"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/drs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dws"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eip"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
@@ -272,6 +273,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
+			"flexibleengine_dws_flavors":        dws.DataSourceDwsFlavlors(),
 			"flexibleengine_elb_certificate":    elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies":   fgs.DataSourceFunctionGraphDependencies(),
 
