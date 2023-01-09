@@ -30,12 +30,14 @@ func resourceDWSClusterV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 			},
 
 			"availability_zone": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 			},
 
 			"name": {
@@ -88,27 +90,34 @@ func resourceDWSClusterV1() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 			},
 			"public_ip": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"eip_id": {
 							Type:     schema.TypeString,
+							Optional: true,
 							Computed: true,
+							ForceNew: true,
 						},
 
 						"public_bind_type": {
 							Type:     schema.TypeString,
+							Optional: true,
 							Computed: true,
+							ForceNew: true,
 						},
 					},
 				},
 			},
 
+			// attributes
 			"endpoints": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -142,6 +151,14 @@ func resourceDWSClusterV1() *schema.Resource {
 							Computed: true,
 						},
 					},
+				},
+			},
+
+			"private_ip": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 
@@ -201,14 +218,14 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 		Name:             d.Get("name").(string),
 		NumberOfNode:     d.Get("number_of_node").(int),
 		AvailabilityZone: d.Get("availability_zone").(string),
-		SubnetID:         d.Get("subnet_id").(string),
-		UserPwd:          d.Get("user_pwd").(string),
-		SecurityGroupID:  d.Get("security_group_id").(string),
-		PublicIp:         getPublicIP(d),
 		NodeType:         d.Get("node_type").(string),
-		VpcID:            d.Get("vpc_id").(string),
 		UserName:         d.Get("user_name").(string),
+		UserPwd:          d.Get("user_pwd").(string),
+		VpcID:            d.Get("vpc_id").(string),
+		SubnetID:         d.Get("subnet_id").(string),
+		SecurityGroupID:  d.Get("security_group_id").(string),
 		Port:             d.Get("port").(int),
+		PublicIp:         getPublicIP(d),
 	}
 	log.Printf("[DEBUG] Create DWS-Cluster Options: %#v", opts)
 
@@ -240,7 +257,8 @@ func resourceDWSClusterV1Create(d *schema.ResourceData, meta interface{}) error 
 
 func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	client, err := config.DwsV1Client(GetRegion(d, config))
+	region := GetRegion(d, config)
+	client, err := config.DwsV1Client(region)
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine client: %s", err)
 	}
@@ -256,7 +274,7 @@ func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error converting struct to map, err=%s", err)
 	}
 
-	d.Set("region", GetRegion(d, config))
+	d.Set("region", region)
 
 	d.Set("name", r.Name)
 	d.Set("number_of_node", r.NumberOfNode)
@@ -271,11 +289,12 @@ func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("status", r.Status)
 	d.Set("sub_status", r.SubStatus)
 	d.Set("task_status", r.TaskStatus)
-	d.Set("created", r.Created)
-	d.Set("updated", r.Updated)
 	d.Set("endpoints", m["endpoints"])
 	d.Set("public_endpoints", m["public_endpoints"])
 	d.Set("public_ip", []interface{}{m["public_ip"]})
+	d.Set("private_ip", r.PrivateIp)
+	d.Set("created", r.Created)
+	d.Set("updated", r.Updated)
 
 	return nil
 }

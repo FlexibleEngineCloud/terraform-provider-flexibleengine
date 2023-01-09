@@ -75,20 +75,19 @@ The following arguments are supported:
 * `security_group_id` - (Required) ID of a security group. The ID is used for
     configuring cluster network.
 
-* `port` - (Optional) Service port of a cluster (8000 to 10000). The default
-    value is 8000.
+* `port` - (Optional) Service port of a cluster (8000 to 10000). The default value is 8000.
+
+* `availability_zone` - (Optional) AZ in a cluster.
 
 * `public_ip` - (Optional) Public IP address. The object structure is documented below.
 
-* `availability_zone` - (Optional) AZ in a cluster
-
 The `public_ip` block supports:
-
-* `eip_id` - (Optional) EIP ID
 
 * `public_bind_type` - (Optional) Binding type of an EIP. The value can be
     either of the following: *auto_assign*, *not_use* and *bind_existing*.
     The default value is *not_use*.
+
+* `eip_id` - (Optional) EIP ID
 
 ## Attributes Reference
 
@@ -102,6 +101,8 @@ In addition to all arguments above, the following attributes are exported:
 * `public_endpoints` - The public network connection information about the cluster.
     The object structure is documented below.
 
+* `private_ip` - List of private network IP address.
+
 * `status` - Cluster status, which can be one of the following: *CREATING*, *AVAILABLE*, *UNAVAILABLE* and *CREATION FAILED*.
 
 * `sub_status` - Sub-status of clusters in the AVAILABLE state.
@@ -110,11 +111,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `version` - Data warehouse version
 
-* `created` - Cluster creation time. The format is
-    ISO8601:YYYY-MM-DDThh:mm:ssZ.
+* `created` - Cluster creation time. The format is ISO8601:YYYY-MM-DDThh:mm:ssZ.
 
-* `updated` - Last modification time of a cluster. The format is
-    ISO8601:YYYY-MM-DDThh:mm:ssZ.
+* `updated` - Last modification time of a cluster. The format is ISO8601:YYYY-MM-DDThh:mm:ssZ.
 
 The `endpoints` block supports:
 
