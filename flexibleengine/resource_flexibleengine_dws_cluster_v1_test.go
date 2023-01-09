@@ -5,11 +5,14 @@ import (
 	"testing"
 
 	"github.com/chnsz/golangsdk/openstack/dws/v1/cluster"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestDWSClusterBasic(t *testing.T) {
+	rName := fmt.Sprintf("acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_dws_cluster_v1.cluster"
 	var ar cluster.Cluster
 
 	resource.Test(t, resource.TestCase{
@@ -18,9 +21,10 @@ func TestDWSClusterBasic(t *testing.T) {
 		CheckDestroy: testDWSClusterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testDWSClusterBasic,
+				Config: testDWSClusterBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testDWSClusterExists("flexibleengine_dws_cluster_v1.cluster", &ar),
+					testDWSClusterExists(resourceName, &ar),
+					resource.TestCheckResourceAttr(resourceName, "name", "cluster-"+rName),
 				),
 			},
 		},
@@ -78,15 +82,16 @@ func testDWSClusterExists(n string, ar *cluster.Cluster) resource.TestCheckFunc 
 	}
 }
 
-var testDWSClusterBasic = fmt.Sprintf(`
+func testDWSClusterBasic(name string) string {
+	return fmt.Sprintf(`
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
-  name        = "terraform_security_group_test"
+  name        = "sg-%[1]s"
   description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_dws_cluster_v1" "cluster" {
-  name           = "terraform_dws_cluster_test"
-  node_type      = "dws2.m6.4xlarge.8"
+  name           = "cluster-%[1]s"
+  node_type      = "dwsx2.xlarge"
   number_of_node = 3
   user_name      = "test_cluster_admin"
   user_pwd       = "cluster123@!"
@@ -95,4 +100,5 @@ resource "flexibleengine_dws_cluster_v1" "cluster" {
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
   availability_zone = "%s"
 }
-`, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE)
+`, name, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE)
+}
