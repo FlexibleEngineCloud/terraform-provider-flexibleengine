@@ -84,21 +84,25 @@ func testDWSClusterExists(n string, ar *cluster.Cluster) resource.TestCheckFunc 
 
 func testDWSClusterBasic(name string) string {
 	return fmt.Sprintf(`
+data "flexibleengine_dws_flavors" "test" {
+  availability_zone = "%[2]s"
+}
+
 resource "flexibleengine_networking_secgroup_v2" "secgroup" {
   name        = "sg-%[1]s"
   description = "terraform security group acceptance test"
 }
 
 resource "flexibleengine_dws_cluster_v1" "cluster" {
-  name           = "cluster-%[1]s"
-  node_type      = "dwsx2.xlarge"
-  number_of_node = 3
-  user_name      = "test_cluster_admin"
-  user_pwd       = "cluster123@!"
-  vpc_id         = "%s"
-  subnet_id      = "%s"
+  name              = "cluster-%[1]s"
+  availability_zone = "%[2]s"
+  node_type         = data.flexibleengine_dws_flavors.test.flavors[0].flavor_id
+  number_of_node    = 3
+  user_name         = "test_cluster_admin"
+  user_pwd          = "cluster123@!"
+  vpc_id            = "%s"
+  subnet_id         = "%s"
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  availability_zone = "%s"
 }
-`, name, OS_VPC_ID, OS_NETWORK_ID, OS_AVAILABILITY_ZONE)
+`, name, OS_AVAILABILITY_ZONE, OS_VPC_ID, OS_NETWORK_ID)
 }

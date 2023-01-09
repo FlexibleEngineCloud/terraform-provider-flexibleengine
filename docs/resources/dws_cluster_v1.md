@@ -11,6 +11,11 @@ Manages a DWS cluster resource within FlexibleEngine.
 ## Example Usage
 
 ```hcl
+data "flexibleengine_dws_flavors" "flavor" {
+  availability_zone = "eu-west-0a"
+  vcpus             = 8
+}
+
 resource "flexibleengine_vpc_v1" "example_vpc" {
   name = "example-vpc"
   cidr = "192.168.0.0/16"
@@ -30,7 +35,7 @@ resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
 
 resource "flexibleengine_dws_cluster_v1" "cluster" {
   name              = "dws_cluster_test"
-  node_type         = "dws.d1.xlarge"
+  node_type         = data.flexibleengine_dws_flavors.test.flavors[0].flavor_id
   number_of_node    = 3
   user_name         = "cluster_admin"
   user_pwd          = "Cluster123@!"
