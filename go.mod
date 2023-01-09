@@ -4,13 +4,13 @@ go 1.18
 
 require (
 	github.com/aws/aws-sdk-go v1.33.0
-	github.com/chnsz/golangsdk v0.0.0-20221130093852-e04b95c12797
+	github.com/chnsz/golangsdk v0.0.0-20230105120102-6307ec6471fc
 	github.com/hashicorp/errwrap v1.1.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.0
-	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.5
-	github.com/huaweicloud/terraform-provider-huaweicloud v1.43.1-0.20221201115952-e73b6e37c318
+	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.20
+	github.com/huaweicloud/terraform-provider-huaweicloud v1.44.1-0.20230109112217-410af960db66
 	github.com/jen20/awspolicyequivalence v1.1.0
 	github.com/mitchellh/go-homedir v1.1.0
 	gopkg.in/yaml.v2 v2.4.0
