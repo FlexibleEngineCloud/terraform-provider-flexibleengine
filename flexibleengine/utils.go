@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/chnsz/golangsdk"
+	"github.com/hashicorp/go-uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -190,4 +191,12 @@ func HashStrings(strings []string) string {
 	}
 
 	return fmt.Sprintf("%d", schema.HashString(buf.String()))
+}
+
+func IsUUIDFormat(str string) bool {
+	if _, err := uuid.ParseUUID(str); err != nil {
+		log.Printf("[WARN] '%s' is not a valid UUID: %s", str, err)
+		return false
+	}
+	return true
 }
