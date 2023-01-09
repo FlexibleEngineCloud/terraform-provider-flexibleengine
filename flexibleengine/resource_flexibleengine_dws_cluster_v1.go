@@ -258,24 +258,24 @@ func resourceDWSClusterV1Read(d *schema.ResourceData, meta interface{}) error {
 
 	d.Set("region", GetRegion(d, config))
 
-	d.Set("status", r.Status)
-	d.Set("sub_status", r.SubStatus)
-	d.Set("updated", r.Updated)
-	d.Set("endpoints", []interface{}{m["endpoints"]})
 	d.Set("name", r.Name)
 	d.Set("number_of_node", r.NumberOfNode)
 	d.Set("availability_zone", r.AvailabilityZone)
+	d.Set("vpc_id", r.VpcID)
 	d.Set("subnet_id", r.SubnetID)
-	d.Set("public_endpoints", []interface{}{m["public_endpoints"]})
-	d.Set("created", r.Created)
 	d.Set("security_group_id", r.SecurityGroupID)
 	d.Set("port", r.Port)
 	d.Set("node_type", r.NodeType)
 	d.Set("version", r.Version)
-	d.Set("public_ip", []interface{}{m["public_ip"]})
-	d.Set("vpc_id", r.VpcID)
-	d.Set("task_status", r.TaskStatus)
 	d.Set("user_name", r.UserName)
+	d.Set("status", r.Status)
+	d.Set("sub_status", r.SubStatus)
+	d.Set("task_status", r.TaskStatus)
+	d.Set("created", r.Created)
+	d.Set("updated", r.Updated)
+	d.Set("endpoints", m["endpoints"])
+	d.Set("public_endpoints", m["public_endpoints"])
+	d.Set("public_ip", []interface{}{m["public_ip"]})
 
 	return nil
 }
