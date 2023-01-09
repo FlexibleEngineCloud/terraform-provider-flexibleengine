@@ -104,10 +104,12 @@ func resourceDmsKafkaInstances() *schema.Resource {
 				Required: true,
 			},
 			"availability_zones": {
-				Type:     schema.TypeList,
+				// There is an issue with order of elements in Availability Zone list returned by Kafka API
+				Type:     schema.TypeSet,
 				Required: true,
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
+				Set:      schema.HashString,
 			},
 
 			"manager_user": {
@@ -235,6 +237,8 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 	if d.Get("access_user").(string) != "" || d.Get("password").(string) != "" {
 		sslEnable = true
 	}
+	instanceAZs := d.Get("availability_zones").(*schema.Set)
+
 	createOpts := &instances.CreateOps{
 		Engine:           "kafka",
 		EngineVersion:    d.Get("engine_version").(string),
@@ -247,7 +251,7 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 		VPCID:            d.Get("vpc_id").(string),
 		SubnetID:         d.Get("network_id").(string),
 		SecurityGroupID:  d.Get("security_group_id").(string),
-		AvailableZones:   utils.ExpandToStringList(d.Get("availability_zones").([]interface{})),
+		AvailableZones:   utils.ExpandToStringList(instanceAZs.List()),
 		MaintainBegin:    d.Get("maintain_begin").(string),
 		MaintainEnd:      d.Get("maintain_end").(string),
 		AccessUser:       d.Get("access_user").(string),

@@ -106,6 +106,8 @@ data "flexibleengine_dms_product" "product_1" {
   bandwidth = "300MB"
 }
 
+data "flexibleengine_availability_zones" "zones" {}
+
 resource "flexibleengine_vpc_v1" "vpc_1" {
   name = "%s"
   cidr = "192.168.0.0/16"
@@ -137,7 +139,7 @@ resource "flexibleengine_dms_kafka_instance" "instance_1" {
   vpc_id             = flexibleengine_vpc_v1.vpc_1.id
   network_id         = flexibleengine_vpc_subnet_v1.vpc_subnet_1.id
   security_group_id  = flexibleengine_networking_secgroup_v2.secgroup_1.id
-  availability_zones = data.flexibleengine_dms_product.product_1.availability_zones
+  availability_zones = data.flexibleengine_availability_zones.zones.names
   bandwidth          = data.flexibleengine_dms_product.product_1.bandwidth
   product_id         = data.flexibleengine_dms_product.product_1.id
   storage_space      = data.flexibleengine_dms_product.product_1.storage_space
