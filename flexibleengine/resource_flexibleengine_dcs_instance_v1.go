@@ -344,6 +344,11 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 
 	log.Printf("[DEBUG] Dcs instance %s: %+v", d.Id(), v)
 
+	// fix an issue caused by API
+	if !IsUUIDFormat(v.SecurityGroupID) {
+		v.SecurityGroupID = ""
+	}
+
 	d.SetId(v.InstanceID)
 	d.Set("name", v.Name)
 	d.Set("engine", v.Engine)
