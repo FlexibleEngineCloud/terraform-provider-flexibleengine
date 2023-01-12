@@ -44,6 +44,14 @@ The following arguments are supported:
 
 All above argument parameters can be exported as attribute parameters.
 
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `update` - Default is 10 minute.
+* `delete` - Default is 10 minute.
+
 ## Import
 
 Antiddos can be imported using the `floating_ip_id`, e.g.
