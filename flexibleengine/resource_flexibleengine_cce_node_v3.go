@@ -205,6 +205,18 @@ func resourceCCENodeV3() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
+			"ecs_group_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
+			"subnet_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
 			"product_id": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -451,6 +463,12 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 					},
 				},
 			},
+			NodeNicSpec: nodes.NodeNicSpec{
+				PrimaryNic: nodes.PrimaryNic{
+					SubnetId: d.Get("subnet_id").(string),
+				},
+			},
+			EcsGroupID:  d.Get("ecs_group_id").(string),
 			BillingMode: d.Get("billing_mode").(int),
 			Count:       1,
 		},
@@ -541,6 +559,8 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 		d.Set("public_ip", s.Status.PublicIP),
 		d.Set("status", s.Status.Phase),
 		d.Set("server_id", s.Status.ServerID),
+		d.Set("subnet_id", s.Spec.NodeNicSpec.PrimaryNic.SubnetId),
+		d.Set("ecs_group_id", s.Spec.EcsGroupID),
 
 		d.Set("eip_ids", s.Spec.PublicIP.Ids),
 		d.Set("eip_count", s.Spec.PublicIP.Count),

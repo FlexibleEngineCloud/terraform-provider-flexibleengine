@@ -197,6 +197,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   flavor_id         = "s1.medium"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
+  subnet_id         = "%s"
 
   root_volume {
     size       = 40
@@ -210,7 +211,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key = "value"
     foo = "bar"
   }
-}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME)
+}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME, OS_NETWORK_ID)
 }
 
 func testAccCCENodeV3_update(rName string) string {
@@ -223,6 +224,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   flavor_id         = "s1.medium"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
+  subnet_id         = "%s"
 
   root_volume {
     size       = 40
@@ -236,7 +238,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key   = "value1"
     owner = "terraform"
   }
-}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME)
+}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME, OS_NETWORK_ID)
 }
 
 func testAccCCENodeV3_data_volume_encryption(rName string) string {

@@ -79,6 +79,12 @@ The following arguments are supported:
 * `ecs_performance_type` - (Optional) Classification of cloud server specifications.
     Changing this parameter will create a new resource.
 
+* `ecs_group_id` - (Optional) Specifies the ECS group ID. If specified, the node will be created under
+    the cloud server group. Changing this parameter will create a new resource.
+
+* `subnet_id` - (Optional) Specifies the ID of the VPC Subnet to which the NIC belongs.
+    Changing this parameter will create a new resource.
+
 * `product_id` - (Optional) The Product ID. Changing this parameter will create a new resource.
 
 * `max_pods` - (Optional) The maximum number of instances a node is allowed to create.
