@@ -125,16 +125,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 5 minute.
-* `delete` - Default is 3 minute.
+* `create` - Default is 5 minutes.
+* `delete` - Default is 3 minutes.
 
 ## Import
 
-CCE PVC can be imported using the cluster ID, namespace name and `name` separated by a slash, e.g.
+CCE PVC can be imported using the cluster ID, namespace name and PVC ID separated by a slash, e.g.
 
 ```shell
-terraform import flexibleengine_cce_pvc.test <cluster_id>/<namespace_name>/<name>
-terraform import flexibleengine_cce_pvc.test 5c20fdad-7288-11eb-b817-0255ac10158b/default/pvc_name
+terraform import flexibleengine_cce_pvc.test <cluster_id>/<namespace_name>/<id>
+terraform import flexibleengine_cce_pvc.test 5c20fdad-7288-11eb-b817-0255ac10158b/default/fa540f3b-12d9-40e5-8268-04bcfed95a46
 ```
 
 Note that the imported state may not be identical to your resource definition, due to some attributes missing from the
