@@ -71,6 +71,9 @@ The following arguments are supported:
 * `subnet_id` - (Optional, String, ForceNew) The ID of the VPC Subnet to which the NIC belongs.
     Changing this parameter will create a new resource.
 
+* `ecs_group_id` - (Optional, String, ForceNew) Specifies the ECS group ID. If specified, the node will be created under
+  the cloud server group. Changing this parameter will create a new resource.
+
 * `max_pods` - (Optional, Int, ForceNew) The maximum number of instances a node is allowed to create.
     Changing this parameter will create a new resource.
 

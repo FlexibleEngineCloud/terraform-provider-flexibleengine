@@ -244,6 +244,11 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"ecs_group_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 
 			"billing_mode": {
 				Type:     schema.TypeInt,
@@ -327,6 +332,9 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				Priority:              d.Get("priority").(int),
 			},
 			InitialNodeCount: &initialNodeCount,
+			NodeManagement: nodepools.NodeManagementSpec{
+				ServerGroupReference: d.Get("ecs_group_id").(string),
+			},
 		},
 	}
 
@@ -404,6 +412,7 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("priority", s.Spec.Autoscaling.Priority),
 		d.Set("type", s.Spec.Type),
 		d.Set("status", s.Status.Phase),
+		d.Set("ecs_group_id", s.Spec.NodeManagement.ServerGroupReference),
 	)
 	if err := mErr.ErrorOrNil(); err != nil {
 		return err

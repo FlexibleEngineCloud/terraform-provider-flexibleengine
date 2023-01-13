@@ -72,6 +72,34 @@ func TestAccCCENodePool_basic(t *testing.T) {
 	})
 }
 
+func TestAccCCENodePool_serverGroup(t *testing.T) {
+	var nodePool nodepools.NodePool
+
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_node_pool_v3.test"
+	// clusterName here is used to provide the cluster id to fetch cce node pool.
+	clusterName := "flexibleengine_cce_cluster_v3.test"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckCCENodePoolDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCCENodePool_serverGroup(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCENodePoolExists(resourceName, clusterName, &nodePool),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttrPair(resourceName, "ecs_group_id",
+						"flexibleengine_compute_servergroup_v2.test", "id"),
+				),
+			},
+		},
+	})
+}
+
 func nodePoolImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
 	return func(s *terraform.State) (string, error) {
 		rs, ok := s.RootModule().Resources[resourceName]
@@ -267,4 +295,41 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   }
 }
 `, testAccCCENodePool_Base(rName), updateName)
+}
+
+func testAccCCENodePool_serverGroup(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_compute_servergroup_v2" "test" {
+  name     = "%[2]s"
+  policies = ["anti-affinity"]
+}
+
+resource "flexibleengine_cce_node_pool_v3" "test" {
+  cluster_id               = flexibleengine_cce_cluster_v3.test.id
+  name                     = "%[2]s"
+  os                       = "EulerOS 2.5"
+  flavor_id                = "s3.large.2"
+  initial_node_count       = 1
+  availability_zone        = data.flexibleengine_availability_zones.test.names[0]
+  key_pair                 = flexibleengine_compute_keypair_v2.test.name
+  scall_enable             = false
+  min_node_count           = 0
+  max_node_count           = 0
+  scale_down_cooldown_time = 0
+  priority                 = 0
+  type                     = "vm"
+  ecs_group_id             = flexibleengine_compute_servergroup_v2.test.id
+
+  root_volume {
+    size       = 40
+    volumetype = "SSD"
+  }
+  data_volumes {
+    size       = 100
+    volumetype = "SSD"
+  }
+}
+`, testAccCCENodePool_Base(rName), rName)
 }
