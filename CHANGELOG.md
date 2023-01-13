@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## 1.36.0 (January 13, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_identity_acl` [GH-469]
+  - `flexibleengine_sms_server_template` [GH-886]
+  - `flexibleengine_sms_task` [GH-886]
+  - `flexibleengine_dms_rocketmq_instance` [GH-880]
+  - `flexibleengine_dms_rocketmq_consumer_group` [GH-897]
+  - `flexibleengine_dms_rocketmq_topic` [GH-897]
+  - `flexibleengine_dms_rocketmq_user` [GH-897]
+
+* **New Data Source:**
+  - `flexibleengine_sms_source_servers` [GH-886]
+  - `flexibleengine_dws_flavors` [GH-894]
+  - `flexibleengine_dms_rocketmq_instances` [GH-897]
+  - `flexibleengine_dms_rocketmq_broker` [GH-897]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_dws_cluster_v1`: support `public_ip` parameter [GH-891]
+* `resource/flexibleengine_cce_node_pool_v3`: add `ecs_group_id` parameter [GH-899]
+* `resource/flexibleengine_cce_node_v3`: add `subnet_id` and `ecs_group_id` parameters [GH-900]
+
+BUG FIXES:
+
+* `resource/flexibleengine_dms_kafka_instance`: change `availability_zones` to set [GH-895]
+
 ## 1.35.1 (December 19, 2022)
 
 ENHANCEMENTS:
