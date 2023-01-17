@@ -216,7 +216,7 @@ func waitForAntiDdosStatus(antiddosClient *golangsdk.ServiceClient, antiddosId s
 // checkNotConfig checks the error returned from the API
 func checkNotConfig(d *schema.ResourceData, err error, msg string) error {
 
-	if sdkErr, ok := err.(golangsdk.ErrDefault400); ok {
+	if sdkErr, ok := err.(golangsdk.ErrDefault403); ok {
 
 		errResp, parseErr := ParseErrorMsg(sdkErr.Body)
 		if parseErr != nil {
