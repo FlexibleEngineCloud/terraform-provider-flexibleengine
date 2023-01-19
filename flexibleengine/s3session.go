@@ -100,6 +100,12 @@ func newS3Session(c *Config, osDebug bool) (*session.Session, error) {
 
 func getOssEndpoint(c *Config, region string) string {
 	if endpoint, ok := c.Endpoints["oss"]; ok {
+		// replace the region in customizing OSS endpoint
+		subparts := strings.Split(endpoint, ".")
+		if len(subparts) >= 3 && subparts[1] != region {
+			subparts[1] = region
+			return strings.Join(subparts, ".")
+		}
 		return endpoint
 	}
 	return fmt.Sprintf("https://oss.%s.%s/", region, c.Cloud)

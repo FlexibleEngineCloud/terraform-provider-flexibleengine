@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/chnsz/golangsdk"
+	th "github.com/chnsz/golangsdk/testhelper"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
@@ -533,4 +534,28 @@ func TestAccServiceEndpoints_Others(t *testing.T) {
 	expectedURL = fmt.Sprintf("https://rts.%s.%s/v1/%s/", OS_REGION_NAME, config.Cloud, config.TenantID)
 	actualURL = serviceClient.ResourceBaseURL()
 	testCheckServiceURL(t, expectedURL, actualURL, "RTS")
+}
+
+func TestCheckOssEndpoint(t *testing.T) {
+	cfg := &Config{
+		Region: "eu-west-0",
+		Cloud:  "prod-cloud-ocb.orange-business.com",
+	}
+
+	// without customizing OSS endpoint in Config
+	expected := "https://oss.eu-west-1.prod-cloud-ocb.orange-business.com/"
+	th.AssertEquals(t, expected, getOssEndpoint(cfg, "eu-west-1"))
+
+	// with customizing OSS endpoint in Config
+	cfg.Endpoints = map[string]string{
+		"obs": "https://oss.eu-west-0.prod-cloud-ocb.orange-business.com/",
+	}
+
+	// the region is equal to the region in customizing endpoint
+	expected = "https://oss.eu-west-0.prod-cloud-ocb.orange-business.com/"
+	th.AssertEquals(t, expected, getOssEndpoint(cfg, "eu-west-0"))
+
+	// the region is not equal to the region in customizing endpoint
+	expected = "https://oss.eu-west-1.prod-cloud-ocb.orange-business.com/"
+	th.AssertEquals(t, expected, getOssEndpoint(cfg, "eu-west-1"))
 }
