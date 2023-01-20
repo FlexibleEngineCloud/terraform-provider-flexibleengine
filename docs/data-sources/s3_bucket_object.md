@@ -1,5 +1,5 @@
 ---
-subcategory: "Object Storage Service (OSS)"
+subcategory: "Object Storage Service (OBS)"
 ---
 
 
