@@ -3,7 +3,7 @@ module github.com/FlexibleEngineCloud/terraform-provider-flexibleengine
 go 1.18
 
 require (
-	github.com/aws/aws-sdk-go v1.33.0
+	github.com/aws/aws-sdk-go v1.34.0
 	github.com/chnsz/golangsdk v0.0.0-20230105120102-6307ec6471fc
 	github.com/hashicorp/errwrap v1.1.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
