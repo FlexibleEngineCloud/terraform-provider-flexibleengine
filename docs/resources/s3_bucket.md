@@ -1,5 +1,5 @@
 ---
-subcategory: "Object Storage Service (OSS)"
+subcategory: "Object Storage Service (OBS)"
 description: ""
 page_title: "flexibleengine_s3_bucket"
 ---
