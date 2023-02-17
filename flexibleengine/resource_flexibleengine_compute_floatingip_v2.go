@@ -22,6 +22,7 @@ func resourceComputeFloatingIPV2() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		DeprecationMessage: "It will be deprecated, using flexibleengine_vpc_eip instead",
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,
