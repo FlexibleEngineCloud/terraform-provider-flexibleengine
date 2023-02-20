@@ -91,6 +91,30 @@ resource "flexibleengine_obs_bucket" "b" {
 }
 ```
 
+### Using Notification
+
+```hcl
+resource "flexibleengine_obs_bucket" "bucket" {
+  bucket = "obs-notification-test.hashicorp.com"
+  acl    = "public-read"
+
+  topic_configurations {
+    topic_id = "topic id"
+    topic    = "urn:smn:eu-west-0:d8cb0fdcf29b4badb9ed8b2525a3286f:topic"
+    events   = ["ObjectCreated:*"]
+
+    filter_rules {
+      name  = "prefix"
+      value = "tf"
+    }
+    filter_rules {
+      name  = "suffix"
+      value = ".jpg"
+    }
+  }
+}
+```
+
 ### Using object lifecycle
 
 ```hcl
@@ -167,6 +191,7 @@ The following arguments are supported:
 * `logging` - (Optional) A settings of bucket logging (documented below).
 * `website` - (Optional) A website object (documented below).
 * `cors_rule` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
+* `topic_configurations` - (Optional) A notification configuration of the bucket (documented below).
 * `lifecycle_rule` - (Optional) A configuration of object lifecycle management (documented below).
 
 * `force_destroy` - (Optional) A boolean that indicates all objects should be deleted from the bucket so that
@@ -223,6 +248,27 @@ The `cors_rule` object supports the following:
 
 * `max_age_seconds` (Optional) Specifies the duration that your browser can cache CORS responses, expressed in seconds.
   The default value is 100.
+
+The `topic_configurations` object supports the following:
+
+* `topic_id` (Optional) Specifies the notification configuration id.
+  If the user does not specify an ID, the system assigns an ID automatically.
+
+* `topic` (Required) Specifies the SMN topic that authorizes OBS to publish messages.
+
+* `events` (Required) Type of events that need to be notified. The events include `ObjectCreatedAll`, 
+  `ObjectCreatedPut`, `ObjectCreatedPost`, `ObjectCreatedCopy`, `ObjectCreatedCompleteMultipartUpload`,
+  `ObjectRemovedAll`, `ObjectRemovedDelete`, `ObjectRemovedDeleteMarkerCreated`.
+
+* `filter_rules` (Optional) Specifies key-value pairs of filtering rules.
+  The [List Object](#filter_rules_attr) structure is documented below.
+
+<a name="filter_rules_attr"></a>
+The `filter_rules` block supports:
+
+* `Name` - Specifies the prefix or suffix of object names for filtering. Valid values are `prefix` and `suffix`.
+* `Value` - Specifies keywords of object names so that objects can be filtered based on the prefixes or suffixes. 
+The value contains a maximum of 1024 characters.
 
 The `lifecycle_rule` object supports the following:
 

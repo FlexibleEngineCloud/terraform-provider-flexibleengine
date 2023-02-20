@@ -217,7 +217,43 @@ func resourceObsBucket() *schema.Resource {
 					},
 				},
 			},
-
+			"topic_configurations": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"topic_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"topic": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"events": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+						},
+						"filter_rules": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"value": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"force_destroy": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -341,6 +377,11 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 			return err
 		}
 	}
+	if d.HasChange("topic_configurations") {
+		if err := resourceObsBucketNotificationUpdate(obsClient, d); err != nil {
+			return err
+		}
+	}
 
 	return resourceObsBucketRead(d, meta)
 }
@@ -409,6 +450,11 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 
 	// Read the CORS rules
 	if err := setObsBucketCorsRules(obsClient, d); err != nil {
+		return err
+	}
+
+	// Read the notifications
+	if err := setObsBucketTopicConfigurations(obsClient, d); err != nil {
 		return err
 	}
 
@@ -744,6 +790,69 @@ func resourceObsBucketCorsUpdate(obsClient *obs.ObsClient, d *schema.ResourceDat
 		return getObsError("Error setting CORS rules of OBS bucket", bucket, err)
 	}
 	return nil
+}
+
+func resourceObsBucketNotificationUpdate(obsClient *obs.ObsClient, d *schema.ResourceData) error {
+	bucket := d.Get("bucket").(string)
+	topicConfigurations := d.Get("topic_configurations").([]interface{})
+	notificationOpt := obs.SetBucketNotificationInput{}
+	notificationOpt.Bucket = bucket
+
+	// set notification
+	configurations := buildTopicConfiguration(topicConfigurations)
+	notificationOpt.TopicConfigurations = configurations
+	_, err := obsClient.SetBucketNotification(&notificationOpt)
+	if err != nil {
+		return getObsError("Error setting Notification of OBS bucket", bucket, err)
+	}
+	return nil
+}
+
+func buildTopicConfiguration(topicConfigurations []interface{}) []obs.TopicConfiguration {
+	configurations := make([]obs.TopicConfiguration, 0, len(topicConfigurations))
+	for _, topicConfig := range topicConfigurations {
+		topicConfigMap := topicConfig.(map[string]interface{})
+		t := obs.TopicConfiguration{}
+		for k, v := range topicConfigMap {
+			if k == "topic_id" {
+				t.ID = v.(string)
+				continue
+			}
+			if k == "topic" {
+				t.Topic = v.(string)
+				continue
+			}
+			if k == "events" {
+				values := v.([]interface{})
+				events := make([]obs.EventType, 0, len(values))
+				for _, value := range values {
+					events = append(events, obs.EventType(value.(string)))
+				}
+				t.Events = events
+				continue
+			}
+			if k == "filter_rules" {
+				values := v.([]interface{})
+				filterRules := make([]obs.FilterRule, 0, len(values))
+				for _, value := range values {
+					ruleMap := value.(map[string]interface{})
+					filterRule := obs.FilterRule{}
+					for fk, fv := range ruleMap {
+						if fk == "name" {
+							filterRule.Name = fv.(string)
+						}
+						if fk == "value" {
+							filterRule.Value = fv.(string)
+						}
+					}
+					filterRules = append(filterRules, filterRule)
+				}
+				t.FilterRules = filterRules
+			}
+		}
+		configurations = append(configurations, t)
+	}
+	return configurations
 }
 
 func resourceObsBucketWebsitePut(obsClient *obs.ObsClient, d *schema.ResourceData, website map[string]interface{}) error {
@@ -1125,6 +1234,51 @@ func setObsBucketCorsRules(obsClient *obs.ObsClient, d *schema.ResourceData) err
 	log.Printf("[DEBUG] saving CORS rules of OBS bucket: %s, CORS: %#v", bucket, rules)
 	if err := d.Set("cors_rule", rules); err != nil {
 		return fmt.Errorf("Error saving CORS rules of OBS bucket %s: %s", bucket, err)
+	}
+
+	return nil
+}
+
+func setObsBucketTopicConfigurations(obsClient *obs.ObsClient, d *schema.ResourceData) error {
+	bucket := d.Id()
+	output, err := obsClient.GetBucketNotification(bucket)
+	if err != nil {
+		return err
+	}
+
+	topicConfigurations := output.TopicConfigurations
+	topicConfig := make([]map[string]interface{}, 0, len(topicConfigurations))
+	for _, config := range topicConfigurations {
+		configMap := make(map[string]interface{})
+		if config.ID != "" {
+			configMap["topic_id"] = config.ID
+		}
+		if config.Topic != "" {
+			configMap["topic"] = config.Topic
+		}
+		if len(config.Events) > 0 {
+			events := make([]string, 0, len(config.Events))
+			for _, v := range config.Events {
+				events = append(events, string(v))
+			}
+			configMap["events"] = events
+		}
+		if len(config.FilterRules) > 0 {
+			filterRules := make([]map[string]interface{}, 0, len(config.FilterRules))
+			for _, v := range config.FilterRules {
+				filterRule := make(map[string]interface{})
+				filterRule["name"] = v.Name
+				filterRule["value"] = v.Value
+				filterRules = append(filterRules, filterRule)
+			}
+			configMap["filter_rules"] = filterRules
+		}
+		topicConfig = append(topicConfig, configMap)
+	}
+
+	log.Printf("[DEBUG] saving notification of OBS bucket: %s, configuration: %#v", bucket, topicConfig)
+	if err := d.Set("topic_configurations", topicConfig); err != nil {
+		return fmt.Errorf("error saving notification of OBS bucket %s: %s", bucket, err)
 	}
 
 	return nil

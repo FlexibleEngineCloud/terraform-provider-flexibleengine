@@ -2,6 +2,7 @@ package flexibleengine
 
 import (
 	"fmt"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/fmtp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -240,6 +241,55 @@ func TestAccObsBucket_cors(t *testing.T) {
 	})
 }
 
+func TestAccObsBucket_notification(t *testing.T) {
+	rInt := acctest.RandInt()
+	resourceName := "flexibleengine_obs_bucket.bucket"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheckS3(t)
+			testAccPreCheckOBSNotification(t)
+		},
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckObsBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccObsBucketConfigWithNotification(rInt, OS_OBS_URN_SMN),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckObsBucketExists(resourceName),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.0.topic_id", "001"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.0.topic", OS_OBS_URN_SMN),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.0.events.0", "ObjectCreated:*"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.0.filter_rules.0.name", "prefix"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.0.filter_rules.0.value", "tf"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.1.topic_id", "002"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.1.topic", OS_OBS_URN_SMN),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.1.events.0", "ObjectCreated:Put"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.1.filter_rules.0.name", "prefix"),
+					resource.TestCheckResourceAttr(
+						resourceName, "topic_configurations.1.filter_rules.0.value", "demo"),
+				),
+			},
+			{
+				Config: testAccObsBucketConfigWithNotificationDelete(rInt),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckObsBucketExists(resourceName),
+					testAccCheckObsBucketNotificationDelete(resourceName),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckObsBucketDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 	obsClient, err := config.ObjectStorageClient(OS_REGION_NAME)
@@ -312,6 +362,34 @@ func testAccCheckObsBucketLogging(name, target, prefix string) resource.TestChec
 				name, output.TargetPrefix, prefix)
 		}
 
+		return nil
+	}
+}
+
+func testAccCheckObsBucketNotificationDelete(name string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[name]
+		if !ok {
+			return fmt.Errorf("not found: %s", name)
+		}
+
+		conf := testAccProvider.Meta().(*Config)
+		obsClient, err := conf.ObjectStorageClient(OS_REGION_NAME)
+		if err != nil {
+			return fmt.Errorf("error creating FlexibleEngine OBS client: %s", err)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmtp.Errorf("No ID is set. ")
+		}
+
+		notifications, err := obsClient.GetBucketNotification(rs.Primary.ID)
+		if err != nil {
+			return fmt.Errorf("error getting notification of OBS bucket: %s, err: %s", rs.Primary.ID, err)
+		}
+		if len(notifications.TopicConfigurations) > 0 {
+			return fmt.Errorf("error deleteing notification of OBS bucket: %s, err: %s", rs.Primary.ID, err)
+		}
 		return nil
 	}
 }
@@ -502,6 +580,58 @@ resource "flexibleengine_obs_bucket" "bucket" {
     expose_headers  = ["x-amz-server-side-encryption","ETag"]
     max_age_seconds = 3000
   }
+}
+`, randInt)
+}
+
+func testAccObsBucketConfigWithNotification(randInt int, urnSmn string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_obs_bucket" "bucket" {
+  bucket = "tf-test-bucket-%d"
+  acl = "public-read"
+
+  topic_configurations {
+    topic_id = "001"
+    topic    = "%s"
+    events   = ["ObjectCreated:*"]
+
+	filter_rules {
+      name  = "prefix"
+      value = "tf"
+	}
+
+	filter_rules {
+      name  = "suffix"
+      value = ".jpg"
+	}
+  }
+
+  topic_configurations {
+    topic_id = "002"
+    topic    = "%s"
+    events   = ["ObjectCreated:Put"]
+
+	filter_rules {
+      name  = "prefix"
+      value = "demo"
+	}
+
+	filter_rules {
+      name  = "suffix"
+      value = ".png"
+	}
+  }
+
+}
+`, randInt, urnSmn, urnSmn)
+}
+
+func testAccObsBucketConfigWithNotificationDelete(randInt int) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_obs_bucket" "bucket" {
+  bucket = "tf-test-bucket-%d"
+  acl = "public-read"
+  
 }
 `, randInt)
 }
