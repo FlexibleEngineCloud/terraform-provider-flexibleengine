@@ -367,6 +367,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_obs_bucket":                         resourceObsBucket(),
 			"flexibleengine_obs_bucket_object":                  resourceObsBucketObject(),
 			"flexibleengine_obs_bucket_replication":             resourceObsBucketReplication(),
+			"flexibleengine_obs_bucket_notifications":           resourceObsBucketNotifications(),
 			"flexibleengine_as_group_v1":                        resourceASGroup(),
 			"flexibleengine_as_configuration_v1":                resourceASConfiguration(),
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
