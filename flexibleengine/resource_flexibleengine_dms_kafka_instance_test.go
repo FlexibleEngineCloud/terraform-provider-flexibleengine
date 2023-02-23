@@ -33,6 +33,8 @@ func TestAccDmsKafkaInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "product_spec_code"),
 					resource.TestCheckResourceAttrSet(resourceName, "manegement_connect_address"),
 					resource.TestCheckResourceAttrSet(resourceName, "port"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 				),
 			},
 			{
@@ -47,7 +49,7 @@ func TestAccDmsKafkaInstance_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
-					"access_user", "password", "manager_user", "manager_password",
+					"access_user", "password", "manager_user", "manager_password", "tags",
 				},
 			},
 		},
@@ -144,6 +146,11 @@ resource "flexibleengine_dms_kafka_instance" "instance_1" {
   product_id         = data.flexibleengine_dms_product.product_1.id
   storage_space      = data.flexibleengine_dms_product.product_1.storage_space
   engine_version     = data.flexibleengine_dms_product.product_1.engine_version
+
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
 }`, testAccDmsKafkaInstance_base(resName), resName)
 }
 
@@ -166,5 +173,10 @@ resource "flexibleengine_dms_kafka_instance" "instance_1" {
   product_id         = data.flexibleengine_dms_product.product_1.id
   storage_space      = data.flexibleengine_dms_product.product_1.storage_space
   engine_version     = data.flexibleengine_dms_product.product_1.engine_version
-  }`, testAccDmsKafkaInstance_base(resName), resUpdate)
+
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
+}`, testAccDmsKafkaInstance_base(resName), resUpdate)
 }
