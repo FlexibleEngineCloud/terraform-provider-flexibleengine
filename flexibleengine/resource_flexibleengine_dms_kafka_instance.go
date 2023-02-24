@@ -14,6 +14,7 @@ import (
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/dms/v1/instances"
 	dmsv2 "github.com/chnsz/golangsdk/openstack/dms/v2/kafka/instances"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/common"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -155,6 +156,7 @@ func resourceDmsKafkaInstances() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"tags": common.TagsForceNewSchema(),
 
 			"status": {
 				Type:     schema.TypeString,
@@ -258,6 +260,11 @@ func resourceDmsKafkaInstancesCreate(d *schema.ResourceData, meta interface{}) e
 		KafkaManagerUser: d.Get("manager_user").(string),
 		SslEnable:        sslEnable,
 		EnableAutoTopic:  d.Get("enable_auto_topic").(bool),
+	}
+
+	// set tags
+	if tagRaw := d.Get("tags").(map[string]interface{}); len(tagRaw) > 0 {
+		createOpts.Tags = utils.ExpandResourceTags(tagRaw)
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)

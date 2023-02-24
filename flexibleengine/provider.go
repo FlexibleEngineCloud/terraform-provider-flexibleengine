@@ -277,7 +277,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
 
-			"flexibleengine_dws_flavors":      dws.DataSourceDwsFlavlors(),
+			"flexibleengine_dws_flavors":      dws.DataSourceDwsFlavors(),
 			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 

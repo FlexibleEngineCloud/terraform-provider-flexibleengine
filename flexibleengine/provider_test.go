@@ -77,22 +77,6 @@ func testAccPreCheckRequiredEnvVars(t *testing.T) {
 	if OS_REGION_NAME == "" {
 		t.Fatal("OS_REGION_NAME must be set for acceptance tests")
 	}
-
-	if OS_AVAILABILITY_ZONE == "" {
-		t.Fatal("OS_AVAILABILITY_ZONE must be set for acceptance tests")
-	}
-
-	if OS_IMAGE_ID == "" && OS_IMAGE_NAME == "" {
-		t.Fatal("OS_IMAGE_ID or OS_IMAGE_NAME must be set for acceptance tests")
-	}
-
-	if OS_FLAVOR_ID == "" && OS_FLAVOR_NAME == "" {
-		t.Fatal("OS_FLAVOR_ID or OS_FLAVOR_NAME must be set for acceptance tests")
-	}
-
-	if OS_NETWORK_ID == "" {
-		t.Fatal("OS_NETWORK_ID must be set for acceptance tests")
-	}
 }
 
 func testAccPreCheck(t *testing.T) {
