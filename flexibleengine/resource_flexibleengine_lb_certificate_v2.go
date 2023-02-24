@@ -23,6 +23,7 @@ func resourceCertificateV2() *schema.Resource {
 			Update: schema.DefaultTimeout(10 * time.Minute),
 			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
+		DeprecationMessage: "It has been deprecated, using flexibleengine_elb_certificate instead",
 
 		Schema: map[string]*schema.Schema{
 			"region": {

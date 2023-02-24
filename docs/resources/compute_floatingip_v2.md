@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Cloud Server (ECS)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_compute_floatingip_v2"
 ---
