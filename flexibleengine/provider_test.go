@@ -34,6 +34,7 @@ var (
 	OS_DELEGATED_DOMAIN_NAME  = os.Getenv("OS_DELEGATED_DOMAIN_NAME")
 	OS_DESTINATION_BUCKET     = os.Getenv("OS_DESTINATION_BUCKET")
 	OS_FGS_BUCKET             = os.Getenv("OS_FGS_BUCKET")
+	OS_OBS_URN_SMN            = os.Getenv("OS_OBS_URN_SMN")
 	OS_TENANT_NAME            = getTenantName()
 )
 
@@ -136,6 +137,12 @@ func testAccPreCheckS3(t *testing.T) {
 
 	if OS_ACCESS_KEY == "" || OS_SECRET_KEY == "" {
 		t.Skip("OS_ACCESS_KEY and OS_SECRET_KEY must be set for OBS/S3 acceptance tests")
+	}
+}
+
+func testAccPreCheckOBSNotification(t *testing.T) {
+	if OS_OBS_URN_SMN == "" {
+		t.Skip("OS_OBS_URN_SMN must be set for OBS notification acceptance tests")
 	}
 }
 
