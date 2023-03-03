@@ -26,8 +26,8 @@ github.com/aws/aws-sdk-go v1.34.0 h1:brux2dRrlwCF5JhTL7MUT3WUwo9zfDHZZp3+g3Mvlmo
 github.com/aws/aws-sdk-go v1.34.0/go.mod h1:5zCpMtNQVjRREroY7sYe8lOMRSxkhG6MZveU8YkpAk0=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/chnsz/golangsdk v0.0.0-20230223093116-95ca65313a4d h1:peedtA9E3upJPjT1axzVvsoqPeHFtH+08cxHojFhAbc=
-github.com/chnsz/golangsdk v0.0.0-20230223093116-95ca65313a4d/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
+github.com/chnsz/golangsdk v0.0.0-20230302033842-efa70a163e26 h1:JZAcwKJ45fxlt+QLC3AuWbs3LqcJBvC7dHOzBuEwe/M=
+github.com/chnsz/golangsdk v0.0.0-20230302033842-efa70a163e26/go.mod h1:j6UR2TfACtmWBEvYrQqTpk5wy3b2QsEdiLkjMoM47j8=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
@@ -142,8 +142,8 @@ github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d h1:kJCB4vdITiW1eC1
 github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
 github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.20 h1:Pyz8ZjJEAel4axFfL3bvPJ0nXg2IAMW2ksZbepyM7KE=
 github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.20/go.mod h1:QpZ96CRqyqd5fEODVmnzDNp3IWi5W95BFmWz1nfkq+s=
-github.com/huaweicloud/terraform-provider-huaweicloud v1.44.2 h1:Q9yD3crErhTbH9g3cgubOI3uXt3g1Ei8QBffQtpMZtE=
-github.com/huaweicloud/terraform-provider-huaweicloud v1.44.2/go.mod h1:K3AXjAqPXmQKRbwVBMP/oLOJZXOclJjoJpiiL+mlTI8=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.45.0 h1:Vq0PzfUrTpVky2pfJMiCfPlybxN9jRE1+dqTZd+EVXc=
+github.com/huaweicloud/terraform-provider-huaweicloud v1.45.0/go.mod h1:lhc0o6i+NTEC5TEe5JNX8AI9EowBjtj18yNdr2z9sg4=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
