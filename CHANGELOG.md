@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 1.36.1 (March 3, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_obs_bucket_notifications` [GH-922]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_dms_kafka_instance`: Add tags support [GH-925]
+
+BUG FIXES:
+
+* `resource/flexibleengine_dds_database_role`: Fix import issue when the role does not exist [GH-885]
+* `resource/flexibleengine_dms_rocketmq_instance`: Fix ForceNew issue caused by the order of `availability_zones` [GH-906]
+* `resource/flexibleengine_dms_rocketmq_user`: Fix import issue when the user does not exist [GH-907]
+
 ## 1.36.0 (January 13, 2023)
 
 FEATURES:
