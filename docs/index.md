@@ -115,7 +115,8 @@ The following arguments are supported:
   combination, since the token was already created by a username/password out of
   band of Terraform. If omitted, the `OS_AUTH_TOKEN` environment variable is used.
 
-* `security_token` - (Optional) Security token to use for OBS federated authentication.
+* `security_token` - (Optional) The security token to authenticate with a temporary security credential.
+  If omitted, the `OS_SECURITY_TOKEN` environment variable is used.
 
 * `auth_url` - (Optional) The Identity authentication URL.
    If omitted, the `OS_AUTH_URL` environment variable is used.
