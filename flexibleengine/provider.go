@@ -274,6 +274,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 
+			"flexibleengine_dms_kafka_instances":    dms.DataSourceDmsKafkaInstances(),
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
 
