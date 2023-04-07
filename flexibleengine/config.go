@@ -215,6 +215,11 @@ func buildClientByAKSK(c *Config) error {
 		ao.IdentityEndpoint = c.IdentityEndpoint
 		ao.AccessKey = c.AccessKey
 		ao.SecretKey = c.SecretKey
+
+		if c.SecurityToken != "" {
+			ao.SecurityToken = c.SecurityToken
+			ao.WithUserCatalog = true
+		}
 	}
 	return genClients(c, pao, dao)
 }

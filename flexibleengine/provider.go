@@ -559,7 +559,7 @@ func init() {
 
 		"token": "Authentication token to use as an alternative to username/password.",
 
-		"security_token": "Security token to use for OBS federated authentication.",
+		"security_token": "The security token to authenticate with a temporary security credential.",
 
 		"domain_id": "The ID of the Domain to scope to (Identity v3).",
 
