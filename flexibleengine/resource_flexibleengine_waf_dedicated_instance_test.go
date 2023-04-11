@@ -1,4 +1,4 @@
-package acceptance
+package flexibleengine
 
 import (
 	"fmt"
@@ -11,13 +11,12 @@ import (
 
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils/fmtp"
 )
 
 func getWafDedicatedInstanceFunc(c *config.Config, state *terraform.ResourceState) (interface{}, error) {
 	client, err := c.WafDedicatedV1Client(OS_REGION_NAME)
 	if err != nil {
-		return nil, fmtp.Errorf("error creating Flexibleengine WAF dedicated client : %s", err)
+		return nil, fmt.Errorf("error creating Flexibleengine WAF dedicated client : %s", err)
 	}
 	return instances.GetInstance(client, state.Primary.ID)
 }

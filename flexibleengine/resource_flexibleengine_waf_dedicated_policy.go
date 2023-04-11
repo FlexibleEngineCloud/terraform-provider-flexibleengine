@@ -273,7 +273,7 @@ func resourceWafDedicatedPolicyV1Delete(d *schema.ResourceData, meta interface{}
 
 	err = policies.Delete(wafClient, d.Id()).ExtractErr()
 	if err != nil {
-		return fmt.Errorf("error deleting WAF Policy: %s", err)
+		return common.CheckDeleted(d, err, "error deleting WAF Policy")
 	}
 
 	d.SetId("")
