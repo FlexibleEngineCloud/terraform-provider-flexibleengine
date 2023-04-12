@@ -19,7 +19,7 @@ resource "flexibleengine_vpc_v1" "example_vpc" {
   cidr = "192.168.0.0/16"
 }
 
-resource "flexibleengine_waf_certificate" "certificate_1" {
+resource "flexibleengine_waf_dedicated_certificate" "certificate_1" {
   name        = "cert_1"
   certificate = <<EOT
 -----BEGIN CERTIFICATE-----
@@ -43,7 +43,7 @@ EOT
 
 resource "flexibleengine_waf_dedicated_domain" "domain_1" {
   domain         = "www.example.com"
-  certificate_id = flexibleengine_waf_certificate.certificate_1.id
+  certificate_id = flexibleengine_waf_dedicated_certificate.certificate_1.id
 
   server {
     client_protocol = "HTTPS"
@@ -72,8 +72,8 @@ The following arguments are supported:
 * `certificate_id` - (Optional, String) Specifies the certificate ID. This parameter is mandatory when `client_protocol`
   is set to HTTPS.
 
-* `policy_id` - (Optional, String) Specifies the policy ID associated with the domain. If not specified, a new policy
-  will be created automatically.
+* `policy_id` - (Optional, String, ForceNew) Specifies the policy ID associated with the domain. If not specified,
+  a new policy will be created automatically. Changing this creates a new domain.
 
 * `proxy` - (Optional, Bool) Specifies whether a proxy is configured. Default value is `false`.
 

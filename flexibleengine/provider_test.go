@@ -35,6 +35,7 @@ var (
 	OS_DESTINATION_BUCKET     = os.Getenv("OS_DESTINATION_BUCKET")
 	OS_FGS_BUCKET             = os.Getenv("OS_FGS_BUCKET")
 	OS_OBS_URN_SMN            = os.Getenv("OS_OBS_URN_SMN")
+	OS_WAF_ENABLE_FLAG        = os.Getenv("OS_WAF_ENABLE_FLAG")
 	OS_TENANT_NAME            = getTenantName()
 )
 
@@ -341,5 +342,11 @@ func testAccIdentityV3AgencyPreCheck(t *testing.T) {
 	testAccPreCheckRequiredEnvVars(t)
 	if OS_TENANT_NAME == "" {
 		t.Skip("OS_TENANT_NAME must be set for acceptance tests")
+	}
+}
+
+func testAccPrecheckWafInstance(t *testing.T) {
+	if OS_WAF_ENABLE_FLAG == "" {
+		t.Skip("Jump the WAF acceptance tests.")
 	}
 }

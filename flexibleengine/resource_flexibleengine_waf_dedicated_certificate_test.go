@@ -100,6 +100,7 @@ func testAccCheckWafDedicatedCertificateV1Exists(n string, certificate *certific
 
 func testAccWafDedicatedCertificateV1_conf(name string) string {
 	return fmt.Sprintf(`
+%s
 
 resource "flexibleengine_waf_dedicated_certificate" "certificate_1" {
   name = "%s"
@@ -158,6 +159,11 @@ x7N2mFK4skBzVtMVbjAHVjG78UitVu+FrzqGreaJXHaduhgUH2iFWfw09joOotAM
 X7ioLbTeWGBqFM+C80PkdBNp
 -----END PRIVATE KEY-----
 EOT
+
+  depends_on = [
+    flexibleengine_waf_dedicated_instance.instance_1
+  ]
+
 }
-`, name)
+`, testAccWafDedicatedInstanceV1_conf(name), name)
 }

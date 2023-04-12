@@ -490,7 +490,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_dedicated_instance":    ResourceWafDedicatedInstance(),
 			"flexibleengine_waf_dedicated_policy":      ResourceWafDedicatedPolicyV1(),
 			"flexibleengine_waf_dedicated_certificate": ResourceWafDedicatedCertificateV1(),
-			"flexibleengine_waf_dedicated_domain":      waf.ResourceWafDedicatedDomainV1(),
+			"flexibleengine_waf_dedicated_domain":      ResourceWafDedicatedDomainV1(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
