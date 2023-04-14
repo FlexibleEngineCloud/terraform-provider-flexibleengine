@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 1.37.0 (April 14, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_gaussdb_cassandra_instance` [GH-934]
+  - `flexibleengine_gaussdb_influx_instance` [GH-934]
+
+* **New Data Source:**
+  - `flexibleengine_dms_kafka_instances` [GH-932]
+  - `flexibleengine_gaussdb_cassandra_instances` [GH-934]
+  - `flexibleengine_gaussdb_nosql_flavors` [GH-934]
+
+ENHANCEMENTS:
+
+* `provider`: Add security_token support [GH-931]
+
+BUG FIXES:
+
+* `resource/flexibleengine_waf_dedicated_domain`: Fix the issue that certificate can't be used in dedicated domain [GH-933]
+
 ## 1.36.1 (March 3, 2023)
 
 FEATURES:
