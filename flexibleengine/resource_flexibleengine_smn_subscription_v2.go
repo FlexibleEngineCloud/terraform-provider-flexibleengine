@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
+	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/smn/v2/subscriptions"
 )
 
@@ -115,27 +116,31 @@ func resourceSubscriptionRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine smn client: %s", err)
 	}
 
-	log.Printf("[DEBUG] Getting subscription %s", d.Id())
-
-	id := d.Id()
 	subscriptionslist, err := subscriptions.List(client).Extract()
 	if err != nil {
-		return fmt.Errorf("Error Get subscriptionslist: %s", err)
+		return fmt.Errorf("error fetching the list of subscriptions: %s", err)
 	}
-	log.Printf("[DEBUG] list : subscriptionslist %#v", subscriptionslist)
-	for _, subscription := range subscriptionslist {
-		if subscription.SubscriptionUrn == id {
-			log.Printf("[DEBUG] subscription: %#v", subscription)
-			d.Set("topic_urn", subscription.TopicUrn)
-			d.Set("endpoint", subscription.Endpoint)
-			d.Set("protocol", subscription.Protocol)
-			d.Set("subscription_urn", subscription.SubscriptionUrn)
-			d.Set("owner", subscription.Owner)
-			d.Set("remark", subscription.Remark)
-			d.Set("status", subscription.Status)
+
+	var targetSubscription *subscriptions.SubscriptionGet
+	id := d.Id()
+	for i := range subscriptionslist {
+		if subscriptionslist[i].SubscriptionUrn == id {
+			targetSubscription = &subscriptionslist[i]
+			break
 		}
 	}
 
-	log.Printf("[DEBUG] Successfully get subscription %s", id)
+	if targetSubscription == nil {
+		return CheckDeleted(d, golangsdk.ErrDefault404{}, "subscription")
+	}
+
+	log.Printf("[DEBUG] fetching subscription: %#v", targetSubscription)
+	d.Set("topic_urn", targetSubscription.TopicUrn)
+	d.Set("endpoint", targetSubscription.Endpoint)
+	d.Set("protocol", targetSubscription.Protocol)
+	d.Set("subscription_urn", targetSubscription.SubscriptionUrn)
+	d.Set("owner", targetSubscription.Owner)
+	d.Set("remark", targetSubscription.Remark)
+	d.Set("status", targetSubscription.Status)
 	return nil
 }
