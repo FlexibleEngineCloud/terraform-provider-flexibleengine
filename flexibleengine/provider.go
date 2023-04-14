@@ -26,6 +26,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/fgs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/gaussdb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/lb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/modelarts"
@@ -282,6 +283,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
+			"flexibleengine_gaussdb_cassandra_instances": gaussdb.DataSourceGeminiDBInstances(),
+			"flexibleengine_gaussdb_nosql_flavors":       gaussdb.DataSourceGaussDBNoSQLFlavors(),
+
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
 			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
 			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
@@ -461,15 +465,19 @@ func Provider() *schema.Provider {
 			"flexibleengine_dms_rocketmq_topic":          dms.ResourceDmsRocketMQTopic(),
 			"flexibleengine_dms_rocketmq_user":           dms.ResourceDmsRocketMQUser(),
 
-			"flexibleengine_dli_database":           dli.ResourceDliSqlDatabaseV1(),
-			"flexibleengine_dli_package":            dli.ResourceDliPackageV2(),
-			"flexibleengine_dli_spark_job":          dli.ResourceDliSparkJobV2(),
-			"flexibleengine_dli_table":              dli.ResourceDliTable(),
-			"flexibleengine_dli_flinksql_job":       dli.ResourceFlinkSqlJob(),
-			"flexibleengine_drs_job":                drs.ResourceDrsJob(),
-			"flexibleengine_fgs_dependency":         fgs.ResourceFgsDependency(),
-			"flexibleengine_fgs_function":           fgs.ResourceFgsFunctionV2(),
-			"flexibleengine_fgs_trigger":            fgs.ResourceFunctionGraphTrigger(),
+			"flexibleengine_dli_database":     dli.ResourceDliSqlDatabaseV1(),
+			"flexibleengine_dli_package":      dli.ResourceDliPackageV2(),
+			"flexibleengine_dli_spark_job":    dli.ResourceDliSparkJobV2(),
+			"flexibleengine_dli_table":        dli.ResourceDliTable(),
+			"flexibleengine_dli_flinksql_job": dli.ResourceFlinkSqlJob(),
+			"flexibleengine_drs_job":          drs.ResourceDrsJob(),
+			"flexibleengine_fgs_dependency":   fgs.ResourceFgsDependency(),
+			"flexibleengine_fgs_function":     fgs.ResourceFgsFunctionV2(),
+			"flexibleengine_fgs_trigger":      fgs.ResourceFunctionGraphTrigger(),
+
+			"flexibleengine_gaussdb_cassandra_instance": gaussdb.ResourceGeminiDBInstanceV3(),
+			"flexibleengine_gaussdb_influx_instance":    gaussdb.ResourceGaussDBInfluxInstanceV3(),
+
 			"flexibleengine_identity_acl":           iam.ResourceIdentityACL(),
 			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
