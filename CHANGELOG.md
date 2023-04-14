@@ -20,6 +20,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * `resource/flexibleengine_waf_dedicated_domain`: Fix the issue that certificate can't be used in dedicated domain [GH-933]
+* `resource/flexibleengine_smn_subscription_v2`: Delete the resource if it does not exist [GH-936]
 
 ## 1.36.1 (March 3, 2023)
 
