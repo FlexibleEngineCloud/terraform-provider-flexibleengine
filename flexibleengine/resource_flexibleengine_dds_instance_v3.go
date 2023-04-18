@@ -3,6 +3,7 @@ package flexibleengine
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -21,6 +22,9 @@ func resourceDdsInstanceV3() *schema.Resource {
 		Read:   resourceDdsInstanceV3Read,
 		Update: resourceDdsInstanceV3Update,
 		Delete: resourceDdsInstanceV3Delete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
@@ -98,6 +102,13 @@ func resourceDdsInstanceV3() *schema.Resource {
 				Sensitive: true,
 				Required:  true,
 				ForceNew:  true,
+				ValidateFunc: validation.All(
+					validation.StringMatch(regexp.MustCompile(`[A-Z]`), "The password must contain at least one uppercase letter."),
+					validation.StringMatch(regexp.MustCompile(`[a-z]`), "The password must contain at least one lowercase letter."),
+					validation.StringMatch(regexp.MustCompile(`[0-9]`), "The password must contain at least one digit."),
+					validation.StringMatch(regexp.MustCompile(`[~!@#%^*-_=+?]`), "The password must contain at least one special character ( ~!@#%^*-_=+? )."),
+					validation.StringLenBetween(8, 32),
+				),
 			},
 			"disk_encryption_id": {
 				Type:      schema.TypeString,
