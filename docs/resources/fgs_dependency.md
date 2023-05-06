@@ -49,9 +49,9 @@ resource "flexibleengine_fgs_dependency" "test" {
   Only letters, digits, underscores (_), periods (.), and hyphens (-) are allowed.
 
 * `link` - (Required, String) Specifies the OBS bucket path where the dependency package is located. The OBS object URL
-  must be in zip format, such as 'https://obs-terraform.oss.eu-west-0.prod-cloud-ocb.orange-business.com/dependencies/sdkcore.zip'.
+  must be in zip format, such as `https://obs-terraform.oss.eu-west-0.prod-cloud-ocb.orange-business.com/dependencies/sdkcore.zip`.
 
--> A link can only be used to create at most one dependency package.
+  -> A link can only be used to create at most one dependency package.
 
 * `description` - (Optional, String) Specifies the dependency description.
   The description can contain a maximum of 512 characters.

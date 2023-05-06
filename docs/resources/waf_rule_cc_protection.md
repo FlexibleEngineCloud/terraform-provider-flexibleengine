@@ -52,7 +52,7 @@ The following arguments are supported:
 
 * `cookie` - (Optional, String) Specifies the cookie name. This field is mandatory when `mode` is set to *cookie*.
 
-* `content` - (Optional, String) Specifies the category content. The format is as follows: "http://www.example.com/path".
+* `content` - (Optional, String) Specifies the category content. The format is as follows: `http://www.example.com/path`.
   This field is mandatory when `mode` is set to *other*.
 
 * `action` - (Required, String) Specifies the action when the number of requests reaches the upper limit. Valid Options are:
