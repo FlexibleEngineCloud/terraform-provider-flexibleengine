@@ -52,7 +52,7 @@ resource "flexibleengine_waf_domain" "domain_1" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String, ForceNew) Specifies the domain name to be protected. For example, www.example.com or *.example.com.
+* `domain` - (Required, String, ForceNew) Specifies the domain name to be protected. For example, `www.example.com` or `*.example.com`.
   Changing this creates a new domain.
 
 * `server` - (Required, List) Specifies an array of origin web servers. The object structure is documented below.
@@ -86,7 +86,7 @@ The `server` block supports:
   The options are *HTTP* and *HTTPS*.
 
 * `address` - (Required, String) IP address or domain name of the web server that the client accesses.
-  For example, 192.168.1.1 or www.a.com.
+  For example, `192.168.1.1` or `www.a.com`.
 
 * `port` - (Required, Int) Port number used by the web server. The value ranges from 0 to 65535, for example, 8080.
 
