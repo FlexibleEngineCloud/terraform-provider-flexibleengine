@@ -147,9 +147,10 @@ The `datastore` block supports:
 
 * `type` - (Required) Specifies the DB engine. Only DDS-Community is supported now.
 
-* `version` - (Required) Specifies the DB instance version. Only 3.4 and 4.0 are supported now.
+* `version` - (Required) Specifies the DB instance version. The valid values are 3.4, 4.0 and 4.2.
 
-* `storage_engine` - (Optional) Specifies the storage engine of the DB instance. Only wiredTiger is supported now.
+* `storage_engine` - (Optional) Specifies the storage engine of the DB instance. The valid values are
+  `wiredTiger` and `rocksDB`.
 
 The `flavor` block supports:
 

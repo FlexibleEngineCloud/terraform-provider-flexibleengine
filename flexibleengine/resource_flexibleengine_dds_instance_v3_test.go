@@ -116,7 +116,7 @@ resource "flexibleengine_dds_instance_v3" "instance" {
   vpc_id            = "%s"
   subnet_id         = "%s"
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
-  password          = "Test@123"
+  password          = "Terraform@123"
   mode              = "Sharding"
 
   datastore {

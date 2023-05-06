@@ -58,17 +58,11 @@ func resourceDdsInstanceV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
-							ValidateFunc: validation.StringInSlice([]string{
-								"4.0", "3.4",
-							}, true),
 						},
 						"storage_engine": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							ValidateFunc: validation.StringInSlice([]string{
-								"wiredTiger",
-							}, true),
 						},
 					},
 				},
@@ -136,9 +130,6 @@ func resourceDdsInstanceV3() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							ValidateFunc: validation.StringInSlice([]string{
-								"ULTRAHIGH",
-							}, true),
 						},
 						"size": {
 							Type:     schema.TypeInt,
