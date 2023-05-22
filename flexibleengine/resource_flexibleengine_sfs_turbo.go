@@ -111,7 +111,7 @@ func resourceSFSTurboCreate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating FlexibleEngine SFS Turbo client: %s", err)
 	}
 
-	createOpts := shares.CreateOpts{
+	share := shares.Share{
 		Name:             d.Get("name").(string),
 		Size:             d.Get("size").(int),
 		ShareProto:       d.Get("share_proto").(string),
@@ -126,8 +126,11 @@ func resourceSFSTurboCreate(d *schema.ResourceData, meta interface{}) error {
 	if v, ok := d.GetOk("crypt_key_id"); ok {
 		metaOpts.CryptKeyID = v.(string)
 	}
-	createOpts.Metadata = metaOpts
+	share.Metadata = metaOpts
 
+	createOpts := shares.CreateOpts{
+		Share: share,
+	}
 	log.Printf("[DEBUG] create sfs turbo with option: %+v", createOpts)
 	create, err := shares.Create(sfsClient, createOpts).Extract()
 	if err != nil {
