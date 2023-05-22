@@ -18,6 +18,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dli"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/drs"
@@ -443,7 +444,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_apig_response":                    apig.ResourceApigResponseV2(),
 			"flexibleengine_apig_throttling_policy_associate": apig.ResourceThrottlingPolicyAssociate(),
 			"flexibleengine_apig_throttling_policy":           apig.ResourceApigThrottlingPolicyV2(),
-			"flexibleengine_apig_vpc_channel":                 apig.ResourceApigVpcChannelV2(),
 
 			"flexibleengine_api_gateway_api":   huaweicloud.ResourceAPIGatewayAPI(),
 			"flexibleengine_api_gateway_group": huaweicloud.ResourceAPIGatewayGroup(),
@@ -458,6 +458,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
 			"flexibleengine_dds_database_role":         dds.ResourceDatabaseRole(),
 			"flexibleengine_dds_database_user":         dds.ResourceDatabaseUser(),
+
+			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
 
 			"flexibleengine_dms_kafka_user":              dms.ResourceDmsKafkaUser(),
 			"flexibleengine_dms_rocketmq_instance":       dms.ResourceDmsRocketMQInstance(),
@@ -478,7 +480,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_gaussdb_cassandra_instance": gaussdb.ResourceGeminiDBInstanceV3(),
 			"flexibleengine_gaussdb_influx_instance":    gaussdb.ResourceGaussDBInfluxInstanceV3(),
 
-			"flexibleengine_identity_acl":           iam.ResourceIdentityACL(),
+			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
+
 			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
 			"flexibleengine_rds_database_privilege": rds.ResourceRdsDatabasePrivilege(),

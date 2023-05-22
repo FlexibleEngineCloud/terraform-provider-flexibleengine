@@ -18,7 +18,7 @@ func TestAccApigVpcChannelV2_basic(t *testing.T) {
 		// The dedicated instance name only allow letters, digits and underscores (_).
 		rName        = fmt.Sprintf("tf_acc_test_%s", acctest.RandString(5))
 		resourceName = "flexibleengine_apig_vpc_channel.test"
-		channel      channels.VpcChannel
+		channel      channels.Channel
 	)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -69,7 +69,7 @@ func TestAccApigVpcChannelV2_withEipMembers(t *testing.T) {
 		// The dedicated instance name only allow letters, digits and underscores (_).
 		rName        = fmt.Sprintf("tf_acc_test_%s", acctest.RandString(5))
 		resourceName = "flexibleengine_apig_vpc_channel.test"
-		channel      channels.VpcChannel
+		channel      channels.Channel
 	)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -120,7 +120,7 @@ func testAccCheckApigVpcChannelDestroy(s *terraform.State) error {
 		if rs.Type != "flexibleengine_apig_vpc_channel" {
 			continue
 		}
-		_, err := channels.Get(client, rs.Primary.Attributes["instance_id"], rs.Primary.ID).Extract()
+		_, err := channels.Get(client, rs.Primary.Attributes["instance_id"], rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("APIG v2 Vpc Channel (%s) is still exists", rs.Primary.ID)
 		}
@@ -128,7 +128,7 @@ func testAccCheckApigVpcChannelDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckApigVpcChannelExists(n string, app *channels.VpcChannel) resource.TestCheckFunc {
+func testAccCheckApigVpcChannelExists(n string, app *channels.Channel) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -143,7 +143,7 @@ func testAccCheckApigVpcChannelExists(n string, app *channels.VpcChannel) resour
 		if err != nil {
 			return fmt.Errorf("Error creating Flexibleengine APIG v2 client: %s", err)
 		}
-		found, err := channels.Get(client, rs.Primary.Attributes["instance_id"], rs.Primary.ID).Extract()
+		found, err := channels.Get(client, rs.Primary.Attributes["instance_id"], rs.Primary.ID)
 		if err != nil {
 			return err
 		}

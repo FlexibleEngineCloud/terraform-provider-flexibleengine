@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/chnsz/golangsdk/openstack/cloudeyeservice/alarmrule"
+	"github.com/chnsz/golangsdk/openstack/cloudeyeservice/v1/alarmrule"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
