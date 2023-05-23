@@ -31,6 +31,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/iam"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/lb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/modelarts"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/obs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
@@ -481,6 +482,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_gaussdb_influx_instance":    gaussdb.ResourceGaussDBInfluxInstanceV3(),
 
 			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
+
+			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
 			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
 			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
