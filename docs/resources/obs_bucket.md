@@ -176,6 +176,9 @@ The following arguments are supported:
     data in the bucket is duplicated and stored in multiple AZs.
     Changing this creates a new bucket.
 
+* `parallel_fs` - (Optional, Bool, ForceNew) Whether enable a bucket as a parallel file system. Changing this will
+  create a new bucket.
+
 * `region` - (Optional) If specified, the region this bucket should reside in. Otherwise, the region used by the provider.
     Changing this creates a new bucket.
 
