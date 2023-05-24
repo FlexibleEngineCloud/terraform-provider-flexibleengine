@@ -28,6 +28,7 @@ func TestAccObsBucket_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "storage_class", "STANDARD"),
 					resource.TestCheckResourceAttr(resourceName, "encryption", "false"),
 					resource.TestCheckResourceAttr(resourceName, "multi_az", "false"),
+					resource.TestCheckResourceAttr(resourceName, "parallel_fs", "false"),
 					resource.TestCheckResourceAttr(resourceName, "region", OS_REGION_NAME),
 				),
 			},
@@ -234,6 +235,31 @@ func TestAccObsBucket_cors(t *testing.T) {
 						resourceName, "cors_rule.0.expose_headers.1", "ETag"),
 					resource.TestCheckResourceAttr(
 						resourceName, "cors_rule.0.max_age_seconds", "3000"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccObsBucket_parallelFS(t *testing.T) {
+	rInt := acctest.RandInt()
+	resourceName := "flexibleengine_obs_bucket.bucket"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheckS3(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckObsBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccObsBucketConfigParallelFS(rInt),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckObsBucketExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "bucket", testAccObsBucketName(rInt)),
+					resource.TestCheckResourceAttr(resourceName, "acl", "private"),
+					resource.TestCheckResourceAttr(resourceName, "storage_class", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "parallel_fs", "true"),
+					resource.TestCheckResourceAttr(resourceName, "multi_az", "true"),
+					resource.TestCheckNoResourceAttr(resourceName, "bucket_version"),
 				),
 			},
 		},
@@ -502,6 +528,17 @@ resource "flexibleengine_obs_bucket" "bucket" {
     expose_headers  = ["x-amz-server-side-encryption","ETag"]
     max_age_seconds = 3000
   }
+}
+`, randInt)
+}
+
+func testAccObsBucketConfigParallelFS(randInt int) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_obs_bucket" "bucket" {
+  bucket      = "tf-test-bucket-%d"
+  acl         = "private"
+  multi_az    = true
+  parallel_fs = true
 }
 `, randInt)
 }

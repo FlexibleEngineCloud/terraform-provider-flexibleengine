@@ -245,6 +245,11 @@ func resourceObsBucket() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"parallel_fs": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+			},
 
 			"bucket_domain_name": {
 				Type:     schema.TypeString,
@@ -266,9 +271,10 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	acl := d.Get("acl").(string)
 	class := d.Get("storage_class").(string)
 	opts := &obs.CreateBucketInput{
-		Bucket:       bucket,
-		ACL:          obs.AclType(acl),
-		StorageClass: obs.ParseStringToStorageClassType(class),
+		Bucket:            bucket,
+		ACL:               obs.AclType(acl),
+		StorageClass:      obs.ParseStringToStorageClassType(class),
+		IsFSFileInterface: d.Get("parallel_fs").(bool),
 	}
 	opts.Location = region
 	if _, ok := d.GetOk("multi_az"); ok {
@@ -377,7 +383,7 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	// Read multi_az
+	// Read multi_az and parallel_fs
 	if err := setObsBucketMetadata(obsClient, d); err != nil {
 		return err
 	}
@@ -858,11 +864,18 @@ func setObsBucketMetadata(obsClient *obs.ObsClient, d *schema.ResourceData) erro
 	if err != nil {
 		return getObsError("Error getting metadata of OBS bucket", bucket, err)
 	}
+	log.Printf("[DEBUG] getting metadata of OBS bucket %s: %#v", bucket, output)
 
 	if output.AZRedundancy == "3az" {
 		d.Set("multi_az", true)
 	} else {
 		d.Set("multi_az", false)
+	}
+
+	if output.FSStatus == "Enabled" {
+		d.Set("parallel_fs", true)
+	} else {
+		d.Set("parallel_fs", false)
 	}
 
 	return nil
@@ -889,7 +902,7 @@ func setObsBucketEncryption(obsClient *obs.ObsClient, d *schema.ResourceData) er
 	output, err := obsClient.GetBucketEncryption(bucket)
 	if err != nil {
 		if obsError, ok := err.(obs.ObsError); ok {
-			if obsError.Code == "NoSuchEncryptionConfiguration" {
+			if obsError.Code == "NoSuchEncryptionConfiguration" || obsError.Code == "FsNotSupport" {
 				d.Set("encryption", false)
 				d.Set("kms_key_id", nil)
 				return nil
