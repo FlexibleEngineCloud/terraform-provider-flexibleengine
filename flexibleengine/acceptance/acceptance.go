@@ -33,6 +33,7 @@ var (
 
 	OS_DEST_REGION            = os.Getenv("OS_DEST_REGION")
 	OS_DEST_PROJECT_ID        = os.Getenv("OS_DEST_PROJECT_ID")
+	OS_NEW_DEST_PROJECT_ID    = os.Getenv("OS_NEW_DEST_PROJECT_ID")
 	OS_SWR_SHARING_ACCOUNT    = os.Getenv("OS_SWR_SHARING_ACCOUNT")
 	OS_DLI_FLINK_JAR_OBS_PATH = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
 	OS_WAF_ENABLE_FLAG        = os.Getenv("OS_WAF_ENABLE_FLAG")
@@ -105,9 +106,15 @@ func testAccPreCheckReplication(t *testing.T) {
 	}
 }
 
-func testAccPreCheckIms(t *testing.T) {
+func testAccPreCheckImsCopy(t *testing.T) {
 	if OS_DEST_REGION == "" {
-		t.Skip("OS_DEST_REGION must be set for IMS acceptance tests")
+		t.Skip("OS_DEST_REGION must be set for IMS copy acceptance tests")
+	}
+}
+
+func testAccPreCheckImsShare(t *testing.T) {
+	if OS_DEST_PROJECT_ID == "" || OS_NEW_DEST_PROJECT_ID == "" {
+		t.Skip("OS_DEST_PROJECT_ID and OS_NEW_DEST_PROJECT_ID must be set for IMS share acceptance tests")
 	}
 }
 

@@ -92,7 +92,7 @@ func TestAccImsImageCopy_basic_cross_region(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreCheckIms(t)
+			testAccPreCheckImsCopy(t)
 		},
 		ProviderFactories: TestAccProviderFactories,
 		CheckDestroy:      rc.CheckResourceDestroy(),
