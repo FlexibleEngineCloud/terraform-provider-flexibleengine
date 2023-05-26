@@ -105,6 +105,12 @@ func testAccPreCheckReplication(t *testing.T) {
 	}
 }
 
+func testAccPreCheckIms(t *testing.T) {
+	if OS_DEST_REGION == "" {
+		t.Skip("OS_DEST_REGION must be set for IMS acceptance tests")
+	}
+}
+
 func testAccPreCheckSWRDomian(t *testing.T) {
 	if OS_SWR_SHARING_ACCOUNT == "" {
 		t.Skip("OS_SWR_SHARING_ACCOUNT must be set for swr domian tests, " +
