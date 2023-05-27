@@ -484,8 +484,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
 
-			"flexibleengine_images_image_copy":  ims.ResourceImsImageCopy(),
-			"flexibleengine_images_image_share": ims.ResourceImsImageShare(),
+			"flexibleengine_images_image_copy":           ims.ResourceImsImageCopy(),
+			"flexibleengine_images_image_share":          ims.ResourceImsImageShare(),
+			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
 
 			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
