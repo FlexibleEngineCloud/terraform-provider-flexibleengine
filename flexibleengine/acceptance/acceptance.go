@@ -31,12 +31,14 @@ var (
 	OS_KEYPAIR_NAME = os.Getenv("OS_KEYPAIR_NAME")
 	OS_FGS_BUCKET   = os.Getenv("OS_FGS_BUCKET")
 
-	OS_DEST_REGION            = os.Getenv("OS_DEST_REGION")
-	OS_DEST_PROJECT_ID        = os.Getenv("OS_DEST_PROJECT_ID")
-	OS_SWR_SHARING_ACCOUNT    = os.Getenv("OS_SWR_SHARING_ACCOUNT")
-	OS_DLI_FLINK_JAR_OBS_PATH = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
-	OS_WAF_ENABLE_FLAG        = os.Getenv("OS_WAF_ENABLE_FLAG")
-	OS_SMS_SOURCE_SERVER      = os.Getenv("OS_SMS_SOURCE_SERVER")
+	OS_DEST_REGION                 = os.Getenv("OS_DEST_REGION")
+	OS_DEST_PROJECT_ID             = os.Getenv("OS_DEST_PROJECT_ID")
+	OS_NEW_DEST_PROJECT_ID         = os.Getenv("OS_NEW_DEST_PROJECT_ID")
+	OS_IMAGE_SHARE_SOURCE_IMAGE_ID = os.Getenv("OS_IMAGE_SHARE_SOURCE_IMAGE_ID")
+	OS_SWR_SHARING_ACCOUNT         = os.Getenv("OS_SWR_SHARING_ACCOUNT")
+	OS_DLI_FLINK_JAR_OBS_PATH      = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
+	OS_WAF_ENABLE_FLAG             = os.Getenv("OS_WAF_ENABLE_FLAG")
+	OS_SMS_SOURCE_SERVER           = os.Getenv("OS_SMS_SOURCE_SERVER")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -105,9 +107,21 @@ func testAccPreCheckReplication(t *testing.T) {
 	}
 }
 
-func testAccPreCheckIms(t *testing.T) {
+func testAccPreCheckImsCopy(t *testing.T) {
 	if OS_DEST_REGION == "" {
-		t.Skip("OS_DEST_REGION must be set for IMS acceptance tests")
+		t.Skip("OS_DEST_REGION must be set for IMS copy acceptance tests")
+	}
+}
+
+func testAccPreCheckImsShare(t *testing.T) {
+	if OS_DEST_PROJECT_ID == "" || OS_NEW_DEST_PROJECT_ID == "" {
+		t.Skip("OS_DEST_PROJECT_ID and OS_NEW_DEST_PROJECT_ID must be set for IMS share acceptance tests")
+	}
+}
+
+func testAccPreCheckImageShareAccepter(t *testing.T) {
+	if OS_IMAGE_SHARE_SOURCE_IMAGE_ID == "" {
+		t.Skip("OS_IMAGE_SHARE_SOURCE_IMAGE_ID must be set for IMS share acceptance tests")
 	}
 }
 
