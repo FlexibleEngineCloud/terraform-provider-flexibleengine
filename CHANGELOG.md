@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 1.38.0 (June 1, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_obs_bucket_acl` [GH-943]
+  - `flexibleengine_images_image_copy` [GH-944]
+  - `flexibleengine_images_image_share` [GH-947]
+  - `flexibleengine_images_image_share_accepter` [GH-947]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_dds_instance_v3`: Support MongoDB 4.2 [GH-930]
+* `resource/flexibleengine_obs_bucket`: Support parallel_fs feature [GH-942]
+
 ## 1.37.0 (April 14, 2023)
 
 FEATURES:
