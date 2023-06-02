@@ -95,6 +95,8 @@ The following arguments are supported:
 
 * `service_network_cidr` - (Optional) Service network segment. Changing this parameter will create a new cluster resource.
 
+* `custom_san` - (Optional) Custom san to add to certificate. (array of string)
+
 * `authentication_mode` - (Optional) Authentication mode of the cluster, possible values are x509 and rbac. Defaults to *rbac*.
     Changing this parameter will create a new cluster resource.
 
