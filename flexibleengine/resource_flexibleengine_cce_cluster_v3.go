@@ -474,6 +474,16 @@ func resourceCCEClusterV3Update(d *schema.ResourceData, meta interface{}) error 
 		}
 	}
 
+	if d.HasChange("custom_san") {
+		var updateOpts clusters.UpdateOpts
+		updateOpts.Spec.CustomSan = resourceCustomSans(d)
+		_, err = clusters.Update(cceClient, d.Id(), updateOpts).Extract()
+
+		if err != nil {
+			return fmt.Errorf("Error updating flexibleengine CCE: %s", err)
+		}
+	}
+
 	if d.HasChange("eip") {
 		eipClient, err := config.NetworkingV1Client(config.GetRegion(d))
 		if err != nil {
