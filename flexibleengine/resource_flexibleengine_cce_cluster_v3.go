@@ -313,7 +313,7 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 			Cidr: d.Get("container_network_cidr").(string),
 		},
 		KubernetesSvcIPRange: d.Get("service_network_cidr").(string),
-		CustomSan: resourceCustomSans(d),
+		CustomSan:            resourceCustomSans(d),
 		Authentication: clusters.AuthenticationSpec{
 			Mode:                d.Get("authentication_mode").(string),
 			AuthenticatingProxy: authenticatingProxy,

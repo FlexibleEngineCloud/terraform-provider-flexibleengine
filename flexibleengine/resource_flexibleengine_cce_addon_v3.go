@@ -145,7 +145,7 @@ func resourceCCEAddonCreate(d *schema.ResourceData, meta interface{}) error {
 		Kind:       "Addon",
 		ApiVersion: "v3",
 		Metadata: addons.CreateMetadata{
-			Anno: addons.Annotations{
+			Anno: addons.CreateAnnotations{
 				AddonInstallType: "install",
 			},
 		},
