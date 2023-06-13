@@ -120,7 +120,6 @@ func resourceCCEClusterV3() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				Computed: true,
-				ForceNew: false,
 			},
 			"authentication_mode": {
 				Type:     schema.TypeString,
@@ -396,13 +395,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("service_network_cidr", n.Spec.KubernetesSvcIPRange)
 	d.Set("authentication_mode", n.Spec.Authentication.Mode)
 	d.Set("security_group_id", n.Spec.HostNetwork.SecurityGroup)
-
-	// Set the custom can list
-	customSans := []string{}
-	for _, p := range n.Spec.CustomSan {
-		customSans = append(customSans, p)
-	}
-	d.Set("custom_san", customSans)
+	d.Set("custom_san", n.Spec.CustomSan)
 
 	cert, err := clusters.GetCert(cceClient, d.Id()).Extract()
 	if err != nil {
