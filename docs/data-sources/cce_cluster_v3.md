@@ -49,6 +49,8 @@ All above argument parameters can be exported as attribute parameters along with
 
 * `service_network_cidr` - The service network segment.
 
+* `custom_san` -  Custom san list for certificate. (array of string)
+
 * `vpc_id` - The ID of the VPC used to create the node.
 
 * `subnet_id` - The ID of the VPC Subnet used to create the node.

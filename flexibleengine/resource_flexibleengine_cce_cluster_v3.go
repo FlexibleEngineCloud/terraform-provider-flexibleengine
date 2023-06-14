@@ -115,6 +115,12 @@ func resourceCCEClusterV3() *schema.Resource {
 				Computed: true,
 				ForceNew: true,
 			},
+			"custom_san": {
+				Type:     schema.TypeList,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Computed: true,
+			},
 			"authentication_mode": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -270,6 +276,15 @@ func resourceClusterMastersV3(d *schema.ResourceData) ([]clusters.MasterSpec, er
 	return nil, nil
 }
 
+func resourceCustomSans(d *schema.ResourceData) []string {
+	rawCustomSans := d.Get("custom_san").([]interface{})
+	customSans := make([]string, len(rawCustomSans))
+	for i, raw := range rawCustomSans {
+		customSans[i] = raw.(string)
+	}
+	return customSans
+}
+
 func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	cceClient, err := config.CceV3Client(GetRegion(d, config))
@@ -297,6 +312,7 @@ func resourceCCEClusterV3Create(d *schema.ResourceData, meta interface{}) error 
 			Cidr: d.Get("container_network_cidr").(string),
 		},
 		KubernetesSvcIPRange: d.Get("service_network_cidr").(string),
+		CustomSan:            resourceCustomSans(d),
 		Authentication: clusters.AuthenticationSpec{
 			Mode:                d.Get("authentication_mode").(string),
 			AuthenticatingProxy: authenticatingProxy,
@@ -379,6 +395,7 @@ func resourceCCEClusterV3Read(d *schema.ResourceData, meta interface{}) error {
 	d.Set("service_network_cidr", n.Spec.KubernetesSvcIPRange)
 	d.Set("authentication_mode", n.Spec.Authentication.Mode)
 	d.Set("security_group_id", n.Spec.HostNetwork.SecurityGroup)
+	d.Set("custom_san", n.Spec.CustomSan)
 
 	cert, err := clusters.GetCert(cceClient, d.Id()).Extract()
 	if err != nil {
@@ -443,6 +460,16 @@ func resourceCCEClusterV3Update(d *schema.ResourceData, meta interface{}) error 
 	if d.HasChange("description") {
 		var updateOpts clusters.UpdateOpts
 		updateOpts.Spec.Description = d.Get("description").(string)
+		_, err = clusters.Update(cceClient, d.Id(), updateOpts).Extract()
+
+		if err != nil {
+			return fmt.Errorf("Error updating flexibleengine CCE: %s", err)
+		}
+	}
+
+	if d.HasChange("custom_san") {
+		var updateOpts clusters.UpdateOpts
+		updateOpts.Spec.CustomSan = resourceCustomSans(d)
 		_, err = clusters.Update(cceClient, d.Id(), updateOpts).Extract()
 
 		if err != nil {

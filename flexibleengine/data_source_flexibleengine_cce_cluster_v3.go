@@ -71,6 +71,11 @@ func dataSourceCCEClusterV3() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"custom_san": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
