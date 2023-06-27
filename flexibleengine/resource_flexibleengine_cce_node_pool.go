@@ -89,6 +89,11 @@ func resourceCCENodePool() *schema.Resource {
 							Required: true,
 							ForceNew: true,
 						},
+						"kms_key_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
 						"extend_params": {
 							Type:     schema.TypeMap,
 							Optional: true,
