@@ -224,9 +224,10 @@ func resourceCCENodePool() *schema.Resource {
 				Computed: true,
 			},
 			"scall_enable": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Computed: true,
+				Type:       schema.TypeBool,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "will be removed in 1.40.0 use scale_enable instead",
 			},
 			"min_node_count": {
 				Type:     schema.TypeInt,
