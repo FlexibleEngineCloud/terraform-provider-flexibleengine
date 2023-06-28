@@ -28,7 +28,7 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists(resourceName, clusterName, &node),
 					resource.TestCheckResourceAttr(resourceName, "name", cceName),
-					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s1.medium"),
+					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s3.large.2"),
 					resource.TestCheckResourceAttr(resourceName, "status", "Active"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
@@ -52,7 +52,7 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 	})
 }
 
-func TestAccCCENodeV3_data_volume_encryption(t *testing.T) {
+func TestAccCCENodeV3_volumes_encryption(t *testing.T) {
 	var node nodes.Nodes
 
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
@@ -65,10 +65,12 @@ func TestAccCCENodeV3_data_volume_encryption(t *testing.T) {
 		CheckDestroy: testAccCheckCCENodeV3Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCCENodeV3_data_volume_encryption(rName),
+				Config: testAccCCENodeV3_volumes_encryption(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists(resourceName, clusterName, &node),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttrPair(resourceName, "root_volume.0.kms_key_id",
+						"flexibleengine_kms_key_v1.test", "id"),
 					resource.TestCheckResourceAttr(resourceName, "data_volumes.#", "1"),
 					resource.TestCheckResourceAttrPair(resourceName, "data_volumes.0.kms_key_id",
 						"flexibleengine_kms_key_v1.test", "id"),
@@ -194,7 +196,7 @@ func testAccCCENodeV3_basic(rName string) string {
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
   name              = "%s"
-  flavor_id         = "s1.medium"
+  flavor_id         = "s3.large.2"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
   subnet_id         = "%s"
@@ -221,7 +223,7 @@ func testAccCCENodeV3_update(rName string) string {
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
   name              = "%s-update"
-  flavor_id         = "s1.medium"
+  flavor_id         = "s3.large.2"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
   subnet_id         = "%s"
@@ -241,7 +243,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
 }`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME, OS_NETWORK_ID)
 }
 
-func testAccCCENodeV3_data_volume_encryption(rName string) string {
+func testAccCCENodeV3_volumes_encryption(rName string) string {
 	return fmt.Sprintf(`
 %s
 
@@ -253,13 +255,14 @@ resource "flexibleengine_kms_key_v1" "test" {
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
   name              = "%s"
-  flavor_id         = "s1.medium"
+  flavor_id         = "s3.large.2"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
   key_pair          = "%s"
 
   root_volume {
     size       = 40
     volumetype = "SSD"
+    kms_key_id = flexibleengine_kms_key_v1.test.id
   }
   data_volumes {
     size       = 100

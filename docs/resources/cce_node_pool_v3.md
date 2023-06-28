@@ -113,6 +113,11 @@ The `root_volume` block supports:
 
 * `volumetype` - (Required, String) Specifies the disk type.
 
+* `kms_key_id` - (Optional, String) Specifies the KMS key ID. This is used to encrypt the volume.
+
+  -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
+  The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
+
 * `extend_params` - (Optional, Map) Specifies the disk expansion parameters in key/value pair format.
 
 The `data_volumes` block supports:

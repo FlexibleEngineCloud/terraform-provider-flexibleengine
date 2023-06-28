@@ -101,6 +101,11 @@ func resourceCCENodeV3() *schema.Resource {
 							Required: true,
 							ForceNew: true,
 						},
+						"kms_key_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
 						"extend_params": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -344,7 +349,16 @@ func resourceCCERootVolume(d *schema.ResourceData) nodes.VolumeSpec {
 		root.Size = rawMap["size"].(int)
 		root.VolumeType = rawMap["volumetype"].(string)
 		root.ExtendParam = rawMap["extend_params"].(map[string]interface{})
+
+		if rawMap["kms_key_id"].(string) != "" {
+			metadata := nodes.VolumeMetadata{
+				SystemEncrypted: "1",
+				SystemCmkid:     rawMap["kms_key_id"].(string),
+			}
+			root.Metadata = &metadata
+		}
 	}
+
 	return root
 }
 
@@ -755,11 +769,17 @@ func installScriptEncode(script string) string {
 }
 
 func expandResourceCCERootVolume(spec nodes.Spec) []map[string]interface{} {
+	var kmsID string
+	if spec.RootVolume.Metadata != nil {
+		kmsID = spec.RootVolume.Metadata.SystemCmkid
+	}
+
 	rootVolume := []map[string]interface{}{
 		{
 			"size":          spec.RootVolume.Size,
 			"volumetype":    spec.RootVolume.VolumeType,
 			"extend_params": spec.RootVolume.ExtendParam,
+			"kms_key_id":    kmsID,
 		},
 	}
 
@@ -816,8 +836,9 @@ func expandResourceCCETagsByServer(client *golangsdk.ServiceClient, serverID str
 	}
 
 	tagmap := tagsToMap(resourceTags.Tags)
-	//ignore "CCE-Dynamic-Provisioning-Node"
+	//ignore "CCE-Dynamic-Provisioning-Node" and "CCE-Cluster-ID"
 	delete(tagmap, "CCE-Dynamic-Provisioning-Node")
+	delete(tagmap, "CCE-Cluster-ID")
 
 	return tagmap, nil
 }

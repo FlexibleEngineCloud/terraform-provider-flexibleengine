@@ -117,6 +117,10 @@ The following arguments are supported:
   + `size` - (Required) Specifies the disk size in GB.
   + `volumetype` - (Required) Specifies the disk type.
   + `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
+  + `kms_key_id` - (Optional) Specifies the ID of a KMS key. This is used to encrypt the volume.
+
+  -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
+  The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
 * `data_volumes` - (Required) Represents the data disk to be created.
   Changing this parameter will create a new resource.
