@@ -59,12 +59,19 @@ The following arguments are supported:
 * `network_id` - (Required) The ID of the VPC Subnet to attach the port to. Changing
     this creates a new port.
 
+* `fixed_ip` - (Optional) An array of desired IPs for this port. The [object](#port_fixed_IP_object)
+    structure is described below.
+
+* `allowed_address_pairs` - (Optional) An array of IP/MAC Address pairs of additional IP
+    addresses that can be active on this port. The [object](#allowed_address_pairs_object) structure is described below.
+
+* `security_group_ids` - (Optional) A list of security group IDs to apply to the
+    port. The security groups must be specified by ID and not name (as opposed
+    to how they are configured with the Compute Instance).
+
 * `admin_state_up` - (Optional) Administrative up/down status for the port
     (must be "true" or "false" if provided). Changing this updates the
     `admin_state_up` of an existing port.
-
-* `mac_address` - (Optional) Specify a specific MAC address for the port. Changing
-    this creates a new port.
 
 * `tenant_id` - (Optional) The owner of the Port. Required if admin wants
     to create a port for another tenant. Changing this creates a new port.
@@ -72,21 +79,12 @@ The following arguments are supported:
 * `device_owner` - (Optional) The device owner of the Port. Changing this creates
     a new port.
 
-* `security_group_ids` - (Optional) A list of security group IDs to apply to the
-    port. The security groups must be specified by ID and not name (as opposed
-    to how they are configured with the Compute Instance).
-
 * `device_id` - (Optional) The ID of the device attached to the port. Changing this
     creates a new port.
 
-* `fixed_ip` - (Optional) An array of desired IPs for this port. The structure is
-    described below.
-
-* `allowed_address_pairs` - (Optional) An array of IP/MAC Address pairs of additional IP
-    addresses that can be active on this port. The structure is described below.
-
 * `value_specs` - (Optional) Map of additional options.
 
+<a name="port_fixed_IP_object"></a>
 The `fixed_ip` block supports:
 
 * `subnet_id` - (Required) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
@@ -96,6 +94,7 @@ The `fixed_ip` block supports:
     you don't specify `ip_address`, an available IP address from the specified
     subnet will be allocated to this port.
 
+<a name="allowed_address_pairs_object"></a>
 The `allowed_address_pairs` block supports:
 
 * `ip_address` - (Required) The additional IP address. The value can be an IP Address or a CIDR,
@@ -118,6 +117,7 @@ The following attributes are exported:
 * `security_group_ids` - See Argument Reference above.
 * `device_id` - See Argument Reference above.
 * `fixed_ip` - See Argument Reference above.
+* `mac_address` - The MAC address for the port.
 * `all_fixed_ips` - The collection of Fixed IP addresses on the port in the
   order returned by the Network v2 API.
 

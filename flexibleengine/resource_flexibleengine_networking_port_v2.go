@@ -50,10 +50,11 @@ func resourceNetworkingPortV2() *schema.Resource {
 				Computed: true,
 			},
 			"mac_address": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "mac_address cannot be set",
 			},
 			"tenant_id": {
 				Type:     schema.TypeString,
