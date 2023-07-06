@@ -1,0 +1,184 @@
+package acceptance
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	"github.com/chnsz/golangsdk/openstack/smn/v2/subscriptions"
+
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
+)
+
+func getResourceSMNSubscription(conf *config.Config, state *terraform.ResourceState) (interface{}, error) {
+	smnClient, err := conf.SmnV2Client(OS_REGION_NAME)
+	if err != nil {
+		return nil, fmt.Errorf("error creating SMN client: %s", err)
+	}
+
+	foundList, err := subscriptions.List(smnClient).Extract()
+	if err != nil {
+		return nil, err
+	}
+
+	var subscription *subscriptions.SubscriptionGet
+	urn := state.Primary.ID
+	for i := range foundList {
+		if foundList[i].SubscriptionUrn == urn {
+			subscription = &foundList[i]
+		}
+	}
+
+	if subscription == nil {
+		return nil, fmt.Errorf("the subscription does not exist")
+	}
+
+	return subscription, nil
+}
+
+func TestAccSMNV2Subscription_basic(t *testing.T) {
+	var subscription1 subscriptions.SubscriptionGet
+	var subscription2 subscriptions.SubscriptionGet
+	var subscription3 subscriptions.SubscriptionGet
+	var subscription4 subscriptions.SubscriptionGet
+	resourceName1 := "flexibleengine_smn_subscription_v2.subscription_1"
+	resourceName2 := "flexibleengine_smn_subscription_v2.subscription_2"
+	resourceName3 := "flexibleengine_smn_subscription_v2.subscription_3"
+	resourceName4 := "flexibleengine_smn_subscription_v2.subscription_4"
+	rName := acceptance.RandomAccResourceNameWithDash()
+
+	rc1 := acceptance.InitResourceCheck(
+		resourceName1,
+		&subscription1,
+		getResourceSMNSubscription,
+	)
+
+	rc2 := acceptance.InitResourceCheck(
+		resourceName2,
+		&subscription2,
+		getResourceSMNSubscription,
+	)
+
+	rc3 := acceptance.InitResourceCheck(
+		resourceName3,
+		&subscription3,
+		getResourceSMNSubscription,
+	)
+
+	rc4 := acceptance.InitResourceCheck(
+		resourceName4,
+		&subscription4,
+		getResourceSMNSubscription,
+	)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckSMNSubscriptionV2Destroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSMNV2SubscriptionConfig_basic(rName),
+				Check: resource.ComposeTestCheckFunc(
+					rc1.CheckResourceExists(),
+					rc2.CheckResourceExists(),
+					rc3.CheckResourceExists(),
+					rc4.CheckResourceExists(),
+					resource.TestCheckResourceAttr(resourceName1, "endpoint", "mailtest@gmail.com"),
+					resource.TestCheckResourceAttr(resourceName2, "endpoint", "13600000000"),
+					resource.TestCheckResourceAttr(resourceName3, "endpoint", "https://test.com"),
+					resource.TestCheckResourceAttrPair(
+						resourceName4, "endpoint", "flexibleengine_fgs_function.test", "urn"),
+				),
+			},
+			{
+				ResourceName:      resourceName1,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccCheckSMNSubscriptionV2Destroy(s *terraform.State) error {
+	cfg := testAccProvider.Meta().(*config.Config)
+	smnClient, err := cfg.SmnV2Client(OS_REGION_NAME)
+	if err != nil {
+		return fmt.Errorf("error creating SMN client: %s", err)
+	}
+
+	foundList, err := subscriptions.List(smnClient).Extract()
+	if err != nil {
+		return err
+	}
+
+	var subscription *subscriptions.SubscriptionGet
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "flexibleengine_smn_subscription_v2" {
+			continue
+		}
+
+		urn := rs.Primary.ID
+		for i := range foundList {
+			if foundList[i].SubscriptionUrn == urn {
+				subscription = &foundList[i]
+			}
+		}
+		if subscription != nil {
+			return fmt.Errorf("subscription still exists")
+		}
+	}
+
+	return nil
+}
+
+func testAccSMNV2SubscriptionConfig_basic(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_fgs_function" "test" {
+  name        = "%s"
+  app         = "default"
+  description = "fuction test"
+  handler     = "index.handler"
+  memory_size = 128
+  timeout     = 3
+  runtime     = "Python2.7"
+  code_type   = "inline"
+  func_code   = "aW1wb3J0IGpzb24KZGVmIGhhbmRsZXIgKGV2ZW50LCBjb250ZXh0KToKICAgIG91dHB1dCA9ICdIZWxsbyBtZXNzYWdlOiAnICsganNvbi5kdW1wcyhldmVudCkKICAgIHJldHVybiBvdXRwdXQ="
+}
+
+resource "flexibleengine_smn_topic_v2" "topic_1" {
+  name         = "%s"
+  display_name = "The display name of topic_1"
+}
+
+resource "flexibleengine_smn_subscription_v2" "subscription_1" {
+  topic_urn = flexibleengine_smn_topic_v2.topic_1.id
+  endpoint  = "mailtest@gmail.com"
+  protocol  = "email"
+  remark    = "O&M"
+}
+
+resource "flexibleengine_smn_subscription_v2" "subscription_2" {
+  topic_urn = flexibleengine_smn_topic_v2.topic_1.id
+  endpoint  = "13600000000"
+  protocol  = "sms"
+  remark    = "O&M"
+}
+
+resource "flexibleengine_smn_subscription_v2" "subscription_3" {
+  topic_urn = flexibleengine_smn_topic_v2.topic_1.id
+  endpoint  = "https://test.com"
+  protocol  = "https"
+  remark    = "O&M"
+}
+
+resource "flexibleengine_smn_subscription_v2" "subscription_4" {
+  topic_urn = flexibleengine_smn_topic_v2.topic_1.id
+  endpoint  = flexibleengine_fgs_function.test.urn
+  protocol  = "functionstage"
+  remark    = "O&M"
+}
+`, rName, rName)
+}
