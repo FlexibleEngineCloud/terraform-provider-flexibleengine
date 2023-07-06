@@ -51,7 +51,7 @@ func TestAccCBRV3Vault_BasicServer(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "resources.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo1", "bar"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_update"),
-					resource.TestCheckResourceAttrPair(resourceName, "policy_id", "flexibleengine_cbr_policy.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "policy.0.id", "flexibleengine_cbr_policy.test", "id"),
 				),
 			},
 			{
@@ -130,7 +130,7 @@ func TestAccCBRV3Vault_BasicVolume(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "protection_type", "backup"),
 					resource.TestCheckResourceAttr(resourceName, "size", "100"),
 					resource.TestCheckResourceAttr(resourceName, "auto_expand", "true"),
-					resource.TestCheckResourceAttrSet(resourceName, "policy_id"),
+					resource.TestCheckResourceAttrSet(resourceName, "policy.0.id"),
 					resource.TestCheckResourceAttr(resourceName, "resources.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "resources.0.includes.#", "2"),
 				),
@@ -176,7 +176,7 @@ func TestAccCBRV3Vault_BasicTurbo(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "type", cbr.VaultTypeTurbo),
 					resource.TestCheckResourceAttr(resourceName, "protection_type", "backup"),
 					resource.TestCheckResourceAttr(resourceName, "size", "1000"),
-					resource.TestCheckResourceAttrSet(resourceName, "policy_id"),
+					resource.TestCheckResourceAttrSet(resourceName, "policy.0.id"),
 					resource.TestCheckResourceAttr(resourceName, "resources.#", "1"),
 				),
 			},
@@ -428,7 +428,10 @@ resource "flexibleengine_cbr_vault" "test" {
   consistent_level = "crash_consistent"
   protection_type  = "backup"
   size             = 300
-  policy_id        = flexibleengine_cbr_policy.test.id
+
+  policy {
+    id = flexibleengine_cbr_policy.test.id
+  }
 
   resources {
     server_id = flexibleengine_compute_instance_v2.test.id
@@ -485,7 +488,11 @@ resource "flexibleengine_cbr_vault" "test" {
   protection_type = "backup"
   size            = 100
   auto_expand     = true
-  policy_id       = flexibleengine_cbr_policy.test.id
+
+  policy {
+    id = flexibleengine_cbr_policy.test.id
+  }
+
 
   resources {
     includes = flexibleengine_compute_volume_attach_v2.test[*].volume_id
@@ -567,7 +574,10 @@ resource "flexibleengine_cbr_vault" "test" {
   type            = "turbo"
   protection_type = "backup"
   size            = 1000
-  policy_id       = flexibleengine_cbr_policy.test.id
+
+  policy {
+    id = flexibleengine_cbr_policy.test.id
+  }
 
   resources {
     includes = [
