@@ -15,6 +15,8 @@ func dataSourceImagesImageV2() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceImagesImageV2Read,
 
+		DeprecationMessage: "It has been deprecated. Please use flexibleengine_images_image instead",
+
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,

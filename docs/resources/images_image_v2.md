@@ -1,5 +1,5 @@
 ---
-subcategory: "Image Management Service (IMS)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_images_image_v2"
 ---
@@ -7,6 +7,8 @@ page_title: "flexibleengine_images_image_v2"
 # flexibleengine_images_image_v2
 
 Manages a V2 Image resource within FlexibleEngine Glance.
+
+!> **WARNING:** It has been deprecated, please use `flexibleengine_images_image` instead.
 
 ## Example Usage
 

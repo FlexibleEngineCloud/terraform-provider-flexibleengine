@@ -15,7 +15,7 @@ func TestAccImagesImageV2_basic(t *testing.T) {
 	resourceName := "flexibleengine_images_image_v2.image_1"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckImagesImageV2Destroy,
 		Steps: []resource.TestStep{
@@ -52,7 +52,7 @@ func TestAccImagesImageV2_tags(t *testing.T) {
 	var image images.Image
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckDeprecated(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckImagesImageV2Destroy,
 		Steps: []resource.TestStep{
@@ -93,7 +93,7 @@ func TestAccImagesImageV2_visibility(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			testAccPreCheckDeprecated(t)
 			testAccPreCheckAdminOnly(t)
 		},
 		Providers:    testAccProviders,
