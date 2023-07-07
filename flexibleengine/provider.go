@@ -275,6 +275,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_apig_environments":  apig.DataSourceEnvironments(),
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
+			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 
 			"flexibleengine_dms_kafka_instances":    dms.DataSourceDmsKafkaInstances(),

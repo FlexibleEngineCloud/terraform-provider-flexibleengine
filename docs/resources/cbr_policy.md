@@ -32,14 +32,14 @@ resource "flexibleengine_cbr_policy" "test" {
 
 ```hcl
 variable "policy_name" {}
-variable "dest_region" {}
-variable "dest_project_id" {}
+variable "destination_region" {}
+variable "destination_project_id" {}
 
 resource "flexibleengine_cbr_policy" "test" {
   name                   = var.policy_name
   type                   = "replication"
-  destination_region     = var.dest_region
-  destination_project_id = var.dest_project_id
+  destination_region     = var.destination_region
+  destination_project_id = var.destination_project_id
   backup_quantity        = 20
 
   backup_cycle {
@@ -54,23 +54,28 @@ resource "flexibleengine_cbr_policy" "test" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CBR policy. If omitted, the
+* `region` - (Optional, String, ForceNew) Specifies the region where the policy is located. If omitted, the
   provider-level region will be used. Changing this will create a new policy.
 
-* `name` - (Required, String) Specifies a unique name of the CBR policy. This parameter can contain a maximum of 64
-  characters, which may consist of chinese charactors, letters, digits, underscores(_) and hyphens (-).
+* `name` - (Required, String) Specifies the policy name.  
+  This parameter can contain a maximum of 64
+  characters, which may consist of chinese characters, letters, digits, underscores(_) and hyphens (-).
 
-* `type` - (Required, String, ForceNew) Specifies the protection type of the CBR policy.
+* `type` - (Required, String, ForceNew) Specifies the protection type of the policy.
   Valid values are **backup** and **replication**.
   Changing this will create a new policy.
 
-* `backup_cycle` - (Required, List) Specifies the scheduling rule for the CBR policy backup execution.
+* `backup_cycle` - (Required, List) Specifies the scheduling rule for the policy backup execution.
   The [object](#cbr_policy_backup_cycle) structure is documented below.
 
-* `enabled` - (Optional, Bool) Specifies whether to enable the CBR policy. Default to **true**.
+* `enabled` - (Optional, Bool) Specifies whether to enable the policy. Default to **true**.
 
 * `destination_region` - (Optional, String) Specifies the name of the replication destination region, which is mandatory
   for cross-region replication. Required if `protection_type` is **replication**.
+
+* `enable_acceleration` - (Optional, Bool, ForceNew) Specifies whether to enable the acceleration function to shorten
+  the replication time for cross-region.  
+  Changing this will create a new policy.
 
 * `destination_project_id` - (Optional, String) Specifies the ID of the replication destination project, which is
   mandatory for cross-region replication. Required if `protection_type` is **replication**.
@@ -90,8 +95,8 @@ The following arguments are supported:
   When the number of retained backups exceeds the preset value (number of `backup_quantity`), the system automatically
   deletes the earliest backups. By default, the system automatically clears data every other day.
 
-* `time_zone` - (Optional, String) Specifies the UTC time zone, e.g.: `UTC+08:00`.
-  Required if `long_term_retention` is set.
+* `time_zone` - (Optional, String) Specifies the UTC time zone, e.g. `UTC+08:00`.
+  Only available if `long_term_retention` is set.
 
 <a name="cbr_policy_backup_cycle"></a>
 The `backup_cycle` block supports:
@@ -121,6 +126,10 @@ The `long_term_retention` block supports:
 -> A maximum of 10 backups are retained for failed periodic backup tasks. They are retained for one month and can be
   manually deleted on the web console.
 
+* `full_backup_interval` - (Optional, Int) Specifies how often (after how many incremental backups) a full backup is
+  performed. The valid value ranges from `-1` to `100`.
+  If `-1` is specified, full backup will not be performed.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
@@ -131,6 +140,24 @@ In addition to all arguments above, the following attributes are exported:
 
 Policies can be imported by their `id`. For example,
 
-```shell
+```bash
 terraform import flexibleengine_cbr_policy.test 4d2c2939-774f-42ef-ab15-e5b126b11ace
+```
+
+Note that the imported state may not be identical to your resource definition, due to the attribute missing from the
+API response. The missing attribute is: `enable_acceleration`.
+It is generally recommended running `terraform plan` after importing a policy.
+You can then decide if changes should be applied to the policy, or the resource definition should be updated to align
+with the policy. Also you can ignore changes as below.
+
+```hcl
+resource "flexibleengine_cbr_policy" "test" {
+  ...
+
+  lifecycle {
+    ignore_changes = [
+      enable_acceleration,
+    ]
+  }
+}
 ```
