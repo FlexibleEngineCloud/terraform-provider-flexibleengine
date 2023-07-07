@@ -380,8 +380,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_as_configuration_v1":                resourceASConfiguration(),
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
 			"flexibleengine_as_lifecycle_hook_v1":               resourceASLifecycleHook(),
-			"flexibleengine_smn_topic_v2":                       resourceTopic(),
-			"flexibleengine_smn_subscription_v2":                resourceSubscription(),
 			"flexibleengine_rds_read_replica_v3":                resourceRdsReadReplicaInstance(),
 			"flexibleengine_rds_parametergroup_v3":              resourceRdsConfigurationV3(),
 			"flexibleengine_networking_vip_v2":                  resourceNetworkingVIPV2(),
@@ -518,15 +516,18 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
 			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),
+			"flexibleengine_smn_message_template":      smn.ResourceSmnMessageTemplate(),
 
 			// importing existing resource
-			"flexibleengine_rds_instance_v3": rds.ResourceRdsInstance(),           // v1.29.0
-			"flexibleengine_vpc_v1":          vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
-			"flexibleengine_vpc_subnet_v1":   vpc.ResourceVpcSubnetV1(),           // v1.31.0
-			"flexibleengine_lb_pool_v2":      lb.ResourcePoolV2(),                 // v1.35.0
-			"flexibleengine_lb_pool_v3":      elb.ResourcePoolV3(),                // v1.35.0
-			"flexibleengine_lb_monitor_v3":   elb.ResourceMonitorV3(),             // v1.35.0
-			"flexibleengine_lb_member_v3":    elb.ResourceMemberV3(),              // v1.35.0
+			"flexibleengine_rds_instance_v3":     rds.ResourceRdsInstance(),           // v1.29.0
+			"flexibleengine_vpc_v1":              vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
+			"flexibleengine_vpc_subnet_v1":       vpc.ResourceVpcSubnetV1(),           // v1.31.0
+			"flexibleengine_lb_pool_v2":          lb.ResourcePoolV2(),                 // v1.35.0
+			"flexibleengine_lb_pool_v3":          elb.ResourcePoolV3(),                // v1.35.0
+			"flexibleengine_lb_monitor_v3":       elb.ResourceMonitorV3(),             // v1.35.0
+			"flexibleengine_lb_member_v3":        elb.ResourceMemberV3(),              // v1.35.0
+			"flexibleengine_smn_topic_v2":        smn.ResourceTopic(),                 // v1.39.0
+			"flexibleengine_smn_subscription_v2": smn.ResourceSubscription(),          // v1.39.0
 
 			// Deprecated resource
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
