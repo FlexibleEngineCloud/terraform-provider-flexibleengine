@@ -29,6 +29,7 @@ func resourceImagesImageV2() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		DeprecationMessage: "It has been deprecated. Please use flexibleengine_images_image instead",
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(30 * time.Minute),
 		},

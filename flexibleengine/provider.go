@@ -229,7 +229,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_compute_instance_v2":       dataSourceComputeInstance(),
 			"flexibleengine_compute_instances":         dataSourceComputeInstances(),
 			"flexibleengine_compute_flavors_v2":        dataSourceEcsFlavors(),
-			"flexibleengine_images_image_v2":           dataSourceImagesImageV2(),
 			"flexibleengine_networking_secgroup_v2":    dataSourceNetworkingSecGroupV2(),
 			"flexibleengine_s3_bucket_object":          dataSourceS3BucketObject(),
 			"flexibleengine_kms_key_v1":                dataSourceKmsKeyV1(),
@@ -289,6 +288,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_gaussdb_cassandra_instances": gaussdb.DataSourceGeminiDBInstances(),
 			"flexibleengine_gaussdb_nosql_flavors":       gaussdb.DataSourceGaussDBNoSQLFlavors(),
 
+			"flexibleengine_images_image":  ims.DataSourceImagesImageV2(),
+			"flexibleengine_images_images": ims.DataSourceImagesImages(),
+
 			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
 			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
 			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
@@ -308,6 +310,8 @@ func Provider() *schema.Provider {
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
 			"flexibleengine_blockstorage_availability_zones_v3": dataSourceBlockStorageAvailabilityZonesV3(),
+
+			"flexibleengine_images_image_v2": dataSourceImagesImageV2(),
 
 			"flexibleengine_networking_network_v2": dataSourceNetworkingNetworkV2(),
 			"flexibleengine_vpc_eip_v1":            dataSourceVpcEipV1(),
@@ -338,7 +342,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_fw_firewall_group_v2":               resourceFWFirewallGroupV2(),
 			"flexibleengine_fw_policy_v2":                       resourceFWPolicyV2(),
 			"flexibleengine_fw_rule_v2":                         resourceFWRuleV2(),
-			"flexibleengine_images_image_v2":                    resourceImagesImageV2(),
 			"flexibleengine_kms_key_v1":                         resourceKmsKeyV1(),
 			"flexibleengine_lb_loadbalancer_v2":                 resourceLoadBalancerV2(),
 			"flexibleengine_lb_listener_v2":                     resourceListenerV2(),
@@ -482,6 +485,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
 
+			"flexibleengine_images_image":                ims.ResourceImsImage(),
 			"flexibleengine_images_image_copy":           ims.ResourceImsImageCopy(),
 			"flexibleengine_images_image_share":          ims.ResourceImsImageShare(),
 			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
@@ -534,6 +538,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_listener":      resourceEListener(),
 			"flexibleengine_elb_backend":       resourceBackend(),
 			"flexibleengine_elb_health":        resourceHealth(),
+			"flexibleengine_images_image_v2":   resourceImagesImageV2(),
 			"flexibleengine_lb_certificate_v2": resourceCertificateV2(),
 			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
 			"flexibleengine_vpc_eip_v1":        resourceVpcEIPV1(),

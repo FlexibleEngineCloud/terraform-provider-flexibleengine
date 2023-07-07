@@ -39,6 +39,7 @@ var (
 	OS_DLI_FLINK_JAR_OBS_PATH      = os.Getenv("OS_DLI_FLINK_JAR_OBS_PATH")
 	OS_WAF_ENABLE_FLAG             = os.Getenv("OS_WAF_ENABLE_FLAG")
 	OS_SMS_SOURCE_SERVER           = os.Getenv("OS_SMS_SOURCE_SERVER")
+	OS_IMS_BACKUP_ID               = os.Getenv("OS_IMS_BACKUP_ID")
 )
 
 // TestAccProviderFactories is a static map containing only the main provider instance
@@ -146,5 +147,11 @@ func testAccPrecheckWafInstance(t *testing.T) {
 func testAccPreCheckSms(t *testing.T) {
 	if OS_SMS_SOURCE_SERVER == "" {
 		t.Skip("OS_SMS_SOURCE_SERVER must be set for SMS acceptance tests")
+	}
+}
+
+func testAccPreCheckImsBackupId(t *testing.T) {
+	if OS_IMS_BACKUP_ID == "" {
+		t.Skip("OS_IMS_BACKUP_ID must be set for IMS whole image with CBR backup id")
 	}
 }

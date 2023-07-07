@@ -1,10 +1,12 @@
 ---
-subcategory: "Image Management Service (IMS)"
+subcategory: "Deprecated"
 ---
 
 # flexibleengine_images_image_v2
 
 Use this data source to get the ID of an available FlexibleEngine image.
+
+!> **WARNING:** It has been deprecated, please use `flexibleengine_images_image` instead.
 
 ## Example Usage
 
