@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## 1.39.0 (July 7, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_smn_message_template` [GH-958]
+  - `flexibleengine_images_image` [GH-959]
+
+* **New Data Source:**
+  - `flexibleengine_images_image` [GH-959]
+  - `flexibleengine_images_images` [GH-959]
+  - `flexibleengine_cbr_backup` [GH-960]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cce_cluster_v3`: Support custom_san feature  [GH-950]
+* `resource/flexibleengine_cce_node_v3`: Support kms_key_id feature [GH-954]
+* `resource/flexibleengine_cce_node_pool_v3`: Support kms_key_id feature [GH-954]
+* `data/flexibleengine_cce_cluster_v3`: Support custom_san feature  [GH-950]
+
+DEPRECATED:
+
+* `resource/flexibleengine_images_image_v2` [GH-959]
+* `data/flexibleengine_images_image_v2` [GH-959]
+
 ## 1.38.0 (June 1, 2023)
 
 FEATURES:
