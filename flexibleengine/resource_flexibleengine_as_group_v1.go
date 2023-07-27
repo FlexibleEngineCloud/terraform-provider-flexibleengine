@@ -50,6 +50,7 @@ func resourceASGroup() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				ForceNew: false,
+				Computed: true,
 			},
 			"min_instance_number": {
 				Type:     schema.TypeInt,

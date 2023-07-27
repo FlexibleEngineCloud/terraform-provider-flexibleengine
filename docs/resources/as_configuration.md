@@ -1,10 +1,10 @@
 ---
 subcategory: "Auto Scaling (AS)"
 description: ""
-page_title: "flexibleengine_as_configuration_v1"
+page_title: "flexibleengine_as_configuration"
 ---
 
-# flexibleengine_as_configuration_v1
+# flexibleengine_as_configuration
 
 Manages a V1 AS Configuration resource within flexibleengine.
 
@@ -13,7 +13,7 @@ Manages a V1 AS Configuration resource within flexibleengine.
 ### Basic AS Configuration
 
 ```hcl
-resource "flexibleengine_as_configuration_v1" "my_as_config" {
+resource "flexibleengine_as_configuration" "my_as_config" {
   scaling_configuration_name = "my_as_config"
 
   instance_config {
@@ -33,7 +33,7 @@ resource "flexibleengine_as_configuration_v1" "my_as_config" {
 ### AS Configuration With User Data and Metadata
 
 ```hcl
-resource "flexibleengine_as_configuration_v1" "my_as_config" {
+resource "flexibleengine_as_configuration" "my_as_config" {
   scaling_configuration_name = "my_as_config"
 
   instance_config {
@@ -59,7 +59,7 @@ function, or the `template_cloudinit_config` resource.
 ### AS Configuration uses the existing instance specifications as the template
 
 ```hcl
-resource "flexibleengine_as_configuration_v1" "my_as_config" {
+resource "flexibleengine_as_configuration" "my_as_config" {
   scaling_configuration_name = "my_as_config"
   instance_config = {
     instance_id = "4579f2f5-cbe8-425a-8f32-53dcb9d9053a"

@@ -1,10 +1,10 @@
 ---
 subcategory: "Auto Scaling (AS)"
 description: ""
-page_title: "flexibleengine_as_group_v1"
+page_title: "flexibleengine_as_group"
 ---
 
-# flexibleengine_as_group_v1
+# flexibleengine_as_group
 
 Manages a V1 Autoscaling Group resource within flexibleengine.
 
@@ -25,7 +25,7 @@ resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
   vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
 
-resource "flexibleengine_as_group_v1" "my_as_group" {
+resource "flexibleengine_as_group" "my_as_group" {
   scaling_group_name       = "my_as_group"
   desire_instance_number   = 2
   min_instance_number      = 0
@@ -59,7 +59,7 @@ resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
   vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
 
-resource "flexibleengine_as_group_v1" "my_as_group_only_remove_members" {
+resource "flexibleengine_as_group" "my_as_group_only_remove_members" {
   scaling_group_name       = "my_as_group_only_remove_members"
   desire_instance_number   = 2
   min_instance_number      = 0
@@ -103,7 +103,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   loadbalancer_id = flexibleengine_lb_loadbalancer_v2.lb_1.id
 }
 
-resource "flexibleengine_as_group_v1" "my_as_group_with_elb" {
+resource "flexibleengine_as_group" "my_as_group_with_elb" {
   scaling_group_name       = "my_as_group_with_elb"
   desire_instance_number   = 2
   min_instance_number      = 0
