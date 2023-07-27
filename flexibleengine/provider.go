@@ -19,6 +19,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dew"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dli"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/drs"
@@ -490,6 +491,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_image_copy":           ims.ResourceImsImageCopy(),
 			"flexibleengine_images_image_share":          ims.ResourceImsImageShare(),
 			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
+
+			"flexibleengine_kms_grant": dew.ResourceKmsGrant(),
 
 			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
