@@ -14,6 +14,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/apig"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/as"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
@@ -273,7 +274,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_flavors":               dataSourceElbFlavorsV3(),
 
 			// importing new data source
-			"flexibleengine_apig_environments":  apig.DataSourceEnvironments(),
+			"flexibleengine_apig_environments": apig.DataSourceEnvironments(),
+
+			"flexibleengine_as_configurations": as.DataSourceASConfigurations(),
+			"flexibleengine_as_groups":         as.DataSourceASGroups(),
+
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
 			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
@@ -381,8 +386,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_obs_bucket_object":                  resourceObsBucketObject(),
 			"flexibleengine_obs_bucket_replication":             resourceObsBucketReplication(),
 			"flexibleengine_obs_bucket_notifications":           resourceObsBucketNotifications(),
-			"flexibleengine_as_group_v1":                        resourceASGroup(),
-			"flexibleengine_as_configuration_v1":                resourceASConfiguration(),
+			"flexibleengine_as_group":                           resourceASGroup(),
+			"flexibleengine_as_configuration":                   resourceASConfiguration(),
 			"flexibleengine_as_policy_v1":                       resourceASPolicy(),
 			"flexibleengine_as_lifecycle_hook_v1":               resourceASLifecycleHook(),
 			"flexibleengine_rds_read_replica_v3":                resourceRdsReadReplicaInstance(),
@@ -452,6 +457,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_api_gateway_api":   huaweicloud.ResourceAPIGatewayAPI(),
 			"flexibleengine_api_gateway_group": huaweicloud.ResourceAPIGatewayGroup(),
+
+			"flexibleengine_as_instance_attach": as.ResourceASInstanceAttach(),
+			"flexibleengine_as_notification":    as.ResourceAsNotification(),
 
 			"flexibleengine_enterprise_project":        eps.ResourceEnterpriseProject(),
 			"flexibleengine_cbr_policy":                cbr.ResourceCBRPolicyV3(),
@@ -538,6 +546,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_smn_subscription_v2": smn.ResourceSubscription(),          // v1.39.0
 
 			// Deprecated resource
+			"flexibleengine_as_group_v1":         resourceASGroup(),
+			"flexibleengine_as_configuration_v1": resourceASConfiguration(),
+
 			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
 			"flexibleengine_elb_listener":      resourceEListener(),
 			"flexibleengine_elb_backend":       resourceBackend(),
