@@ -103,7 +103,7 @@ resource "flexibleengine_blockstorage_volume_v2" "volume_2" {
 resource "flexibleengine_drs_replication_v2" "replication_1" {
   name = "replication_1"
   description = "The description of replication_1"
-  volume_ids = ["${flexibleengine_blockstorage_volume_v2.volume_1.id}", "${flexibleengine_blockstorage_volume_v2.volume_2.id}"]
+  volume_ids = [flexibleengine_blockstorage_volume_v2.volume_1.id, flexibleengine_blockstorage_volume_v2.volume_2.id]
   priority_station = "eu-west-0a"
 }
 `

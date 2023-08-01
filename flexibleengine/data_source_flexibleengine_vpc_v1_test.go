@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"time"
 )
 
 func TestAccFlexibleEngineVpcV1DataSource_basic(t *testing.T) {
@@ -71,20 +71,20 @@ func testAccDataSourceFlexibleEngineVpcV1Check(n, name, cidr string) resource.Te
 func testAccDataSourceFlexibleEngineVpcV1Config(name, cidr string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_vpc_v1" "vpc_1" {
-	name = "%s"
-	cidr= "%s"
+  name = "%s"
+  cidr = "%s"
 }
 
 data "flexibleengine_vpc_v1" "by_id" {
-  id = "${flexibleengine_vpc_v1.vpc_1.id}"
+  id = flexibleengine_vpc_v1.vpc_1.id
 }
 
 data "flexibleengine_vpc_v1" "by_cidr" {
-  cidr = "${flexibleengine_vpc_v1.vpc_1.cidr}"
+  cidr = flexibleengine_vpc_v1.vpc_1.cidr
 }
 
 data "flexibleengine_vpc_v1" "by_name" {
-	name = "${flexibleengine_vpc_v1.vpc_1.name}"
+  name = flexibleengine_vpc_v1.vpc_1.name
 }
 `, name, cidr)
 }

@@ -97,33 +97,33 @@ func testAccCheckNetworkingV2FloatingIPAssociateExists(n string, fip *floatingip
 
 const testAccNetworkingV2FloatingIPAssociate_basic = `
 resource "flexibleengine_networking_network_v2" "network_1" {
-  name = "network_1"
+  name           = "network_1"
   admin_state_up = "true"
 }
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
-  name = "subnet_1"
-  cidr = "192.168.199.0/24"
+  name       = "subnet_1"
+  cidr       = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  router_id = flexibleengine_networking_router_v2.router_1.id
+  subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
-  name = "router_1"
+  name           = "router_1"
   admin_state_up = "true"
 }
 
 resource "flexibleengine_networking_port_v2" "port_1" {
   admin_state_up = "true"
-  network_id = "${flexibleengine_networking_subnet_v2.subnet_1.network_id}"
+  network_id     = flexibleengine_networking_subnet_v2.subnet_1.network_id
 
   fixed_ip {
-    subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id  = flexibleengine_networking_subnet_v2.subnet_1.id
     ip_address = "192.168.199.20"
   }
 }
@@ -132,7 +132,7 @@ resource "flexibleengine_networking_floatingip_v2" "fip_1" {
 }
 
 resource "flexibleengine_networking_floatingip_associate_v2" "fip_1" {
-  floating_ip = "${flexibleengine_networking_floatingip_v2.fip_1.address}"
-  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
+  floating_ip = flexibleengine_networking_floatingip_v2.fip_1.address
+  port_id     = flexibleengine_networking_port_v2.port_1.id
 }
 `

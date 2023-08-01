@@ -3,9 +3,10 @@ package flexibleengine
 import (
 	"testing"
 
+	"regexp"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"regexp"
 )
 
 func TestAccFlexibleEngineVpcPeeringConnectionAccepterV2_basic(t *testing.T) {
@@ -39,11 +40,11 @@ resource "flexibleengine_vpc_v1" "vpc_2" {
 }
 resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
     name = "flexibleengine"
-    vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-    peer_vpc_id = "${flexibleengine_vpc_v1.vpc_2.id}"
+    vpc_id = flexibleengine_vpc_v1.vpc_1.id
+    peer_vpc_id = flexibleengine_vpc_v1.vpc_2.id
   }
 resource "flexibleengine_vpc_peering_connection_accepter_v2" "peer" {
-  vpc_peering_connection_id = "${flexibleengine_vpc_peering_connection_v2.peering_1.id}"
+  vpc_peering_connection_id = flexibleengine_vpc_peering_connection_v2.peering_1.id
   accept = true
 
 }

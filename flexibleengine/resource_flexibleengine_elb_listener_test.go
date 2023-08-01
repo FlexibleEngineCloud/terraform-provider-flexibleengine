@@ -102,7 +102,7 @@ resource "flexibleengine_elb_listener" "listener_1" {
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = flexibleengine_elb_loadbalancer.loadbalancer_1.id
 
 	timeouts {
 		create = "5m"
@@ -127,7 +127,7 @@ resource "flexibleengine_elb_listener" "listener_1" {
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = flexibleengine_elb_loadbalancer.loadbalancer_1.id
 
 	timeouts {
 		create = "5m"

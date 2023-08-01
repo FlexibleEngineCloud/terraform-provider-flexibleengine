@@ -41,12 +41,12 @@ func testAccCheckBMSNicV2DataSourceID(n string) resource.TestCheckFunc {
 
 var testAccBMSNicV2DataSource_basic = fmt.Sprintf(`
 resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name = "BMSinstance_1"
-  image_id = "%s"
-  security_groups = ["default"]
+  name              = "BMSinstance_1"
+  image_id          = "%s"
+  security_groups   = ["default"]
   availability_zone = "%s"
-  flavor_id = "physical.o2.medium"
-  flavor_name = "physical.o2.medium"
+  flavor_id         = "physical.o2.medium"
+  flavor_name       = "physical.o2.medium"
   metadata = {
     foo = "bar"
   }
@@ -55,6 +55,6 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
   }
 }
 data "flexibleengine_compute_bms_nic_v2" "nic_1" {
-  server_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
+  server_id = flexibleengine_compute_instance_v2.instance_1.id
 }
 `, OS_IMAGE_ID, OS_AVAILABILITY_ZONE, OS_NETWORK_ID)

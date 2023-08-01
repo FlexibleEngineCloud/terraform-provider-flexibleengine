@@ -164,8 +164,8 @@ resource "flexibleengine_s3_bucket" "object_bucket" {
 	bucket = "tf-object-test-bucket-%d"
 }
 resource "flexibleengine_s3_bucket_object" "object" {
-	bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
-	key = "tf-testing-obj-%d"
+	bucket  = flexibleengine_s3_bucket.object_bucket.bucket
+	key     = "tf-testing-obj-%d"
 	content = "Hello World"
 }
 `, randInt, randInt)
@@ -173,7 +173,7 @@ resource "flexibleengine_s3_bucket_object" "object" {
 	both := fmt.Sprintf(`%s
 data "flexibleengine_s3_bucket_object" "obj" {
 	bucket = "tf-object-test-bucket-%d"
-	key = "tf-testing-obj-%d"
+	key    = "tf-testing-obj-%d"
 }`, resources, randInt, randInt)
 
 	return resources, both
@@ -185,9 +185,9 @@ resource "flexibleengine_s3_bucket" "object_bucket" {
 	bucket = "tf-object-test-bucket-%d"
 }
 resource "flexibleengine_s3_bucket_object" "object" {
-	bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
-	key = "tf-testing-obj-%d-readable"
-	content = "yes"
+	bucket       = flexibleengine_s3_bucket.object_bucket.bucket
+	key          = "tf-testing-obj-%d-readable"
+	content      = "yes"
 	content_type = "text/plain"
 }
 `, randInt, randInt)
@@ -195,7 +195,7 @@ resource "flexibleengine_s3_bucket_object" "object" {
 	both := fmt.Sprintf(`%s
 data "flexibleengine_s3_bucket_object" "obj" {
 	bucket = "tf-object-test-bucket-%d"
-	key = "tf-testing-obj-%d-readable"
+	key    = "tf-testing-obj-%d-readable"
 }`, resources, randInt, randInt)
 
 	return resources, both
@@ -211,26 +211,23 @@ resource "flexibleengine_s3_bucket" "object_bucket" {
 }
 
 resource "flexibleengine_s3_bucket_object" "object" {
-	bucket = "${flexibleengine_s3_bucket.object_bucket.bucket}"
-	key = "tf-testing-obj-%d-all-params"
+	bucket = flexibleengine_s3_bucket.object_bucket.bucket
+	key    = "tf-testing-obj-%d-all-params"
 	content = <<CONTENT
 {"msg": "Hi there!"}
 CONTENT
-	content_type = "application/unknown"
-	cache_control = "no-cache"
+	content_type        = "application/unknown"
+	cache_control       = "no-cache"
 	content_disposition = "attachment"
-	content_encoding = "identity"
-	content_language = "en-GB"
-	#tags {
-	#	Key1 = "Value 1"
-	#}
+	content_encoding    = "identity"
+	content_language    = "en-GB"
 }
 `, randInt, randInt)
 
 	both := fmt.Sprintf(`%s
 data "flexibleengine_s3_bucket_object" "obj" {
 	bucket = "tf-object-test-bucket-%d"
-	key = "tf-testing-obj-%d-all-params"
+	key    = "tf-testing-obj-%d-all-params"
 }`, resources, randInt, randInt)
 
 	return resources, both

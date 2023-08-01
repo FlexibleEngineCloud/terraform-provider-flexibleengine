@@ -187,17 +187,17 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.199.0/24"
 }
 
 resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
   vpc_id = "%s"
   type = "External"
   bandwidth = 3
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_1.id}"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_1.id
 }
 `, OS_VPC_ID)
 
@@ -219,16 +219,16 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.199.0/24"
 }
 
 resource "flexibleengine_elb_loadbalancer" "loadbalancer_1" {
   name = "loadbalancer_1"
-  vip_subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  vip_subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
   vpc_id = "%s"
   type = "External"
   bandwidth = 3
-  security_group_id = "${flexibleengine_networking_secgroup_v2.secgroup_2.id}"
+  security_group_id = flexibleengine_networking_secgroup_v2.secgroup_2.id
 }
 `, OS_VPC_ID)

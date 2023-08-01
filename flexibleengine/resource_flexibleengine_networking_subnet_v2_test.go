@@ -183,7 +183,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   allocation_pools {
     start = "192.168.199.100"
@@ -202,7 +202,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   gateway_ip = "192.168.199.1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   allocation_pools {
     start = "192.168.199.150"
@@ -222,7 +222,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
   gateway_ip = "192.168.199.1"
   enable_dhcp = true
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 `
 
@@ -236,7 +236,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   enable_dhcp = false
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 `
 
@@ -250,7 +250,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   no_gateway = true
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 `
 
@@ -262,7 +262,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 `
 
@@ -274,7 +274,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   allocation_pools {
     start = "192.168.199.100"

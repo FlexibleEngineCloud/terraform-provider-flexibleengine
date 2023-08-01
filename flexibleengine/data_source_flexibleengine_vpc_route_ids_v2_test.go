@@ -43,32 +43,32 @@ func testAccFlexibleEngineRouteIdV2DataSourceID(n string) resource.TestCheckFunc
 
 const testAccFlexibleEngineRouteIdV2DataSource_vpcroute = `
 resource "flexibleengine_vpc_v1" "vpc_1" {
-name = "vpc_test"
-cidr = "192.168.0.0/16"
+  name = "vpc_test"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_v1" "vpc_2" {
-		name = "vpc_test1"
-        cidr = "192.168.0.0/16"
+  name = "vpc_test1"
+  cidr = "192.168.0.0/16"
 }
 
 resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
-		name = "flexibleengine_peering"
-		vpc_id = "${flexibleengine_vpc_v1.vpc_1.id}"
-		peer_vpc_id = "${flexibleengine_vpc_v1.vpc_2.id}"
+  name        = "flexibleengine_peering"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
+  peer_vpc_id = flexibleengine_vpc_v1.vpc_2.id
 }
 
 resource "flexibleengine_vpc_route_v2" "route_1" {
-   type = "peering"
-  nexthop = "${flexibleengine_vpc_peering_connection_v2.peering_1.id}"
+  type        = "peering"
+  nexthop     = flexibleengine_vpc_peering_connection_v2.peering_1.id
   destination = "192.168.0.0/16"
-  vpc_id ="${flexibleengine_vpc_v1.vpc_1.id}"
+  vpc_id      = flexibleengine_vpc_v1.vpc_1.id
 }
 `
 
 var testAccFlexibleEngineRouteIdV2DataSource_basic = fmt.Sprintf(`
 %s
 data "flexibleengine_vpc_route_ids_v2" "route_ids" {
-  vpc_id = "${flexibleengine_vpc_route_v2.route_1.vpc_id}"
+  vpc_id = flexibleengine_vpc_route_v2.route_1.vpc_id
 }
 `, testAccFlexibleEngineRouteIdV2DataSource_vpcroute)

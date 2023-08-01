@@ -122,7 +122,7 @@ resource "flexibleengine_mrs_cluster_v1" "cluster1" {
 resource "flexibleengine_mrs_job_v1" "job1" {
   job_type = 1
   job_name = "test_mapreduce_job1"
-  cluster_id = "${flexibleengine_mrs_cluster_v1.cluster1.id}"
+  cluster_id = flexibleengine_mrs_cluster_v1.cluster1.id
   jar_path = "s3a://tf-mrs/program/hadoop-mapreduce-examples-2.7.5.jar"
   input = "s3a://tf-mrs/input/"
   output = "s3a://tf-mrs/output/"
