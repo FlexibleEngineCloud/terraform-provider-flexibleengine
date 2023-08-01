@@ -73,11 +73,11 @@ func dataSourceCertificateV2Read(d *schema.ResourceData, meta interface{}) error
 	}
 	allPages, err := certificates.List(lbClient, listOpts).AllPages()
 	if err != nil {
-		return fmt.Errorf("Error retrieving flexibleengine_lb_certificate_v2: %s", err)
+		return fmt.Errorf("Error retrieving ELB certificate: %s", err)
 	}
 	certs, err := certificates.ExtractCertificates(allPages)
 	if err != nil {
-		return fmt.Errorf("Error extracting flexibleengine_lb_certificate_v2 from response: %s", err)
+		return fmt.Errorf("Error extracting ELB certificate from response: %s", err)
 	}
 
 	if len(certs) < 1 {

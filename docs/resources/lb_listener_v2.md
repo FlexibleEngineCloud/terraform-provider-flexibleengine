@@ -38,7 +38,7 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 
-resource "flexibleengine_lb_certificate_v2" "certificate_1" {
+resource "flexibleengine_elb_certificate" "certificate_1" {
   name        = "cert"
   domain      = "www.elb.com"
   private_key = <<EOT
@@ -102,7 +102,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol                  = "TERMINATED_HTTPS"
   protocol_port             = 8080
   loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
-  default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
+  default_tls_container_ref = flexibleengine_elb_certificate.certificate_1.id
 }
 ```
 
