@@ -9,10 +9,10 @@ The FlexibleEngine CSBS Backup data source allows access of backup resources.
 ## Example Usage
 
 ```hcl
-variable "backup_name" { }
+variable "backup_name" {}
 
 data "flexibleengine_csbs_backup_v1" "csbs" {
-  backup_name = "${var.backup_name}" 
+  backup_name = var.backup_name
 }
 ```
 

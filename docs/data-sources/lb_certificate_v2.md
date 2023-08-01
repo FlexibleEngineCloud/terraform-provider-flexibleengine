@@ -11,13 +11,11 @@ flexibleengine_lb_certificate_v2 provides details about a specific Certificate.
 The following example shows how one might accept a certificate name as a variable to fetch this data source.
 
 ```hcl
-
 variable "cert_name" {}
 
 data "flexibleengine_lb_certificate_v2" "by_name" {
-  name = "${var.cert_name}"
+  name = var.cert_name
 }
-
 ```
 
 ## Argument Reference

@@ -9,18 +9,16 @@ The VPC Peering Connection data source provides details about a specific VPC pee
 ## Example Usage
 
  ```hcl
-
 data "flexibleengine_vpc_peering_connection_v2" "peering" {
-   vpc_id          = "${flexibleengine_vpc_v1.vpc.id}"
-   peer_vpc_id     = "${flexibleengine_vpc_v1.peer_vpc.id}"
+  vpc_id      = flexibleengine_vpc_v1.vpc.id
+  peer_vpc_id = flexibleengine_vpc_v1.peer_vpc.id
  }
 
-
 resource "flexibleengine_vpc_route_v2" "vpc_route" {
-  type       = "peering"
-  nexthop    = "${data.flexibleengine_vpc_peering_connection_v2.peering.id}"
+  type        = "peering"
+  nexthop     = data.flexibleengine_vpc_peering_connection_v2.peering.id
   destination = "192.168.0.0/16"
-  vpc_id = "${flexibleengine_vpc_v1.vpc.id}"
+  vpc_id      = flexibleengine_vpc_v1.vpc.id
 }
  ```
 

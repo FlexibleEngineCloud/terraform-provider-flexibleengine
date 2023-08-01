@@ -9,10 +9,10 @@ The VBS Backup data source provides details about a specific VBS Backup.
 ## Example Usage
 
 ```hcl
-variable "backup_id" {}
+variable "backup_name" {}
 
 data "flexibleengine_vbs_backup_v2" "mybackup" {
-  id = "${var.backup_id}"
+  name = var.backup_name
 }
 ```
 

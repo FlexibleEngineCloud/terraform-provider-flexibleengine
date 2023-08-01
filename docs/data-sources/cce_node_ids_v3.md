@@ -10,8 +10,10 @@ This data source can be useful for getting back a list of node ids for a CCE clu
 ## Example Usage
 
 ```hcl
+variable "cluster_id" {}
+
 data "flexibleengine_cce_node_ids_v3" "node_ids" {
-  cluster_id = "${var.cluster_id}"
+  cluster_id = var.cluster_id
 }
 ```
 

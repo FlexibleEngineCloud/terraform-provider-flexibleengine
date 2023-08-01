@@ -9,15 +9,12 @@ Provides information about an Shared File System (SFS).
 ## Example Usage
 
 ```hcl
-    variable "share_name" { }
+variable "share_name" {}
 
-    variable "share_id" { }
-
-    data "flexibleengine_sfs_file_system_v2" "shared_file"
-    {
-        name = "${var.share_name}"
-        id = "${var.share_id}"
-    }
+data "flexibleengine_sfs_file_system_v2" "shared_file"
+{
+  name = var.share_name
+}
 ```
 
 ## Argument Reference

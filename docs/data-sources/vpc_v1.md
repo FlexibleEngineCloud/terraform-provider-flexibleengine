@@ -18,7 +18,7 @@ obtain the data necessary to create a subnet within it.
 variable "vpc_name" {}
 
 data "flexibleengine_vpc_v1" "vpc" {
-  name = "${var.vpc_name}"
+  name = var.vpc_name
 }
 ```
 
