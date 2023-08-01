@@ -9,12 +9,11 @@ The FlexibleEngine CSBS Backup Policy data source allows access of backup Policy
 ## Example Usage
 
 ```hcl
-variable "policy_id" { }
+variable "policy_id" {}
 
 data "flexibleengine_csbs_backup_policy_v1" "csbs_policy" {
-  id = "${var.policy_id}" 
+  id = var.policy_id
 }
-
 ```
 
 ## Argument Reference

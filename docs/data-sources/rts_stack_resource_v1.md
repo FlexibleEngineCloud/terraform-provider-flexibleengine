@@ -13,8 +13,8 @@ variable "stack_name" { }
 variable "resource_name" { }
 
 data "flexibleengine_rts_stack_resource_v1" "stackresource" {
-  stack_name = "${var.stack_name}"
-  resource_name = "${var.resource_name}"  
+  stack_name    = var.stack_name
+  resource_name = var.resource_name
 }
 ```
 

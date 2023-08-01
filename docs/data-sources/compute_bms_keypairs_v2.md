@@ -9,12 +9,11 @@ subcategory: "Bare Metal Server (BMS)"
 ## Example Usage
 
 ```hcl
-    variable "keypair_name" {}
+variable "keypair_name" {}
 
-    data "flexibleengine_compute_bms_keypairs_v2" "Query_BMS_keypair" 
-    {
-        name = "${var.keypair_name}"
-    }
+data "flexibleengine_compute_bms_keypairs_v2" "keypair" {
+  name = var.keypair_name
+}
 ```
 
 ## Argument Reference

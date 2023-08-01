@@ -9,16 +9,13 @@ subcategory: "Bare Metal Server (BMS)"
 ## Example Usage
 
 ```hcl
-    
-    variable "bms_id" {}
-    variable "nic_id" {}
+variable "bms_id" {}
+variable "nic_id" {}
 
-    data "flexibleengine_compute_bms_nic_v2" "Query_BMS_Nic" 
-    {
-        server_id = "${var.bms_id}",
-        id = "${var.nic_id}",
-    }
-       
+data "flexibleengine_compute_bms_nic_v2" "nic" {
+  server_id = var.bms_id
+  id        = var.nic_id
+}
 ```
 
 ## Argument Reference

@@ -9,14 +9,10 @@ The VBS Backup Policy data source provides details about a specific VBS backup p
 ## Example Usage
 
  ```hcl
-
- variable "policy_name" { }
-
- variable "policy_id" { }
+ variable "policy_name" {}
     
 data "flexibleengine_vbs_backup_policy_v2" "policies" {
-  name = "${var.policy_name}"
-  id = "${var.policy_id}"
+  name = var.policy_name
 }
  ```
 
