@@ -43,8 +43,8 @@ func TestAccDliSparkJobV2_basic(t *testing.T) {
 				Config: testAccDliSparkJob_basic(rName, dashName),
 				Check: resource.ComposeTestCheckFunc(
 					rc.CheckResourceExists(),
-					acceptance.TestCheckResourceAttrWithVariable(resourceName, "queue_name",
-						"${flexibleengine_dli_queue.test.name}"),
+					resource.TestCheckResourceAttrPair(resourceName, "queue_name",
+						"flexibleengine_dli_queue.test", "name"),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 				),
 			},
