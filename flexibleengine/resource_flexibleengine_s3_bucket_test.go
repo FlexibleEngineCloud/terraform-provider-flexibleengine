@@ -1084,7 +1084,7 @@ resource "flexibleengine_s3_bucket" "bucket" {
 	acl = "private"
 	force_destroy = "true"
 	logging {
-		target_bucket = "${flexibleengine_s3_bucket.log_bucket.id}"
+		target_bucket = flexibleengine_s3_bucket.log_bucket.id
 		target_prefix = "log/"
 	}
 }

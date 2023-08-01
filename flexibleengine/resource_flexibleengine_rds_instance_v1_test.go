@@ -106,10 +106,10 @@ func testAccCheckRDSV1InstanceExists(n string, instance *instances.Instance) res
 
 var TestAccSInstanceV1Config_basic = fmt.Sprintf(`
 data "flexibleengine_rds_flavors_v1" "flavor" {
-    region = "eu-west-0"
-    datastore_name = "MySQL"
-    datastore_version = "5.6.30"
-    speccode = "rds.mysql.s1.medium.ha"
+  region            = "eu-west-0"
+  datastore_name    = "MySQL"
+  datastore_version = "5.6.30"
+  speccode          = "rds.mysql.s1.medium.ha"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgrp_rds" {
@@ -120,27 +120,27 @@ resource "flexibleengine_networking_secgroup_v2" "secgrp_rds" {
 resource "flexibleengine_rds_instance_v1" "instance" {
   name = "rds-instance"
   datastore {
-    type = "MySQL"
+    type    = "MySQL"
     version = "5.6.30"
   }
-  flavorref = "${data.flexibleengine_rds_flavors_v1.flavor.id}"
+  flavorref = data.flexibleengine_rds_flavors_v1.flavor.id
   volume {
     type = "COMMON"
     size = 100
   }
-  region = "eu-west-0"
+  region           = "eu-west-0"
   availabilityzone = "eu-west-0a"
   vpc = "%s"
   nics {
     subnetid = "%s"
   }
   securitygroup {
-    id = "${flexibleengine_networking_secgroup_v2.secgrp_rds.id}"
+    id = flexibleengine_networking_secgroup_v2.secgrp_rds.id
   }
   dbport = "8635"
   backupstrategy {
     starttime = "00:00:00"
-    keepdays = 0
+    keepdays  = 0
   }
   dbrtpd = "Huangwei-120521"
   ha {
@@ -152,10 +152,10 @@ resource "flexibleengine_rds_instance_v1" "instance" {
 
 var TestAccSInstanceV1Config_PostgreSQL = fmt.Sprintf(`
 data "flexibleengine_rds_flavors_v1" "flavor" {
-    region = "eu-west-0"
-    datastore_name = "PostgreSQL"
-    datastore_version = "9.5.5"
-    speccode = "rds.pg.s1.medium.ha"
+  region            = "eu-west-0"
+  datastore_name    = "PostgreSQL"
+  datastore_version = "9.5.5"
+  speccode          = "rds.pg.s1.medium.ha"
 }
 
 resource "flexibleengine_networking_secgroup_v2" "secgrp_rds" {
@@ -169,7 +169,7 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     type = "PostgreSQL"
     version = "9.5.5"
   }
-  flavorref = "${data.flexibleengine_rds_flavors_v1.flavor.id}"
+  flavorref = data.flexibleengine_rds_flavors_v1.flavor.id
   volume {
     type = "COMMON"
     size = 100
@@ -181,7 +181,7 @@ resource "flexibleengine_rds_instance_v1" "instance" {
     subnetid = "%s"
   }
   securitygroup {
-    id = "${flexibleengine_networking_secgroup_v2.secgrp_rds.id}"
+    id = flexibleengine_networking_secgroup_v2.secgrp_rds.id
   }
   dbport = "8635"
   backupstrategy {

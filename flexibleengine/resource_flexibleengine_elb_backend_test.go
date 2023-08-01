@@ -97,12 +97,12 @@ resource "flexibleengine_elb_listener" "ls_flexibleengine_acctest" {
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.lb_flexibleengine_acctest.id}"
+  loadbalancer_id = flexibleengine_elb_loadbalancer.lb_flexibleengine_acctest.id
 }
 
 
 resource "flexibleengine_elb_health" "health_flexibleengine_acctest" {
-  listener_id = "${flexibleengine_elb_listener.ls_flexibleengine_acctest.id}"
+  listener_id = flexibleengine_elb_listener.ls_flexibleengine_acctest.id
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
   healthcheck_timeout = 10
@@ -121,16 +121,16 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_flexibleengine_acc_te
 
 resource "flexibleengine_compute_instance_v2" "instance_flexibleengine_backend_test" {
   name = "instance_flexibleengine_backend_test"
-  security_groups = ["${flexibleengine_networking_secgroup_v2.secgroup_flexibleengine_acc_test.name}"]
+  security_groups = [flexibleengine_networking_secgroup_v2.secgroup_flexibleengine_acc_test.name]
   network {
     uuid = "%s"
   }
 }
 
 resource "flexibleengine_elb_backend" "backend_flexibleengine_acctest" {
-  address = "${flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.access_ip_v4}"
-  listener_id = "${flexibleengine_elb_listener.ls_flexibleengine_acctest.id}"
-  server_id = "${flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.id}"
+  address = flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.access_ip_v4
+  listener_id = flexibleengine_elb_listener.ls_flexibleengine_acctest.id
+  server_id = flexibleengine_compute_instance_v2.instance_flexibleengine_backend_test.id
   timeouts {
     create = "5m"
     delete = "5m"

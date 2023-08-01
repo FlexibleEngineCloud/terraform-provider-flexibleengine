@@ -159,8 +159,8 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
   description =  "terraform acceptance test"
   rules = [
-    "${flexibleengine_fw_rule_v2.udp_deny.id}",
-    "${flexibleengine_fw_rule_v2.tcp_allow.id}"
+    flexibleengine_fw_rule_v2.udp_deny.id,
+    flexibleengine_fw_rule_v2.tcp_allow.id
   ]
 }
 
@@ -180,7 +180,7 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
   name = "policy_1"
   description =  "terraform acceptance test"
   rules = [
-    "${flexibleengine_fw_rule_v2.udp_deny.id}"
+    flexibleengine_fw_rule_v2.udp_deny.id
   ]
 }
 

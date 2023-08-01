@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/jen20/awspolicyequivalence"
+	awspolicy "github.com/jen20/awspolicyequivalence"
 )
 
 func TestAccS3BucketPolicy_basic(t *testing.T) {
@@ -112,15 +112,12 @@ func testAccCheckS3BucketHasPolicy(n string, expectedPolicyText string) resource
 func testAccS3BucketPolicyConfig(bucketName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_s3_bucket" "bucket" {
-	bucket = "%s"
-	#tags {
-	#	TestName = "TestAccS3BucketPolicy_basic"
-	#}
+  bucket = "%s"
 }
 
 resource "flexibleengine_s3_bucket_policy" "bucket" {
-	bucket = "${flexibleengine_s3_bucket.bucket.bucket}"
-	policy =<<POLICY
+  bucket = flexibleengine_s3_bucket.bucket.bucket
+  policy =<<POLICY
 {
 	"Version": "2008-10-17",
 	"Statement": [{
@@ -145,15 +142,12 @@ POLICY
 func testAccS3BucketPolicyConfig_updated(bucketName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_s3_bucket" "bucket" {
-	bucket = "%s"
-	#tags {
-	#	TestName = "TestAccS3BucketPolicy_basic"
-	#}
+  bucket = "%s"
 }
 
 resource "flexibleengine_s3_bucket_policy" "bucket" {
-	bucket = "${flexibleengine_s3_bucket.bucket.bucket}"
-	policy =<<POLICY
+  bucket = flexibleengine_s3_bucket.bucket.bucket
+  policy =<<POLICY
 {
 	"Version": "2008-10-17",
 	"Statement": [{

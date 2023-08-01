@@ -108,12 +108,12 @@ resource "flexibleengine_elb_listener" "listener_1" {
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = flexibleengine_elb_loadbalancer.loadbalancer_1.id
 }
 
 
 resource "flexibleengine_elb_health" "health_1" {
-  listener_id = "${flexibleengine_elb_listener.listener_1.id}"
+  listener_id = flexibleengine_elb_listener.listener_1.id
   healthcheck_protocol = "HTTP"
   healthy_threshold = 3
   healthcheck_timeout = 10
@@ -142,12 +142,12 @@ resource "flexibleengine_elb_listener" "listener_1" {
   backend_protocol = "TCP"
   backend_port = 8080
   lb_algorithm = "roundrobin"
-  loadbalancer_id = "${flexibleengine_elb_loadbalancer.loadbalancer_1.id}"
+  loadbalancer_id = flexibleengine_elb_loadbalancer.loadbalancer_1.id
 }
 
 
 resource "flexibleengine_elb_health" "health_1" {
-  listener_id = "${flexibleengine_elb_listener.listener_1.id}"
+  listener_id = flexibleengine_elb_listener.listener_1.id
   healthcheck_protocol = "HTTP"
   healthy_threshold = 5
   healthcheck_timeout = 15

@@ -140,8 +140,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  port_id = flexibleengine_networking_port_v2.port_1.id
 }
 `, OS_NETWORK_ID, OS_NETWORK_ID)
 
@@ -152,7 +152,7 @@ resource "flexibleengine_networking_network_v2" "network_1" {
 
 resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
   cidr = "192.168.1.0/24"
   ip_version = 4
   enable_dhcp = true
@@ -168,8 +168,8 @@ resource "flexibleengine_compute_instance_v2" "instance_1" {
 }
 
 resource "flexibleengine_compute_interface_attach_v2" "ai_1" {
-  instance_id = "${flexibleengine_compute_instance_v2.instance_1.id}"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  instance_id = flexibleengine_compute_instance_v2.instance_1.id
+  network_id = flexibleengine_networking_network_v2.network_1.id
   fixed_ip = "192.168.1.100"
 }
 `, OS_NETWORK_ID)

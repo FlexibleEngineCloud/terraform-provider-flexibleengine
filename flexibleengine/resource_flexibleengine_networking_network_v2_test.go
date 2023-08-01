@@ -186,7 +186,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.10.0/24"
   ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
@@ -194,8 +194,8 @@ resource "flexibleengine_networking_router_v2" "router_1" {
 }
 
 resource "flexibleengine_networking_router_interface_v2" "ri_1" {
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  subnet_id = "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+  router_id = flexibleengine_networking_router_v2.router_1.id
+  subnet_id = flexibleengine_networking_subnet_v2.subnet_1.id
 }
 `
 
@@ -209,7 +209,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
@@ -226,21 +226,21 @@ resource "flexibleengine_compute_secgroup_v2" "secgroup_1" {
 resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  security_group_ids = ["${flexibleengine_compute_secgroup_v2.secgroup_1.id}"]
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  security_group_ids = [flexibleengine_compute_secgroup_v2.secgroup_1.id]
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   fixed_ip {
-    "subnet_id" =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    "subnet_id" =  flexibleengine_networking_subnet_v2.subnet_1.id
     "ip_address" =  "192.168.199.23"
   }
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
   name = "instance_1"
-  security_groups = ["${flexibleengine_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = [flexibleengine_compute_secgroup_v2.secgroup_1.name]
 
   network {
-    port = "${flexibleengine_networking_port_v2.port_1.id}"
+    port = flexibleengine_networking_port_v2.port_1.id
   }
 }
 `

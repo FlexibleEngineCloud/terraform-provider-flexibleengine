@@ -6,7 +6,7 @@ resource "flexibleengine_compute_instance_v2" "webserver" {
   key_pair    = flexibleengine_compute_keypair_v2.keypair.name
   user_data   = "#cloud-config\npackage_update: true\npackages: ['nginx-light']\n"
   security_groups = [
-    "${flexibleengine_networking_secgroup_v2.secgrp_web.name}"
+    flexibleengine_networking_secgroup_v2.secgrp_web.name
   ]
 
   network {

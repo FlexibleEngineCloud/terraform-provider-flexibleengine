@@ -256,8 +256,8 @@ func testAccCheckFWFirewallGroupV2(n, expectedName, expectedDescription string, 
 
 const testAccFWFirewallGroupV2_basic_1 = `
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
+  egress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
 
   timeouts {
     create = "5m"
@@ -275,8 +275,8 @@ const testAccFWFirewallGroupV2_basic_2 = `
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "fw_1"
   description = "terraform acceptance test"
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_2.id}"
-  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_2.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_2.id
+  egress_policy_id = flexibleengine_fw_policy_v2.policy_2.id
   admin_state_up = true
 
   timeouts {
@@ -302,7 +302,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   cidr = "192.168.199.0/24"
   ip_version = 4
   enable_dhcp = true
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
@@ -314,17 +314,17 @@ resource "flexibleengine_networking_router_v2" "router_1" {
 resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   fixed_ip {
-    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  flexibleengine_networking_subnet_v2.subnet_1.id
     #ip_address = "192.168.199.23"
   }
 }
 
 resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
+  router_id = flexibleengine_networking_router_v2.router_1.id
+  port_id = flexibleengine_networking_port_v2.port_1.id
 }
 
 resource "flexibleengine_fw_policy_v2" "policy_1" {
@@ -334,10 +334,10 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
-  #egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
+  #egress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
   ports = [
-	"${flexibleengine_networking_port_v2.port_1.id}"
+	flexibleengine_networking_port_v2.port_1.id
   ]
   depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1"]
 }
@@ -353,7 +353,7 @@ resource "flexibleengine_networking_subnet_v2" "subnet_1" {
   name = "subnet_1"
   cidr = "192.168.199.0/24"
   ip_version = 4
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 }
 
 resource "flexibleengine_networking_router_v2" "router_1" {
@@ -371,10 +371,10 @@ resource "flexibleengine_networking_router_v2" "router_2" {
 resource "flexibleengine_networking_port_v2" "port_1" {
   name = "port_1"
   admin_state_up = "true"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   fixed_ip {
-    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  flexibleengine_networking_subnet_v2.subnet_1.id
     #ip_address = "192.168.199.23"
   }
 }
@@ -382,22 +382,22 @@ resource "flexibleengine_networking_port_v2" "port_1" {
 resource "flexibleengine_networking_port_v2" "port_2" {
   name = "port_2"
   admin_state_up = "true"
-  network_id = "${flexibleengine_networking_network_v2.network_1.id}"
+  network_id = flexibleengine_networking_network_v2.network_1.id
 
   fixed_ip {
-    subnet_id =  "${flexibleengine_networking_subnet_v2.subnet_1.id}"
+    subnet_id =  flexibleengine_networking_subnet_v2.subnet_1.id
     #ip_address = "192.168.199.24"
   }
 }
 
 resource "flexibleengine_networking_router_interface_v2" "router_interface_1" {
-  router_id = "${flexibleengine_networking_router_v2.router_1.id}"
-  port_id = "${flexibleengine_networking_port_v2.port_1.id}"
+  router_id = flexibleengine_networking_router_v2.router_1.id
+  port_id = flexibleengine_networking_port_v2.port_1.id
 }
 
 resource "flexibleengine_networking_router_interface_v2" "router_interface_2" {
-  router_id = "${flexibleengine_networking_router_v2.router_2.id}"
-  port_id = "${flexibleengine_networking_port_v2.port_2.id}"
+  router_id = flexibleengine_networking_router_v2.router_2.id
+  port_id = flexibleengine_networking_port_v2.port_2.id
 }
 
 resource "flexibleengine_fw_policy_v2" "policy_1" {
@@ -407,11 +407,11 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
+  egress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
   ports = [
-	"${flexibleengine_networking_port_v2.port_1.id}",
-	"${flexibleengine_networking_port_v2.port_2.id}"
+	flexibleengine_networking_port_v2.port_1.id,
+	flexibleengine_networking_port_v2.port_2.id
   ]
   depends_on = ["flexibleengine_networking_router_interface_v2.router_interface_1", "flexibleengine_networking_router_interface_v2.router_interface_2"]
 }
@@ -425,8 +425,8 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
+  egress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
 }
 `
 
@@ -438,7 +438,7 @@ resource "flexibleengine_fw_policy_v2" "policy_1" {
 resource "flexibleengine_fw_firewall_group_v2" "fw_1" {
   name = "firewall_1"
   description = "firewall router test"
-  ingress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
-  egress_policy_id = "${flexibleengine_fw_policy_v2.policy_1.id}"
+  ingress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
+  egress_policy_id = flexibleengine_fw_policy_v2.policy_1.id
 }
 `
