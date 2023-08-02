@@ -221,7 +221,7 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_certificate_v2" "certificate_1" {
+resource "flexibleengine_elb_certificate" "certificate_1" {
   name        = "cert-%s"
   domain      = "www.elb.com"
   private_key = <<EOT
@@ -286,7 +286,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
   protocol_port             = 8080
   http2_enable              = true
   loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
-  default_tls_container_ref = flexibleengine_lb_certificate_v2.certificate_1.id
+  default_tls_container_ref = flexibleengine_elb_certificate.certificate_1.id
 }
 `, name, OS_SUBNET_ID, name, name)
 }
