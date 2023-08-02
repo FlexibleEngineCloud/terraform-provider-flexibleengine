@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 1.40.0 (August 2, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_kms_grant` [GH-965]
+  - `flexibleengine_as_instance_attach` [GH-966]
+  - `flexibleengine_as_notification` [GH-966]
+
+* **New Data Source:**
+  - `flexibleengine_as_configurations` [GH-966]
+  - `flexibleengine_as_groups` [GH-966]
+
 ## 1.39.0 (July 7, 2023)
 
 FEATURES:
