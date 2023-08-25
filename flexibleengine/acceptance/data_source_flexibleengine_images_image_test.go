@@ -115,27 +115,6 @@ data "flexibleengine_images_image" "test" {
 `, osVersion)
 }
 
-func testBaseNetwork(rName string) string {
-	return fmt.Sprintf(`
-resource "flexibleengine_vpc_v1" "test" {
-  name = "%[1]s"
-  cidr = "192.168.0.0/16"
-}
-
-resource "flexibleengine_vpc_subnet_v1" "test" {
-  name       = "%[1]s"
-  vpc_id     = flexibleengine_vpc_v1.test.id
-  cidr       = "192.168.0.0/24"
-  gateway_ip = "192.168.0.1"
-}
-
-resource "flexibleengine_networking_secgroup_v2" "test" {
-  name                 = "%[1]s"
-  delete_default_rules = true
-}
-`, rName)
-}
-
 func testAccImsImageDataSource_base(rName string) string {
 	return fmt.Sprintf(`
 %[1]s

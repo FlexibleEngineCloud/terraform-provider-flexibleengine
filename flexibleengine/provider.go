@@ -34,6 +34,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ims"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/lb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/modelarts"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/nat"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/obs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
@@ -501,6 +502,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
 
 			"flexibleengine_kms_grant": dew.ResourceKmsGrant(),
+
+			"flexibleengine_nat_private_dnat_rule":  nat.ResourcePrivateDnatRule(),
+			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
+			"flexibleengine_nat_private_snat_rule":  nat.ResourcePrivateSnatRule(),
+			"flexibleengine_nat_private_transit_ip": nat.ResourcePrivateTransitIp(),
 
 			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
