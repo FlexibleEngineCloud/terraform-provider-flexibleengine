@@ -1,13 +1,16 @@
-package flexibleengine
+package acceptance
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/chnsz/golangsdk/openstack/sfs_turbo/v1/shares"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	"github.com/chnsz/golangsdk/openstack/sfs_turbo/v1/shares"
+
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 )
 
 func TestAccSFSTurbo_basic(t *testing.T) {
@@ -17,9 +20,9 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 	var turbo shares.Turbo
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSFSTurboDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckSFSTurboDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSFSTurbo_basic(randSuffix),
@@ -30,6 +33,8 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "share_type", "STANDARD"),
 					resource.TestCheckResourceAttr(resourceName, "size", "500"),
 					resource.TestCheckResourceAttr(resourceName, "status", "200"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 				),
 			},
 			{
@@ -41,8 +46,10 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 				Config: testAccSFSTurbo_update(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSFSTurboExists(resourceName, &turbo),
-					resource.TestCheckResourceAttr(resourceName, "size", "600"),
-					resource.TestCheckResourceAttr(resourceName, "status", "221"),
+					resource.TestCheckResourceAttr(resourceName, "size", "500"),
+					resource.TestCheckResourceAttr(resourceName, "status", "200"),
+					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar_update"),
+					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_update"),
 				),
 			},
 		},
@@ -56,9 +63,9 @@ func TestAccSFSTurbo_crypt(t *testing.T) {
 	var turbo shares.Turbo
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSFSTurboDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckSFSTurboDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSFSTurbo_crypt(randSuffix),
@@ -77,10 +84,10 @@ func TestAccSFSTurbo_crypt(t *testing.T) {
 }
 
 func testAccCheckSFSTurboDestroy(s *terraform.State) error {
-	config := testAccProvider.Meta().(*Config)
+	config := testAccProvider.Meta().(*config.Config)
 	sfsClient, err := config.SfsV1Client(OS_REGION_NAME)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine sfs turbo client: %s", err)
+		return fmt.Errorf("Error creating flexibleengine sfs turbo client: %s", err)
 	}
 
 	for _, rs := range s.RootModule().Resources {
@@ -108,10 +115,10 @@ func testAccCheckSFSTurboExists(n string, share *shares.Turbo) resource.TestChec
 			return fmt.Errorf("No ID is set")
 		}
 
-		config := testAccProvider.Meta().(*Config)
+		config := testAccProvider.Meta().(*config.Config)
 		sfsClient, err := config.SfsV1Client(OS_REGION_NAME)
 		if err != nil {
-			return fmt.Errorf("Error creating FlexibleEngine sfs turbo client: %s", err)
+			return fmt.Errorf("Error creating flexibleengine sfs turbo client: %s", err)
 		}
 
 		found, err := shares.Get(sfsClient, rs.Primary.ID).Extract()
@@ -152,52 +159,66 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup" {
 func testAccSFSTurbo_basic(suffix string) string {
 	return fmt.Sprintf(`
 %s
+data "flexibleengine_availability_zones" "myaz" {}
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
-  name        = "sfs-turbo-acc-%s"
-  size        = 500
-  share_proto = "NFS"
-  vpc_id      = flexibleengine_vpc_v1.test.id
-  subnet_id   = flexibleengine_vpc_subnet_v1.test.id
+  name              = "sfs-turbo-acc-%s"
+  size              = 500
+  share_proto       = "NFS"
+  vpc_id            = flexibleengine_vpc_v1.test.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  availability_zone = "%s"
+  availability_zone = data.flexibleengine_availability_zones.myaz.names[0]
+
+  tags = {
+    foo = "bar"
+    key = "value"
+  }
 }
-`, testAccNetworkPreConditions(suffix), suffix, OS_AVAILABILITY_ZONE)
+`, testAccNetworkPreConditions(suffix), suffix)
 }
 
 func testAccSFSTurbo_update(suffix string) string {
 	return fmt.Sprintf(`
 %s
+data "flexibleengine_availability_zones" "myaz" {}
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
-  name        = "sfs-turbo-acc-%s"
-  size        = 600
-  share_proto = "NFS"
-  vpc_id      = flexibleengine_vpc_v1.test.id
-  subnet_id   = flexibleengine_vpc_subnet_v1.test.id
+  name              = "sfs-turbo-acc-%s"
+  size              = 500
+  share_proto       = "NFS"
+  vpc_id            = flexibleengine_vpc_v1.test.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  availability_zone = "%s"
+  availability_zone = data.flexibleengine_availability_zones.myaz.names[0]
+
+  tags = {
+    foo = "bar_update"
+    key = "value_update"
+  }
 }
-`, testAccNetworkPreConditions(suffix), suffix, OS_AVAILABILITY_ZONE)
+`, testAccNetworkPreConditions(suffix), suffix)
 }
 
 func testAccSFSTurbo_crypt(suffix string) string {
 	return fmt.Sprintf(`
 %s
+data "flexibleengine_availability_zones" "myaz" {}
+
 resource "flexibleengine_kms_key_v1" "key_1" {
-  key_alias = "kms-acc-%s"
+  key_alias    = "kms-acc-%s"
   pending_days = "7"
 }
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
-  name         = "sfs-turbo-acc-%s"
-  size         = 500
-  share_proto  = "NFS"
-  crypt_key_id = flexibleengine_kms_key_v1.key_1.id
-  vpc_id       = flexibleengine_vpc_v1.test.id
-  subnet_id    = flexibleengine_vpc_subnet_v1.test.id
+  name              = "sfs-turbo-acc-%s"
+  size              = 500
+  share_proto       = "NFS"
+  vpc_id            = flexibleengine_vpc_v1.test.id
+  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
   security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  availability_zone = "%s"
+  availability_zone = data.flexibleengine_availability_zones.myaz.names[0]
+  crypt_key_id      = flexibleengine_kms_key_v1.key_1.id
 }
-`, testAccNetworkPreConditions(suffix), suffix, suffix, OS_AVAILABILITY_ZONE)
+`, testAccNetworkPreConditions(suffix), suffix, suffix)
 }
