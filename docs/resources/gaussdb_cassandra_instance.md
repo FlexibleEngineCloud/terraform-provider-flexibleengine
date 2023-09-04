@@ -122,11 +122,11 @@ The `backup_strategy` block supports:
   0 to 35. If this parameter is set to 0, the automated backup policy is not set. If this parameter is not transferred,
   the automated backup policy is enabled by default. Backup files are stored for seven days by default.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Specifies a resource ID in UUID format.
+* `id` - Indicates the DB instance ID.
 * `status` - Indicates the DB instance status.
 * `port` - Indicates the database port.
 * `mode` - Indicates the instance type.
@@ -148,9 +148,9 @@ The `nodes` block contains:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 60 minute.
-* `update` - Default is 120 minute.
-* `delete` - Default is 30 minute.
+* `create` - Default is 60 minutes.
+* `update` - Default is 120 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
