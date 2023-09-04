@@ -13,6 +13,7 @@ require (
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.20
 	github.com/huaweicloud/terraform-provider-huaweicloud v1.50.0
 	github.com/jen20/awspolicyequivalence v1.1.0
+	github.com/jmespath/go-jmespath v0.4.0
 	github.com/mitchellh/go-homedir v1.1.0
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -41,7 +42,6 @@ require (
 	github.com/hashicorp/terraform-registry-address v0.0.0-20220623143253-7d51757b572c // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/keybase/go-crypto v0.0.0-20200123153347-de78d2cb44f4 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
