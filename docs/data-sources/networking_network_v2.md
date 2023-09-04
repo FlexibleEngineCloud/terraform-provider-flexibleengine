@@ -18,7 +18,7 @@ data "flexibleengine_networking_network_v2" "network" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Neutron client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Neutron client.
   A Neutron client is needed to retrieve networks ids. If omitted, the
   `region` argument of the provider is used.
 

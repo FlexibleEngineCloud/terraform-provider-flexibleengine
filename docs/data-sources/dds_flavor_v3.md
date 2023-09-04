@@ -18,7 +18,7 @@ data "flexibleengine_dds_flavor_v3" "flavor" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V3 dds client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V3 dds client.
 
 * `engine_name` - (Optional) The engine name of the dds, now only DDS-Community is supported.
 

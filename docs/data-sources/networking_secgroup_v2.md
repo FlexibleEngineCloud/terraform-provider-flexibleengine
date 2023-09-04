@@ -16,7 +16,7 @@ data "flexibleengine_networking_secgroup_v2" "secgroup" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 Neutron client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Neutron client.
   A Neutron client is needed to retrieve security groups ids. If omitted, the
   `region` argument of the provider is used.
 
@@ -24,7 +24,7 @@ data "flexibleengine_networking_secgroup_v2" "secgroup" {
 
 * `name` - (Optional) The name of the security group.
 
-* `tenant_id` - (Optional) The owner of the security group.
+* `tenant_id` - (Optional, String, ForceNew) The owner of the security group.
 
 ## Attributes Reference
 

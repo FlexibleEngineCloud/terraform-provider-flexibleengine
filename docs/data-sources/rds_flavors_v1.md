@@ -21,7 +21,7 @@ data "flexibleengine_rds_flavors_v1" "flavor" {
 
 ## Argument Reference
 
-* `region` - (Required) The region in which to obtain the V1 rds client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V1 rds client.
 
 * `datastore_name` - (Required) The datastore name of the rds.
 

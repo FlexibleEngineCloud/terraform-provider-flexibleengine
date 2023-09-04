@@ -18,7 +18,7 @@ data "flexibleengine_blockstorage_volume_v2" "volume" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Volume client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Volume client.
   If omitted, the `region` argument of the provider is used.
 
 * `name` - (Optional) The name of the volume.

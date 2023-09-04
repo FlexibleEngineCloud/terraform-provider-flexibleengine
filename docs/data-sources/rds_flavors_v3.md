@@ -21,7 +21,7 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 
 * `db_type` - (Required, String) Specifies the DB engine. Value: MySQL, PostgreSQL, SQLServer.
 
-* `db_version` - (Required, String) Specifies the database version. MySQL databases support MySQL 5.6
+* `db_version` - (Optional, String) Specifies the database version. MySQL databases support MySQL 5.6
   and 5.7. PostgreSQL databases support PostgreSQL 9.5 and 9.6. Microsoft SQL Server databases support
   2014_SE, 2016_SE, and 2016_EE.
 

@@ -18,27 +18,27 @@ data "flexibleengine_images_image_v2" "ubuntu" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the image.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the image.
     If omitted, the `region` argument of the provider is used.
 
-* `name` - (Optional) The name of the image. Exact matching is used.
+* `name` - (Optional, String, ForceNew) The name of the image. Exact matching is used.
 
-* `owner` - (Optional) The owner (UUID) of the image.
+* `owner` - (Optional, String, ForceNew) The owner (UUID) of the image.
 
-* `size_min` - (Optional) The minimum size (in bytes) of the image to return.
+* `size_min` - (Optional, Int, ForceNew) The minimum size (in bytes) of the image to return.
 
-* `size_max` - (Optional) The maximum size (in bytes) of the image to return.
+* `size_max` - (Optional, Int, ForceNew) The maximum size (in bytes) of the image to return.
 
-* `sort_direction` - (Optional) Order the results in either `asc` or `desc`.
+* `sort_direction` - (Optional, String, ForceNew) Order the results in either `asc` or `desc`.
 
-* `sort_key` - (Optional) Sort images based on a certain key. Defaults to `name`.
+* `sort_key` - (Optional, String, ForceNew) Sort images based on a certain key. Defaults to `name`.
 
-* `tag` - (Optional) Search for images with a specific tag.
+* `tag` - (Optional, String, ForceNew) Search for images with a specific tag.
 
-* `visibility` - (Optional) The visibility of the image. Must be one of
+* `visibility` - (Optional, String, ForceNew) The visibility of the image. Must be one of
    "public", "private", "community", or "shared".
 
-* `most_recent` - (Optional) If more than one result is returned, use the most
+* `most_recent` - (Optional, Bool, ForceNew) If more than one result is returned, use the most
   recent image.
 
 ## Attributes Reference
