@@ -181,6 +181,9 @@ The `backend_params` block supports:
 * `description` - (Optional, String) Specifies the description of the constant or system parameter, which contain a
   maximum of 255 characters, and the angle brackets (< and >) are not allowed.
 
+* `system_param_type` - (Optional, String) Specifies the type of the system parameter.  
+  The valid values are **frontend**, **backend** and **internal**, defaults to **internal**.
+
 <a name="apig_api_mock"></a>
 The `mock` block supports:
 
@@ -356,13 +359,13 @@ The `conditions` block supports:
 * `type` - (Optional, String) Specifies the condition type of the backend policy. The valid values are **Equal**,
   **Enumerated** and **Matching**, default to **Equal**.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the APIG API.
-* `register_time` - Time when the API is registered, in UTC format.
-* `update_time` - Time when the API was last modified, in UTC format.
+* `registered_at` - Time when the API is registered, in UTC format.
+* `updated_at` - Time when the API was last modified, in UTC format.
 
 ## Import
 

@@ -70,13 +70,13 @@ The `rule` block supports:
 
 * `status_code` - (Optional, Int) Specifies the HTTP status code of the API response rule.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the API custom response.
-* `create_time` - Time when the API custom response is created.
-* `update_time` - Time when the API custom response was last modified.
+* `create_at` - Time when the API custom response is created.
+* `update_at` - Time when the API custom response was last modified.
 
 ## Import
 

@@ -41,27 +41,21 @@ The following arguments are supported:
   custom authorizer belongs to.
   Changing this will create a new custom authorizer resource.
 
-* `name` - (Required, String, ForceNew) Specifies the name of the custom authorizer.
+* `name` - (Required, String) Specifies the name of the custom authorizer.
   The custom authorizer name consists of 3 to 64 characters, starting with a letter.
   Only letters, digits and underscores (_) are allowed.
-  Changing this will create a new custom authorizer resource.
 
-* `type` - (Required, String, ForceNew) Specifies the custom authoriz type.
-  The valid values are *FRONTEND* and *BACKEND*.
-  Changing this will create a new custom authorizer resource.
+* `type` - (Optional, String, ForceNew) Specifies the custom authoriz type.
+  The valid values are *FRONTEND* and *BACKEND*. Changing this will create a new custom authorizer resource.
 
-* `function_urn` - (Required, String, ForceNew) Specifies the uniform function URN of the function graph resource.
-  Changing this will create a new custom authorizer resource.
+* `function_urn` - (Required, String) Specifies the uniform function URN of the function graph resource.
 
-* `is_body_send` - (Optional, Bool, ForceNew) Specifies whether to send the body.
-  Changing this will create a new custom authorizer resource.
+* `is_body_send` - (Optional, Bool) Specifies whether to send the body.
 
-* `cache_age` - (Optional, String) Specifies the maximum cache age.
-  Changing this will create a new custom authorizer resource.
+* `cache_age` - (Optional, Int) Specifies the maximum cache age.
 
-* `user_data` - (Optional, String, ForceNew) Specifies the user data, which can contain a maximum of 2,048 characters.
+* `user_data` - (Optional, String) Specifies the user data, which can contain a maximum of 2,048 characters.
   The user data is used by APIG to invoke the specified authentication function when accessing the backend service.
-  Changing this will create a new custom authorizer resource.
 
   -> **NOTE:** The user data will be displayed in plain text on the console.
 
@@ -70,24 +64,21 @@ The following arguments are supported:
 
 The `identity` block supports:
 
-* `name` - (Required, String, ForceNew) Specifies the name of the parameter to be verified.
+* `name` - (Required, String) Specifies the name of the parameter to be verified.
   The parameter includes front-end and back-end parameters.
-  Changing this will create a new custom authorizer resource.
 
-* `location` - (Required, String, ForceNew) Specifies the parameter location, which support 'HEADER' and 'QUERY'.
-  Changing this will create a new custom authorizer resource.
+* `location` - (Required, String) Specifies the parameter location, which support 'HEADER' and 'QUERY'.
 
-* `validation` - (Required, String, ForceNew) Specifies the parameter verification expression.
+* `validation` - (Optional, String) Specifies the parameter verification expression.
   If omitted, the custom authorizer will not perform verification.
   The valid value is range form 1 to 2,048.
-  Changing this will create a new custom authorizer resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the custom authorizer.
-* `create_time` - Time when the APIG custom authorizer was created.
+* `create_at` - Time when the APIG custom authorizer was created.
 
 ## Import
 

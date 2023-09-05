@@ -71,14 +71,26 @@ The `variable` block supports:
 
   -> **NOTE:** The variable value will be displayed in plain text on the console.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the API group.
-* `registraion_time` - Registration time, in RFC-3339 format.
-* `update_time` - Time when the API group was last modified, in RFC-3339 format.
-* `environment/variable/variable_id` - ID of the environment variable.
+* `registration_at` - Registration time, in RFC-3339 format.
+* `update_at` - Time when the API group was last modified, in RFC-3339 format.
+* `environment` - The array of one or more environments of the associated group.  
+  The [object](#group_environment_attr) structure is documented below.
+
+<a name="group_environment_attr"></a>
+The `environment` block supports:
+
+* `variable` - The array of one or more environment variables.  
+  The [object](#group_environment_variable_attr) structure is documented below.
+
+<a name="group_environment_variable_attr"></a>
+The `variable` block supports:
+
+* `id` - The variable ID.
 
 ## Import
 
