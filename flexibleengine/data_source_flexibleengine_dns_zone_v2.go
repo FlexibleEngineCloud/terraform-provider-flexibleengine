@@ -18,59 +18,45 @@ func dataSourceDNSZoneV2() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-
-			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"pool_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
-			"project_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
 			"email": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-
-			"status": {
+			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-
-			"zone_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"ttl": {
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-
+			"status": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"ttl": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"zone_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"masters": {
 				Type:     schema.TypeSet,
-				Optional: true,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-
+			"pool_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"project_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"serial": {
 				Type:     schema.TypeInt,
-				Optional: true,
 				Computed: true,
 			},
 		},

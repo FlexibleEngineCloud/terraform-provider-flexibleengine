@@ -16,23 +16,24 @@ data "flexibleengine_dns_zone_v2" "zone_1" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V2 DNS client.
-  A DNS client is needed to retrieve zone ids. If omitted, the
-  `region` argument of the provider is used.
+* `region` - (Optional, String) The region in which to obtain the V2 DNS client.
+  A DNS client is needed to retrieve zone ids. If omitted, the `region` argument of the provider is used.
 
-* `name` - (Optional) The name of the zone.
+* `name` - (Optional, String) The name of the zone.
 
-* `description` - (Optional) A description of the zone.
+* `description` - (Optional, String) A description of the zone.
 
-* `email` - (Optional) The email contact for the zone record.
+* `email` - (Optional, String) The email contact for the zone record.
 
-* `status` - (Optional) The zone's status.
+* `status` - (Optional, String) The zone's status.
 
-* `ttl` - (Optional) The time to live (TTL) of the zone.
+* `ttl` - (Optional, Int) The time to live (TTL) of the zone.
 
-* `zone_type` - (Optional) The type of the zone. Can either be `public` or `private`.
+* `zone_type` - (Optional, String) The type of the zone. Can either be `public` or `private`.
 
-## Attributes Reference
+## Attribute Reference
+
+In addition to all arguments above, the following attributes are exported:
 
 `id` is set to the ID of the found zone. In addition, the following attributes
 are exported:

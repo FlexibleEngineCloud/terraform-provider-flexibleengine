@@ -42,25 +42,25 @@ resource "flexibleengine_dns_zone_v2" "my_private_zone" {
 
 The following arguments are supported:
 
-* `region` - (Optional, ForceNew) The region in which to create the DNS zone.
+* `region` - (Optional, String, ForceNew) The region in which to create the DNS zone.
   If omitted, the `region` argument of the provider is used.
   Changing this creates a new DNS zone.
 
-* `name` - (Required, ForceNew) The name of the zone. Note the `.` at the end of the name.
+* `name` - (Required, String, ForceNew) The name of the zone. Note the `.` at the end of the name.
   Changing this creates a new DNS zone.
 
-* `email` - (Optional) The email contact for the zone record.
+* `email` - (Optional, String) The email contact for the zone record.
 
 * `zone_type` - (Optional, ForceNew) The type of zone. Can either be `public` or `private`.
   Default is `public`. Changing this creates a new DNS zone.
 
-* `router` - (Optional) Router configuration block which is required if zone_type is private.
+* `router` - (Optional, List) Router configuration block which is required if zone_type is private.
   The router structure is documented below.
 
-* `ttl` - (Optional) The time to live (TTL) of the zone. TTL ranges from 1 to 2147483647 seconds.
+* `ttl` - (Optional, Int) The time to live (TTL) of the zone. TTL ranges from 1 to 2147483647 seconds.
   Default is  `300`.
 
-* `description` - (Optional) A description of the zone. Max length is `255` characters.
+* `description` - (Optional, String) A description of the zone. Max length is `255` characters.
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the zone.
 
@@ -69,22 +69,25 @@ The following arguments are supported:
 
 The `router` block supports:
 
-* `router_id` - (Required) The VPC UUID.
+* `router_id` - (Required, String) The VPC UUID.
 
-* `router_region` - (Optional) The region of the VPC. Defaults to the `region`.
+* `router_region` - (Optional, String) The region of the VPC. Defaults to the `region`.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `email` - See Argument Reference above.
-* `zone_type` - See Argument Reference above.
-* `ttl` - See Argument Reference above.
-* `description` - See Argument Reference above.
+* `id` - Specifies a resource ID in UUID format.
+
 * `masters` - An array of master DNS servers.
-* `value_specs` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
