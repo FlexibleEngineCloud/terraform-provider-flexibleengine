@@ -42,47 +42,56 @@ resource "flexibleengine_vpc_eip" "eip_with_tags" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the EIP. If omitted,
+* `region` - (Optional, String, ForceNew) The region in which to create the EIP. If omitted,
   the `region` argument of the provider is used. Changing this creates a new EIP.
 
-* `publicip` - (Required) The elastic IP address object.
+* `publicip` - (Required, List) The elastic IP address object.
 
-* `bandwidth` - (Required) The bandwidth object.
+* `bandwidth` - (Required, List) The bandwidth object.
 
-* `tags` - (Optional) The key/value pairs to associate with the EIP.
+* `tags` - (Optional, Map) The key/value pairs to associate with the EIP.
 
 The `publicip` block supports:
 
-* `type` - (Required) The value must be a type supported by the system. Only **5_bgp** supported now.
+* `type` - (Required, String, ForceNew) The value must be a type supported by the system. Only **5_bgp** supported now.
     Changing this creates a new EIP.
 
-* `ip_address` - (Optional) The value must be a valid IP address in the available IP address segment.
+* `ip_address` - (Optional, String, ForceNew) The value must be a valid IP address in the available IP address segment.
     Changing this creates a new EIP.
 
-* `port_id` - (Optional) The port id which this EIP will associate with. If the value
+* `port_id` - (Optional, String) The port id which this EIP will associate with. If the value
     is not specified, the EIP will be in unbind state.
 
 The `bandwidth` block supports:
 
-* `name` - (Required) The bandwidth name, which is a string of 1 to 64 characters
+* `name` - (Required, String) The bandwidth name, which is a string of 1 to 64 characters
     that contain letters, digits, underscores (_), and hyphens (-).
 
-* `size` - (Required) The bandwidth size. The value ranges from 1 to 1000 Mbit/s.
+* `size` - (Required, Int) The bandwidth size. The value ranges from 1 to 1000 Mbit/s.
 
-* `share_type` - (Required) Specifies the bandwidth type.
+* `share_type` - (Required, String, ForceNew) Specifies the bandwidth type.
     The value is *PER*, indicating that the bandwidth is dedicated.
     Changing this creates a new EIP.
 
-* `charge_mode` - (Optional) Specifies whether the bandwidth is billed by traffic or by bandwidth size.
+* `charge_mode` - (Optional, String, ForceNew) Specifies whether the bandwidth is billed by traffic or by bandwidth size.
     Only **traffic** supported now. Changing this creates a new EIP.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in UUID format.
+
 * `address` - The IP address of the EIP.
+
 * `status` - The status of EIP.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
