@@ -33,9 +33,12 @@ resource "flexibleengine_as_lifecycle_hook_v1" "test" {
 
 The following arguments are supported:
 
-* `name` - (Required, String) Specifies the lifecycle hook name.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the AS lifecycle hook.
+  If omitted, the provider-level region will be used. Changing this creates a new AS lifecycle hook.
+
+* `name` - (Required, String, ForceNew) Specifies the lifecycle hook name.
   This parameter can contain a maximum of 32 characters, which may consist of letters, digits,
-  underscores (_) and hyphens (-).
+  underscores (_) and hyphens (-). Changing this creates a new AS configuration.
 
 * `scaling_group_id` - (Required, String, ForceNew) Specifies the ID of the AS group in UUID format.
   Changing this creates a new AS lifecycle hook.
@@ -57,7 +60,7 @@ The following arguments are supported:
 * `notification_message` - (Optional, String) Specifies a customized notification.
   This parameter can contains a maximum of 256 characters, which cannot contain the following characters: <>&'().
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
