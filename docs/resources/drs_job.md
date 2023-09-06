@@ -160,7 +160,7 @@ The `db_info` block supports:
 
 * `ip` - (Required, String, ForceNew) Specifies the IP of database. Changing this parameter will create a new resource.
 
-* `port` - (Required, String, ForceNew) Specifies the port of database. Changing this parameter will create a new resource.
+* `port` - (Required, Int, ForceNew) Specifies the port of database. Changing this parameter will create a new resource.
 
 * `user` - (Required, String, ForceNew) Specifies the user name of database.
  Changing this parameter will create a new resource.
@@ -177,7 +177,9 @@ The `db_info` block supports:
 * `region` - (Optional, String, ForceNew) Specifies the region which the database belongs when it is a RDS database.
  Changing this parameter will create a new resource.
 
-* `ssl_enabled` - (Optional, String, ForceNew) Specifies whether to enable SSL connection.
+* `name` - (Optional, String, ForceNew) Specifies the name of database. Changing this parameter will create a new resource.
+
+* `ssl_enabled` - (Optional, Bool, ForceNew) Specifies whether to enable SSL connection.
  Changing this parameter will create a new resource.
 
 * `ssl_cert_key` - (Optional, String, ForceNew) Specifies the SSL certificate content, encrypted with base64.
@@ -204,7 +206,7 @@ is two digits, for example: 01:00. Changing this parameter will create a new res
 * `end_time` - (Required, String, ForceNew) Specifies the time to end speed limit, this time is UTC time. The input must
  end at 59 minutes, the format is `hh:mm`, for example: 15:59. Changing this parameter will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
