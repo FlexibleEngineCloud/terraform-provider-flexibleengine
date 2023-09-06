@@ -2,7 +2,7 @@
 subcategory: "Cloud Trace Service (CTS)"
 ---
 
-# Data Source: flexibleengine_cts_tracker_v1
+# flexibleengine_cts_tracker_v1
 
 CTS Tracker data source allows access of Cloud Tracker.
 

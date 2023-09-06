@@ -2,7 +2,7 @@
 subcategory: "Scalable File Service (SFS)"
 ---
 
-# Data Source: flexibleengine_sfs_file_system_v2
+# flexibleengine_sfs_file_system_v2
 
 Provides information about an Shared File System (SFS).
 

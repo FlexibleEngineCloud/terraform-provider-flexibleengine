@@ -2,7 +2,7 @@
 subcategory: "Bare Metal Server (BMS)"
 ---
 
-# Data Source: flexibleengine_compute_bms_flavors_v2
+# flexibleengine_compute_bms_flavors_v2
 
 Use this data source to get an available BMS Flavor.
 

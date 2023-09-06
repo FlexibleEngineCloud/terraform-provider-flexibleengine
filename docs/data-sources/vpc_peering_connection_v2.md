@@ -2,7 +2,7 @@
 subcategory: "Virtual Private Cloud (VPC)"
 ---
 
-# Data Source: flexibleengine_vpc_peering_connection_v2
+# flexibleengine_vpc_peering_connection_v2
 
 The VPC Peering Connection data source provides details about a specific VPC peering connection.
 

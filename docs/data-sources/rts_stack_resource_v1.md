@@ -2,7 +2,7 @@
 subcategory: "Resource Template Service (RTS)"
 ---
 
-# Data Source: flexibleengine_rts_stack_resource_v1
+# flexibleengine_rts_stack_resource_v1
 
 The FlexibleEngine RTS Stack Resource data source allows access to stack resource metadata.
 

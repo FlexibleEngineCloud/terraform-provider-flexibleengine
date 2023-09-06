@@ -2,7 +2,7 @@
 subcategory: "Bare Metal Server (BMS)"
 ---
 
-# Data Source: flexibleengine_compute_bms_keypairs_v2
+# flexibleengine_compute_bms_keypairs_v2
 
 `flexibleengine_compute_bms_keypairs_v2` used to query SSH key pairs.
 

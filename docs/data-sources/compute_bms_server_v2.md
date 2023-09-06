@@ -3,7 +3,7 @@ subcategory: "Bare Metal Server (BMS)"
 ---
 
 
-# Data Source: flexibleengine_compute_bms_server_v2
+# flexibleengine_compute_bms_server_v2
 
 `flexibleengine_compute_bms_server_v2` used to query a BMS or BMSs details.
 

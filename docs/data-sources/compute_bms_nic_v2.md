@@ -2,7 +2,7 @@
 subcategory: "Bare Metal Server (BMS)"
 ---
 
-# Data Source: flexibleengine_compute_bms_nic_v2
+# flexibleengine_compute_bms_nic_v2
 
 `flexibleengine_compute_bms_nic_v2` used to query information about a BMS NIC based on the NIC ID.
 
