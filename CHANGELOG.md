@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 1.41.0 (September 6, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_nat_private_dnat_rule` [GH-971]
+  - `flexibleengine_nat_private_gateway` [GH-971]
+  - `flexibleengine_nat_private_snat_rule` [GH-971]
+  - `flexibleengine_nat_private_transit_ip` [GH-971]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_sfs_turbo`: Support enhanced feature  [GH-980]
+
 ## 1.40.0 (August 2, 2023)
 
 FEATURES:
