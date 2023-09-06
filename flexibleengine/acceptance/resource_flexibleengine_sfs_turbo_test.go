@@ -31,6 +31,7 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", turboName),
 					resource.TestCheckResourceAttr(resourceName, "share_proto", "NFS"),
 					resource.TestCheckResourceAttr(resourceName, "share_type", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "enhanced", "false"),
 					resource.TestCheckResourceAttr(resourceName, "size", "500"),
 					resource.TestCheckResourceAttr(resourceName, "status", "200"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
@@ -46,8 +47,8 @@ func TestAccSFSTurbo_basic(t *testing.T) {
 				Config: testAccSFSTurbo_update(randSuffix),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSFSTurboExists(resourceName, &turbo),
-					resource.TestCheckResourceAttr(resourceName, "size", "500"),
-					resource.TestCheckResourceAttr(resourceName, "status", "200"),
+					resource.TestCheckResourceAttr(resourceName, "size", "600"),
+					resource.TestCheckResourceAttr(resourceName, "status", "221"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar_update"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value_update"),
 				),
@@ -74,6 +75,7 @@ func TestAccSFSTurbo_crypt(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", turboName),
 					resource.TestCheckResourceAttr(resourceName, "share_proto", "NFS"),
 					resource.TestCheckResourceAttr(resourceName, "share_type", "STANDARD"),
+					resource.TestCheckResourceAttr(resourceName, "enhanced", "false"),
 					resource.TestCheckResourceAttr(resourceName, "size", "500"),
 					resource.TestCheckResourceAttr(resourceName, "status", "200"),
 					resource.TestCheckResourceAttrSet(resourceName, "crypt_key_id"),
@@ -185,7 +187,7 @@ data "flexibleengine_availability_zones" "myaz" {}
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
   name              = "sfs-turbo-acc-%s"
-  size              = 500
+  size              = 600
   share_proto       = "NFS"
   vpc_id            = flexibleengine_vpc_v1.test.id
   subnet_id         = flexibleengine_vpc_subnet_v1.test.id

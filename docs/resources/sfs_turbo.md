@@ -42,7 +42,9 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Specifies the name of an SFS Turbo file system. The value contains 4 to 64
   characters and must start with a letter. Changing this will create a new resource.
 
-* `size` - (Required, Int) Specifies the capacity of a sharing file system, in GB. The value ranges from 500 to 32768.
+* `size` - (Required, Int) Specifies the capacity of a sharing file system, in GB.
+  + If `share_type` is set to **STANDARD** or **PERFORMANCE**, the value ranges from 500 to 32768, and ranges from
+  10240 to 327680 for an enhanced file system.
 
   -> The file system capacity can only be expanded, not reduced.
 
@@ -62,6 +64,9 @@ The following arguments are supported:
 
 * `security_group_id` - (Required, String, ForceNew) Specifies the security group ID. Changing this will create a new
   resource.
+
+* `enhanced` - (Optional, Bool, ForceNew) Specifies whether the file system is enhanced or not. Changing this will
+  create a new resource.
 
 * `crypt_key_id` - (Optional, String, ForceNew) Specifies the ID of a KMS key to encrypt the file system. Changing this
   will create a new resource.
