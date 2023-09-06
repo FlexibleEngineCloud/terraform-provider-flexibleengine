@@ -2,7 +2,7 @@
 subcategory: "Cloud Server Backup Service (CSBS)"
 ---
 
-# Data Source: flexibleengine_csbs_backup_policy_v1
+# flexibleengine_csbs_backup_policy_v1
 
 The FlexibleEngine CSBS Backup Policy data source allows access of backup Policy resources.
 

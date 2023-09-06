@@ -2,7 +2,7 @@
 subcategory: "Volume Backup Service (VBS)"
 ---
 
-# Data Source: flexibleengine_vbs_backup_v2
+# flexibleengine_vbs_backup_v2
 
 The VBS Backup data source provides details about a specific VBS Backup.
 

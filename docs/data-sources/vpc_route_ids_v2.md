@@ -2,7 +2,7 @@
 subcategory: "Deprecated"
 ---
 
-# Data Source: flexibleengine_vpc_route_ids_v2
+# flexibleengine_vpc_route_ids_v2
 
 !> **WARNING:** It has been deprecated, use `flexibleengine_vpc_route_table` to get the route details.
 

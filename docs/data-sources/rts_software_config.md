@@ -2,7 +2,7 @@
 subcategory: "Resource Template Service (RTS)"
 ---
 
-# Data Source: flexibleengine_rts_software_config_v1
+# flexibleengine_rts_software_config_v1
 
 The RTS Software Config data source provides details about a specific RTS Software Config.
 

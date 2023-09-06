@@ -2,7 +2,7 @@
 subcategory: "Cloud Server Backup Service (CSBS)"
 ---
 
-# Data Source: flexibleengine_csbs_backup_v1
+# flexibleengine_csbs_backup_v1
 
 The FlexibleEngine CSBS Backup data source allows access of backup resources.
 
