@@ -43,6 +43,9 @@ resource "flexibleengine_ces_alarmrule" "alarm_rule" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) The region in which to create the alarm rule resource. If omitted, the
+  provider-level region will be used. Changing this creates a new resource.
+
 * `alarm_name` - (Required, String) Specifies the name of an alarm rule. The value can
     be a string of 1 to 128 characters that can consist of numbers, lowercase letters,
     uppercase letters, underscores (_), or hyphens (-).
@@ -124,12 +127,12 @@ The `condition` block supports:
 
 the `alarm_actions` block supports:
 
-* `type` - (Optional, String) specifies the type of action triggered by an alarm. the
+* `type` - (Required, String) specifies the type of action triggered by an alarm. the
     value can be *notification* or *autoscaling*.
     - notification: indicates that a notification will be sent to the user.
     - autoscaling: indicates that a scaling action will be triggered.
 
-* `notification_list` - (Optional, List) specifies the list of objects to be notified
+* `notification_list` - (Required, List) specifies the list of objects to be notified
     if the alarm status changes, the maximum length is 5.
     if type is set to *notification*, the value of notification_list cannot be empty.
     if type is set to *autoscaling*, the value of notification_list must be **[]**
@@ -139,14 +142,14 @@ the `alarm_actions` block supports:
 
 the `ok_actions` block supports:
 
-* `type` - (Optional, String) specifies the type of action triggered by an alarm. the
+* `type` - (Required, String) specifies the type of action triggered by an alarm. the
     value is notification.
     notification: indicates that a notification will be sent to the user.
 
-* `notification_list` - (Optional, List) specifies the list of objects to be notified
+* `notification_list` - (Required, List) specifies the list of objects to be notified
     if the alarm status changes, the maximum length is 5.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -159,6 +162,14 @@ In addition to all arguments above, the following attributes are exported:
 
 * `update_time` - Indicates the time when the alarm status changed.
     The value is a UNIX timestamp and the unit is ms.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 
