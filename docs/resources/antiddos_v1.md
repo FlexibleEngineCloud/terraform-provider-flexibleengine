@@ -28,17 +28,20 @@ resource "flexibleengine_antiddos_v1" "myantiddos" {
 
 The following arguments are supported:
 
-* `floating_ip_id` - (Required) The ID corresponding to the Elastic IP Address (EIP).
+* `region` - (Optional, String, ForceNew) Specifies the region in which to manage the Cloud Native Anti-DDos Basic resource.
+  If omitted, the provider-level region will be used. Changing this creates a new resource.
 
-* `enable_l7` - (Required) Specifies whether to enable L7 defense.
+* `floating_ip_id` - (Required, String) The ID corresponding to the Elastic IP Address (EIP).
 
-* `traffic_pos_id` - (Required) The position ID of traffic. The value ranges from 1 to 9.
+* `enable_l7` - (Required, Bool) Specifies whether to enable L7 defense.
 
-* `http_request_pos_id` - (Required) The position ID of number of HTTP requests. The value ranges from 1 to 15.
+* `traffic_pos_id` - (Required, Int) The position ID of traffic. The value ranges from 1 to 9.
 
-* `cleaning_access_pos_id` - (Required)The position ID of access limit during cleaning. The value ranges from 1 to 8.
+* `http_request_pos_id` - (Required, Int) The position ID of number of HTTP requests. The value ranges from 1 to 15.
 
-* `app_type_id` - (Required) The application type ID.
+* `cleaning_access_pos_id` - (Required, Int)The position ID of access limit during cleaning. The value ranges from 1 to 8.
+
+* `app_type_id` - (Required, Int) The application type ID.
 
 ## Attributes Reference
 
