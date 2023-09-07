@@ -3,7 +3,7 @@ subcategory: "Bare Metal Server (BMS)"
 ---
 
 
-# Data Source: flexibleengine_compute_bms_server_v2
+# flexibleengine_compute_bms_server_v2
 
 `flexibleengine_compute_bms_server_v2` used to query a BMS or BMSs details.
 
@@ -21,23 +21,26 @@ data "flexibleengine_compute_bms_server_v2" "server" {
 
 The arguments of this data source act as filters for querying the BMSs details.
 
-* `id` - (Optional) - The unique ID of the BMS.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `user_id` (Optional) - The ID of the user to which the BMS belongs.
+* `id` - (Optional, String) - The unique ID of the BMS.
 
-* `name` (Optional) - The name of BMS.
+* `user_id` (Optional, String) - The ID of the user to which the BMS belongs.
 
-* `status` (Optional) - The BMS status.
+* `name` (Optional, String) - The name of BMS.
 
-* `host_status` (Optional) - The nova-compute status: **UP, UNKNOWN, DOWN, MAINTENANCE** and **Null**.
+* `status` (Optional, String) - The BMS status.
 
-* `key_name` (Optional) - It is the SSH key name.
+* `host_status` (Optional, String) - The nova-compute status: **UP, UNKNOWN, DOWN, MAINTENANCE** and **Null**.
 
-* `flavor_id` (Optional) - It gives the BMS flavor information.
+* `key_name` (Optional, String) - It is the SSH key name.
 
-* `image_id` (Optional) - The BMS image.
+* `flavor_id` (Optional, String) - It gives the BMS flavor information.
 
-## Attributes Reference
+* `image_id` (Optional, String) - The BMS image.
+
+## Attribute Reference
 
 All of the argument attributes are also exported as result attributes.
 
@@ -51,9 +54,8 @@ All of the argument attributes are also exported as result attributes.
 
 * `access_ip_v6` - This is a reserved attribute.  
 
-* `addresses` - It gives the BMS network address.
-
 * `security_groups` - The list of security groups to which the BMS belongs.
+    The [security_groups](#<a name="bms_security_groups"></a>) object structure is documented below.
 
 * `tags` - Specifies the BMS tag.
 
@@ -70,3 +72,11 @@ All of the argument attributes are also exported as result attributes.
 * `hypervisor_hostname` -  It is the name of a host on the hypervisor.
 
 * `instance_name` - Instance name is specified.
+
+* `tenant_id` - Specifies the ID of the tenant owning the BMS. The value is in UUID format.
+    This parameter specifies the same meaning as project_id.
+
+<a name="bms_security_groups"></a>
+The `security_groups` block supports:
+
+* `name` - The name of security_groups.

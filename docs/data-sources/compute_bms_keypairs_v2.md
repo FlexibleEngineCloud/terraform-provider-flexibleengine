@@ -2,7 +2,7 @@
 subcategory: "Bare Metal Server (BMS)"
 ---
 
-# Data Source: flexibleengine_compute_bms_keypairs_v2
+# flexibleengine_compute_bms_keypairs_v2
 
 `flexibleengine_compute_bms_keypairs_v2` used to query SSH key pairs.
 
@@ -20,9 +20,12 @@ data "flexibleengine_compute_bms_keypairs_v2" "keypair" {
 
 The arguments of this data source act as filters for querying the BMSs details.
 
-* `name` - (Required) - It is the key pair name.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-## Attributes Reference
+* `name` - (Required, String) - It is the key pair name.
+
+## Attribute Reference
 
 All of the argument attributes are also exported as result attributes.
 

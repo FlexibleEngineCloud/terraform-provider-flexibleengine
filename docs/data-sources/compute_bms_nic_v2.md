@@ -2,7 +2,7 @@
 subcategory: "Bare Metal Server (BMS)"
 ---
 
-# Data Source: flexibleengine_compute_bms_nic_v2
+# flexibleengine_compute_bms_nic_v2
 
 `flexibleengine_compute_bms_nic_v2` used to query information about a BMS NIC based on the NIC ID.
 
@@ -22,18 +22,29 @@ data "flexibleengine_compute_bms_nic_v2" "nic" {
 
 The arguments of this data source act as filters for querying the BMSs details.
 
-* `server_id` - (Required) - This is the unique BMS id.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `id` - (Optional) - The ID of the NIC.
+* `server_id` - (Required, String) - This is the unique BMS id.
 
-* `status` - (Optional) - The NIC port status.
+* `id` - (Optional, String) - The ID of the NIC.
 
-## Attributes Reference
+* `status` - (Optional, String) - The NIC port status.
+
+## Attribute Reference
 
 All of the argument attributes are also exported as result attributes.
 
 * `mac_address` - It is NIC's mac address.
 
 * `fixed_ips` - The NIC IP address.
+    The [fixed_ips](#<a name="bms_fixed_ips"></a>) object structure is documented below.
 
 * `network_id` - The ID of the network to which the NIC port belongs.
+
+<a name="bms_fixed_ips"></a>
+The `fixed_ips` block supports:
+
+* `ip_address` - Specifies the NIC private IP address.
+
+* `subnet_id` - Specifies the ID of the subnet (subnet_id) corresponding to the private IP address of the NIC.
