@@ -21,9 +21,12 @@ data "flexibleengine_cce_node_ids_v3" "node_ids" {
 
 The following arguments are supported:
 
-* `cluster_id` (Required) - Specifies the CCE cluster ID used as the query filter.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-## Attributes Reference
+* `cluster_id` (Required, String) - Specifies the CCE cluster ID used as the query filter.
+
+## Attribute Reference
 
 The following attributes are exported:
 

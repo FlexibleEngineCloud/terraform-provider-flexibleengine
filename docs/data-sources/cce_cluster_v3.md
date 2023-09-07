@@ -21,15 +21,20 @@ data "flexibleengine_cce_cluster_v3" "cluster" {
 
 The following arguments are supported:
 
-* `name` -  (Optional)The Name of the cluster resource.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `id` - (Optional) The ID of container cluster.
+* `name` - (Optional, String)The Name of the cluster resource.
 
-* `status` - (Optional) The state of the cluster.
+* `id` - (Optional, String) The ID of container cluster.
 
-* `cluster_type` - (Optional) Type of the cluster. Possible values: VirtualMachine, BareMetal or Windows
+* `status` - (Optional, String) The state of the cluster.
 
-## Attributes Reference
+* `cluster_type` - (Optional, String) Type of the cluster. Possible values: VirtualMachine, BareMetal or Windows
+
+* `vpc_id` - (Optional, String) The ID of the VPC used to create the node.
+
+## Attribute Reference
 
 All above argument parameters can be exported as attribute parameters along with attribute reference:
 
@@ -69,8 +74,10 @@ All above argument parameters can be exported as attribute parameters along with
 
 * `authentication_mode` - Authentication mode of the cluster, possible values are x509 and rbac.
 
-* `masters` - Advanced configuration of master nodes. Structure is documented below.
+* `masters` - Advanced configuration of master nodes.
+  The [masters](#cce_masters) object structure is documented below.
 
+<a name="cce_masters"></a>
 The `masters` block supports:
 
 * `availability_zone` - The availability zone (AZ) of the master node.

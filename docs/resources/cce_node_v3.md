@@ -40,63 +40,71 @@ resource "flexibleengine_cce_node_v3" "node_1" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) ID of the cluster. Changing this parameter will create a new resource.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CCE node resource.
+  If omitted, the provider-level region will be used. Changing this will create a new CCE node resource.
 
-* `name` - (Optional) Node Name.
+* `cluster_id` - (Required, String, ForceNew) ID of the cluster. Changing this parameter will create a new resource.
 
-* `flavor_id` - (Required) Specifies the flavor id. Changing this parameter will create a new resource.
+* `name` - (Optional, String) Node Name.
 
-* `availability_zone` - (Required) specify the name of the available partition (AZ).
+* `flavor_id` - (Required, String, ForceNew) Specifies the flavor id.Changing this parameter will create a new resource.
+
+* `availability_zone` - (Required, String, ForceNew) specify the name of the available partition (AZ).
   Changing this parameter will create a new resource.
 
-* `key_pair` - (Required) Key pair name when logging in to select the key pair mode.
+* `key_pair` - (Required, String, ForceNew) Key pair name when logging in to select the key pair mode.
   Changing this parameter will create a new resource.
 
-* `os` - (Optional) Operating System of the node, possible values are EulerOS 2.2 and CentOS 7.6. Defaults to EulerOS 2.2.
-    Changing this parameter will create a new resource.
+* `os` - (Optional, String, ForceNew) Operating System of the node, possible values are EulerOS 2.2 and CentOS 7.6.
+  Defaults to EulerOS 2.2. Changing this parameter will create a new resource.
 
-* `labels` - (Optional) Tags of a Kubernetes node, key/value pair format. Changing this parameter will create a new resource.
+* `labels` - (Optional, Map, ForceNew) Tags of a Kubernetes node, key/value pair format. Changing this parameter will
+  create a new resource.
 
-* `tags` - (Optional) VM tag, key/value pair format.
+* `tags` - (Optional, Map) VM tag, key/value pair format.
 
-* `annotations` - (Optional) Node annotation, key/value pair format. Changing this parameter will create a new resource.
+* `annotations` - (Optional, Map, ForceNew) Node annotation, key/value pair format. Changing this parameter will
+  create a new resource.
 
-* `eip_ids` - (Optional) List of existing elastic IP IDs. Changing this parameter will create a new resource.
+* `eip_ids` - (Optional, Set, ForceNew) List of existing elastic IP IDs. Changing this parameter will create a new
+  resource.
 
   -> If the `eip_ids` parameter is configured, you do not need to configure the `eip_count` and bandwidth parameters:
   `iptype`, `bandwidth_charge_mode`, `bandwidth_size` and `share_type`.
 
-* `eip_count` - (Optional) Number of elastic IPs to be dynamically created. Changing this parameter will create a new resource.
+* `eip_count` - (Optional, Int, ForceNew) Number of elastic IPs to be dynamically created. Changing this parameter
+  will create a new resource.
 
-* `iptype` - (Optional) Elastic IP type.
+* `iptype` - (Optional, String, ForceNew) Elastic IP type.
 
-* `bandwidth_charge_mode` - (Optional) Bandwidth billing type. Changing this parameter will create a new resource.
+* `bandwidth_charge_mode` - (Optional, String, ForceNew) Bandwidth billing type. Changing this parameter will create a
+  new resource.
 
-* `sharetype` - (Optional) Bandwidth sharing type. Changing this parameter will create a new resource.
+* `sharetype` - (Optional, String, ForceNew) Bandwidth sharing type. Changing this parameter will create a new resource.
 
-* `bandwidth_size` - (Optional) Bandwidth size. Changing this parameter will create a new resource.
+* `bandwidth_size` - (Optional, Int, ForceNew) Bandwidth size. Changing this parameter will create a new resource.
 
-* `ecs_performance_type` - (Optional) Classification of cloud server specifications.
+* `ecs_performance_type` - (Optional, String, ForceNew) Classification of cloud server specifications.
     Changing this parameter will create a new resource.
 
-* `ecs_group_id` - (Optional) Specifies the ECS group ID. If specified, the node will be created under
+* `ecs_group_id` - (Optional, String, ForceNew) Specifies the ECS group ID. If specified, the node will be created under
     the cloud server group. Changing this parameter will create a new resource.
 
-* `subnet_id` - (Optional) Specifies the ID of the VPC Subnet to which the NIC belongs.
+* `subnet_id` - (Optional, String, ForceNew) Specifies the ID of the VPC Subnet to which the NIC belongs.
     Changing this parameter will create a new resource.
 
-* `product_id` - (Optional) The Product ID. Changing this parameter will create a new resource.
+* `product_id` - (Optional, String, ForceNew) The Product ID. Changing this parameter will create a new resource.
 
-* `max_pods` - (Optional) The maximum number of instances a node is allowed to create.
+* `max_pods` - (Optional, Int, ForceNew) The maximum number of instances a node is allowed to create.
     Changing this parameter will create a new resource.
 
-* `public_key` - (Optional) The Public key. Changing this parameter will create a new resource.
+* `public_key` - (Optional, String, ForceNew) The Public key. Changing this parameter will create a new resource.
 
-* `preinstall` - (Optional) Script required before installation. The input value can be a Base64 encoded string or not.
-    Changing this parameter will create a new resource.
+* `preinstall` - (Optional, String, ForceNew) Script required before installation. The input value can be a Base64
+  encoded string or not. Changing this parameter will create a new resource.
 
-* `postinstall` - (Optional) Script required after installation. The input value can be a Base64 encoded string or not.
-   Changing this parameter will create a new resource.
+* `postinstall` - (Optional, String, ForceNew) Script required after installation. The input value can be a Base64
+  encoded string or not. Changing this parameter will create a new resource.
 
 * `extend_param` - (Optional, Map, ForceNew) Extended parameter. Changing this parameter will create a new resource.
   Availiable keys:
@@ -111,39 +119,44 @@ The following arguments are supported:
     }
     ```
 
-* `root_volume` - (Required) It corresponds to the system disk related configuration.
+* `root_volume` - (Required, List, ForceNew) It corresponds to the system disk related configuration.
   Changing this parameter will create a new resource.
 
-  + `size` - (Required) Specifies the disk size in GB.
-  + `volumetype` - (Required) Specifies the disk type.
-  + `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
-  + `kms_key_id` - (Optional) Specifies the ID of a KMS key. This is used to encrypt the volume.
+  + `size` - (Required, Int, ForceNew) Specifies the disk size in GB.
+  + `volumetype` - (Required, String, ForceNew) Specifies the disk type.
+  + `extend_params` - (Optional, Map, ForceNew) Specifies the disk expansion parameters in key/value pair format.
+  + `kms_key_id` - (Optional, String, ForceNew) Specifies the ID of a KMS key. This is used to encrypt the volume.
 
   -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
   The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
-* `data_volumes` - (Required) Represents the data disk to be created.
+* `data_volumes` - (Required, List, ForceNew) Represents the data disk to be created.
   Changing this parameter will create a new resource.
 
-  + `size` - (Required) Specifies the disk size in GB.
-  + `volumetype` - (Required) Specifies the disk type.
-  + `extend_params` - (Optional) Specifies the disk expansion parameters in key/value pair format.
-  + `kms_key_id` - (Optional) Specifies the ID of a KMS key. This is used to encrypt the volume.
+  + `size` - (Required, Int, ForceNew) Specifies the disk size in GB.Changing this will create a new resource.
+  + `volumetype` - (Required, String, ForceNew) Specifies the disk type.Changing this will create a new resource.
+  + `extend_params` - (Optional, Map, ForceNew) Specifies the disk expansion parameters in key/value pair format.
+    Changing this will create a new resource.
+  + `kms_key_id` - (Optional, String, ForceNew) Specifies the ID of a KMS key. This is used to encrypt the volume.
+    Changing this will create a new resource.
 
-  -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
-  The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
+  -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first
+  time ever. The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
-* `taints` - (Optional) You can add taints to created nodes to configure anti-affinity.
+* `taints` - (Optional, List, ForceNew) You can add taints to created nodes to configure anti-affinity.
   Changing this parameter will create a new resource.
   Each taint contains the following parameters:
 
-  + `key` - (Required) A key must contain 1 to 63 characters starting with a letter or digit. Only letters, digits,
-    hyphens (-), underscores (_), and periods (.) are allowed. A DNS subdomain name can be used as the prefix of a key.
-  + `value` - (Required) A value must start with a letter or digit and can contain a maximum of 63 characters,
-    including letters, digits, hyphens (-), underscores (_), and periods (.).
-  + `effect` - (Required) Available options are NoSchedule, PreferNoSchedule, and NoExecute.
+  + `key` - (Required, String, ForceNew) A key must contain 1 to 63 characters starting with a letter or digit. Only
+    letters, digits, hyphens (-), underscores (_), and periods (.) are allowed. A DNS subdomain name can be used as
+    the prefix of a key. Changing this parameter will create a new resource.
+  + `value` - (Required, String, ForceNew) A value must start with a letter or digit and can contain a maximum of 63
+    characters, including letters, digits, hyphens (-), underscores (_), and periods (.).Changing this parameter will
+    create a new resource.
+  + `effect` - (Required, String, ForceNew) Available options are NoSchedule, PreferNoSchedule, and NoExecute.
+    Changing this parameter will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 All above argument parameters can be exported as attribute parameters along with attribute reference.
 
@@ -152,6 +165,13 @@ All above argument parameters can be exported as attribute parameters along with
 * `server_id` - ID of the ECS instance associated with the node.
 * `private_ip` - Private IP of the CCE node.
 * `public_ip` - Public IP of the CCE node.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 20 minutes.
+* `delete` - Default is 20 minutes.
 
 ## Import
 

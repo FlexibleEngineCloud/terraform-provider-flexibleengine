@@ -22,15 +22,18 @@ data "flexibleengine_cce_node_v3" "node" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The id of container cluster.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `name` - (Optional) - Name of the node.
+* `cluster_id` - (Required, String) The id of container cluster.
 
-* `node_id` - (Optional) - The id of the node.
+* `name` - (Optional, String) - Name of the node.
 
-* `status` - (Optional) - The state of the node.
+* `node_id` - (Optional, String) - The id of the node.
 
-## Attributes Reference
+* `status` - (Optional, String) - The state of the node.
+
+## Attribute Reference
 
 All above argument parameters can be exported as attribute parameters along with attribute reference:
 
@@ -53,13 +56,14 @@ All above argument parameters can be exported as attribute parameters along with
 * `ip_type` - Elastic IP address type.
 
 * `share_type` - Bandwidth sharing type.
+
 * `bandwidth_size` - Bandwidth (Mbit/s), in the range of [1, 2000].
+
 * `charge_mode` - Bandwidth billing type.
 
-* `root_volume` - It corresponds to the system disk related configuration.
+* `disk_size` - Disk size in GB.
 
-  + `disk_size` - Disk size in GB.
-  + `volume_type` - Disk type.
+* `volume_type` - Disk type.
 
 * `data_volumes` - Represents the data disk to be created.
 
