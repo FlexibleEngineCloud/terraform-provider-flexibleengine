@@ -27,7 +27,7 @@ The following arguments are supported:
 
 * `id` - (Required, String) Specifies the backup ID.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -144,9 +144,10 @@ The `children` block supports:
 
 * `vault_id` - The vault to which the backup resource belongs.
 
-* `replication_records` - The replication records.
+* `replication_records` - The replication records. The [object](#cbr_backup_replication_records) structure is
+  documented above.
 
-* `extend_info` - The extended information.
+* `extend_info` - The extended information. The [object](#cbr_backup_extend_info) structure is documented below.
 
 * `status` - The sub-backup status.
 
