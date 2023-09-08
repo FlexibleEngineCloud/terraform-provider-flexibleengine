@@ -23,16 +23,19 @@ Allows you to collect, store, and query cloud resource operation records.
 
 The following arguments are supported:
 
-* `bucket_name` - (Required) The OBS bucket name for a tracker.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CTS tracker resource.
+  If omitted, the provider-level region will be used. Changing this will create a new CTS tracker resource.
 
-* `file_prefix_name` - (Optional) The prefix of a log that needs to be stored in an OBS bucket.
+* `bucket_name` - (Required, String) The OBS bucket name for a tracker.
+
+* `file_prefix_name` - (Optional, String) The prefix of a log that needs to be stored in an OBS bucket.
   The value can contain letters, digits, and special characters `.-_`, but cannot contain spaces.
   The length is 1 to 64 characters.
 
-* `status` - The status of a tracker. The value should be **enabled** when creating a tracker,
+* `status` - (Optional, String) The status of a tracker. The value should be **enabled** when creating a tracker,
   and can be enabled or disabled when updating it.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
