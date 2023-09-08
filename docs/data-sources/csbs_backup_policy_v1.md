@@ -20,13 +20,16 @@ data "flexibleengine_csbs_backup_policy_v1" "csbs_policy" {
 
 The following arguments are supported:
 
-* `id` - (Optional) Specifies the ID of backup policy.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `name` - (Optional) Specifies the backup policy name.
+* `id` - (Optional, String) Specifies the ID of backup policy.
 
-* `status` - (Optional) Specifies the backup policy status.
+* `name` - (Optional, String) Specifies the backup policy name.
 
-## Attributes Reference
+* `status` - (Optional, String) Specifies the backup policy status.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -34,39 +37,46 @@ In addition to all arguments above, the following attributes are exported:
 
 * `provider_id` - Provides the Backup provider ID.
 
-* `parameters` - Specifies the parameters of a backup policy.
+* `common` - General backup policy parameters, which are blank by default.
 
-* `scheduled_operation` block supports the following arguments:
+* `scheduled_operation` -  Backup plan information.
+  The [scheduled_operation](#csbs_scheduled_operation) object structure is documented below.
 
-  + `name` - Specifies Scheduling period name.
+* `resource` - Backup Object. The [resource](#csbs_resource) object structure is documented below.
 
-  + `description` - Specifies Scheduling period description.
+<a name="csbs_scheduled_operation"></a>
+The `scheduled_operation` block supports:
 
-  + `enabled` - Specifies whether the scheduling period is enabled.
+* `name` - Specifies Scheduling period name.
 
-  + `max_backups` - Specifies maximum number of backups that can be automatically created for a backup object.
+* `description` - Specifies Scheduling period description.
 
-  + `retention_duration_days` - Specifies duration of retaining a backup, in days.
+* `enabled` - Specifies whether the scheduling period is enabled.
 
-  + `permanent` - Specifies whether backups are permanently retained.
+* `max_backups` - Specifies maximum number of backups that can be automatically created for a backup object.
 
-  + `trigger_pattern` - Specifies Scheduling policy of the scheduler.
+* `retention_duration_days` - Specifies duration of retaining a backup, in days.
 
-  + `operation_type` - Specifies Operation type, which can be backup.
+* `permanent` - Specifies whether backups are permanently retained.
 
-  + `id` -  Specifies Scheduling period ID.
+* `trigger_pattern` - Specifies Scheduling policy of the scheduler.
 
-  + `trigger_id` -  Specifies Scheduler ID.
+* `operation_type` - Specifies Operation type, which can be backup.
 
-  + `trigger_name` -  Specifies Scheduler name.
+* `id` -  Specifies Scheduling period ID.
 
-  + `trigger_type` -  Specifies Scheduler type.
+* `trigger_id` -  Specifies Scheduler ID.
 
-* `resource` block supports the following arguments:
+* `trigger_name` -  Specifies Scheduler name.
 
-  + `id` - Specifies the ID of the object to be backed up.
+* `trigger_type` -  Specifies Scheduler type.
 
-  + `type` - Entity object type of the backup object.
+<a name="csbs_resource"></a>
+The `resource` block supports:
 
-  + `name` - Specifies backup object name.
+* `id` - Specifies the ID of the object to be backed up.
+
+* `type` - Entity object type of the backup object.
+
+* `name` - Specifies backup object name.
   
