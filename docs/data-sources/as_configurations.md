@@ -22,20 +22,22 @@ The following arguments are supported:
 
 * `image_id` - (Optional, String) Specifies the image ID.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The ID of the list.
 
 * `configurations` - A list of AS configurations.
+  The [configurations](#instance_configurations) object structure is documented below.
 
+<a name="instance_configurations"></a>
 The `configurations` block supports:
 
 * `scaling_configuration_name` - The AS configuration name.
 
 * `instance_config` - The list of information about instance configurations.
-  The [object](#instance_config_object) structure is documented below.
+  The [instance_config](#instance_config_object) structure is documented below.
 
 * `status` - The AS configuration status, the value can be **Bound** or **Unbound**.
 
@@ -48,7 +50,7 @@ The `instance_config` block supports:
 
 * `image` - The ECS image ID.
 
-* `disk` - The list of disk group information. The [object](#instance_config_disk_object) structure is documented below.
+* `disk` - The list of disk group information. The [disk](#instance_config_disk_object) structure is documented below.
 
 * `key_name` - The name of the SSH key pair used to log in to the instance.
 
@@ -64,12 +66,12 @@ The `instance_config` block supports:
 * `user_data` - The user data to provide when launching the instance.
 
 * `public_ip` - The EIP list of the ECS instance.
-  The [object](#instance_config_public_ip_object) structure is documented below.
+  The [public_ip](#instance_config_public_ip_object) structure is documented below.
 
 * `metadata` - The key/value pairs to make available from within the instance.
 
 * `personality` - The list of information about the injected file.
-  The [object](#instance_config_personality_object) structure is documented below.
+  The [personality](#instance_config_personality_object) structure is documented below.
 
 <a name="instance_config_disk_object"></a>
 The `disk` block supports:
@@ -86,14 +88,17 @@ The `disk` block supports:
 The `public_ip` block supports:
 
 * `eip` - The list of EIP configuration that will be automatically assigned to the instance.
-  The object structure is documented below.
+  The [eip](#instance_eip) object structure is documented below.
 
+<a name="instance_eip"></a>
 The `eip` block supports:
 
 * `ip_type` - The EIP type.
 
-* `bandwidth` - The list of bandwidth information. The object structure is documented below.
+* `bandwidth` - The list of bandwidth information.
+  The [bandwidth](#instance_bandwidth) object structure is documented below.
 
+<a name="instance_bandwidth"></a>
 The `bandwidth` block supports:
 
 * `share_type` - The bandwidth sharing type.

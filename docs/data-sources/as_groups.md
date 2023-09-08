@@ -30,14 +30,15 @@ The following arguments are supported:
   - **DELETING**: indicates that the AS group is being deleted.
   - **FREEZED**: indicates that the AS group has been frozen.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The ID of the list.
 
-* `groups` - A list of AS groups.
+* `groups` - A list of AS groups. The [groups](#as_groups) object structure is documented below.
 
+<a name="as_groups"></a>
 The `groups` block supports:
 
 * `scaling_group_name` - The name of the AS group.
@@ -61,15 +62,15 @@ The `groups` block supports:
 * `cool_down_time` - The cooling duration, in seconds..
 
 * `lbaas_listeners` - The enhanced load balancers.
-  The [object](#lbaas_listener_object) structure is documented below.
+  The [lbaas_listeners](#as_lbaas_listener_object) structure is documented below.
 
 * `availability_zones` - The AZ information.
 
 * `networks` - The network information.
-  The [object](#network_object) structure is documented below.
+  The [networks](#as_network_object) structure is documented below.
 
 * `security_groups` - The security group information.
-  The [object](#security_group_object) structure is documented below.
+  The [security_groups](#as_security_group_object) structure is documented below.
 
 * `created_at` - The time when an AS group was created. The time format complies with UTC.
 
@@ -106,7 +107,7 @@ The `groups` block supports:
 
 * `instances` - The scaling group instances ids.
 
-<a name="lbaas_listener_object"></a>
+<a name="as_lbaas_listener_object"></a>
 The `lbaas_listeners` block supports:
 
 * `pool_id` - The backend ECS group ID.
@@ -116,7 +117,7 @@ The `lbaas_listeners` block supports:
 * `weight` - The weight, which determines the portion of requests a backend ECS processes
   compared to other backend ECSs added to the same listener.
 
-<a name="network_object"></a>
+<a name="as_network_object"></a>
 The `networks` block supports:
 
 * `id` - The subnet ID.
@@ -127,7 +128,7 @@ The `networks` block supports:
 
 * `source_dest_check` - Whether processesing only traffic that is destined specifically for it.
 
-<a name="security_group_object"></a>
+<a name="as_security_group_object"></a>
 The `security_groups` block supports:
 
 * `id` - The ID of the security group.
