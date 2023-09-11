@@ -21,14 +21,17 @@ data "flexibleengine_cts_tracker_v1" "tracker_v1" {
 
 The following arguments are supported:
 
-* `tracker_name` - (Optional) The tracker name.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `bucket_name` - (Optional) The OBS bucket name for a tracker.
+* `tracker_name` - (Optional, String) The tracker name.
 
-* `file_prefix_name` - (Optional) The prefix of a log that needs to be stored in an OBS bucket.
+* `bucket_name` - (Optional, String) The OBS bucket name for a tracker.
 
-* `status` - (Optional) Status of a tracker.
+* `file_prefix_name` - (Optional, String) The prefix of a log that needs to be stored in an OBS bucket.
 
-## Attributes Reference
+* `status` - (Optional, String) Status of a tracker.
+
+## Attribute Reference
 
 All above argument parameters can be exported as attribute parameters.
