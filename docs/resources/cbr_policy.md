@@ -73,10 +73,6 @@ The following arguments are supported:
 * `destination_region` - (Optional, String) Specifies the name of the replication destination region, which is mandatory
   for cross-region replication. Required if `protection_type` is **replication**.
 
-* `enable_acceleration` - (Optional, Bool, ForceNew) Specifies whether to enable the acceleration function to shorten
-  the replication time for cross-region.  
-  Changing this will create a new policy.
-
 * `destination_project_id` - (Optional, String) Specifies the ID of the replication destination project, which is
   mandatory for cross-region replication. Required if `protection_type` is **replication**.
 
@@ -126,11 +122,7 @@ The `long_term_retention` block supports:
 -> A maximum of 10 backups are retained for failed periodic backup tasks. They are retained for one month and can be
   manually deleted on the web console.
 
-* `full_backup_interval` - (Optional, Int) Specifies how often (after how many incremental backups) a full backup is
-  performed. The valid value ranges from `-1` to `100`.
-  If `-1` is specified, full backup will not be performed.
-
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -142,22 +134,4 @@ Policies can be imported by their `id`. For example,
 
 ```bash
 terraform import flexibleengine_cbr_policy.test 4d2c2939-774f-42ef-ab15-e5b126b11ace
-```
-
-Note that the imported state may not be identical to your resource definition, due to the attribute missing from the
-API response. The missing attribute is: `enable_acceleration`.
-It is generally recommended running `terraform plan` after importing a policy.
-You can then decide if changes should be applied to the policy, or the resource definition should be updated to align
-with the policy. Also you can ignore changes as below.
-
-```hcl
-resource "flexibleengine_cbr_policy" "test" {
-  ...
-
-  lifecycle {
-    ignore_changes = [
-      enable_acceleration,
-    ]
-  }
-}
 ```

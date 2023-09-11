@@ -51,7 +51,9 @@ The following arguments are supported:
 
 * `status` - (Optional, String) Specifies the vault status, including **available**, **lock**, **frozen** and **error**.
 
-## Attributes Reference
+* `enterprise_project_id` - (Optional, String) Specifies the ID of the enterprise project to which the vault belongs.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -74,6 +76,8 @@ The `vaults` block supports:
 * `size` - The vault capacity, in GB.
 
 * `auto_expand_enabled` - Whether to enable automatic expansion of the backup protection type vault.
+
+* `enterprise_project_id` - The enterprise project ID.
 
 * `policy_id` - The ID of the policy associated with the vault.
 

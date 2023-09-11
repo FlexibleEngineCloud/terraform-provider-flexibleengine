@@ -178,9 +178,6 @@ The following arguments are supported:
 * `resources` - (Optional, List) Specifies an array of one or more resources to attach to the CBR vault.
   The [object](#cbr_vault_resources) structure is documented below.
 
-* `backup_name_prefix` - (Optional, String, ForceNew) Specifies the backup name prefix.
-  Changing this will create a new vault.
-
 -> If configured, the names of all automatic backups generated for the vault will use this prefix.
 
 * `tags` - (Optional, Map) Specifies the key/value pairs to associat
@@ -206,7 +203,7 @@ The `resources` block supports:
 * `includes` - (Optional, List) Specifies the array of disk or SFS file system IDs which will be included in the backup.
   Only **disk** and **turbo** vault support this parameter.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -226,8 +223,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 5 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 
