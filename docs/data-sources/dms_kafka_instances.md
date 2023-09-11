@@ -45,14 +45,16 @@ data "flexibleengine_dms_kafka_instances" "test" {
 
 * `include_failure` - (Optional, Bool) Specifies whether the query results contain instances that failed to create.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-* `instances` - The result of the query's list of kafka instances. The structure is documented below.
+* `instances` - The result of the query's list of kafka instances. The [instances](#dms_instances) object structure
+  is documented below.
 
+<a name="dms_instances"></a>
 The `instances` block supports:
 
 * `id` - The instance ID.
@@ -122,8 +124,10 @@ The `instances` block supports:
 
 * `tags` - The key/value pairs to associate with the instance.
 
-* `cross_vpc_accesses` - Indicates the Access information of cross-VPC. The structure is documented below.
+* `cross_vpc_accesses` - Indicates the Access information of cross-VPC. The [cross_vpc_accesses](#dms_cross_vpc_accesses)
+  object structure is documented below.
 
+<a name="dms_cross_vpc_accesses"></a>
 The `cross_vpc_accesses` block supports:
 
 * `listener_ip` - The listener IP address.

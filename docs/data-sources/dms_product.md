@@ -25,9 +25,9 @@ data "flexibleengine_dms_product" "product1" {
 
 * `engine` - (Optional, String) Specifies the name of a message engine. Only **kafka** is supported.
 
-* `version` - (Optional, String) Specifies the version of a message engine. The default value is **2.3.0**.
+* `engine_version` - (Optional, String) Specifies the version of a message engine. The default value is **2.3.0**.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

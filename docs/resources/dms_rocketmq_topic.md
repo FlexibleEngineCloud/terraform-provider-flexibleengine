@@ -31,20 +31,16 @@ The following arguments are supported:
   If omitted, the provider-level region will be used. Changing this parameter will create a new resource.
 
 * `instance_id` - (Required, String, ForceNew) Specifies the ID of the rocketMQ instance.
-
   Changing this parameter will create a new resource.
 
 * `name` - (Required, String, ForceNew) Specifies the name of the topic.
-
   Changing this parameter will create a new resource.
 
 * `brokers` - (Required, List, ForceNew) Specifies the list of associated brokers of the topic.
-
   Changing this parameter will create a new resource.
-  The [BrokerRef](#DmsRocketMQTopic_BrokerRef) structure is documented below.
+  The [brokers](#dms_arg_brokers) structure is documented below.
 
 * `queue_num` - (Optional, Int, ForceNew) Specifies the number of queues. Default to 3.
-
   Changing this parameter will create a new resource.
 
 * `permission` - (Optional, String) Specifies the permissions of the topic.
@@ -54,19 +50,22 @@ The following arguments are supported:
 
 * `total_write_queue_num` - (Optional, Int) Specifies the total number of write queues.
 
-<a name="DmsRocketMQTopic_BrokerRef"></a>
-The `BrokerRef` block supports:
+<a name="dms_arg_brokers"></a>
+The `brokers` block supports:
 
 * `name` - (Optional, String) Indicates the name of the broker.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID.
-  
-<a name="DmsRocketMQTopic_BrokerRef"></a>
-  The `BrokerRef` block supports:
+
+* `brokers` - Specifies the list of associated brokers of the topic.
+  The [brokers](#dms_attr_brokers) structure is documented below.
+
+<a name="dms_attr_brokers"></a>
+  The `brokers` block supports:
 
 * `read_queue_num` - Indicates the read queues number of the broker. It's useless when create a topic.
 

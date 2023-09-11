@@ -140,9 +140,10 @@ The following arguments are supported:
   topic creation is enabled, a topic will be automatically created with 3 partitions and 3 replicas when a message is
   produced to or consumed from a topic that does not exist. Changing this creates a new instance resource.
 
-* `tags` - (Optional, Map) Specifies the key/value pairs to associate with the DMS Kafka instance.
+* `tags` - (Optional, Map, ForceNew) Specifies the key/value pairs to associate with the DMS Kafka instance.
+  Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -162,6 +163,13 @@ In addition to all arguments above, the following attributes are exported:
 * `port` - Indicates the port number of the DMS Kafka instance.
 * `ssl_enable` - Indicates whether the Kafka SASL_SSL is enabled.
 * `created_at` - Indicates the creation time of the DMS Kafka instance.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 

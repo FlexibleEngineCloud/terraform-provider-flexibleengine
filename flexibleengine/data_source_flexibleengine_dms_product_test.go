@@ -48,6 +48,7 @@ func testAccCheckDmsProductDataSourceID(n string) resource.TestCheckFunc {
 
 var testAccDmsProductDataSource_basic = fmt.Sprintf(`
 data "flexibleengine_dms_product" "test" {
-  bandwidth = "100MB"
+  bandwidth 	 = "100MB"
+  engine_version = "2.3.0"
 }
 `)

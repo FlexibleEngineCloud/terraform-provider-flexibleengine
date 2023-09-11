@@ -30,14 +30,14 @@ The following arguments are supported:
 * `exact_match_name` - (Optional, String) Specifies whether to search for the instance that precisely matches a
   specified instance name. Value options: **true**, **false**. Defaults to **false**.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID.
 
 * `instances` - Indicates the list of DMS RocketMQ instances.
-  The [Instance](#DmsRocketMQInstances_Instance) structure is documented below.
+  The [instances](#DmsRocketMQInstances_Instance) object structure is documented below.
 
 <a name="DmsRocketMQInstances_Instance"></a>
 The `instances` block supports:
@@ -87,7 +87,7 @@ The `instances` block supports:
 * `ssl_enable` - Indicates whether the RocketMQ SASL_SSL is enabled. Defaults to false.
 
 * `cross_vpc_accesses` - Indicates the Cross-VPC access information.
-  The [CrossVpc](#DmsRocketMQInstances_InstanceCrossVpc) structure is documented below.
+  The [cross_vpc_accesses](#DmsRocketMQInstances_InstanceCrossVpc) object structure is documented below.
 
 * `storage_spec_code` - Indicates the storage I/O specification.
 
@@ -114,7 +114,7 @@ The `instances` block supports:
 <a name="DmsRocketMQInstances_InstanceCrossVpc"></a>
 The `cross_vpc_accesses` block supports:
 
-* `lisenter_ip` - Indicates the IP of the listener.
+* `listener_ip` - Indicates the IP of the listener.
 
 * `advertised_ip` - Indicates the advertised IP.
 
