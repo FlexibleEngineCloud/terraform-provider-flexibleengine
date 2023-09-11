@@ -43,5 +43,6 @@ func testAccCheckDDSFlavorV3DataSourceID(n string) resource.TestCheckFunc {
 var testAccDDSFlavorV3DataSource_basic = `
 data "flexibleengine_dds_flavor_v3" "flavor" {
   engine_name = "DDS-Community"
+  spec_code   = "dds.mongodb.s3.medium.4.repset"
 }
 `

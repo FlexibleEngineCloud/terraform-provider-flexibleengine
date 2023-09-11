@@ -18,11 +18,12 @@ data "flexibleengine_dds_flavor_v3" "flavor" {
 
 ## Argument Reference
 
-* `region` - (Optional) The region in which to obtain the V3 dds client.
+* `region` - (Optional, String) The region in which to obtain the V3 dds client. If omitted, the provider-level region
+  will be used.
 
-* `engine_name` - (Optional) The engine name of the dds, now only DDS-Community is supported.
+* `engine_name` - (Optional, String) The engine name of the dds, now only DDS-Community is supported.
 
-* `speccode` - (Optional) The spec code of a dds flavor.
+* `spec_code` - (Optional, String) The spec code of a dds flavor.
 
 ## Available value for attributes
 
@@ -45,11 +46,11 @@ DDS-Community | replica | 4 | 16 | dds.mongodb.s3.xlarge.4.repset
 DDS-Community | replica | 8 | 32 | dds.mongodb.s3.2xlarge.4.repset
 DDS-Community | replica | 16 | 64 | dds.mongodb.s3.4xlarge.4.repset
 
-## Attributes Reference
+## Attribute Reference
 
 * `region` - See Argument Reference above.
 * `engine_name` - See Argument Reference above.
-* `speccode` - See Argument Reference above.
+* `spec_code` - See Argument Reference above.
 * `type` - The type of the dds flavor.
 * `vcpus` - The vcpus of the dds flavor.
 * `ram` - The ram of the dds flavor.

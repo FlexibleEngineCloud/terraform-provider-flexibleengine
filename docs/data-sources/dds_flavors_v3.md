@@ -18,6 +18,9 @@ data "flexibleengine_dds_flavors_v3" "flavor" {
 
 ## Argument Reference
 
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
+
 * `engine_name` - (Optional, String) Specifies the engine name of the dds, the default value is
   "DDS-Community".
 
@@ -28,15 +31,16 @@ data "flexibleengine_dds_flavors_v3" "flavor" {
 
 * `memory` - (Optional, String) Specifies the ram of the dds flavor in GB.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Specifies a data source ID.
 
-* `flavors` - Indicates the flavors information. Structure is documented below.
+* `flavors` - Indicates the flavors information. The [flavors](#dds_flavors) object structure is documented below.
 
-The `flavors` block contains:
+<a name="dds_flavors"></a>
+The `flavors` block supports:
 
 * `spec_code` - The name of the dds flavor.
 * `type` - See `type` above.
