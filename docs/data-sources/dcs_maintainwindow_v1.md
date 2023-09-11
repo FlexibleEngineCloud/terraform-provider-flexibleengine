@@ -18,15 +18,15 @@ data "flexibleengine_dcs_maintainwindow_v1" "maintainwindow1" {
 
 ## Argument Reference
 
-* `default` - (Optional) Specifies whether a maintenance time window is set to the default time segment.
+* `default` - (Optional, Bool) Specifies whether a maintenance time window is set to the default time segment.
 
-* `seq` - (Optional) Specifies the sequential number of a maintenance time window.
+* `seq` - (Optional, Int) Specifies the sequential number of a maintenance time window.
 
-* `begin` - (Optional) Specifies the time at which a maintenance time window starts.
+* `begin` - (Optional, String) Specifies the time at which a maintenance time window starts.
 
-* `end` - (Optional) Specifies the time at which a maintenance time window ends.
+* `end` - (Optional, String) Specifies the time at which a maintenance time window ends.
 
-## Attributes Reference
+## Attribute Reference
 
 `id` is set to the ID of the found maintainwindow. In addition, the following attributes
 are exported:

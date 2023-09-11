@@ -21,13 +21,13 @@ data "flexibleengine_dcs_az_v1" "az1" {
 
 ## Argument Reference
 
-* `name` - (Optional) Indicates the name of an AZ.
+* `name` - (Optional, String) Indicates the name of an AZ.
 
-* `code` - (Optional) Indicates the code of an AZ.
+* `code` - (Optional, String) Indicates the code of an AZ.
 
-* `port` - (Optional) Indicates the port number of an AZ.
+* `port` - (Optional, String) Indicates the port number of an AZ.
 
-## Attributes Reference
+## Attribute Reference
 
 `id` is set to the ID of the found az. In addition, the following attributes
 are exported:
