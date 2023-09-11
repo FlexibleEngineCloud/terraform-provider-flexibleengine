@@ -84,7 +84,7 @@ data "flexibleengine_dcs_product_v1" "product6" {
 * `spec_code` - (Optional, String) Specifies the DCS instance specification code. You can log in to the DCS console,
   click *Buy DCS Instance*, and find the corresponding instance specification.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

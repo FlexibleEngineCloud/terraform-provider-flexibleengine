@@ -182,6 +182,10 @@ func resourceDcsInstanceV1() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"user_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -372,6 +376,7 @@ func resourceDcsInstancesV1Read(d *schema.ResourceData, meta interface{}) error 
 	d.Set("maintain_end", v.MaintainEnd)
 	d.Set("access_user", v.AccessUser)
 	d.Set("available_zones", v.AvailableZones)
+	d.Set("user_id", v.UserID)
 
 	// set capacity by Capacity and CapacityMinor
 	var capacity float64 = float64(v.Capacity)
