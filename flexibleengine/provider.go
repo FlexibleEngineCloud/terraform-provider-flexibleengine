@@ -18,6 +18,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ddm"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dew"
@@ -285,6 +286,13 @@ func Provider() *schema.Provider {
 			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 
+			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
+			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
+			"flexibleengine_ddm_instance_nodes": ddm.DataSourceDdmInstanceNodes(),
+			"flexibleengine_ddm_instances":      ddm.DataSourceDdmInstances(),
+			"flexibleengine_ddm_schemas":        ddm.DataSourceDdmSchemas(),
+			"flexibleengine_ddm_accounts":       ddm.DataSourceDdmAccounts(),
+
 			"flexibleengine_dms_kafka_instances":    dms.DataSourceDmsKafkaInstances(),
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
@@ -469,8 +477,13 @@ func Provider() *schema.Provider {
 			"flexibleengine_cse_microservice":          cse.ResourceMicroservice(),
 			"flexibleengine_cse_microservice_engine":   cse.ResourceMicroserviceEngine(),
 			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
-			"flexibleengine_dds_database_role":         dds.ResourceDatabaseRole(),
-			"flexibleengine_dds_database_user":         dds.ResourceDatabaseUser(),
+
+			"flexibleengine_ddm_instance": ddm.ResourceDdmInstance(),
+			"flexibleengine_ddm_schema":   ddm.ResourceDdmSchema(),
+			"flexibleengine_ddm_account":  ddm.ResourceDdmAccount(),
+
+			"flexibleengine_dds_database_role": dds.ResourceDatabaseRole(),
+			"flexibleengine_dds_database_user": dds.ResourceDatabaseUser(),
 
 			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
 
