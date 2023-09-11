@@ -98,13 +98,13 @@ The following arguments are supported:
 * `host_name` - (Required, String, ForceNew) Specifies the host name, such as `localhost`.
   Changing this will create a new microservice instance.
 
-* `endpoints` - (Required, String, ForceNew) Specifies the access addresses information.
+* `endpoints` - (Required, List, ForceNew) Specifies the access addresses information.
   Changing this will create a new microservice instance.
 
 * `version` - (Optional, String, ForceNew) Specifies the verison of the dedicated microservice instance.
   Changing this will create a new microservice instance.
 
-* `properties` - (Optional, String, ForceNew) Specifies the extended attributes.
+* `properties` - (Optional, Map, ForceNew) Specifies the extended attributes.
   Changing this will create a new microservice instance.
 
 * `health_check` - (Optional, List, ForceNew) Specifies the health check configuration.
@@ -154,7 +154,7 @@ The `data_center` block supports:
 * `availability_zone` - (Required, String, ForceNew) Specifies the custom availability zone name of the data center.
   Changing this will create a new microservice instance.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
