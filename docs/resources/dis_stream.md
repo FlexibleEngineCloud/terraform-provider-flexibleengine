@@ -21,6 +21,9 @@ resource "flexibleengine_dis_stream" "stream" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the DIS stream resource.
+  If omitted, the provider-level region will be used. Changing this will create a new DIS stream resource.
+
 * `name` - (Required, String, ForceNew) Specifies the name of the DIS stream to be created.
   Changing this will create a new resource.
 
@@ -36,10 +39,10 @@ The following arguments are supported:
   + **ADVANCED stream:**
     Each partition supports a read speed of up to 10 MB/s and a write speed of up to 2000 records/s and 5 MB/s.
 
-* `retention_period` - (Optional, Int, ForceNew) Specifies the number of hours for which data from the stream
+* `data_duration` - (Optional, Int, ForceNew) Specifies the number of hours for which data from the stream
   will be retained in DIS. The value ranges from 24 to 168 and defaults to 24. Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -47,9 +50,11 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - Status of stream: `CREATING`,`RUNNING`,`TERMINATING`,`TERMINATED`,`FROZEN`.
 
-* `partitions` - The information of stream partitions. Structure is documented below.
+* `partitions` - The information of stream partitions. The [partitions](#dis_partitions) object structure is
+  documented below.
 
-The `partitions` block contains:
+<a name="dis_partitions"></a>
+The `partitions` block supports:
 
 * `id` - The ID of the partition.
 
