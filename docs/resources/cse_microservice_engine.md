@@ -35,6 +35,9 @@ The following arguments are supported:
   The name must start with a letter and cannot end with a hyphen (-).
   Changing this will create a new engine.
 
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the cse microservice
+  engine resource. Changing this will create a new resource.
+
 * `flavor` - (Required, String, ForceNew) Specifies the flavor of the dedicated microservice engine.
   Changing this will create a new engine.
 
