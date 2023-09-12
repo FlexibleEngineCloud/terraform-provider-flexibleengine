@@ -7,7 +7,10 @@ subcategory: "Auto Scaling (AS)"
 Use this data source to get a list of AS groups.
 
 ```hcl
+variable "ep_id" {}
+
 data "flexibleengine_as_groups" "groups" {
+   enterprise_project_id = ep_id
 }
 ```
 
@@ -29,6 +32,9 @@ The following arguments are supported:
   - **ERROR**: indicates that the AS group malfunctions.
   - **DELETING**: indicates that the AS group is being deleted.
   - **FREEZED**: indicates that the AS group has been frozen.
+
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the AS group.
+  Changing this will create a new resource.
 
 ## Attribute Reference
 
