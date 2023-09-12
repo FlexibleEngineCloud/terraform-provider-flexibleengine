@@ -49,21 +49,23 @@ func resourceFWPolicyV2() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
 			"rules": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "tenant_id is deprecated",
+			},
 			"value_specs": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeMap,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "value_specs is deprecated",
 			},
 		},
 	}

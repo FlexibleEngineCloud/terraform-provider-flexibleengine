@@ -50,61 +50,71 @@ resource "flexibleengine_dws_cluster_v1" "cluster" {
 
 The following arguments are supported:
 
-* `name` - (Required) Cluster name, which must be unique and contains 4 to 64
-    characters, which consist of letters, digits, hyphens (-), or underscores
-    (_) only and must start with a letter.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the DWS cluster (v1) resource.
+  If omitted, the provider-level region will be used. Changing this will create a new DWS cluster (v1) resource.
 
-* `node_type` - (Required) Node type.
+* `name` - (Required, String, ForceNew) Cluster name, which must be unique and contains 4 to 64
+    characters, which consist of letters, digits, hyphens (-), or underscores(_) only and must start with a letter.
+    Changing this will create a new resource.
 
-* `number_of_node` - (Required) Number of nodes in a cluster. The value ranges
-    from 3 to 32.
+* `node_type` - (Required, String, ForceNew) Node type.Changing this will create a new resource.
 
-* `user_name` - (Required) Administrator username for logging in to a data
+* `number_of_node` - (Required, Int, ForceNew) Number of nodes in a cluster. The value ranges from 3 to 32.
+  Changing this will create a new resource.
+
+* `user_name` - (Required, String, ForceNew) Administrator username for logging in to a data
     warehouse cluster The administrator username must:
     - Consist of lowercase letters, digits, or underscores.
     - Start with a lowercase letter or an underscore.
     - Contain 1 to 63 characters.
     - Cannot be a keyword of the DWS database.
+    Changing this will create a new resource.
 
-* `user_pwd` - (Required) Administrator password for logging in to a data
+* `user_pwd` - (Required, String, ForceNew) Administrator password for logging in to a data
     warehouse cluster. A password must conform to the following rules:
     - Contains 8 to 32 characters.
     - Cannot be the same as the username or the username written in reverse order.
     - Contains three types of lowercase letters, uppercase letters, digits and
       special characters ~!@#%^&*()-_=+|[{}];:,<.>/?
+    Changing this will create a new resource.
 
-* `vpc_id` - (Required) VPC ID, which is used for configuring cluster network.
+* `vpc_id` - (Required, String, ForceNew) VPC ID, which is used for configuring cluster network.
+  Changing this will create a new resource.
 
-* `subnet_id` - (Required) The ID of the VPC Subnet, which is used for configuring cluster network.
+* `subnet_id` - (Required, String, ForceNew) The ID of the VPC Subnet, which is used for configuring cluster network.
+  Changing this will create a new resource.
 
-* `security_group_id` - (Required) ID of a security group. The ID is used for
-    configuring cluster network.
+* `security_group_id` - (Required, String, ForceNew) ID of a security group. The ID is used for
+    configuring cluster network. Changing this will create a new resource.
 
-* `port` - (Optional) Service port of a cluster (8000 to 10000). The default value is 8000.
+* `port` - (Optional, Int, ForceNew) Service port of a cluster (8000 to 10000). The default value is 8000.
+  Changing this will create a new resource.
 
-* `availability_zone` - (Optional) AZ in a cluster.
+* `availability_zone` - (Optional, String, ForceNew) AZ in a cluster.Changing this will create a new resource.
 
-* `public_ip` - (Optional) Public IP address. The object structure is documented below.
+* `public_ip` - (Optional, List, ForceNew) Public IP address.The [public_ip](#dws_public_ip) object structure is
+    documented below. Changing this will create a new resource.
 
+<a name="dws_public_ip"></a>
 The `public_ip` block supports:
 
-* `public_bind_type` - (Optional) Binding type of an EIP. The value can be
+* `public_bind_type` - (Optional, String, ForceNew) Binding type of an EIP. The value can be
     either of the following: *auto_assign*, *not_use* and *bind_existing*.
-    The default value is *not_use*.
+    The default value is *not_use*. Changing this will create a new resource.
 
-* `eip_id` - (Optional) EIP ID
+* `eip_id` - (Optional, String, ForceNew) EIP ID. Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Cluster ID
 
 * `endpoints` - The private network connection information about the cluster.
-    The object structure is documented below.
+  The [endpoints](#dws_endpoints) object structure is documented below.
 
 * `public_endpoints` - The public network connection information about the cluster.
-    The object structure is documented below.
+  The [public_endpoints](#dws_public_endpoints) object structure is documented below.
 
 * `private_ip` - List of private network IP address.
 
@@ -120,6 +130,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `updated` - Last modification time of a cluster. The format is ISO8601:YYYY-MM-DDThh:mm:ssZ.
 
+<a name="dws_endpoints"></a>
 The `endpoints` block supports:
 
 * `connect_info` - Private network connection information
@@ -127,12 +138,20 @@ The `endpoints` block supports:
 * `jdbc_url` - JDBC URL. The following is the default format:
     jdbc:postgresql://< connect_info>/<YOUR_DATABASE_NAME>
 
+<a name="dws_public_endpoints"></a>
 The `public_endpoints` block supports:
 
 * `public_connect_info` - Public network connection information
 
 * `jdbc_url` - JDBC URL. The following is the default format:
     jdbc:postgresql://< public_connect_info>/<YOUR_DATABASE_NAME>
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
