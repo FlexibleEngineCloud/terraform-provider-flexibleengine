@@ -52,6 +52,23 @@ func TestAccDwsFlavorsDataSource_memory(t *testing.T) {
 	})
 }
 
+func TestAccDwsFlavorsDataSource_dataStoreType(t *testing.T) {
+	resourceName := "data.flexibleengine_dws_flavors.test"
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDwsFlavorsDataSource_dataStoreType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDwsFlavorDataSourceID(resourceName),
+					resource.TestCheckResourceAttrSet(resourceName, "flavors.#"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccDwsFlavorsDataSource_all(t *testing.T) {
 	resourceName := "data.flexibleengine_dws_flavors.test"
 	resource.ParallelTest(t, resource.TestCase{
@@ -125,6 +142,12 @@ data "flexibleengine_dws_flavors" "test" {
   memory = 64
 }
 `
+
+const testAccDwsFlavorsDataSource_dataStoreType = `
+data "flexibleengine_dws_flavors" "test" {
+  datastore_type = "hybrid"
+}`
+
 const testAccDwsFlavorsDataSource_all = `
 data "flexibleengine_availability_zones" "test" {}
 
