@@ -25,18 +25,22 @@ Provides a FlexibleEngine Backup of Resources.
 
 The following arguments are supported:
 
-* `backup_name` - (Optional) Name for the backup. The value consists of 1 to 255 characters and can contain
-  only letters, digits, underscores (_), and hyphens (-). Changing backup_name creates a new backup.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CSBS backup resource.
+  If omitted, the provider-level region will be used. Changing this will create a new CSBS backup resource.
 
-* `description` - (Optional) Backup description. The value consists of 0 to 255 characters and must not contain
-  a greater-than sign (>) or less-than sign (<). Changing description creates a new backup.
+* `backup_name` - (Optional, String, ForceNew) Name for the backup. The value consists of 1 to 255 characters and can
+  contain only letters, digits, underscores (_), and hyphens (-). Changing backup_name creates a new backup.
 
-* `resource_id` - (Required) ID of the target to which the backup is restored. Changing this creates a new backup.
+* `description` - (Optional, String, ForceNew) Backup description. The value consists of 0 to 255 characters and must
+  not contain a greater-than sign (>) or less-than sign (<). Changing description creates a new backup.
 
-* `resource_type` - (Optional) Type of the target to which the backup is restored. The default value is
-  **OS::Nova::Server** for an ECS. Changing this creates a new backup.
+* `resource_id` - (Required, String, ForceNew) ID of the target to which the backup is restored.
+  Changing this creates a new backup.
 
-## Attributes Reference
+* `resource_type` - (Optional, String, ForceNew) Type of the target to which the backup is restored. The default value
+  is **OS::Nova::Server** for an ECS. Changing this creates a new backup.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -44,51 +48,64 @@ In addition to all arguments above, the following attributes are exported:
 
 * `backup_record_id` - Specifies backup record ID.
 
-* `volume_backups` block supports the following arguments:
+* `volume_backups` - The [volume_backups](#csbs_volume_backups) object structure is documented below.
 
-  + `status` -  Status of backup Volume.
+* `vm_metadata` - The [vm_metadata](#csbs_vm_metadata) object structure is documented below.
 
-  + `space_saving_ratio` -  Specifies space saving rate.
+<a name="csbs_volume_backups"></a>
+The `volume_backups` block supports:
 
-  + `name` -  It gives EVS disk backup name.
+* `status` -  Status of backup Volume.
 
-  + `bootable` -  Specifies whether the disk is bootable.
+* `space_saving_ratio` -  Specifies space saving rate.
 
-  + `average_speed` -  Specifies the average speed.
+* `name` -  It gives EVS disk backup name.
 
-  + `source_volume_size` -  Shows source volume size in GB.
+* `bootable` -  Specifies whether the disk is bootable.
 
-  + `source_volume_id` -  It specifies source volume ID.
+* `average_speed` -  Specifies the average speed.
 
-  + `incremental` -  Shows whether incremental backup is used.
+* `source_volume_size` -  Shows source volume size in GB.
 
-  + `snapshot_id` -  ID of snapshot.
+* `source_volume_id` -  It specifies source volume ID.
 
-  + `source_volume_name` -  Specifies source volume name.
+* `incremental` -  Shows whether incremental backup is used.
 
-  + `image_type` -  It specifies backup. The default value is backup.
+* `snapshot_id` -  ID of snapshot.
 
-  + `id` -  Specifies Cinder backup ID.
+* `source_volume_name` -  Specifies source volume name.
 
-  + `size` -  Specifies accumulated size (MB) of backups.
+* `image_type` -  It specifies backup. The default value is backup.
 
-* `vm_metadata` block supports the following arguments:
+* `id` -  Specifies Cinder backup ID.
 
-  + `name` - Name of backup data.
+* `size` -  Specifies accumulated size (MB) of backups.
 
-  + `eip` - Specifies elastic IP address of the ECS.
+<a name="csbs_vm_metadata"></a>
+The `vm_metadata` block supports:
 
-  + `cloud_service_type` - Specifies ECS type.
+* `name` - Name of backup data.
 
-  + `ram` - Specifies memory size of the ECS, in MB.
+* `eip` - Specifies elastic IP address of the ECS.
 
-  + `vcpus` - Specifies CPU cores corresponding to the ECS.
+* `cloud_service_type` - Specifies ECS type.
 
-  + `private_ip` - It specifies internal IP address of the ECS.
+* `ram` - Specifies memory size of the ECS, in MB.
 
-  + `disk` - Shows system disk size corresponding to the ECS specifications.
+* `vcpus` - Specifies CPU cores corresponding to the ECS.
 
-  + `image_type` - Specifies image type.
+* `private_ip` - It specifies internal IP address of the ECS.
+
+* `disk` - Shows system disk size corresponding to the ECS specifications.
+
+* `image_type` - Specifies image type.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
