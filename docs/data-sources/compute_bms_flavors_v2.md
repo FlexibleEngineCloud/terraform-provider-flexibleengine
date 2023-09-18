@@ -18,23 +18,28 @@ data "flexibleengine_compute_bms_flavors_v2" "BMS_flavor" {
 
 The arguments of this data source act as filters for querying the BMSs details.
 
-* `name` (Optional) - Specifies the name of the BMS flavor.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `vcpus` (Optional) - Specifies the number of CPU cores in the BMS flavor.
+* `name` (Optional, String) - Specifies the name of the BMS flavor.
 
-* `min_ram` (Optional) - Specifies the minimum memory size in MB. Only the BMSs with the memory size
+* `id` - (Optional, String) - The ID of the flavor.
+
+* `vcpus` (Optional, Int) - Specifies the number of CPU cores in the BMS flavor.
+
+* `min_ram` (Optional, Int) - Specifies the minimum memory size in MB. Only the BMSs with the memory size
   greater than or equal to the minimum size can be queried.
 
-* `min_disk` (Optional) - Specifies the minimum disk size in GB. Only the BMSs with a disk size
+* `min_disk` (Optional, Int) - Specifies the minimum disk size in GB. Only the BMSs with a disk size
   greater than or equal to the minimum size can be queried.
 
-* `sort_key` (Optional) - The sorting field. The default value is **flavorid**.
+* `sort_key` (Optional, String) - The sorting field. The default value is **flavorid**.
   The available values are **name**, **memory_mb**, **vcpus**, **root_gb**, or **flavorid**.
 
-* `sort_dir` (Optional) - The sorting order, which can be **asc** (ascending) or **desc** (descending).
+* `sort_dir` (Optional, String) - The sorting order, which can be **asc** (ascending) or **desc** (descending).
   The default value is **asc**.
 
-## Attributes Reference
+## Attribute Reference
 
 All of the argument attributes are also exported as result attributes.
 
