@@ -101,7 +101,7 @@ The following arguments are supported:
 
 * `retention_policy` - (Optional, Bool) Specifies the ACL access control.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -139,6 +139,14 @@ In addition to all arguments above, the following attributes are exported:
 * `public_broker_address` - Indicates the public network service data address.
 
 * `resource_spec_code` - Indicates the resource specifications.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 50 minutes.
+* `update` - Default is 50 minutes.
+* `delete` - Default is 15 minutes.
 
 ## Import
 
