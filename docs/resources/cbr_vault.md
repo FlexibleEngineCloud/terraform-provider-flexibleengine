@@ -151,6 +151,9 @@ The following arguments are supported:
   + **disk** (EVS Disks)
   + **turbo** (SFS Turbo file systems)
 
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the cbr vault resource.
+  Changing this will create a new resource.
+
 * `protection_type` - (Required, String, ForceNew) Specifies the protection type of the CBR vault.
   The valid values are **backup** and **replication**. Vaults of type **disk** don't support **replication**.
   Changing this will create a new vault.

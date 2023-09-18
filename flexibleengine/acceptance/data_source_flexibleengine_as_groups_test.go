@@ -27,6 +27,12 @@ func TestAccDataSourceASGroup_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "groups.0.scaling_group_name", name),
 				),
 			},
+			{
+				Config: testAccDataSourceASGroup_enterpriseProjectId(name),
+				Check: resource.ComposeTestCheckFunc(
+					dc.CheckResourceExists(),
+				),
+			},
 		},
 	})
 }
@@ -39,6 +45,15 @@ data "flexibleengine_as_groups" "groups" {
   name = flexibleengine_as_group.acc_as_group.scaling_group_name
 
   depends_on = [flexibleengine_as_group.acc_as_group]
+}
+`, testASGroup_basic(name))
+}
+
+func testAccDataSourceASGroup_enterpriseProjectId(name string) string {
+	return fmt.Sprintf(`
+%s
+data "flexibleengine_as_groups" "groups" {
+  enterprise_project_id = 0
 }
 `, testASGroup_basic(name))
 }
