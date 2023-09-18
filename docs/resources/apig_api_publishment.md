@@ -63,7 +63,7 @@ The following arguments are supported:
 
 * `version_id` - (Optional, String) Specifies the version ID of the current publishment.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -71,7 +71,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `env_name` - Environment name to which the current version of the API is published.
 
-* `publish_time` - Time when the current version was published.
+* `publish_at` - Time when the current version was published.
 
 * `histories` - All publish informations of the API. The structure is documented below.
 

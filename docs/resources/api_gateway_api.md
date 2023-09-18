@@ -97,7 +97,7 @@ The following arguments are supported:
 The `http_backend` object supports the following:
 
 * `protocol` - (Required, String) Specifies the backend request protocol. The value can be 'HTTP' and 'HTTPS'.
-* `method` - (Optional, String) Specifies the backend request method, including 'GET','POST','PUT' and etc..
+* `method` - (Required, String) Specifies the backend request method, including 'GET','POST','PUT' and etc..
 * `uri` - (Required, String) Specifies the backend request path. The value must comply with URI specifications.
 * `vpc_channel` - (Optional, String) Specifies the VPC channel ID. This parameter and `url_domain` are alternative.
 * `url_domain` - (Optional, String) Specifies the backend service address. An endpoint URL is in the format of
@@ -110,7 +110,7 @@ The `function_backend` object supports the following:
 
 * `function_urn` - (Required, String) Specifies the function URN.
 * `invocation_type` - (Required, String) Specifies the invocation mode, which can be 'async' or 'sync'.
-* `version` - (Optional, String) Specifies the function version.
+* `version` - (Required, String) Specifies the function version.
 * `timeout` - (Optional, Int) Timeout duration (in ms) for API Gateway to request for FunctionGraph. Defaults to 50000.
 
 The `mock_backend` object supports the following:
@@ -126,7 +126,7 @@ The `request_parameter` object supports the following:
   with a letter. Only letters, digits, periods (.), hyphens (-), and underscores (_) are allowed.
 * `location` - (Required, String) Specifies the input parameter location, which can be 'PATH', 'QUERY' or 'HEADER'.
 * `type` - (Required, String) Specifies the input parameter type, which can be 'STRING' or 'NUMBER'.
-* `required` - (Optional, Bool) Specifies whether the parameter is mandatory or not.
+* `required` - (Required, Bool) Specifies whether the parameter is mandatory or not.
 * `default` - (Optional, String) Specifies the default value when the parameter is optional.
 * `description` - (Optional, String) Specifies the description of the parameter. The description cannot exceed 255
   characters.
@@ -146,7 +146,7 @@ The `backend_parameter` object supports the following:
 * `description` - (Optional, String) Specifies the description of the parameter. The description cannot exceed 255
   characters.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -157,8 +157,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

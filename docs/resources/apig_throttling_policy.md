@@ -106,16 +106,16 @@ The following arguments are supported:
   The `throttle` object of the `user_throttles` structure is documented below.
 
 * `app_throttles` - (Optional, List) Specifies an array of one or more special throttling policies for APP limit.
-  The `throttle` object of the `user_throttles` structure is documented below.
+  The `throttle` object of the `app_throttles` structure is documented below.
 
-The `throttle` block supports:
+The `user_throttles` and `app_throttles` block supports:
 
 * `max_api_requests` - (Required, Int) Specifies the maximum number of times an API can be accessed within a specified
   period.
 
 * `throttling_object_id` - (Required, String) Specifies the object ID which the special throttling policy belongs.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -129,7 +129,7 @@ In addition to all arguments above, the following attributes are exported:
   + `throttling_object_name` - The object name which the special application throttling policy belongs.
   + `id` - ID of the special application throttling policy.
 
-* `create_time` - Time when the API throttling policy was created.
+* `create_at` - Time when the API throttling policy was created.
 
 ## Import
 

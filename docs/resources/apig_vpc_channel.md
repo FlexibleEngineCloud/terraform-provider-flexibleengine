@@ -53,8 +53,11 @@ The following arguments are supported:
   Only letters, digits and underscores (_) are allowed.
   Chinese characters must be in UTF-8 or Unicode format.
 
-* `port` - (Optional, Int) Specifies the host port of the VPC channel.
+* `port` - (Required, Int) Specifies the host port of the VPC channel.
   The valid value is range from 1 to 65535.
+
+* `members` - (Required, List) Specifies an array of one or more backend server IDs or IP addresses that bind the VPC
+  channel. The object structure is documented below.
 
 * `member_type` - (Optional, String) Specifies the type of the backend service.
   The valid types are *ECS* and *EIP*, default to *ECS*.
@@ -84,9 +87,13 @@ The following arguments are supported:
 * `interval` - (Optional, Int) Specifies the interval between consecutive checks, in second.
   The valid value is range from 5 to 300, default to 10.
 
-* `members` - (Optional, List) Specifies an array of one or more backend server IDs or IP addresses that bind the VPC
-  channel.
-  The object structure is documented below.
+* `http_code` - (Optional, String) Specifies the response codes for determining a successful HTTP response.  
+  The valid value ranges from `100` to `599` and the valid formats are as follows:
+  + The multiple values, for example, **200,201,202**.
+  + The range, for example, **200-299**.
+  + Both multiple values and ranges, for example, **201,202,210-299**.
+
+  It is Required if the `protocol` is **HTTP**.
 
 The `members` block supports:
 
@@ -100,12 +107,12 @@ The `members` block supports:
 * `weight` - (Optional, Int) Specifies the backend server weight.
   The valid values are range from 1 to 100, default to 1.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the VPC channel.
-* `create_time` - Time when the channel created, in UTC format.
+* `create_at` - Time when the channel created, in UTC format.
 * `status` - The status of VPC channel, supports *Normal* and *Abnormal*.
 
 ## Import

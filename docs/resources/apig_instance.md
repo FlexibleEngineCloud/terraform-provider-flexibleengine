@@ -84,11 +84,15 @@ The following arguments are supported:
 * `security_group_id` - (Required, String) Specifies the ID of the security group to which the APIG dedicated instance
   belongs to.
 
-* `available_zones` - (Required, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
+* `availability_zones` - (Required, List, ForceNew) Specifies an array of available zone names for the APIG dedicated
   instance. Changing this will create a new APIG dedicated instance resource.
 
 * `description` - (Optional, String) Specifies the description about the APIG dedicated instance. The description
   contain a maximum of 255 characters and the angle brackets (< and >) are not allowed.
+
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project ID to which the dedicated
+  instance belongs.  
+  This parameter is required for enterprise users. Changing this will create a new resource.
 
 * `maintain_begin` - (Optional, String) Specifies a start time of the maintenance time window in the format 'xx:00:00'.
   The value of xx can be 02, 06, 10, 14, 18 or 22.
@@ -98,13 +102,24 @@ The following arguments are supported:
 
 * `eip_id` - (Optional, String) Specifies the eip ID associated with the APIG dedicated instance.
 
-## Attributes Reference
+* `ipv6_enable` - (Optional, Bool, ForceNew) Specifies whether public access with an IPv6 address is supported.  
+  Changing this will create a new resource.
+
+* `loadbalancer_provider` - (Optional, String, ForceNew) Specifies the provider type of load balancer used by the
+  dedicated instance.  
+  The valid values are as follows:
+  + **lvs**: Linux virtual server.
+  + **elb**: Elastic load balance.
+
+  Changing this will create a new resource.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the APIG dedicated instance.
 * `maintain_end` - End time of the maintenance time window, 4-hour difference between the start time and end time.
-* `create_time` - Time when the APIG instance is created, in RFC-3339 format.
+* `create_at` - Time when the APIG instance is created, in RFC-3339 format.
 * `status` - Status of the APIG dedicated instance.
 * `supported_features` - The supported features of the APIG dedicated instance.
 * `egress_address` - The egress (nat) public ip address.
@@ -115,9 +130,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 40 minute.
-* `update` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 40 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
