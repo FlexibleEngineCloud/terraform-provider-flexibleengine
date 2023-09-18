@@ -59,32 +59,31 @@ output "volume devices" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Compute client.
-    A Compute client is needed to create a volume attachment. If omitted, the
-    `region` argument of the provider is used. Changing this creates a
-    new volume attachment.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Compute client.
+  A Compute client is needed to create a volume attachment. If omitted, the
+  `region` argument of the provider is used. Changing this creates a new volume attachment.
 
-* `instance_id` - (Required) The ID of the Instance to attach the Volume to.
+* `instance_id` - (Required, String, ForceNew) The ID of the Instance to attach the Volume to.
 
-* `volume_id` - (Required) The ID of the Volume to attach to an Instance.
+* `volume_id` - (Required, String, ForceNew) The ID of the Volume to attach to an Instance.
 
-* `device` - (Optional) The device of the volume attachment (ex: `/dev/vdc`).
+* `device` - (Optional, String) The device of the volume attachment (ex: `/dev/vdc`).
   Being able to specify a device is dependent upon the hypervisor in use.
   There is a chance that the device specified in Terraform will not be
   the same device the hypervisor chose. If this happens, Terraform will wish
   to update the device upon subsequent applying which will cause the volume
   to be detached and reattached indefinitely. Please use with caution.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+All the arguments above can also be exported attributes.
 
-* `region` - See Argument Reference above.
-* `instance_id` - See Argument Reference above.
-* `volume_id` - See Argument Reference above.
-* `device` - See Argument Reference above. The correctness of this
-  information is dependent upon the hypervisor in use. In some cases, this
-  should not be used as an authoritative piece of information.
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

@@ -269,169 +269,170 @@ function, or the `template_cloudinit_config` resource.
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the server instance. If
-    omitted, the `region` argument of the provider is used. Changing this
-    creates a new server.
+* `region` - (Optional, String, ForceNew) The region in which to create the server instance.
+  If omitted, the `region` argument of the provider is used. Changing this creates a new server.
 
-* `name` - (Required) A unique name for the resource.
+* `name` - (Required, String) A unique name for the resource.
 
-* `image_id` - (Optional; Required if `image_name` is empty and not booting
-    from a volume. Do not specify if booting from a volume.) The image ID of
-    the desired image for the server. Changing this creates a new server.
+* `image_id` - (Optional, String, ForceNew) The image ID of the desired image for the server.
+  It is **Required** if `image_name` is empty and not booting from a volume. Do not specify if booting from a volume.
+  Changing this creates a new server.
 
-* `image_name` - (Optional; Required if `image_id` is empty and not booting
-    from a volume. Do not specify if booting from a volume.) The name of the
-    desired image for the server. Changing this creates a new server.
+* `image_name` - (Optional, String, ForceNew) The name of the desired image for the server.
+  It is **Required** if `image_id` is empty and not booting from a volume. Do not specify if booting from a volume.
+  Changing this creates a new server.
 
-* `flavor_id` - (Optional; Required if `flavor_name` is empty) The flavor ID of
-    the desired flavor for the server. Changing this resizes the existing server.
+* `flavor_id` - (Optional, String) The flavor ID of the desired flavor for the server.
+  It is **Required** if `flavor_name` is empty. Changing this resizes the existing server.
 
-* `flavor_name` - (Optional; Required if `flavor_id` is empty) The name of the
-    desired flavor for the server. Changing this resizes the existing server.
+* `flavor_name` - (Optional, String) The name of the desired flavor for the server.
+  It is **Required** if `flavor_id` is empty. Changing this resizes the existing server.
 
-* `availability_zone` - (Optional) The availability zone in which to create
-    the server. Changing this creates a new server.
+* `availability_zone` - (Optional, String, ForceNew) The availability zone in which to create the server.
+  Changing this creates a new server.
 
-* `security_groups` - (Optional) An array of one or more security group names
-    to associate with the server. Changing this results in adding/removing
-    security groups from the existing server. *Note*: When attaching the
-    instance to networks using Ports, place the security groups on the Port
-    and not the instance.
+* `security_groups` - (Optional, List) An array of one or more security group names
+  to associate with the server. Changing this results in adding/removing
+  security groups from the existing server. *Note*: When attaching the
+  instance to networks using Ports, place the security groups on the Port and not the instance.
 
-* `network` - (Optional) An array of one or more networks to attach to the
-    instance. The network object structure is documented below. Changing this
-    creates a new server.
+* `network` - (Optional, List, ForceNew) An array of one or more networks to attach to the
+  instance. The [network](#ecs_arg_network) object structure is documented below. Changing this
+  creates a new server.
 
-* `user_data` - (Optional) The user data to provide when launching the instance.
-    Changing this creates a new server.
+* `user_data` - (Optional, String, ForceNew) The user data to provide when launching the instance.
+  Changing this creates a new server.
 
-* `metadata` - (Optional) The key/value pairs to associate with the instance.
-    Changing this updates the existing server metadata.
+* `metadata` - (Optional, Map) The key/value pairs to associate with the instance.
 
-* `config_drive` - (Optional) Whether to use the config_drive feature to
-    configure the instance. Changing this creates a new server.
+* `config_drive` - (Optional, Bool, ForceNew) Whether to use the config_drive feature to
+  configure the instance. Changing this creates a new server.
 
-* `admin_pass` - (Optional) The administrative password to assign to the server.
-    Changing this changes the root password on the existing server.
+* `admin_pass` - (Optional, String) The administrative password to assign to the server.
 
-* `key_pair` - (Optional) The name of a key pair to put on the server. The key
-    pair must already be created and associated with the tenant's account.
-    Changing this creates a new server.
+* `key_pair` - (Optional, String, ForceNew) The name of a key pair to put on the server. The key
+  pair must already be created and associated with the tenant's account. Changing this creates a new server.
 
-* `block_device` - (Optional) Configuration of block devices. The block_device
-    structure is documented below. Changing this creates a new server.
-    You can specify multiple block devices which will create an instance with
-    multiple disks. This configuration is very flexible, so please see the
-    following [reference](http://docs.openstack.org/developer/nova/block_device_mapping.html)
-    for more information.
+* `block_device` - (Optional, List) Configuration of block devices. The [block_device](#ecs_arg_block_device) object
+  structure is documented below. You can specify multiple block devices which will create an instance with
+  multiple disks. This configuration is very flexible, so please see the
+  following [reference](http://docs.openstack.org/developer/nova/block_device_mapping.html) for more information.
 
-* `scheduler_hints` - (Optional) Provide the Nova scheduler with hints on how
-    the instance should be launched. The available hints are described below.
+* `scheduler_hints` - (Optional, List) Provide the Nova scheduler with hints on how
+  the instance should be launched. The [scheduler_hints](#ecs_scheduler_hints) object structure is documented below.
 
-* `stop_before_destroy` - (Optional) Whether to try stop instance gracefully
-    before destroying it, thus giving chance for guest OS daemons to stop correctly.
-    If instance doesn't stop within timeout, it will be destroyed anyway.
+* `stop_before_destroy` - (Optional, Bool) Whether to try stop instance gracefully
+  before destroying it, thus giving chance for guest OS daemons to stop correctly.
+  If instance doesn't stop within timeout, it will be destroyed anyway.
 
-* `force_delete` - (Optional) Whether to force the FlexibleEngine instance to be
-    forcefully deleted. This is useful for environments that have reclaim / soft
-    deletion enabled.
+* `auto_recovery` - (Optional, Bool) Configures or deletes automatic recovery of an instance
 
-* `auto_recovery` - (Optional) Configures or deletes automatic recovery of an instance
+* `tags` - (Optional, Map) Specifies the key/value pairs to associate with the instance.
 
-* `tags` - (Optional) Specifies the key/value pairs to associate with the instance.
-
+<a name="ecs_arg_network"></a>
 The `network` block supports:
 
-* `uuid` - (Required unless `port` is provided) The network UUID to
-    attach to the server. Changing this creates a new server.
+* `uuid` - (Optional, String, ForceNew) The network UUID to attach to the server. It is **Required** unless `port` is
+  provided. Changing this creates a new server.
 
-* `port` - (Required unless `uuid` is provided) The port UUID of a network to
-    attach to the server. Changing this creates a new server.
+* `port` - (Optional, String, ForceNew) The port UUID of a network to attach to the server.
+  It is **Required** unless `uuid` is provided. Changing this creates a new server.
 
-* `fixed_ip_v4` - (Optional) Specifies a fixed IPv4 address to be used on this
-    network. Changing this creates a new server.
+* `fixed_ip_v4` - (Optional, String, ForceNew) Specifies a fixed IPv4 address to be used on this
+  network. Changing this creates a new server.
 
-* `fixed_ip_v6` - (Optional) Specifies a fixed IPv6 address to be used on this
-    network. Changing this creates a new server.
+* `fixed_ip_v6` - (Optional, String, ForceNew) Specifies a fixed IPv6 address to be used on this
+  network. Changing this creates a new server.
 
-* `access_network` - (Optional) Specifies if this network should be used for
-    provisioning access. Accepts true or false. Defaults to false.
+* `access_network` - (Optional, Bool) Specifies if this network should be used for
+  provisioning access. Accepts true or false. Defaults to false.
 
+<a name="ecs_arg_block_device"></a>
 The `block_device` block supports:
 
-* `uuid` - (Required unless `source_type` is set to `"blank"` ) The UUID of
-    the image, volume, or snapshot. Changing this creates a new server.
+* `uuid` - (Optional, String, ForceNew) The UUID of the image, volume, or snapshot.
+  It is Required unless `source_type` is set to `"blank"`. Changing this creates a new server.
 
-* `source_type` - (Required) The source type of the device. Must be one of
-    "blank", "image", "volume", or "snapshot". Changing this creates a new
-    server.
+* `source_type` - (Required, String, ForceNew) The source type of the device. Must be one of
+  "blank", "image", "volume", or "snapshot". Changing this creates a new server.
 
-* `volume_size` - The size of the volume to create (in gigabytes). Required
-    in the following combinations: source=image and destination=volume,
-    source=blank and destination=local, and source=blank and destination=volume.
-    Changing this creates a new server.
+* `volume_size` - (Optional, Int, ForceNew)The size of the volume to create (in gigabytes). Required
+  in the following combinations: source=image and destination=volume, source=blank and destination=local,
+  and source=blank and destination=volume. Changing this creates a new server.
 
-* `volume_type` - (Optional) Currently, the value can be `SSD` (ultra-I/O disk type),
-    `SAS` (high I/O disk type), or `SATA` (common I/O disk type)
+* `volume_type` - (Optional, String, ForceNew) Currently, the value can be `SSD` (ultra-I/O disk type),
+  `SAS` (high I/O disk type), or `SATA` (common I/O disk type). Changing this creates a new server.
 
-* `boot_index` - (Optional) The boot index of the volume. It defaults to 0, which
-    indicates that it's a system disk. Changing this creates a new server.
+* `boot_index` - (Optional, Int, ForceNew) The boot index of the volume. It defaults to 0, which
+  indicates that it's a system disk. Changing this creates a new server.
 
-* `destination_type` - (Optional) The type that gets created. Possible values
-    are "volume" and "local". Changing this creates a new server.
+* `destination_type` - (Optional, String, ForceNew) The type that gets created. Possible values
+  are "volume" and "local". Changing this creates a new server.
 
-* `delete_on_termination` - (Optional) Delete the volume / block device upon
-    termination of the instance. Defaults to false. Changing this creates a
-    new server.
+* `delete_on_termination` - (Optional, Bool, ForceNew) Delete the volume / block device upon
+  termination of the instance. Defaults to false. Changing this creates a new server.
 
-* `disk_bus` - (Optional) The low-level disk bus that will be used, for example, *virtio*, *scsi*.
-    Most common thing is to leave this empty. Changing this creates a new server.
+* `disk_bus` - (Optional, String) The low-level disk bus that will be used, for example, *virtio*, *scsi*.
+  Most common thing is to leave this empty. Changing this creates a new server.
 
+<a name="ecs_scheduler_hints"></a>
 The `scheduler_hints` block supports:
 
-* `group` - (Optional) Specifies the **anti-affinity** group ID. The instance will be placed into that group.
+* `group` - (Optional, String, ForceNew) Specifies the **anti-affinity** group ID.
+  The instance will be placed into that group. Changing this creates a new server.
 
-* `tenancy` - (Optional) Specifies whether the ECS is created on a Dedicated Host (DeH) or in a shared pool (default).
-  The value can be **shared** or **dedicated**.
+* `tenancy` - (Optional, String, ForceNew) Specifies whether the ECS is created on a Dedicated Host (DeH) or in a
+  shared pool (default). The value can be **shared** or **dedicated**.
 
-* `deh_id` - (Optional) Specifies the DeH ID. This parameter takes effect only when the value of tenancy is dedicated.
-  If you do not specify this parameter, the system will automatically assign a DeH to you to deploy ECSs.
+* `deh_id` - (Optional, String, ForceNew) Specifies the DeH ID.This parameter takes effect only when the value of tenancy
+  is dedicated. If you do not specify this parameter, the system will automatically assign a DeH to you to deploy ECSs.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
 * `access_ip_v4` - The first detected Fixed IPv4 address *or* the Floating IP.
+
 * `access_ip_v6` - The first detected Fixed IPv6 address.
-* `metadata` - See Argument Reference above.
-* `security_groups` - See Argument Reference above.
-* `flavor_id` - See Argument Reference above.
-* `flavor_name` - See Argument Reference above.
-* `network/uuid` - See Argument Reference above.
-* `network/port` - See Argument Reference above.
-* `network/name` - The human-readable name of the network.
-* `network/fixed_ip_v4` - The Fixed IPv4 address of the Instance on that network.
-* `network/fixed_ip_v6` - The Fixed IPv6 address of the Instance on that network.
-* `network/mac` - The MAC address of the NIC on that network.
-* `all_metadata` - Contains all instance metadata, even metadata not set
-    by Terraform.
-* `auto_recovery` - See Argument Reference above.
-* `tags` - See Argument Reference above.
-* `floating_ip` - The EIP address that is associted to the instance.
-* `system_disk_id` - The system disk voume ID.
+
+* `network` - See Argument Reference above. The [network](#ecs_attr_network) object structure is documented below.
+
+* `all_metadata` - Contains all instance metadata, even metadata not set by Terraform.
+
+* `floating_ip` - The EIP address that is associate to the instance.
+
+* `system_disk_id` - The system disk volume ID.
+
 * `volume_attached` - An array of one or more disks to attach to the instance.
-    The volume_attached object structure is documented below.
+   The [volume_attached](#ecs_attr_volume_attached) object structure is documented below.
+
 * `status` - The status of the instance.
 
+<a name="ecs_attr_network"></a>
+The `network` block supports:
+
+* `mac` - The MAC address of the NIC on that network.
+
+<a name="ecs_attr_volume_attached"></a>
 The `volume_attached` block supports:
 
 * `uuid` - The volume id on that attachment.
+
 * `boot_index` - The volume boot index on that attachment.
+
 * `size` - The volume size on that attachment.
+
 * `type` - The volume type on that attachment.
+
 * `pci_address` - The volume pci address on that attachment.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `update` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
