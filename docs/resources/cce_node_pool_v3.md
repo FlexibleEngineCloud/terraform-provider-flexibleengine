@@ -45,6 +45,9 @@ resource "flexibleengine_cce_node_pool_v3" "node_pool" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CCE node pool resource.
+  If omitted, the provider-level region will be used. Changing this will create a new CCE node pool resource.
+
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster. Changing this parameter will create a new resource.
 
 * `name` - (Required, String) Node Pool Name.
@@ -59,7 +62,7 @@ The following arguments are supported:
     Default value is random to create nodes in a random AZ in the node pool.
     Changing this parameter will create a new resource.
 
-* `os` - (Optional, String) Operating System of the node. The value can be EulerOS 2.5 and CentOS 7.6.
+* `os` - (Optional, String, ForceNew) Operating System of the node. The value can be EulerOS 2.5 and CentOS 7.6.
     Changing this parameter will create a new resource.
 
 * `key_pair` - (Optional, String, ForceNew) Key pair name when logging in to select the key pair mode.
@@ -109,29 +112,37 @@ The following arguments are supported:
 
 The `root_volume` block supports:
 
-* `size` - (Required, Int) Specifies the disk size in GB.
+* `size` - (Required, Int, ForceNew) Specifies the disk size in GB.
+  Changing this will create a new CCE node pool resource.
 
-* `volumetype` - (Required, String) Specifies the disk type.
+* `volumetype` - (Required, String, ForceNew) Specifies the disk type.
+  Changing this will create a new CCE node pool resource.
 
-* `kms_key_id` - (Optional, String) Specifies the KMS key ID. This is used to encrypt the volume.
+* `kms_key_id` - (Optional, String, ForceNew) Specifies the KMS key ID. This is used to encrypt the volume.
+  Changing this will create a new CCE node pool resource.
 
   -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
   The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
-* `extend_params` - (Optional, Map) Specifies the disk expansion parameters in key/value pair format.
+* `extend_params` - (Optional, Map, ForceNew) Specifies the disk expansion parameters in key/value pair format.
+  Changing this will create a new CCE node pool resource.
 
 The `data_volumes` block supports:
 
-* `size` - (Required, Int) Specifies the disk size in GB.
+* `size` - (Required, Int, ForceNew) Specifies the disk size in GB.
+  Changing this will create a new CCE node pool resource.
 
-* `volumetype` - (Required, String) Specifies the disk type.
+* `volumetype` - (Required, String, ForceNew) Specifies the disk type.
+  Changing this will create a new CCE node pool resource.
 
-* `kms_key_id` - (Optional, String) Specifies the KMS key ID. This is used to encrypt the volume.
+* `kms_key_id` - (Optional, String, ForceNew) Specifies the KMS key ID. This is used to encrypt the volume.
+  Changing this will create a new CCE node pool resource.
 
   -> You need to create an agency (EVSAccessKMS) when disk encryption is used in the current project for the first time ever.
   The account and permission of the created agency are `op_svc_evs` and **KMS Administrator**, respectively.
 
-* `extend_params` - (Optional, Map) Specifies the disk expansion parameters in key/value pair format.
+* `extend_params` - (Optional, Map, ForceNew) Specifies the disk expansion parameters in key/value pair format.
+  Changing this will create a new CCE node pool resource.
 
 The `taints` block supports:
 
@@ -144,7 +155,7 @@ The `taints` block supports:
 
 * `effect` - (Required, String) Available options are *NoSchedule*, *PreferNoSchedule* and *NoExecute*.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -158,8 +169,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 20 minute.
-* `delete` - Default is 20 minute.
+* `create` - Default is 20 minutes.
+* `delete` - Default is 20 minutes.
 
 ## Import
 

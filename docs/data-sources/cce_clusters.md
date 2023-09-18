@@ -36,7 +36,7 @@ The following arguments are supported:
 
 * `status` - (Optional, String) Specifies the status of the cluster.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -44,8 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `ids` - Indicates a list of IDs of all CCE clusters found.
 
-* `clusters` - Indicates a list of CCE clusters found. Structure is documented below.
+* `clusters` - Indicates a list of CCE clusters found.
+  The [clusters](#cce_clusters) object structure is documented below.
 
+<a name="cce_clusters"></a>
 The `clusters` block supports:
 
 * `name` - The name of the cluster.
@@ -76,7 +78,7 @@ The `clusters` block supports:
 
 * `authentication_mode` - The authentication mode of the cluster, possible values are x509 and rbac. Defaults to **rbac**.
 
-* `masters` - The advanced configuration of master nodes.
+* `masters` - The advanced configuration of master nodes.The [masters](#cce_masters) object structure is documented below.
 
 * `security_group_id` - The security group ID of the cluster.
 
@@ -84,18 +86,25 @@ The `clusters` block supports:
 
 * `subnet_id` - The ID of the VPC Subnet used to create the node.
 
-* `highway_subnet_id` - The ID of the high speed network used to create bare metal nodes.
-
 * `enterprise_project_id` - The enterprise project ID of the CCE cluster.
 
-* `endpoints` - The access addresses of kube-apiserver in the cluster. Structure is documented below.
+* `endpoints` - The access addresses of kube-apiserver in the cluster.
+  The [endpoints](#cce_endpoints) object structure is documented below.
 
-* `certificate_clusters` - The certificate clusters. Structure is documented below.
+* `certificate_clusters` - The certificate clusters.
+  The [certificate_clusters](#cce_certificate_clusters) object structure is documented below.
 
-* `certificate_users` - The certificate users. Structure is documented below.
+* `certificate_users` - The certificate users
+  The [certificate_users](#cce_certificate_users) object structure is documented below.
 
 * `kube_config_raw` - The raw Kubernetes config to be used by kubectl and other compatible tools.
 
+<a name="cce_masters"></a>
+The `masters` block supports:
+
+* `availability_zone` - The availability zone (AZ) of the master node.
+
+<a name="cce_endpoints"></a>
 The `endpoints` block supports:
 
 * `url` - The URL of the cluster access address.
@@ -104,6 +113,7 @@ The `endpoints` block supports:
   + **Internal**: The user's subnet access address.
   + **External**: The public network access address.
 
+<a name="cce_certificate_clusters"></a>
 The `certificate_clusters` block supports:
 
 * `name` - The cluster name.
@@ -112,6 +122,7 @@ The `certificate_clusters` block supports:
 
 * `certificate_authority_data` - The certificate data.
 
+<a name="cce_certificate_users"></a>
 The `certificate_users` block supports:
 
 * `name` - The user name.

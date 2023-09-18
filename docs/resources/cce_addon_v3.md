@@ -59,6 +59,9 @@ resource "flexibleengine_cce_addon_v3" "autoscaler" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the CCE addon resource.
+  If omitted, the provider-level region will be used. Changing this will create a new CCE addon resource.
+
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster. Changing this parameter will create a new resource.
 
 * `template_name` - (Required, String, ForceNew) Name of the addon template.
@@ -68,8 +71,10 @@ The following arguments are supported:
 
 * `values` - (Optional, List, ForceNew) Add-on template installation parameters.
   These parameters vary depending on the add-on. Changing this parameter will create a new resource.
+  The [values](#cce_values) object structure is documented below.
 
-* The `values` block supports:
+<a name="cce_values"></a>
+The `values` block supports:
 
 * `basic` - (Required, String, ForceNew) The basic parameters in json string format.
   Changing this will create a new resource.
@@ -80,7 +85,7 @@ The following arguments are supported:
 * `flavor` - (Optional, String, ForceNew) The flavor parameters in json string format.
   Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -92,8 +97,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 3 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 3 minutes.
 
 ## Import
 
