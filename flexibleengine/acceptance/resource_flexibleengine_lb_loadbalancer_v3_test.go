@@ -133,9 +133,10 @@ func testAccElbV3LoadBalancerConfig_basic(rName string) string {
 %s
 
 resource "flexibleengine_lb_loadbalancer_v3" "test" {
-  name            = "%s"
-  ipv4_subnet_id  = flexibleengine_vpc_subnet_v1.test.subnet_id
-  ipv6_network_id = flexibleengine_vpc_subnet_v1.test.id
+  name           		 = "%s"
+  ipv4_subnet_id  	     = flexibleengine_vpc_subnet_v1.test.subnet_id
+  ipv6_network_id        = flexibleengine_vpc_subnet_v1.test.id
+  enterprise_project_id  = 0  
 
   availability_zone = [
     data.flexibleengine_availability_zones.test.names[0]
@@ -154,10 +155,11 @@ func testAccElbV3LoadBalancerConfig_update(rName, rNameUpdate string) string {
 %s
 
 resource "flexibleengine_lb_loadbalancer_v3" "test" {
-  name              = "%s"
-  cross_vpc_backend = true
-  ipv4_subnet_id    = flexibleengine_vpc_subnet_v1.test.subnet_id
-  ipv6_network_id   = flexibleengine_vpc_subnet_v1.test.id
+  name              	 = "%s"
+  cross_vpc_backend 	 = true
+  ipv4_subnet_id   	     = flexibleengine_vpc_subnet_v1.test.subnet_id
+  ipv6_network_id   	 = flexibleengine_vpc_subnet_v1.test.id
+  enterprise_project_id  = 0 
 
   availability_zone = [
     data.flexibleengine_availability_zones.test.names[0]

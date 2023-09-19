@@ -79,23 +79,23 @@ EOT
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Networking client.
     A Networking client is needed to create an LB certificate. If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     LB certificate.
 
-* `name` - (Optional) Human-readable name for the Certificate. Does not have
+* `name` - (Optional, String) Human-readable name for the Certificate. Does not have
     to be unique.
 
-* `private_key` - (Required) The private encrypted key of the Certificate, PEM format.
+* `private_key` - (Required, String) The private encrypted key of the Certificate, PEM format.
 
-* `certificate` - (Required) The public encrypted key of the Certificate, PEM format.
+* `certificate` - (Required, String) The public encrypted key of the Certificate, PEM format.
 
-* `description` - (Optional) Human-readable description for the Certificate.
+* `description` - (Optional, String) Human-readable description for the Certificate.
 
-* `domain` - (Optional) The domain of the Certificate.
+* `domain` - (Optional, String) The domain of the Certificate.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -107,3 +107,11 @@ The following attributes are exported:
 * `certificate` - See Argument Reference above.
 * `update_time` - Indicates the update time.
 * `create_time` - Indicates the creation time.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 5 minutes.

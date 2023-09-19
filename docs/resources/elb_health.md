@@ -27,41 +27,41 @@ resource "flexibleengine_elb_health" "healthcheck" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the elb health. If
+* `region` - (Optional, String, ForceNew) The region in which to create the elb health. If
     omitted, the `region` argument of the provider is used. Changing this
     creates a new elb health.
 
-* `listener_id` - (Required) Specifies the ID of the listener to which the health
+* `listener_id` - (Required, String, ForceNew) Specifies the ID of the listener to which the health
     check belongs.
 
-* `healthcheck_protocol` - (Optional) Specifies the protocol used for the health
+* `healthcheck_protocol` - (Optional, String) Specifies the protocol used for the health
     check. The value can be HTTP or TCP (case-insensitive).
 
-* `healthcheck_uri` - (Optional) Specifies the URI for health check. This parameter
+* `healthcheck_uri` - (Optional, String) Specifies the URI for health check. This parameter
     is valid when healthcheck_ protocol is HTTP. The value is a string of 1 to 80
     characters that must start with a slash (/) and can only contain letters, digits,
     and special characters, such as -/.%?#&.
 
-* `healthcheck_connect_port` - (Optional) Specifies the port used for the health
+* `healthcheck_connect_port` - (Optional, Int) Specifies the port used for the health
     check. The value ranges from 1 to 65535.
 
-* `healthy_threshold` - (Optional) Specifies the threshold at which the health
+* `healthy_threshold` - (Optional, Int) Specifies the threshold at which the health
     check result is success, that is, the number of consecutive successful health
     checks when the health check result of the backend server changes from fail
     to success. The value ranges from 1 to 10.
 
-* `unhealthy_threshold` - (Optional) Specifies the threshold at which the health
+* `unhealthy_threshold` - (Optional, Int) Specifies the threshold at which the health
     check result is fail, that is, the number of consecutive failed health checks
     when the health check result of the backend server changes from success to fail.
     The value ranges from 1 to 10.
 
-* `healthcheck_timeout` - (Optional) Specifies the maximum timeout duration
+* `healthcheck_timeout` - (Optional, Int) Specifies the maximum timeout duration
     (s) for the health check. The value ranges from 1 to 50.
 
-* `healthcheck_interval` - (Optional) Specifies the maximum interval (s) for
+* `healthcheck_interval` - (Optional, Int) Specifies the maximum interval (s) for
     health check. The value ranges from 1 to 5.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -75,3 +75,11 @@ The following attributes are exported:
 * `unhealthy_threshold` - See Argument Reference above.
 * `healthcheck_timeout` - See Argument Reference above.
 * `healthcheck_interval` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
