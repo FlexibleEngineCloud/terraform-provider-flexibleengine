@@ -33,28 +33,23 @@ The following arguments are supported:
 
 * `description` - (Optional, String) Specifies the description of the ip group.
 
-* `ip_list` - (Required, List) Specifies an array of one or more ip addresses. The ip_list object structure is
-  documented below.
+* `ip_list` - (Required, List) Specifies an array of one or more ip addresses. The [ip_list](#elb_ip_list) object
+    structure is documented below.
 
+<a name="elb_ip_list"></a>
 The `ip_list` block supports:
 
 * `ip` - (Required, String) IP address or CIDR block.
 
 * `description` - (Optional, String) Human-readable description for the ip.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The uuid of the ip group.
 
-## Timeouts
-
-This resource provides the following timeouts configuration options:
-
-* `create` - Default is 10 minute.
-* `update` - Default is 10 minute.
-* `delete` - Default is 5 minute.
+## Import
 
 ELB IP group can be imported using the IP group ID, e.g.
 

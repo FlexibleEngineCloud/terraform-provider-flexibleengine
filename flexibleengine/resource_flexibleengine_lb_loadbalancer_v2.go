@@ -78,9 +78,10 @@ func resourceLoadBalancerV2() *schema.Resource {
 			},
 
 			"flavor": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "flavor is deprecated",
 			},
 
 			"admin_state_up": {
