@@ -51,50 +51,38 @@ resource "flexibleengine_lb_l7rule_v2" "l7rule_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an . If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    L7 Rule.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Networking client.
+  A Networking client is needed to create an . If omitted, the
+  `region` argument of the provider is used. Changing this creates a new L7 Rule.
 
-* `description` - (Optional) Human-readable description for the L7 Rule.
+* `type` - (Required, String, ForceNew) The L7 Rule type - can either be HOST_NAME or PATH.
+  Changing this creates a new L7 Rule.
 
-* `type` - (Required) The L7 Rule type - can either be HOST_NAME or PATH.
-    Changing this creates a new L7 Rule.
+* `compare_type` - (Required, String) The comparison type for the L7 rule - can either be
+  STARTS_WITH, EQUAL_TO or REGEX
 
-* `compare_type` - (Required) The comparison type for the L7 rule - can either be
-    STARTS_WITH, EQUAL_TO or REGEX
+* `l7policy_id` - (Required, String, ForceNew) The ID of the L7 Policy to query. Changing this creates a new L7 Rule.
 
-* `l7policy_id` - (Required) The ID of the L7 Policy to query. Changing this creates a new
-    L7 Rule.
+* `value` - (Required, String) The value to use for the comparison. For example, the file type to compare.
 
-* `value` - (Required) The value to use for the comparison. For example, the file type to
-    compare.
+* `key` - (Optional, String, ForceNew) The key to use for the comparison. For example, the name of the cookie to
+  evaluate. Valid when `type` is set to COOKIE or HEADER. Changing this creates a new L7 Rule.
 
-* `key` - (Optional) The key to use for the comparison. For example, the name of the cookie to
-    evaluate. Valid when `type` is set to COOKIE or HEADER. Changing this creates a new L7 Rule.
+## Attribute Reference
 
-* `admin_state_up` - (Optional) The administrative state of the L7 Rule.
-    The value can only be true (UP).
-
-* `tenant_id` - (Optional) The UUID of the tenant who owns the L7 Rule.
-    Only administrative users can specify a tenant UUID other than their own.
-    Changing this creates a new L7 Rule.
-
-## Attributes Reference
-
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID for the L7 Rule.
-* `region` - See Argument Reference above.
-* `tenant_id` - See Argument Reference above.
-* `type` - See Argument Reference above.
-* `compare_type` - See Argument Reference above.
-* `l7policy_id` - See Argument Reference above.
-* `value` - See Argument Reference above.
-* `key` - See Argument Reference above.
-* `invert` - See Argument Reference above.
-* `admin_state_up` - See Argument Reference above.
+
 * `listener_id` - The ID of the Listener owning this resource.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

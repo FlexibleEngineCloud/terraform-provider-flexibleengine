@@ -111,31 +111,29 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the listener resource.
-    If omitted, the `region` argument of the provider is used.
-    Changing this creates a new listener.
+* `region` - (Optional, String, ForceNew) The region in which to create the listener resource.
+  If omitted, the `region` argument of the provider is used. Changing this creates a new listener.
 
-* `loadbalancer_id` - (Required) The load balancer on which to provision this
-    listener. Changing this creates a new listener.
+* `loadbalancer_id` - (Required, String, ForceNew) The load balancer on which to provision this
+  listener. Changing this creates a new listener.
 
-* `protocol` - (Required) The protocol - can either be TCP, UDP, HTTP or TERMINATED_HTTPS.
-    Changing this creates a new listener.
+* `protocol` - (Required, String, ForceNew) The protocol - can either be TCP, UDP, HTTP or TERMINATED_HTTPS.
+  Changing this creates a new listener.
 
-* `protocol_port` - (Required) The port on which to listen for client traffic.
-    Changing this creates a new listener.
+* `protocol_port` - (Required, Int, ForceNew) The port on which to listen for client traffic.
+  Changing this creates a new listener.
 
-* `default_pool_id` - (Optional) The ID of the default pool with which the
-    listener is associated. Changing this creates a new listener.
+* `default_pool_id` - (Optional, String, ForceNew) The ID of the default pool with which the
+  listener is associated. Changing this creates a new listener.
 
-* `name` - (Optional) Human-readable name for the listener. Does not have
-    to be unique.
+* `name` - (Optional, String) Human-readable name for the listener. Does not have to be unique.
 
-* `description` - (Optional) Human-readable description for the listener.
+* `description` - (Optional, String) Human-readable description for the listener.
 
-* `tags` - (Optional) The key/value pairs to associate with the listener.
+* `tags` - (Optional, Map) The key/value pairs to associate with the listener.
 
 * `http2_enable` - (Optional, Bool) Specifies whether to use HTTP/2. The default value is false.
-    This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
+  This parameter is valid only when the protocol is set to *TERMINATED_HTTPS*.
 
 * `transparent_client_ip_enable` - (Optional, Bool) Specifies whether to pass source IP addresses of the clients to
   backend servers.
@@ -155,21 +153,20 @@ The following arguments are supported:
   server, in seconds. This parameter is available only for HTTP and HTTPS listeners. The value ranges from 1 to 300,
   and the default value is 60.
 
-* `default_tls_container_ref` - (Optional) A reference to a Barbican Secrets
-    container which stores TLS information. This is required if the protocol
-    is `TERMINATED_HTTPS`. See
-    [here](https://wiki.openstack.org/wiki/Network/LBaaS/docs/how-to-create-tls-loadbalancer)
-    for more information.
+* `default_tls_container_ref` - (Optional, String) A reference to a Barbican Secrets
+  container which stores TLS information. This is required if the protocol is `TERMINATED_HTTPS`. See
+  [here](https://wiki.openstack.org/wiki/Network/LBaaS/docs/how-to-create-tls-loadbalancer)
+  for more information.
 
-* `sni_container_refs` - (Optional) A list of references to Barbican Secrets
-    containers which store SNI information. See
-    [here](https://wiki.openstack.org/wiki/Network/LBaaS/docs/how-to-create-tls-loadbalancer)
-    for more information.
+* `sni_container_refs` - (Optional, List) A list of references to Barbican Secrets
+  containers which store SNI information. See
+  [here](https://wiki.openstack.org/wiki/Network/LBaaS/docs/how-to-create-tls-loadbalancer)
+  for more information.
 
-* `tls_ciphers_policy` - (Optional) Specifies the security policy used by the listener.
-    This parameter is valid only when the load balancer protocol is set to TERMINATED_HTTPS.
-    The value can be tls-1-0, tls-1-1, tls-1-2, or tls-1-2-strict, and the default value is tls-1-0.
-    For details of cipher suites for each security policy, see the table below.
+* `tls_ciphers_policy` - (Optional, String) Specifies the security policy used by the listener.
+  This parameter is valid only when the load balancer protocol is set to TERMINATED_HTTPS.
+  The value can be tls-1-0, tls-1-1, tls-1-2, or tls-1-2-strict, and the default value is tls-1-0.
+  For details of cipher suites for each security policy, see the table below.
 
 <table>
   <tr>
@@ -197,18 +194,16 @@ The following arguments are supported:
   </tr>
 </table>
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID for the listener.
-* `protocol` - See Argument Reference above.
-* `protocol_port` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `default_port_id` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `http2_enable` - See Argument Reference above.
-* `default_tls_container_ref` - See Argument Reference above.
-* `sni_container_refs` - See Argument Reference above.
-* `tls_ciphers_policy` - See Argument Reference above.
-* `tags` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.

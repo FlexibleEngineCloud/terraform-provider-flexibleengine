@@ -23,13 +23,6 @@ func resourceWhitelistV2() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"listener_id": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -45,6 +38,14 @@ func resourceWhitelistV2() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				DiffSuppressFunc: suppressLBWhitelistDiffs,
+			},
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}

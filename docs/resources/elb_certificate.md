@@ -84,7 +84,7 @@ The following arguments are supported:
 * `description` - (Optional, String) Specifies the description of the certificate.
 
 * `type` - (Optional, String, ForceNew) Specifies the certificate type. The default value is "server".
-  The value can be one of the following:
+  Changing this creates a new certificate. The value can be one of the following:
   + server: indicates the server certificate.
   + client: indicates the CA certificate.
 
@@ -96,22 +96,17 @@ The following arguments are supported:
 * `domain` - (Optional, String) Specifies the domain of the certificate. The value contains a maximum of 100 characters.
   This parameter is valid only when `type` is set to "server".
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Specifies a resource ID in UUID format.
+
 * `update_time` - Indicates the update time.
+
 * `create_time` - Indicates the creation time.
-* `expire_time` - Indicates the expire time.
 
-## Timeouts
-
-This resource provides the following timeouts configuration options:
-
-* `create` - Default is 10 minute.
-* `update` - Default is 10 minute.
-* `delete` - Default is 5 minute.
+* `expire_time` - Indicates the expired time.
 
 ## Import
 

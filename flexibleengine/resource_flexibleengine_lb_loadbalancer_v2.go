@@ -77,28 +77,31 @@ func resourceLoadBalancerV2() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"flavor": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
-
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
-				Optional: true,
-			},
-
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"vip_port_id": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+
+			"flavor": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "flavor is deprecated",
+			},
+
+			"admin_state_up": {
+				Type:       schema.TypeBool,
+				Default:    true,
+				Optional:   true,
+				Deprecated: "admin_state_up is deprecated",
+			},
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}

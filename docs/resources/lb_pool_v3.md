@@ -29,20 +29,23 @@ resource "flexibleengine_lb_pool_v3" "pool_1" {
 The following arguments are supported:
 
 * `region` - (Optional, String, ForceNew) Specifies the region in which to create the ELB pool resource.
+  If omitted, the provider-level region will be used. Changing this will create a new ELB pool resource.
+
+* `protocol` - (Required, String, ForceNew) Specifies the protocol used by the pool. The value can be TCP, UDP,
+  HTTP, HTTPS or QUIC.
+  + When the protocol used by the listener is UDP, the protocol of the backend pool must be UDP or QUIC.
+  + When the protocol used by the listener is TCP, the protocol of the backend pool must be TCP.
+  + When the protocol used by the listener is HTTP, the protocol of the backend pool must be HTTP.
+  + When the protocol used by the listener is HTTPS, the protocol of the backend pool must be HTTPS.
+  + When the protocol used by the listener is TERMINATED_HTTPS, the protocol of the backend pool must be HTTP.
   Changing this creates a new pool.
+
+* `lb_method` - (Required, String) Specifies the load balancing algorithm to distribute traffic to the pool's members.
+  Must be one of ROUND_ROBIN, LEAST_CONNECTIONS, or SOURCE_IP.
 
 * `name` - (Optional, String) Specifies the name for the pool.
 
 * `description` - (Optional, String) Specifies the description for the pool.
-
-* `protocol` - (Required, String, ForceNew) Specifies the protocol used by the pool. The value can be TCP, UDP,
-  HTTP, HTTPS or QUIC.
-    + When the protocol used by the listener is UDP, the protocol of the backend pool must be UDP or QUIC.
-    + When the protocol used by the listener is TCP, the protocol of the backend pool must be TCP.
-    + When the protocol used by the listener is HTTP, the protocol of the backend pool must be HTTP.
-    + When the protocol used by the listener is HTTPS, the protocol of the backend pool must be HTTPS.
-    + When the protocol used by the listener is TERMINATED_HTTPS, the protocol of the backend pool must be HTTP.
-  Changing this creates a new pool.
 
 * `loadbalancer_id` - (Optional, String, ForceNew) Specifies the load balancer on which to provision this pool.
   Changing this creates a new pool. Note:  Exactly one of LoadbalancerID or ListenerID must be provided.
@@ -51,13 +54,11 @@ The following arguments are supported:
   associated with.
   Changing this creates a new pool. Note:  Exactly one of LoadbalancerID or ListenerID must be provided.
 
-* `lb_method` - (Required, String) Specifies the load balancing algorithm to distribute traffic to the pool's members.
-  Must be one of ROUND_ROBIN, LEAST_CONNECTIONS, or SOURCE_IP.
-
 * `persistence` - (Optional, List, ForceNew) Specifies the omit this field to prevent session persistence.
   Indicates whether connections in the same session will be processed by the same Pool member or not.
-  Changing this creates a new pool.
+  The [persistence](#lb_persistence) object structure is documented below. Changing this creates a new pool.
 
+<a name="lb_persistence"></a>
 The `persistence` argument supports:
 
 * `type` - (Required, String, ForceNew) Specifies the type of persistence mode. The current specification supports
@@ -71,7 +72,7 @@ The `persistence` argument supports:
   + When the protocol of the backend server group is TCP or UDP, the value ranges from 1 to 60.
   + When the protocol of the backend server group is HTTP or HTTPS, the value ranges from 1 to 1440.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes is exported:
 
