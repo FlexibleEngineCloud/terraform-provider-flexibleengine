@@ -193,7 +193,10 @@ The following arguments are supported:
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the loadbalancer.
 
-## Attributes Reference
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the resource.
+  Changing this will create a new resource.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -223,7 +226,7 @@ API response, security or some other reason. The missing attributes include: `ip
 `bandwidth_charge_mode`, `sharetype` and `bandwidth_size`.
 It is generally recommended running `terraform plan` after importing a loadbalancer.
 You can then decide if changes should be applied to the loadbalancer, or the resource
-definition should be updated to align with the loadbalancer. Also you can ignore changes as below.
+definition should be updated to align with the loadbalancer. Also, you can ignore changes as below.
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v3" "loadbalancer_1" {
