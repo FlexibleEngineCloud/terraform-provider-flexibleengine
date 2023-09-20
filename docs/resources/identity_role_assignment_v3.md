@@ -54,26 +54,30 @@ resource "flexibleengine_identity_role_assignment_v3" "role_assignment_1" {
   domain_id = var.domain_id
   role_id   = data.flexibleengine_identity_role_v3.role_1.id
 } 
-
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-* `role_id` - (Required) The role to assign.
+* `role_id` - (Required, String, ForceNew) The role to assign. Changing this will create a new resource.
 
-* `group_id` - (Required) The group to assign the role in.
+* `group_id` - (Required, String, ForceNew) The group to assign the role in. Changing this will create a new resource.
 
-* `domain_id` - (Optional; Required if `project_id` is empty) The domain to assign the role in.
+* `domain_id` - (Optional, String, ForceNew) The domain to assign the role in.
+  It is **Required** if `project_id` is empty. Changing this will create a new resource.
 
-* `project_id` - (Optional; Required if `domain_id` is empty) The project to assign the role in.
+* `project_id` - (Optional, String, ForceNew) The project to assign the role in.
+  It is **Required** if `domain_id` is empty. Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+All the arguments above can also be exported attributes.
 
-* `group_id` - See Argument Reference above.
-* `role_id` - See Argument Reference above.
-* `domain_id` - See Argument Reference above.
-* `project_id` - See Argument Reference above.
+## Import
+
+IAM role assignment can be imported using the role assignment ID, e.g.
+
+```shell
+terraform import flexibleengine_identity_role_assignment_v3.assignment_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+```

@@ -18,20 +18,19 @@ data "flexibleengine_identity_project_v3" "project_1" {
 
 The following arguments are supported:
 
-* `name` - (Optional) The name of the project.
+* `name` - (Optional, String) The name of the project.
 
-* `domain_id` - (Optional) The domain this project belongs to.
+* `domain_id` - (Optional, String) The domain this project belongs to.
 
-* `parent_id` - (Optional) The parent of this project.
+* `parent_id` - (Optional, String) The parent of this project.
 
-## Attributes Reference
+* `enabled` - (Optional, Bool) The enabling status of this project.
+
+* `is_domain` - (Optional, Bool) Indicates whether the user calling the API is a tenant.
+
+## Attribute Reference
 
 `id` is set to the ID of the found project. In addition, the following attributes
 are exported:
 
-* `name` - See Argument Reference above.
-* `domain_id` - See Argument Reference above.
-* `parent_id` - See Argument Reference above.
 * `description` - The description of the project.
-* `enabled` - Whether the project is available.
-* `is_domain` - Whether this project is a domain.
