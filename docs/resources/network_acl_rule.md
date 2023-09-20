@@ -26,47 +26,38 @@ resource "flexibleengine_network_acl_rule" "rule_1" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Specifies a unique name for the network ACL rule.
+* `name` - (Optional, String) Specifies a unique name for the network ACL rule.
 
-* `description` - (Optional) Specifies the description for the network ACL rule.
+* `description` - (Optional, String) Specifies the description for the network ACL rule.
 
-* `protocol` - (Required) Specifies the protocol supported by the network ACL rule.
-     Valid values are: *tcp*, *udp*, *icmp* and *any*.
+* `protocol` - (Required, String) Specifies the protocol supported by the network ACL rule.
+   Valid values are: *tcp*, *udp*, *icmp* and *any*.
 
-* `action` - (Required) Specifies the action in the network ACL rule. Currently, the value can be *allow* or *deny*.
+* `action` - (Required, String) Specifies the action in the network ACL rule. Currently, the value can be *allow* or *deny*.
 
-* `ip_version` - (Optional) Specifies the IP version, either 4 (default) or 6. This parameter is
-    available after the IPv6 function is enabled.
+* `ip_version` - (Optional, Int) Specifies the IP version, either 4 (default) or 6. This parameter is
+  available after the IPv6 function is enabled.
 
-* `source_ip_address` - (Optional) Specifies the source IP address that the traffic is allowed from.
-    The default value is *0.0.0.0/0*. For example: xxx.xxx.xxx.xxx (IP address), xxx.xxx.xxx.0/24 (CIDR block).
+* `source_ip_address` - (Optional, String) Specifies the source IP address that the traffic is allowed from.
+  The default value is *0.0.0.0/0*. For example: xxx.xxx.xxx.xxx (IP address), xxx.xxx.xxx.0/24 (CIDR block).
 
-* `destination_ip_address` - (Optional) Specifies the destination IP address to which the traffic is allowed.
-    The default value is *0.0.0.0/0*. For example: xxx.xxx.xxx.xxx (IP address), xxx.xxx.xxx.0/24 (CIDR block).
+* `destination_ip_address` - (Optional, String) Specifies the destination IP address to which the traffic is allowed.
+  The default value is *0.0.0.0/0*. For example: xxx.xxx.xxx.xxx (IP address), xxx.xxx.xxx.0/24 (CIDR block).
 
-* `source_port` - (Optional) Specifies the source port number or port number range. The value ranges from 1 to 65535.
-    For a port number range, enter two port numbers connected by a hyphen (-). For example, 1-100.
+* `source_port` - (Optional, String) Specifies the source port number or port number range. The value ranges from 1 to
+  65535. For a port number range, enter two port numbers connected by a hyphen (-). For example, 1-100.
 
-* `destination_port` - (Optional) Specifies the destination port number or port number range.
-    The value ranges from 1 to 65535. For a port number range, enter two port numbers connected by a hyphen (-).
-    For example, 1-100.
+* `destination_port` - (Optional, String) Specifies the destination port number or port number range.
+  The value ranges from 1 to 65535. For a port number range, enter two port numbers connected by a hyphen (-).
+  For example, 1-100.
 
-* `enabled` - (Optional) Enabled status for the network ACL rule. Defaults to true.
+* `enabled` - (Optional, Bool) Enabled status for the network ACL rule. Defaults to true.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `protocol` - See Argument Reference above.
-* `action` - See Argument Reference above.
-* `ip_version` - See Argument Reference above.
-* `source_ip_address` - See Argument Reference above.
-* `destination_ip_address` - See Argument Reference above.
-* `source_port` - See Argument Reference above.
-* `destination_port` - See Argument Reference above.
-* `enabled` - See Argument Reference above.
+* `id` - The ID of the acl rule.
 
 ## Import
 
