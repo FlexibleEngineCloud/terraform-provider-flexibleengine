@@ -51,17 +51,6 @@ func resourceFWFirewallGroupV2() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
-			},
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-			},
 			"ports": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -69,10 +58,24 @@ func resourceFWFirewallGroupV2() *schema.Resource {
 				Set:      schema.HashString,
 				Computed: true,
 			},
+			"admin_state_up": {
+				Type:       schema.TypeBool,
+				Optional:   true,
+				Default:    true,
+				Deprecated: "admin_state_up is deprecated",
+			},
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Computed:   true,
+				Deprecated: "tenant_id is deprecated",
+			},
 			"value_specs": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeMap,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "value_specs is deprecated",
 			},
 		},
 	}
