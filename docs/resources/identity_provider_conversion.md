@@ -47,26 +47,30 @@ The following arguments are supported:
 * `conversion_rules` - (Required, List) Specifies the identity conversion rules of the identity provider.
   You can use identity conversion rules to map the identities of existing users to FlexibleEngine and manage their access
   to cloud resources.
-  The [object](#conversion_rules) structure is documented below.
+  The [conversion_rules](#IAM_conversion_rules) object structure is documented below.
 
-<a name="conversion_rules"></a>
+<a name="IAM_conversion_rules"></a>
 The `conversion_rules` block supports:
 
-* `local` - (Required, List) Specifies the federated user information on the cloud platform.
+* `local` - (Required, List) Specifies the federated user information on the cloud platform. The [local](#IAM_local)
+  object structure is documented below.
 
-* `remote` - (Required, List) Specifies Federated user information in the IDP system.
+* `remote` - (Required, List) Specifies Federated user information in the IDP system. The [remote](#IAM_remote) object
+  structure is documented below.
 
   -> **NOTE:**
     If the protocol of identity provider is SAML, this field is an expression consisting of assertion
     attributes and operators.  
     If the protocol of identity provider is OIDC, the value of this field is determined by the ID token.
 
+<a name="IAM_local"></a>
 The `local` block supports:
 
 * `username` - (Required, String) Specifies the name of a federated user on the cloud platform.
 
 * `group` - (Optional, String) Specifies the user group to which the federated user belongs on the cloud platform.
 
+<a name="IAM_remote"></a>
 The `remote` block supports:
 
 * `attribute` - (Required, String) Specifies the attribute in the IDP assertion.
@@ -78,7 +82,7 @@ The `remote` block supports:
 
 * `value` - (Optional, List) Specifies the rule is matched only if the specified strings appear in the attribute type.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

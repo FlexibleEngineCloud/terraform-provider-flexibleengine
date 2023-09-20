@@ -25,12 +25,12 @@ resource "flexibleengine_identity_project_v3" "project_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the project. The length is less than or equal
+* `name` - (Required, String) The name of the project. The length is less than or equal
      to 64 bytes. Name mut be prefixed with a valid region name (eg. eu-west-0_project_1).
 
-* `description` - (Optional) A description of the project.
+* `description` - (Optional, String) A description of the project.
 
-## Atribute Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `parent_id` - The parent of this project.
 
 * `enabled` - Enabling status of this project.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

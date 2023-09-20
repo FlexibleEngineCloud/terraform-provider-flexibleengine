@@ -32,7 +32,6 @@ func resourceIAMProviderConversion() *schema.Resource {
 			"provider_id": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"conversion_rules": {
 				Type:     schema.TypeList,
