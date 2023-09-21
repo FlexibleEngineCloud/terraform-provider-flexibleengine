@@ -32,8 +32,15 @@ The following arguments are supported:
 
   Changing this parameter will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 5 minutes.
+* `delete` - Default is 5 minutes.

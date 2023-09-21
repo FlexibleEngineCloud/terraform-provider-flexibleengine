@@ -53,10 +53,9 @@ The following arguments are supported:
   allowed, but it cannot start or end with a space.
 
 * `target_region` - (Optional, String, ForceNew) Specifies the target region name.
-  If specified, it means cross-region replication.
+  If specified, it means cross-region replication. Changing this parameter will create a new resource.
 
-* `description` - (Optional, String, ForceNew) Specifies the description of the copy image.
-  Changing this parameter will create a new resource.
+* `description` - (Optional, String) Specifies the description of the copy image.
 
 * `kms_key_id` - (Optional, String, ForceNew) Specifies the master key used for encrypting an image.
   Only copying scene within a region is supported. Changing this parameter will create a new resource.
@@ -73,7 +72,7 @@ The following arguments are supported:
 
 * `tags` - (Optional, Map) Specifies the key/value pairs to associate with the copy image.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -96,3 +95,10 @@ In addition to all arguments above, the following attributes are exported:
 * `checksum` - Indicates the checksum of the data associated with the image.
 
 * `status` - Indicates the status of the image.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 60 minutes.
+* `delete` - Default is 3 minutes.
