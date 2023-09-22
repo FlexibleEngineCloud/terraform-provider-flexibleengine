@@ -26,23 +26,21 @@ data "flexibleengine_kms_data_key_v1" "kms_datakey1" {
 
 ## Argument Reference
 
-* `key_id` - (Required) The globally unique identifier for the key.
-    Changing this gets the new data encryption key.
+* `key_id` - (Required, String) The globally unique identifier for the key.
+  Changing this gets the new data encryption key.
 
-* `datakey_length` - (Required) Number of bits in the length of a DEK (data encryption keys).
-    The maximum number is 512. Changing this gets the new data encryption key.
+* `datakey_length` - (Required, String) Number of bits in the length of a DEK (data encryption keys).
+  The maximum number is 512. Changing this gets the new data encryption key.
 
-* `encryption_context` - (Optional) The value of this parameter must be a series of
-    "key:value" pairs used to record resource context information. The value of this
-    parameter must not contain sensitive information and must be within 8192 characters
-    in length. Example: {"Key1":"Value1","Key2":"Value2"}
+* `encryption_context` - (Optional, String) The value of this parameter must be a series of
+  "key:value" pairs used to record resource context information. The value of this
+  parameter must not contain sensitive information and must be within 8192 characters
+  in length. Example: {"Key1":"Value1","Key2":"Value2"}
 
-## Attributes Reference
+## Attribute Reference
 
 `id` is set to the date of the found data key. In addition, the following attributes
 are exported:
 
-* `plain_text` - The plaintext of a DEK is expressed in hexadecimal format, and two
-    characters indicate one byte.
-* `cipher_text` - The ciphertext of a DEK is expressed in hexadecimal format, and two
-    characters indicate one byte.
+* `plain_text` - The plaintext of a DEK is expressed in hexadecimal format, and two characters indicate one byte.
+* `cipher_text` - The ciphertext of a DEK is expressed in hexadecimal format, and two characters indicate one byte.

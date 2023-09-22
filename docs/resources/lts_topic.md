@@ -25,8 +25,8 @@ resource "flexibleengine_lts_topic" "test_topic" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the log topic resource.
-  If omitted, the provider-level region will be used. Changing this creates a new log topic resource.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the log topic resource.
+  If omitted, the provider-level region will be used. Changing this will create a new log topic resource.
 
 * `group_id` - (Required, String, ForceNew) Specifies the ID of a created log group.
   Changing this parameter will create a new resource.
@@ -34,7 +34,7 @@ The following arguments are supported:
 * `topic_name` - (Required, String, ForceNew) Specifies the log topic name.
   Changing this parameter will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
