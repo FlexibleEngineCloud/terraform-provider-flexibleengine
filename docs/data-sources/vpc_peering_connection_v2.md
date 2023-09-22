@@ -27,18 +27,24 @@ resource "flexibleengine_vpc_route_v2" "vpc_route" {
 The arguments of this data source act as filters for querying the available VPC peering connection.
 The given filters must match exactly one VPC peering connection whose data will be exported as attributes.
 
-* `id` (Optional) - The ID of the specific VPC Peering Connection to retrieve.
+* `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
+  If omitted, the region argument of the provider is used.
 
-* `status` (Optional) - The status of the specific VPC Peering Connection to retrieve.
+* `id` (Optional, String) - The ID of the specific VPC Peering Connection to retrieve.
 
-* `vpc_id` (Optional) - The ID of the requester VPC of the specific VPC Peering Connection to retrieve.
+* `name` (Optional, String) - The name of the specific VPC Peering Connection to retrieve.
 
-* `peer_vpc_id` (Optional) -  The ID of the accepter/peer VPC of the specific VPC Peering Connection to retrieve.
+* `status` (Optional, String) - The status of the specific VPC Peering Connection to retrieve.
 
-* `peer_tenant_id` (Optional) - The Tenant ID of the accepter/peer VPC of the specific VPC Peering Connection to retrieve.
+* `vpc_id` (Optional, String) - The ID of the requester VPC of the specific VPC Peering Connection to retrieve.
 
-* `name` (Optional) - The name of the specific VPC Peering Connection to retrieve.
+* `peer_vpc_id` (Optional, String) -  The ID of the accepter/peer VPC of the specific VPC Peering Connection to retrieve.
+
+* `peer_tenant_id` (Optional, String) - The Tenant ID of the accepter/peer VPC
+  of the specific VPC Peering Connection to retrieve.
 
 ## Attributes Reference
+
+* `description` - The description of the VPC Peering Connection.
 
 All of the argument attributes are exported as result attributes.

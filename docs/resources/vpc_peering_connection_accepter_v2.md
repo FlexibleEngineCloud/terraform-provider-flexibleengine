@@ -72,10 +72,13 @@ resource "flexibleengine_vpc_peering_connection_accepter_v2" "peer" {
 
 The following arguments are supported:
 
-* `vpc_peering_connection_id` (Required) - The VPC Peering Connection ID to manage.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the VPC peering connection accepter.
+  If omitted, the provider-level region will be used. Changing this creates a new VPC peering connection accepter.
+
+* `vpc_peering_connection_id` (Required, String, ForceNew) - The VPC Peering Connection ID to manage.
   Changing this creates a new VPC peering connection accepter.
 
-* `accept` (Optional)- Whether or not to accept the peering request. Defaults to `false`.
+* `accept` (Optional, Bool)- Whether or not to accept the peering request. Defaults to `false`.
 
 ## Removing flexibleengine_vpc_peering_connection_accepter_v2 from your configuration
 
@@ -90,9 +93,9 @@ from your state file and management, but will not destroy the VPC Peering Connec
 
 All of the argument attributes except accept are also exported as result attributes.
 
-* `name` - The VPC peering connection name.
-
 * `id` - The VPC peering connection ID.
+
+* `name` - The VPC peering connection name.
 
 * `status` - The VPC peering connection status.
 
@@ -101,6 +104,13 @@ All of the argument attributes except accept are also exported as result attribu
 * `peer_vpc_id` - The VPC ID of the accepter tenant.
 
 * `peer_tenant_id` - The Tenant Id of the accepter tenant.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `delete` - Default is 10 minute.
 
 ## Import
 

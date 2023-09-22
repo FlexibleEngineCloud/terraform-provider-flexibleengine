@@ -50,6 +50,9 @@ The `endpoints` block contains:
 * `whitelist` - List of IP or CIDR block which can access the VPC endpoint.
 * `private_domain_name` - DNS name pointing to the VPC endpoint ip.
 * `tags` - The key/value pairs to associate with the VPC endpoint.
+    + `key` - The tag key. Each tag key contains a maximum of 127 unicode characters but cannot be left blank.
+    + `value` - The tag value list. Each value contains a maximum of 255 Unicode characters.
+      Before using values, delete SBC spaces before and after the value.
 * `project_id` - The ID of the project holding the VPC endpoint.
 * `created_at` - Creation date of the VPC endpoint.
 * `updated_at` - Last update date of the VPC endpoint.

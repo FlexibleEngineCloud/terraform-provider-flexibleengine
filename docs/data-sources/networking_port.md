@@ -4,7 +4,7 @@ subcategory: "Virtual Private Cloud (VPC)"
 
 # flexibleengine_networking_port
 
-Use this data source to get the ID of an available Flexibleengine port.
+Use this data source to get the ID of an available FlexibleEngine port.
 
 ## Example Usage
 
@@ -40,11 +40,11 @@ In addition to all arguments above, the following attributes are exported:
 
 * `name` - The name of the port.
 
-* `admin_state_up` - The administrative state of the port.
-
 * `device_owner` - The device owner of the port.
 
 * `device_id` - The ID of the device the port belongs to.
+
+* `all_allowed_ips` - The collection of allowed IP addresses on the port.
 
 * `all_fixed_ips` - The collection of Fixed IP addresses on the port.
 

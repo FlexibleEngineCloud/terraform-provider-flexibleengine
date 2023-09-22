@@ -19,6 +19,9 @@ data "flexibleengine_vpcep_public_services" "dns_service" {
 
 ## Argument Reference
 
+* `region` - (Optional, String) The region in which to obtain the public VPC endpoint services.
+  If omitted, the provider-level region will be used.
+
 * `service_name` - (Optional, String) Specifies the name of the public VPC endpoint service.
     The value is not case-sensitive and supports fuzzy match.
 
@@ -29,8 +32,6 @@ data "flexibleengine_vpcep_public_services" "dns_service" {
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Specifies a data source ID in UUID format.
-
-* `region` - The region in which to obtain the public VPC endpoint services.
 
 * `services` - Indicates the public VPC endpoint services information. Structure is documented below.
 

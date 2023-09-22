@@ -28,23 +28,28 @@ The arguments of this data source act as filters for querying the available
 subnets in the current tenant. The given filters must match exactly one
 subnet whose data will be exported as attributes.
 
-* `id` - (Optional) - Specifies the ID in UUID format.
+* `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
+  If omitted, the region argument of the provider is used.
 
-* `name` (Optional) - The name of the specific subnet to retrieve.
+* `id` - (Optional, String) - Specifies the ID in UUID format.
 
-* `cidr` (Optional) - The network segment of specific subnet to retrieve. The value must be in CIDR format.
+* `name` (Optional, String) - The name of the specific subnet to retrieve.
 
-* `status` (Optional) - The value can be ACTIVE, DOWN, UNKNOWN, or ERROR.
+* `cidr` (Optional, String) - The network segment of specific subnet to retrieve. The value must be in CIDR format.
 
-* `vpc_id` (Optional) - The id of the VPC that the desired subnet belongs to.
+* `status` (Optional, String) - The value can be ACTIVE, DOWN, UNKNOWN, or ERROR.
 
-* `gateway_ip` (Optional) - The subnet gateway address of specific subnet.
+* `vpc_id` (Optional, String) - The id of the VPC that the desired subnet belongs to.
 
-* `primary_dns` (Optional) - The IP address of DNS server 1 on the specific subnet.
+* `gateway_ip` (Optional, String) - The subnet gateway address of specific subnet.
 
-* `secondary_dns` (Optional) - The IP address of DNS server 2 on the specific subnet.
+* `primary_dns` (Optional, String) - The IP address of DNS server 1 on the specific subnet.
 
-* `availability_zone` (Optional) - The availability zone (AZ) to which the subnet should belong.
+* `secondary_dns` (Optional, String) - The IP address of DNS server 2 on the specific subnet.
+
+* `availability_zone` (Optional, String) - The availability zone (AZ) to which the subnet should belong.
+
+* `description` - The description of the subnet.
 
 ## **Attributes Reference**
 

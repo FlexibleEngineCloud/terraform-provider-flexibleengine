@@ -31,7 +31,10 @@ output "route_nexthop" {
 
 ## Argument Reference
 
-* `vpc_id` (Required) - The VPC ID that you want to filter from.
+* `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
+  If omitted, the region argument of the provider is used.
+
+* `vpc_id` (Required, String) - The VPC ID that you want to filter from.
 
 ## Attributes Reference
 
