@@ -193,3 +193,92 @@ resource "flexibleengine_cce_cluster_v3" "cluster_1" {
   eip                    = flexibleengine_vpc_eip.update.address
 }`, testAccCCEClusterV3_Base(cceName), cceName)
 }
+
+func TestAccCluster_hibernate(t *testing.T) {
+	var cluster clusters.Clusters
+
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_cluster_v3.test"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: TestAccProviderFactories,
+		CheckDestroy:      testAccCheckCCEClusterV3Destroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCluster_basic(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCEClusterV3Exists(resourceName, &cluster),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "status", "Available"),
+				),
+			},
+			{
+				Config: testAccCluster_hibernate(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCEClusterV3Exists(resourceName, &cluster),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "status", "Hibernation"),
+				),
+			},
+			{
+				Config: testAccCluster_awake(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCEClusterV3Exists(resourceName, &cluster),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "status", "Available"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCluster_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_cce_cluster_v3" "test" {
+  name                   = "%s"
+  flavor_id              = "cce.s1.small"
+  cluster_type           = "VirtualMachine"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
+  container_network_type = "overlay_l2"
+  service_network_cidr   = "10.248.0.0/16"
+}
+`, testAccCCEClusterV3_Base(rName), rName)
+}
+
+func testAccCluster_hibernate(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_cce_cluster_v3" "test" {
+  name                   = "%s"
+  flavor_id              = "cce.s1.small"
+  cluster_type           = "VirtualMachine"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
+  container_network_type = "overlay_l2"
+  service_network_cidr   = "10.248.0.0/16"
+  hibernate              = true
+}
+`, testAccCCEClusterV3_Base(rName), rName)
+}
+
+func testAccCluster_awake(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_cce_cluster_v3" "test" {
+  name                   = "%s"
+  flavor_id              = "cce.s1.small"
+  cluster_type           = "VirtualMachine"
+  vpc_id                 = flexibleengine_vpc_v1.test.id
+  subnet_id              = flexibleengine_vpc_subnet_v1.test.id
+  container_network_type = "overlay_l2"
+  service_network_cidr   = "10.248.0.0/16"
+  hibernate              = false
+}
+`, testAccCCEClusterV3_Base(rName), rName)
+}
