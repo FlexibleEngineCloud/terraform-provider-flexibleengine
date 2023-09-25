@@ -77,21 +77,25 @@ The following arguments are supported:
 * `sql` - (Optional, String, ForceNew) Specifies the SQL command or file path. Only required if `type` is **HiveSql**
   or **SparkSql**. Changing this will create a new MRS job resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the MRS job in UUID format.
+
 * `status` - Status of the MRS job.
+
 * `start_time` - The creation time of the MRS job.
+
 * `submit_time` - The submission time of the MRS job.
+
 * `finish_time` - The completion time of the MRS job.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 20 minute.
+* `create` - Default is 20 minutes.
 
 ## Import
 
