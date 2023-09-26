@@ -57,7 +57,7 @@ The following arguments are supported:
 * `description` - (Optional, String) Specifies the description of the nat gateway.
   The value contains 0 to 255 characters, and angle brackets (<) and (>) are not allowed.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -69,8 +69,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

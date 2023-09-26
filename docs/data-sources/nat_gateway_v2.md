@@ -16,6 +16,9 @@ data "flexibleengine_nat_gateway_v2" "natgateway" {
 
 ## Argument Reference
 
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
+
 * `id` - (Optional, String) Specifies the ID of the NAT gateway.
 
 * `name` - (Optional, String) Specifies the NAT gateway name. The name can contain only digits, letters,
@@ -36,3 +39,7 @@ data "flexibleengine_nat_gateway_v2" "natgateway" {
   characters, and angle brackets (<) and (>) are not allowed.
 
 * `status` - (Optional, String) Specifies the status of the NAT gateway.
+
+## Attribute Reference
+
+All the arguments above can also be exported attributes.
