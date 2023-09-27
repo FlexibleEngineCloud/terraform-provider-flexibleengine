@@ -27,12 +27,18 @@ The following arguments are supported:
 
 * `name` - (Optional, String) The name of WAF dedicated instance.
 
-## Attributes Reference
+* `enterprise_project_id` - (Optional, String) Specifies the enterprise project id of the  WAF dedicated instance.
+
+## Attribute Reference
+
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID in UUID format.
 
-The following attributes are exported:
+* `instances` - An array of available WAF dedicated instances. The [instances](#waf_instances) object structure is
+  documented below.
 
+<a name="waf_instances"></a>
 The `instances` block supports:
 
 * `id` - The id of WAF dedicated instance.
@@ -40,11 +46,6 @@ The `instances` block supports:
 * `name` - The name of WAF dedicated instance.
 
 * `available_zone` - The available zone names for the WAF dedicated instances.
-
-* `specification_code` - The specification code of instance.
-  Different specifications have different throughput. Values are:
-  + `waf.instance.professional` - The professional edition, throughput: 100 Mbit/s; QPS: 2,000 (Reference only).
-  +`waf.instance.enterprise` - The enterprise edition, throughput: 500 Mbit/s; QPS: 10,000 (Reference only).
 
 * `cpu_architecture` - The ECS cpu architecture of WAF dedicated instance.
 

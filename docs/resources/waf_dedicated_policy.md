@@ -22,8 +22,8 @@ resource "flexibleengine_waf_dedicated_policy" "policy_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the WAF policy resource. If omitted, the
-  provider-level region will be used. Changing this setting will push a new certificate.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the WAF policy resource.
+  If omitted, the provider-level region will be used. Changing this will create a new WAF policy resource.
 
 * `name` - (Required, String) Specifies the policy name. The maximum length is 256 characters. Only digits, letters,
   underscores(_), and hyphens(-) are allowed.
@@ -38,7 +38,7 @@ The following arguments are supported:
   + `2`: medium
   + `3`: high
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -46,12 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `full_detection` - The detection mode in Precise Protection.
   + `true`: full detection, Full detection finishes all threat detections before blocking requests that meet Precise
-      Protection specified conditions.
+    Protection specified conditions.
   + `false`: instant detection. Instant detection immediately ends threat detection after blocking a request that
-      meets Precise Protection specified conditions.
+    meets Precise Protection specified conditions.
 
-* `options` - The protection switches. The options object structure is documented below.
+* `options` - The protection switches. The [options](#waf_options) object structure is documented below.
 
+<a name="waf_options"></a>
 The `options` block supports:
 
 * `basic_web_protection` - Indicates whether Basic Web Protection is enabled.
@@ -81,6 +82,13 @@ The `options` block supports:
 * `false_alarm_masking` - Indicates whether False Alarm Masking is enabled.
 
 * `web_tamper_protection` - Indicates whether Web Tamper Protection is enabled.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

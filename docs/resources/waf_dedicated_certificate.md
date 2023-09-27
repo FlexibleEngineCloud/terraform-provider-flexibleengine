@@ -48,13 +48,20 @@ The following arguments are supported:
 
 * `private_key` - (Required, String, ForceNew) Specifies the private key. Changing this creates a new certificate.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The certificate ID in UUID format.
 
 * `expiration` - Indicates the time when the certificate expires.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

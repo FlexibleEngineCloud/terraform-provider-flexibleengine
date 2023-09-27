@@ -52,10 +52,14 @@ resource "flexibleengine_waf_domain" "domain_1" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String, ForceNew) Specifies the domain name to be protected. For example, `www.example.com` or `*.example.com`.
-  Changing this creates a new domain.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the domain resource.
+  If omitted, the provider-level region will be used. Changing this will create a new domain resource.
 
-* `server` - (Required, List) Specifies an array of origin web servers. The object structure is documented below.
+* `domain` - (Required, String, ForceNew) Specifies the domain name to be protected. For example, `www.example.com`
+  or `*.example.com`. Changing this creates a new domain.
+
+* `server` - (Required, List) Specifies an array of origin web servers. The [server](#waf_server) object structure is
+  documented below.
 
 * `certificate_id` - (Optional, String) Specifies the certificate ID.
   This parameter is mandatory when `client_protocol` is set to HTTPS.
@@ -63,7 +67,7 @@ The following arguments are supported:
 * `policy_id` - (Optional, String, ForceNew) Specifies the policy ID associated with the domain.
   If not specified, a new policy will be created automatically. Changing this create a new domain.
 
-* `keep_proxy` - (Optional, Bool) Specifies whether to retain the policy when deleting a domain name. Defaults to true.
+* `keep_policy` - (Optional, Bool) Specifies whether to retain the policy when deleting a domain name. Defaults to true.
 
 * `proxy` - (Optional, Bool) Specifies whether a proxy is configured.
 
@@ -78,6 +82,7 @@ The following arguments are supported:
   + If `sip_header_name` is *akamai*, the value is ["True-Client-IP"].
   + If `sip_header_name` is *custom*, you can customize a value.
 
+<a name="waf_server"></a>
 The `server` block supports:
 
 * `client_protocol` - (Required, String) Protocol type of the client. The options are *HTTP* and *HTTPS*.
@@ -90,7 +95,7 @@ The `server` block supports:
 
 * `port` - (Required, Int) Port number used by the web server. The value ranges from 0 to 65535, for example, 8080.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -109,6 +114,13 @@ The following attributes are exported:
   + 1: The domain name is connected to WAF.
 
 * `protocol` - The protocol type of the client. The options are HTTP, HTTPS, and HTTP&HTTPS.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
