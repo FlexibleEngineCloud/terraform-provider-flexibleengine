@@ -44,5 +44,10 @@ POLICY
 
 The following arguments are supported:
 
-* `bucket` - (Required) The name of the bucket to which to apply the policy.
-* `policy` - (Required) The text of the policy.
+* `bucket` - (Required, String, ForceNew) The name of the bucket to which to apply the policy.
+
+* `policy` - (Required, String) The text of the policy.
+
+## Attribute Reference
+
+All the arguments above can also be exported attributes.

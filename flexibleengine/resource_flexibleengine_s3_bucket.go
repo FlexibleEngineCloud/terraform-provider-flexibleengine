@@ -29,6 +29,12 @@ func resourceS3Bucket() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"region": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
 			"bucket": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -41,18 +47,6 @@ func resourceS3Bucket() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-
-			"bucket_domain_name": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-
-			"arn": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
 			"acl": {
 				Type:     schema.TypeString,
 				Default:  "private",
@@ -137,29 +131,6 @@ func resourceS3Bucket() *schema.Resource {
 					},
 				},
 			},
-
-			"hosted_zone_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
-			"region": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"website_endpoint": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"website_domain": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-
 			"versioning": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -273,6 +244,27 @@ func resourceS3Bucket() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
+			},
+
+			"bucket_domain_name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"arn": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"hosted_zone_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"website_endpoint": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"website_domain": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}

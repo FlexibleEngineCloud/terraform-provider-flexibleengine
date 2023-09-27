@@ -45,8 +45,10 @@ The following arguments are supported:
 * `bucket` - (Required, String, ForceNew) Specifies the name of the source bucket.
   Changing this parameter will create a new resource.
 
-* `notifications` - (Optional, List) Specifies the list of OBS bucket Notification Configurations.
+* `notifications` - (Optional, List) Specifies the list of OBS bucket Notification Configurations. The
+  [notifications](#obs_notifications) object structure is documented below.
 
+<a name="obs_notifications"></a>
 The `notifications` block supports:
 
 * `topic_urn` (Required, String) Specifies the SMN topic that authorizes OBS to publish messages.
@@ -62,7 +64,7 @@ The `notifications` block supports:
 
 * `suffix` (Optional, String) Specifies the suffix filtering rule. The value contains a maximum of 1024 characters.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
