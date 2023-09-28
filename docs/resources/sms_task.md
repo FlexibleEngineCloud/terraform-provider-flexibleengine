@@ -118,21 +118,27 @@ The `physical_volumes` block supports:
 * `uuid` - (Optional, String, ForceNew) Specifies the GUID of the volume.
   Changing this parameter will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in UUID format.
+
 * `state` - The status of the migration task.
+
 * `enterprise_project_id` - The enterprise project id of the target server.
+
 * `target_server_name` - The name of the target server.
+
 * `migrate_speed` - The migration rate, in MB/s.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 5 minute.
+* `create` - Default is 5 minutes.
+* `update` - Default is 5 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 

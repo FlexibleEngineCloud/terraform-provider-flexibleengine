@@ -24,18 +24,19 @@ The following arguments are supported:
 
 * `name` - (Optional, String) Specifies the name of the source server.
 
-* `status` - (Optional, String) Specifies the status of the source server.
+* `state` - (Optional, String) Specifies the status of the source server.
 
 * `ip` - (Optional, String) Specifies the IP address of the source server.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-* `servers` - An array of SMS source servers found. Structure is documented below.
+* `servers` - An array of SMS source servers found. The [servers](#sms_servers) object structure is documented below.
 
+<a name="sms_servers"></a>
 The `servers` block supports:
 
 * `name` - The name of the source server.
@@ -44,7 +45,7 @@ The `servers` block supports:
 
 * `ip` - The IP address of the source server.
 
-* `status` - The status of the source server.
+* `state` - The status of the source server.
 
 * `connected` - Whether the source server is properly connected to SMS.
 
@@ -60,9 +61,10 @@ The `servers` block supports:
 
 * `memory` - The memory size in MB.
 
-* `disks` - The disk information of the source server. Structure is documented below.
+* `disks` - The disk information of the source server. The [disks](#sms_disks) object structure is documented below.
 
-The `disks` blocks support:
+<a name="sms_disks"></a>
+The `disks` block supports:
 
 * `name` - The disk name, for example, /dev/vda.
 

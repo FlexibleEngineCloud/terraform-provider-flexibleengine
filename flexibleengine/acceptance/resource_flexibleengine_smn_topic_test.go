@@ -125,8 +125,9 @@ func TestAccSMNV2Topic_policies(t *testing.T) {
 func testAccSMNV2TopicConfig_basic(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_smn_topic_v2" "topic_1" {
-  name         = "%s"
-  display_name = "The display name of %s"
+  name                  = "%s"
+  display_name          = "The display name of %s"
+  enterprise_project_id = "0"
 }
 `, rName, rName)
 }
