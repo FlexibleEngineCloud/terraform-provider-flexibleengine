@@ -181,7 +181,7 @@ The following arguments are supported:
 * `code_filename` - (Optional, String) Specifies the name of a function file, This field is mandatory only when coe_type
   is set to jar or zip.
 
-* `depend_list` - (Optional, String) Specifies the ID list of the dependencies.
+* `depend_list` - (Optional, List) Specifies the ID list of the dependencies.
 
 * `user_data` - (Optional, String) Specifies the Key/Value information defined for the function. Key/value data might be
   parsed with [Terraform `jsonencode()` function]('https://www.terraform.io/docs/language/functions/jsonencode.html').
@@ -211,14 +211,14 @@ The following arguments are supported:
 
 -> **NOTE:** An agency with VPC management permissions must be specified for the function.
 
-* `mount_user_id` - (Optional, String) Specifies the user ID, a non-0 integer from –1 to 65534. Default to -1.
+* `mount_user_id` - (Optional, Int) Specifies the user ID, a non-0 integer from –1 to 65534. Default to -1.
 
-* `mount_user_group_id` - (Optional, String) Specifies the user group ID, a non-0 integer from –1 to 65534. Default to
-  -1.
+* `mount_user_group_id` - (Optional, Int) Specifies the user group ID, a non-0 integer from –1 to 65534. Default to -1.
 
-* `func_mounts` - (Optional, List) Specifies the file system list. The `func_mounts` object structure is documented
-  below.
+* `func_mounts` - (Optional, List) Specifies the file system list. The [func_mounts](#fgs_arg_func_mounts) object
+  structure is documented below.
 
+<a name="fgs_arg_func_mounts"></a>
 The `func_mounts` block supports:
 
 * `mount_type` - (Required, String) Specifies the mount type. Options: sfs, sfsTurbo, and ecs.
@@ -229,21 +229,30 @@ The `func_mounts` block supports:
 
 * `local_mount_path` - (Required, String) Specifies the function access path.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Specifies a resource ID in UUID format.
-* `func_mounts/status` - The status of file system.
-* `urn` - Uniform Resource Name
-* `version` - The version of the function
+
+* `urn` - Uniform Resource Name.
+
+* `version` - The version of the function.
+
+* `func_mounts` - Specifies the file system list.
+  The [func_mounts](#fgs_arrt_func_mounts) object structure is documented below.
+
+<a name="fgs_arrt_func_mounts"></a>
+The `func_mounts` block supports:
+
+* `status` - The status of file system.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
