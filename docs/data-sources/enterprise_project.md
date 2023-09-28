@@ -21,10 +21,10 @@ data "flexibleengine_enterprise_project" "test" {
 * `id` - (Optional, String) Specifies the ID of an enterprise project. The value "0" indicates the default enterprise project.
 
 * `status` - (Optional, Int) Specifies the status of an enterprise project.
-    + 1 indicates Enabled.
-    + 2 indicates Disabled.
+  + 1 indicates Enabled.
+  + 2 indicates Disabled.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
