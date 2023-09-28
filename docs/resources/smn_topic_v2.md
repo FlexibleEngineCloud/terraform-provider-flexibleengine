@@ -43,7 +43,7 @@ The following arguments are supported:
   Changing this parameter will create a new resource.
 
 * `display_name` - (Optional, String) Specifies the topic display name, which is presented as the name of the email
-  sender in an email message. The name can contains of 0 to 192 characters.
+  sender in an email message. The name can contain of 0 to 192 characters.
 
 * `users_publish_allowed` - (Optional, String) Specifies the users who can publish messages to this topic.
   The value can be **\*** which indicates all users or user account URNs separated by comma(,). The format of
@@ -56,7 +56,10 @@ The following arguments are supported:
 * `introduction` - (Optional, String) Specifies the introduction of the topic,
   this will be contained in the subscription invitation.
 
-## Attributes Reference
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the SMN Topic, Value 0
+  indicates the default enterprise project. Changing this parameter will create a new resource.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

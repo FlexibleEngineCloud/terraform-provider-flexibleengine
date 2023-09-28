@@ -41,7 +41,7 @@ The following arguments are supported:
 * `category` - (Optional, String) Specifies the category of the repository.
   The value can be `app_server`, `linux`, `framework_app`, `database`, `lang`, `other`, `windows`, `arm`.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -56,6 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 * `num_images` - Number of image tags in a repository.
 
 * `size` - Repository size.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 2 minutes.
+* `update` - Default is 2 minutes.
+* `delete` - Default is 2 minutes.
 
 ## Import
 
