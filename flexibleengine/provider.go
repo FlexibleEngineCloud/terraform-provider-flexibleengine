@@ -366,10 +366,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_whitelist_v2":                    resourceWhitelistV2(),
 			"flexibleengine_lb_l7policy_v2":                     resourceL7PolicyV2(),
 			"flexibleengine_lb_l7rule_v2":                       resourceL7RuleV2(),
-			"flexibleengine_mrs_hybrid_cluster_v1":              resourceMRSHybridClusterV1(),
-			"flexibleengine_mrs_cluster_v1":                     resourceMRSClusterV1(),
 			"flexibleengine_mrs_cluster_v2":                     resourceMRSClusterV2(),
-			"flexibleengine_mrs_job_v1":                         resourceMRSJobV1(),
 			"flexibleengine_mrs_job_v2":                         resourceMRSJobV2(),
 			"flexibleengine_mls_instance_v1":                    resourceMlsInstanceV1(),
 			"flexibleengine_network_acl":                        resourceNetworkACL(),
@@ -577,6 +574,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
 			"flexibleengine_vpc_eip_v1":        resourceVpcEIPV1(),
 			"flexibleengine_vpc_route_v2":      resourceVPCRouteV2(),
+
+			"flexibleengine_mrs_hybrid_cluster_v1": resourceMRSHybridClusterV1(),
+			"flexibleengine_mrs_cluster_v1":        resourceMRSClusterV1(),
+			"flexibleengine_mrs_job_v1":            resourceMRSJobV1(),
 
 			"flexibleengine_networking_floatingip_v2":           resourceNetworkingFloatingIPV2(),
 			"flexibleengine_networking_floatingip_associate_v2": resourceNetworkingFloatingIPAssociateV2(),

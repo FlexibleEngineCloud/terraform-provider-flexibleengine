@@ -1,5 +1,5 @@
 ---
-subcategory: "MapReduce Service (MRS)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_mrs_job_v1"
 ---
@@ -8,7 +8,7 @@ page_title: "flexibleengine_mrs_job_v1"
 
 Manages resource job within FlexibleEngine MRS.
 
-!> **Warning:** It will be deprecated, using `flexibleengine_mrs_job_v2` instead.
+!> **Warning:** It has been deprecated, please use `flexibleengine_mrs_job_v2` instead.
 
 ## Example Usage
 
