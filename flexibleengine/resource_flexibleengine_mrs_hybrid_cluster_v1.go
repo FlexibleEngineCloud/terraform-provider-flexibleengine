@@ -23,6 +23,7 @@ func resourceMRSHybridClusterV1() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		DeprecationMessage: "It has been deprecated, please use `flexibleengine_mrs_cluster_v2` instead",
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(60 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),

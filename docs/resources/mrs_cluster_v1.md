@@ -1,5 +1,5 @@
 ---
-subcategory: "MapReduce Service (MRS)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_mrs_cluster_v1"
 ---
@@ -8,7 +8,7 @@ page_title: "flexibleengine_mrs_cluster_v1"
 
 Manages a MRS cluster resource within FlexibleEngine.
 
-!> **Warning:** It will be deprecated, using `flexibleengine_mrs_cluster_v2` instead.
+!> **Warning:** It has been deprecated, please use `flexibleengine_mrs_cluster_v2` instead.
 
 ## Example Usage:  Creating a MRS cluster
 

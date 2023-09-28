@@ -12,7 +12,10 @@ func TestAccMRSV1HybridCluster_basic(t *testing.T) {
 	var mrsCluster cluster.Cluster
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckMrs(t) },
+		PreCheck: func() {
+			testAccPreCheckDeprecated(t)
+			testAccPreCheckMrs(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMRSV1ClusterDestroy,
 		Steps: []resource.TestStep{
