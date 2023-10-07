@@ -14,6 +14,7 @@ func TestAccTurbosDataSource_basic(t *testing.T) {
 		dcByName      = acceptance.InitDataSourceCheck("data.flexibleengine_sfs_turbos.by_name")
 		dcBySize      = acceptance.InitDataSourceCheck("data.flexibleengine_sfs_turbos.by_size")
 		dcByShareType = acceptance.InitDataSourceCheck("data.flexibleengine_sfs_turbos.by_share_type")
+		dcByEpsID     = acceptance.InitDataSourceCheck("data.flexibleengine_sfs_turbos.by_enterprise_project")
 	)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -29,6 +30,8 @@ func TestAccTurbosDataSource_basic(t *testing.T) {
 					resource.TestCheckOutput("size_query_result_validation", "true"),
 					dcByShareType.CheckResourceExists(),
 					resource.TestCheckOutput("share_type_query_result_validation", "true"),
+					dcByEpsID.CheckResourceExists(),
+					resource.TestCheckOutput("enterprise_project_query_result_validation", "true"),
 				),
 			},
 		},
@@ -77,10 +80,11 @@ resource "flexibleengine_sfs_turbo" "test" {
   security_group_id = flexibleengine_networking_secgroup_v2.test.id
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
 
-  name        = "%[1]s-${count.index}"
-  size        = var.turbo_configuration[count.index]["size"]
-  share_proto = "NFS"
-  share_type  = var.turbo_configuration[count.index]["share_type"]
+  name                  = "%[1]s-${count.index}"
+  size                  = var.turbo_configuration[count.index]["size"]
+  share_proto           = "NFS"
+  share_type            = var.turbo_configuration[count.index]["share_type"]
+  enterprise_project_id = "0"
 }
 
 data "flexibleengine_sfs_turbos" "by_name" {
@@ -101,6 +105,12 @@ data "flexibleengine_sfs_turbos" "by_share_type" {
   share_type = var.turbo_configuration[1]["share_type"]
 }
 
+data "flexibleengine_sfs_turbos" "by_enterprise_project" {
+  depends_on = [flexibleengine_sfs_turbo.test]
+
+  enterprise_project_id = "0"
+}
+
 output "name_query_result_validation" {
   value = contains(data.flexibleengine_sfs_turbos.by_name.turbos[*].id,
   flexibleengine_sfs_turbo.test[0].id) && !contains(data.flexibleengine_sfs_turbos.by_name.turbos[*].id,
@@ -119,6 +129,13 @@ output "share_type_query_result_validation" {
   value = contains(data.flexibleengine_sfs_turbos.by_share_type.turbos[*].id,
   flexibleengine_sfs_turbo.test[1].id) && !contains(data.flexibleengine_sfs_turbos.by_share_type.turbos[*].id,
   flexibleengine_sfs_turbo.test[0].id) && !contains(data.flexibleengine_sfs_turbos.by_share_type.turbos[*].id,
+  flexibleengine_sfs_turbo.test[2].id)
+}
+
+output "enterprise_project_query_result_validation" {
+  value = contains(data.flexibleengine_sfs_turbos.by_enterprise_project.turbos[*].id,
+  flexibleengine_sfs_turbo.test[1].id) && !contains(data.flexibleengine_sfs_turbos.by_enterprise_project.turbos[*].enterprise_project_id,
+  flexibleengine_sfs_turbo.test[0].id) && !contains(data.flexibleengine_sfs_turbos.by_enterprise_project.turbos[*].enterprise_project_id,
   flexibleengine_sfs_turbo.test[2].id)
 }
 `, rName)

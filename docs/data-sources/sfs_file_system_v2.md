@@ -21,24 +21,29 @@ data "flexibleengine_sfs_file_system_v2" "shared_file"
 
 The following arguments are supported:
 
-* `name` - (Optional) The name of the shared file system.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `id` - (Optional) The UUID of the shared file system.
+* `name` - (Optional, String) The name of the shared file system.
 
-* `status` - (Optional) The status of the shared file system.
+* `id` - (Optional, String) The UUID of the shared file system.
 
-## Attributes Reference
+* `status` - (Optional, String) The status of the shared file system.
 
-The following attributes are exported:
+## Attribute Reference
+
+In addition to all arguments above, the following attributes are exported:
 
 * `availability_zone` - The availability zone name.
+
+* `description` - The description of the shared file system.
+
+* `project_id` - The project ID of the operating user.
 
 * `size` - The size (GB) of the shared file system.
 
 * `share_type` - The storage service type for the shared file system, such as high-performance storage (composed of SSDs)
   or large-capacity storage (composed of SATA disks).
-
-* `status` - The status of the shared file system.
 
 * `host` - The host name of the shared file system.
 
@@ -55,8 +60,6 @@ The following attributes are exported:
 * `export_locations` - The list of mount locations.
 
 * `access_level` - The level of the access rule.
-
-* `access_rules_status` - The status of the share access rule.
 
 * `access_type` - The type of the share access rule.
 

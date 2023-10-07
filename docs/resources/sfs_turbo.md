@@ -65,6 +65,9 @@ The following arguments are supported:
 * `security_group_id` - (Required, String, ForceNew) Specifies the security group ID. Changing this will create a new
   resource.
 
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the resource.
+  Changing this will create a new resource.
+
 * `enhanced` - (Optional, Bool, ForceNew) Specifies whether the file system is enhanced or not. Changing this will
   create a new resource.
 
@@ -78,19 +81,17 @@ SFS Turbo will create two private IP addresses and one virtual IP address under 
 normal use, SFS Turbo will enable the inbound rules for ports *111*, *445*, *2049*, *2051*, *2052*, and *20048* in the
 security group you specified.
 
-## Attribute Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The UUID of the SFS Turbo file system.
 
-* `region` - The region of the SFS Turbo file system.
-
 * `status` - The status of the SFS Turbo file system.
 
 * `version` - The version ID of the SFS Turbo file system.
 
-* `export_location` - Tthe mount point of the SFS Turbo file system.
+* `export_location` - The mount point of the SFS Turbo file system.
 
 * `available_capacity` - The available capacity of the SFS Turbo file system in the unit of GB.
 
