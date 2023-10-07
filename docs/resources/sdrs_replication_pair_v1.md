@@ -41,20 +41,20 @@ resource "flexibleengine_sdrs_replication_pair_v1" "replication_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of a replication pair. The name can contain a maximum of 64 bytes.
+* `name` - (Required, String) The name of a replication pair. The name can contain a maximum of 64 bytes.
   The value can contain only letters (a to z and A to Z), digits (0 to 9), decimal points (.),
   underscores (_), and hyphens (-).
 
-* `description` - (Optional) The description of a replication pair. Changing this creates a new pair.
+* `description` - (Optional, String, ForceNew) The description of a replication pair. Changing this creates a new pair.
 
-* `group_id` - (Required) Specifies the ID of a protection group. Changing this creates a new pair.
+* `group_id` - (Required, String, ForceNew) Specifies the ID of a protection group. Changing this creates a new pair.
 
-* `volume_id` - (Required) Specifies the ID of a source disk. Changing this creates a new pair.
+* `volume_id` - (Required, String, ForceNew) Specifies the ID of a source disk. Changing this creates a new pair.
 
-* `delete_target_volume` - (Optional) Specifies whether to delete the target disk.
+* `delete_target_volume` - (Optional, Bool) Specifies whether to delete the target disk.
   The default value is `false`.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -67,6 +67,13 @@ The following attributes are exported:
 * `status` - Specifies the status of a replication pair.
 
 * `target_volume_id` - Specifies the ID of the disk in the protection availability zone.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

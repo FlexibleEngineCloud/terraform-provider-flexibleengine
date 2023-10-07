@@ -55,16 +55,26 @@ resource "flexibleengine_sdrs_replication_attach_v1" "attach_1" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Specifies the ID of a protected instance. Changing this creates a new replication attach.
+* `instance_id` - (Required, String, ForceNew) Specifies the ID of a protected instance.
+  Changing this creates a new replication attach.
 
-* `replication_id` - (Required) Specifies the ID of a replication pair. Changing this creates a new replication attach.
+* `replication_id` - (Required, String, ForceNew) Specifies the ID of a replication pair.
+  Changing this creates a new replication attach.
 
-* `device` - (Required) Specifies the device name, eg. /dev/vdb. Changing this creates a new replication attach.
+* `device` - (Required, String, ForceNew) Specifies the device name, eg. /dev/vdb.
+  Changing this creates a new replication attach.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in format of <instance_id>:<replication_id>.
 
-* `status` - The status of the SDRS replication attch resource.
+* `status` - The status of the SDRS replication attach resource.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
