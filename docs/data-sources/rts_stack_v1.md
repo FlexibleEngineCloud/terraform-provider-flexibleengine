@@ -20,9 +20,12 @@ data "flexibleengine_rts_stack_v1" "mystack" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the stack.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-## Attributes Reference
+* `name` - (Required, String) The name of the stack.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

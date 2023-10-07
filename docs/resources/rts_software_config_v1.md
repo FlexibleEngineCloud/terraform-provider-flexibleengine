@@ -22,23 +22,39 @@ resource "flexibleengine_rts_software_config_v1" "myconfig" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the software configuration.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RTS software resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RTS software resource.
 
-* `group` - (Optional) The namespace that groups this software configuration by when it is delivered to a server.
+* `name` - (Required, String, ForceNew) The name of the software configuration. Changing this will create a new RTS
+  software resource.
 
-* `input_values` - (Optional) A list of software configuration inputs.
+* `group` - (Optional, String, ForceNew) The namespace that groups this software configuration by when it is delivered
+  to a server. Changing this will create a new RTS software resource.
 
-* `output_values` - (Optional) A list of software configuration outputs.
+* `input_values` - (Optional, List, ForceNew) A list of software configuration inputs. Changing this will create a new
+  RTS software resource.
 
-* `config` - (Optional) The software configuration code.
+* `output_values` - (Optional, List, ForceNew) A list of software configuration outputs. Changing this will create a
+  new RTS software resource.
 
-* `options` - (Optional) The software configuration options.
+* `config` - (Optional, String, ForceNew) The software configuration code. Changing this will create a new RTS software
+  resource.
 
-## Attributes Reference
+* `options` - (Optional, Map, ForceNew) The software configuration options. Changing this will create a new RTS software
+  resource.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The id of the software config.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 3 minutes.
 
 ## Import
 

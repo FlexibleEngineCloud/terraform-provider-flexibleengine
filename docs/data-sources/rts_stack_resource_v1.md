@@ -22,15 +22,18 @@ data "flexibleengine_rts_stack_resource_v1" "stackresource" {
 
 The following arguments are supported:
 
-* `stack_name` - (Required) The unique stack name.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `resource_name` - (Optional) The name of a resource in the stack.
+* `stack_name` - (Required, String) The unique stack name.
 
-* `physical_resource_id` - (Optional) The physical resource ID.
+* `resource_name` - (Optional, String) The name of a resource in the stack.
 
-* `resource_type` - (Optional) The resource type.
+* `physical_resource_id` - (Optional, String) The physical resource ID.
 
-## Attributes Reference
+* `resource_type` - (Optional, String) The resource type.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

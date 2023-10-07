@@ -26,19 +26,22 @@ resource "flexibleengine_rts_software_deployment_v1" "mydeployment" {
 
 The following arguments are supported:
 
-* `id` - (Optional) The id of the software configuration.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `name` - (Optional) The name of the software configuration.
+* `id` - (Optional, String) The id of the software configuration.
 
-## Attributes Reference
+* `name` - (Optional, String) The name of the software configuration.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `group` - The namespace that groups this software configuration by when it is delivered to a server.
 
-* `inputs` -  A list of software configuration inputs.
+* `input_values` -  A list of software configuration inputs.
 
-* `outputs` - A list of software configuration outputs.
+* `output_values` - A list of software configuration outputs.
 
 * `config` - The software configuration code.
 
