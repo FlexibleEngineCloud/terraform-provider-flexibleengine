@@ -24,8 +24,8 @@ resource "flexibleengine_rds_database" "test" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the RDS database resource. If omitted, the
-  provider-level region will be used. Changing this creates a new resource.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RDS database resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RDS database resource.
 
 * `instance_id` - (Required, String, ForceNew) Specifies the RDS instance ID. Changing this will create a new resource.
 
@@ -37,11 +37,23 @@ The following arguments are supported:
 * `character_set` - (Required, String, ForceNew) Specifies the character set used by the database, For example **utf8**,
   **gbk**, **ascii**, etc. Changing this will create a new resource.
 
-## Attributes Reference
+* `description` - (Optional, String) Specifies the database description. The value can contain **0** to **512**
+  characters. This parameter takes effect only for DB instances whose kernel versions are at least **5.6.51.3**,
+  **5.7.33.1**, or **8.0.21.4**.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID of database which is formatted `<instance_id>/<database_name>`.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

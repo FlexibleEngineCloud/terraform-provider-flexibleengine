@@ -19,6 +19,9 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 
 ## Argument Reference
 
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
+
 * `db_type` - (Required, String) Specifies the DB engine. Value: MySQL, PostgreSQL, SQLServer.
 
 * `db_version` - (Required, String) Specifies the database version. MySQL databases support MySQL 5.6
@@ -42,21 +45,29 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 
 * `availability_zone` - (Optional, String) Specifies the availability zone which the RDS flavor belongs to.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-* `flavors` - Indicates the flavors information. Structure is documented below.
+* `flavors` - Indicates the flavors information. The [flavors](#rds_flavors) object structure is documented below.
 
+<a name="rds_flavors"></a>
 The `flavors` block contains:
 
 * `id` - The ID of the rds flavor.
+
 * `name` - The name of the rds flavor.
+
 * `vcpus` - The CPU size.
+
 * `memory` - The memory size in GB.
+
 * `group_type` - The performance specification.
+
 * `instance_mode` - The mode of instance.
+
 * `availability_zones` - The availability zones which the RDS flavor belongs to.
+
 * `db_versions` - The Available versions of the database.

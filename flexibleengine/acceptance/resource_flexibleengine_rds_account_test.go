@@ -176,36 +176,31 @@ resource "flexibleengine_networking_secgroup_v2" "test" {
   name = "%[1]s"
 }
 
-data "flexibleengine_rds_flavors_v3" "test" {
-  db_type       = "MySQL"
-  db_version    = "5.7"
-  instance_mode = "single"
-  vcpus         = 2
-  memory        = 4
-}
-
 resource "flexibleengine_rds_instance_v3" "test" {
-  name               = "%[1]s"
-  flavor             = data.flexibleengine_rds_flavors_v3.test.flavors[0].name
-  security_group_id  = flexibleengine_networking_secgroup_v2.test.id
-  subnet_id          = flexibleengine_vpc_subnet_v1.test.id
-  vpc_id             = flexibleengine_vpc_v1.test.id
+  name                = "%[1]s"
+  flavor              = "rds.mysql.c6.large.2.ha"
+  security_group_id   = flexibleengine_networking_secgroup_v2.test.id
+  subnet_id           = flexibleengine_vpc_subnet_v1.test.id
+  vpc_id              = flexibleengine_vpc_v1.test.id
+  fixed_ip            = "192.168.0.58"
+  ha_replication_mode = "semisync"
 
- availability_zone = [
-   data.flexibleengine_availability_zones.test.names[0]
- ]
+  availability_zone = [
+    data.flexibleengine_availability_zones.test.names[0],
+    data.flexibleengine_availability_zones.test.names[1],
+  ]
 
- db {
-   password = "Huangwei!120521"
-   type     = "MySQL"
-   version  = "5.7"
-   port     = 3306
- }
+  db {
+    password = "Huangwei!120521"
+    type     = "MySQL"
+    version  = "5.7"
+    port     = 3306
+  }
 
- volume {
-   type = "ULTRAHIGH"
-   size = 40
- }
+  volume {
+    type = "ULTRAHIGH"
+    size = 50
+  }
 }
 `, rName)
 }
