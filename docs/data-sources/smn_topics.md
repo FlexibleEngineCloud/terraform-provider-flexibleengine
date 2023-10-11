@@ -29,14 +29,17 @@ The following arguments are supported:
 
 * `display_name` - (Optional, String) Specifies the topic display name.
 
-## Attributes Reference
+* `enterprise_project_id` - (Optional, String) Specifies the enterprise project id of the topic.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-* `topics` - An array of SMN topics found. Structure is documented below.
+* `topics` - An array of SMN topics found. The [topics](#smn_topics) object structure is documented below.
 
+<a name="smn_topics"></a>
 The `topics` block supports:
 
 * `name` - The name of the topic.
@@ -46,6 +49,8 @@ The `topics` block supports:
 * `topic_urn` - The topic URN.
 
 * `display_name` - The topic display name.
+
+* `enterprise_project_id` - The enterprise project id of the topic.
 
 * `push_policy` - Message pushing policy.
   + **0**: indicates that the message sending fails and the message is cached in the queue.

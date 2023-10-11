@@ -35,41 +35,41 @@ resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 nat client.
-    If omitted, the `region` argument of the provider is used. Changing this
-    creates a new snat rule.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 nat client.
+  If omitted, the `region` argument of the provider is used. Changing this creates a new snat rule.
 
-* `nat_gateway_id` - (Required) ID of the nat gateway this snat rule belongs to.
-    Changing this creates a new snat rule.
+* `nat_gateway_id` - (Required, String, ForceNew) ID of the nat gateway this snat rule belongs to.
+  Changing this creates a new snat rule.
 
-* `floating_ip_id` - (Required) ID of the floating ip this snat rule connets to.
-    Changing this creates a new snat rule.
+* `floating_ip_id` - (Required, String, ForceNew) ID of the floating ip this snat rule connets to.
+  Changing this creates a new snat rule.
 
-* `subnet_id` - (Optional) ID of the VPC Subnet this snat rule connects to.
-    This parameter and `cidr` are alternative. Changing this creates a new snat rule.
+* `subnet_id` - (Optional, String, ForceNew) ID of the VPC Subnet this snat rule connects to.
+  This parameter and `cidr` are alternative. Changing this creates a new snat rule.
 
-* `cidr` - (Optional) Specifies CIDR, which can be in the format of a network segment or a host IP address.
-    This parameter and `subnet_id` are alternative. Changing this creates a new snat rule.
+* `cidr` - (Optional, String, ForceNew) Specifies CIDR, which can be in the format of a network segment or a host IP
+  address. This parameter and `subnet_id` are alternative. Changing this creates a new snat rule.
 
-* `source_type` - (Optional) Specifies the scenario. The valid value is 0 (VPC scenario) and 1 (Direct Connect scenario).
-    Only `cidr` can be specified over a Direct Connect connection.
-    If no value is entered, the default value 0 (VPC scenario) is used.
-    Changing this creates a new snat rule.
+* `source_type` - (Optional, Int, ForceNew) Specifies the scenario. The valid value is 0 (VPC scenario) and 1
+  (Direct Connect scenario). Only `cidr` can be specified over a Direct Connect connection.
+  If no value is entered, the default value 0 (VPC scenario) is used. Changing this creates a new snat rule.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in UUID format.
+
 * `floating_ip_address` - The actual floating IP address.
+
 * `status` - The status of the snat rule.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

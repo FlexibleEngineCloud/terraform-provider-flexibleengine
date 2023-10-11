@@ -120,6 +120,10 @@ The following arguments are supported:
 * `masters` - (Optional, List, ForceNew) Advanced configuration of master nodes. Changing this creates a new cluster.
   The [masters](#cce_masters) object structure is documented below.
 
+* `hibernate` - (Optional, Bool) Specifies whether to hibernate the CCE cluster. Defaults to **false**. After a cluster is
+  hibernated, resources such as workloads cannot be created or managed in the cluster, and the cluster cannot be
+  deleted.
+
 <a name="cce_masters"></a>
 The `masters` block supports:
 

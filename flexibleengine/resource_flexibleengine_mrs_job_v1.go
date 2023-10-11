@@ -20,6 +20,7 @@ func resourceMRSJobV1() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		DeprecationMessage: "It has been deprecated, please use `flexibleengine_mrs_job_v2` instead",
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
 			Update: schema.DefaultTimeout(10 * time.Minute),

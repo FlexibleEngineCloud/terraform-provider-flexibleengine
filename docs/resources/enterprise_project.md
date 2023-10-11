@@ -23,15 +23,18 @@ resource "flexibleengine_enterprise_project" "test" {
 
 ## Argument Reference
 
-* `name` - (Optional, String) Specifies the name of the enterprise project.
+* `name` - (Required, String) Specifies the name of the enterprise project.
   This parameter can contain 1 to 64 characters. Only letters, digits, underscores (_), and hyphens (-) are allowed.
   The name must be unique in the domain and cannot include any form of the word "default" ("deFaulT", for instance).
 
 * `description` - (Optional, String) Specifies the description of the enterprise project.
 
-* `enable` - (Optional, Bool) Specifies whether to enable the enterprise project. Default to *true*.
+* `enable` - (Optional, Bool) Specifies whether to enable the enterprise project. Default to **true**.
 
-## Attributes Reference
+* `skip_disable_on_destroy` - (Optional, Bool) Specifies whether to skip disable the enterprise project on destroy.
+  Defaults to **false**.
+
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -44,6 +47,14 @@ In addition to all arguments above, the following attributes are exported:
 * `created_at` - Indicates the UTC time when the enterprise project was created. Example: 2018-05-18T06:49:06Z
 
 * `updated_at` - Indicates the UTC time when the enterprise project was modified. Example: 2018-05-28T02:21:36Z
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 5 minutes.
+* `update` - Default is 5 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 

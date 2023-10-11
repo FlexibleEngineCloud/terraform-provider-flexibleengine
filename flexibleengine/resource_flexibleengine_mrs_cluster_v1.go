@@ -28,6 +28,7 @@ func resourceMRSClusterV1() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
+		DeprecationMessage: "It has been deprecated, please use `flexibleengine_mrs_cluster_v2` instead",
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,

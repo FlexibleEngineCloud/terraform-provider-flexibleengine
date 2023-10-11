@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 1.42.0 (September 28, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_ddm_instance` [GH-998]
+  - `flexibleengine_ddm_schema` [GH-998]
+  - `flexibleengine_ddm_account` [GH-998]
+
+* **New Data Source:**
+  - `flexibleengine_ddm_accounts` [GH-998]
+  - `flexibleengine_ddm_engines` [GH-998]
+  - `flexibleengine_ddm_flavors` [GH-998]
+  - `flexibleengine_ddm_instance_nodes` [GH-998]
+  - `flexibleengine_ddm_instances` [GH-998]
+  - `flexibleengine_ddm_schemas` [GH-998]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_lb_loadbalancer_v3`: Support `autoscaling_enabled` and `min_l7_flavor_id` parameters [GH-1019]
+* `resource/flexibleengine_cce_cluster`: Support cluster hibernation feature [GH-1022]
+
+DEPRECATED:
+
+* `resource/flexibleengine_mrs_cluster_v1` [GH-1028]
+* `resource/flexibleengine_mrs_hybrid_cluster_v1` [GH-1028]
+* `resource/flexibleengine_mrs_job_v1` [GH-1028]
+
 ## 1.41.0 (September 6, 2023)
 
 FEATURES:

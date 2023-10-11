@@ -43,8 +43,9 @@ The following arguments are supported:
   Changing this creates a new resource.
 
 * `users` - (Required, List) Specifies the users to access to the organization (namespace).
-  Structure is documented below.
+  The [users](#swr_users) object structure is documented below.
 
+<a name="swr_users"></a>
 The `users` block supports:
 
 * `permission` - (Required, String) Specifies the permission of the existing IAM user.
@@ -54,16 +55,18 @@ The `users` block supports:
 
 * `user_name` - (Optional, String) Specifies the name of the existing IAM user.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource. The value is the name of the organization.
 
-* `creator` - The creator user name of the organization.
+* `creator` - The creator username of the organization.
 
-* `self_permission` - The permission informations of current user.
+* `self_permission` - The permission information of current user. The [self_permission](#swr_self_permission) object
+  structure is documented below.
 
+<a name="swr_self_permission"></a>
 The `self_permission` block supports:
 
 * `user_name` - The name of current user.
@@ -71,6 +74,13 @@ The `self_permission` block supports:
 * `user_id` - The ID of current user.
 
 * `permission` - The permission of current user.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 5 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 

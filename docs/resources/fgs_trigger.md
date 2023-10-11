@@ -147,26 +147,26 @@ The following arguments are supported:
 
 * `timer` - (Optional, List, ForceNew) Specifies the configuration of the timing trigger.
   Changing this will create a new trigger resource.
-  The [object](#fgs_trigger_timer) structure is documented below.
+  The [timer](#fgs_trigger_timer) object structure is documented below.
 
 * `obs` - (Optional, List, ForceNew) Specifies the configuration of the OBS trigger.
   Changing this will create a new trigger resource.
-  The [object](#fgs_trigger_obs) structure is documented below.
+  The [obs](#fgs_trigger_obs) object structure is documented below.
 
 * `smn` - (Optional, List, ForceNew) Specifies the configuration of the SMN trigger.
   Changing this will create a new trigger resource.
-  The [object](#fgs_trigger_smn) structure is documented below.
+  The [smn](#fgs_trigger_smn) object structure is documented below.
 
 * `dis` - (Optional, List, ForceNew) Specifies the configuration of the DIS trigger.
   Changing this will create a new trigger resource.
-  The [object](#fgs_trigger_dis) structure is documented below.
+  The [dis](#fgs_trigger_dis) object structure is documented below.
 
   -> **NOTE:** Specify an agency with DIS access permissions for the function version before you can create a DIS
   trigger.
 
 * `apig` - (Optional, List, ForceNew) Specifies the configuration of the shared APIG trigger.
   Changing this will create a new trigger resource.
-  The [object](#fgs_trigger_apig) structure is documented below.
+  The [apig](#fgs_trigger_apig) object structure is documented below.
 
 <a name="fgs_trigger_timer"></a>
 The `timer` block supports:
@@ -264,7 +264,7 @@ The `apig` block supports:
 * `timeout` - (Optional, Int, ForceNew) Specifies the timeout for request sending. The valid value is range form
   `1` to `60,000`, default to `5,000`. Changing this will create a new trigger resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -274,4 +274,4 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `update` - Default is 2 minute.
+* `update` - Default is 2 minutes.

@@ -35,8 +35,9 @@ func TestAccDataTopics_basic(t *testing.T) {
 func testAccDataTopicsConfig_basic(rName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_smn_topic_v2" "topic_1" {
-  name         = "%[1]s"
-  display_name = "The display name of %[1]s"
+  name                  = "%[1]s"
+  display_name          = "The display name of %[1]s"
+  enterprise_project_id = "0"
 }
 
 data "flexibleengine_smn_topics" "test" {
