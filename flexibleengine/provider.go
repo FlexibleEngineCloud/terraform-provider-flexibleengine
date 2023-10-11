@@ -282,7 +282,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_as_groups":         as.DataSourceASGroups(),
 
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
-			"flexibleengine_cbr_vaults":         cbr.DataSourceCbrVaultsV3(),
+			"flexibleengine_cbr_vaults":         cbr.DataSourceVaults(),
 			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 
@@ -467,7 +467,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_as_notification":    as.ResourceAsNotification(),
 
 			"flexibleengine_enterprise_project":        eps.ResourceEnterpriseProject(),
-			"flexibleengine_cbr_policy":                cbr.ResourceCBRPolicyV3(),
+			"flexibleengine_cbr_policy":                cbr.ResourcePolicy(),
 			"flexibleengine_cbr_vault":                 cbr.ResourceVault(),
 			"flexibleengine_cce_namespace":             cce.ResourceCCENamespaceV1(),
 			"flexibleengine_cce_pvc":                   cce.ResourceCcePersistentVolumeClaimsV1(),
@@ -519,9 +519,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
-			"flexibleengine_rds_account":            rds.ResourceRdsAccount(),
-			"flexibleengine_rds_database":           rds.ResourceRdsDatabase(),
-			"flexibleengine_rds_database_privilege": rds.ResourceRdsDatabasePrivilege(),
+			"flexibleengine_rds_account":            rds.ResourceMysqlAccount(),
+			"flexibleengine_rds_database":           rds.ResourceMysqlDatabase(),
+			"flexibleengine_rds_database_privilege": rds.ResourceMysqlDatabasePrivilege(),
 			"flexibleengine_sms_server_template":    sms.ResourceServerTemplate(),
 			"flexibleengine_sms_task":               sms.ResourceMigrateTask(),
 			"flexibleengine_swr_organization":       swr.ResourceSWROrganization(),
@@ -559,7 +559,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_member_v3":        elb.ResourceMemberV3(),              // v1.35.0
 			"flexibleengine_smn_topic_v2":        smn.ResourceTopic(),                 // v1.39.0
 			"flexibleengine_smn_subscription_v2": smn.ResourceSubscription(),          // v1.39.0
-			"flexibleengine_sfs_turbo":           huaweicloud.ResourceSFSTurbo(),      // v1.41.0
+			"flexibleengine_sfs_turbo":           sfs.ResourceSFSTurbo(),
 
 			// Deprecated resource
 			"flexibleengine_as_group_v1":         resourceASGroup(),

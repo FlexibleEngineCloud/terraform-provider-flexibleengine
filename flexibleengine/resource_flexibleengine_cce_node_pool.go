@@ -6,12 +6,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/chnsz/golangsdk"
-	"github.com/chnsz/golangsdk/openstack/cce/v3/nodepools"
-	"github.com/chnsz/golangsdk/openstack/cce/v3/nodes"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	"github.com/chnsz/golangsdk"
+	"github.com/chnsz/golangsdk/openstack/cce/v3/nodepools"
+	"github.com/chnsz/golangsdk/openstack/cce/v3/nodes"
+
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 func resourceCCENodePool() *schema.Resource {
@@ -462,7 +465,8 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating Flexibleengine CCE client: %s", err)
 	}
 
-	initialNodeCount := d.Get("initial_node_count").(int)
+	specLogin := buildCCENodePoolLoginSpec(d)
+	rootVolume := resourceCCERootVolume(d)
 	updateOpts := nodepools.UpdateOpts{
 		Kind:       "NodePool",
 		ApiVersion: "v3",
@@ -470,7 +474,7 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 			Name: d.Get("name").(string),
 		},
 		Spec: nodepools.UpdateSpec{
-			InitialNodeCount: &initialNodeCount,
+			InitialNodeCount: utils.Int(d.Get("initial_node_count").(int)),
 			Autoscaling: nodepools.AutoscalingSpec{
 				Enable:                d.Get("scale_enable").(bool) || d.Get("scall_enable").(bool),
 				MinNodeCount:          d.Get("min_node_count").(int),
@@ -478,11 +482,11 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 				ScaleDownCooldownTime: d.Get("scale_down_cooldown_time").(int),
 				Priority:              d.Get("priority").(int),
 			},
-			NodeTemplate: nodes.Spec{
+			NodeTemplate: nodepools.UpdateNodeTemplate{
 				Flavor:      d.Get("flavor_id").(string),
 				Az:          d.Get("availability_zone").(string),
-				Login:       buildCCENodePoolLoginSpec(d),
-				RootVolume:  resourceCCERootVolume(d),
+				Login:       &specLogin,
+				RootVolume:  &rootVolume,
 				DataVolumes: resourceCCEDataVolume(d),
 				Count:       1,
 				K8sTags:     resourceCCENodeK8sTags(d),

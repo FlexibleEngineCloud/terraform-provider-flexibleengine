@@ -6,11 +6,14 @@ import (
 	"regexp"
 	"strings"
 
-	iam_users "github.com/chnsz/golangsdk/openstack/identity/v3.0/users"
-	"github.com/chnsz/golangsdk/openstack/identity/v3/users"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	iam_users "github.com/chnsz/golangsdk/openstack/identity/v3.0/users"
+	"github.com/chnsz/golangsdk/openstack/identity/v3/users"
+
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
 func resourceIdentityUserV3() *schema.Resource {
@@ -158,7 +161,7 @@ func resourceIdentityUserV3Update(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if d.HasChange("description") {
-		updateOpts.Description = d.Get("description").(string)
+		updateOpts.Description = utils.String(d.Get("description").(string))
 	}
 
 	if d.HasChange("email") {
