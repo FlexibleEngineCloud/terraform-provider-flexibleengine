@@ -301,6 +301,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
+			"flexibleengine_gaussdb_cassandra_flavors":   gaussdb.DataSourceCassandraFlavors(),
 			"flexibleengine_gaussdb_cassandra_instances": gaussdb.DataSourceGeminiDBInstances(),
 			"flexibleengine_gaussdb_nosql_flavors":       gaussdb.DataSourceGaussDBNoSQLFlavors(),
 
