@@ -317,8 +317,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_images": ims.DataSourceImagesImages(),
 
 			"flexibleengine_networking_port": vpc.DataSourceNetworkingPortV2(),
-			"flexibleengine_identity_group":  iam.DataSourceIdentityGroup(),
-			"flexibleengine_identity_users":  iam.DataSourceIdentityUsers(),
+
+			"flexibleengine_account":           huaweicloud.DataSourceAccount(),
+			"flexibleengine_identity_group":    iam.DataSourceIdentityGroup(),
+			"flexibleengine_identity_projects": iam.DataSourceIdentityProjects(),
+			"flexibleengine_identity_users":    iam.DataSourceIdentityUsers(),
 
 			"flexibleengine_rds_backups":         rds.DataSourceBackup(),
 			"flexibleengine_rds_engine_versions": rds.DataSourceRdsEngineVersionsV3(),
