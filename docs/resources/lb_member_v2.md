@@ -23,38 +23,37 @@ resource "flexibleengine_lb_member_v2" "example_member" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an . If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    member.
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Networking client.
+    A Networking client is needed to be created. If omitted, the
+    `region` argument of the provider is used. Changing this creates a new member.
 
-* `pool_id` - (Required) The id of the pool that this member will be
-    assigned to.
+* `pool_id` - (Required, String, ForceNew) The id of the pool that this member will be
+    assigned to. Changing this creates a new member.
 
-* `subnet_id` - (Required) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
-    VPC Subnet in which to access the member
+* `subnet_id` - (Required, String, ForceNew) The `ipv4_subnet_id` or `ipv6_subnet_id` of the
+    VPC Subnet in which to access the member. Changing this creates a new member.
 
-* `name` - (Optional) Human-readable name for the member.
-
-* `address` - (Required) The IP address of the member to receive traffic from
+* `address` - (Required, String, ForceNew) The IP address of the member to receive traffic from
     the load balancer. Changing this creates a new member.
 
-* `protocol_port` - (Required) The port on which to listen for client traffic.
+* `protocol_port` - (Required, Int, ForceNew) The port on which to listen for client traffic.
     Changing this creates a new member.
 
-* `weight` - (Optional)  A positive integer value that indicates the relative
+* `name` - (Optional, String) Human-readable name for the member.
+
+* `weight` - (Optional, Int)  A positive integer value that indicates the relative
     portion of traffic that this member should receive from the pool. For
     example, a member with a weight of 10 receives five times as much traffic
     as a member with a weight of 2.
 
-* `admin_state_up` - (Optional) The administrative state of the member.
+* `admin_state_up` - (Optional, Bool) The administrative state of the member.
     A valid value is true (UP) or false (DOWN).
 
-* `tenant_id` - (Optional) The UUID of the tenant who owns the member.
+* `tenant_id` - (Optional, String, ForceNew) The UUID of the tenant who owns the member.
     Only administrative users can specify a tenant UUID other than their own.
     Changing this creates a new member.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -67,3 +66,11 @@ The following attributes are exported:
 * `pool_id` - See Argument Reference above.
 * `address` - See Argument Reference above.
 * `protocol_port` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.

@@ -176,21 +176,21 @@ The following arguments are supported:
 * `ipv4_eip_id` - (Optional, String, ForceNew) The ID of the EIP. Changing this parameter will create a new resource.
 
 -> **NOTE:** If the ipv4_eip_id parameter is configured, you do not need to configure the bandwidth parameters:
-  `iptype`, `bandwidth_charge_mode`, `bandwidth_size`, `share_type` and `bandwidth_id`.
+`iptype`, `bandwidth_charge_mode`, `bandwidth_size`, `share_type` and `bandwidth_id`.
 
 * `iptype` - (Optional, String, ForceNew) Elastic IP type. Changing this parameter will create a new resource.
 
 * `bandwidth_charge_mode` - (Optional, String, ForceNew) Bandwidth billing type. Value options:
   + **bandwidth**: Billed by bandwidth.
   + **traffic**: Billed by traffic.
-  
+
   It is mandatory when `iptype` is set and `bandwidth_id` is empty.
   Changing this parameter will create a new resource.
 
 * `sharetype` - (Optional, String, ForceNew) Bandwidth sharing type. Value options:
   + **PER**: Dedicated bandwidth.
   + **WHOLE**: Shared bandwidth.
-  
+
   It is mandatory when `iptype` is set and `bandwidth_id` is empty.
   Changing this parameter will create a new resource.
 
@@ -209,10 +209,10 @@ The following arguments are supported:
 
 * `backend_subnets` - (Optional, List) The IDs of subnets on the downstream plane.
   + If this parameter is not specified, select subnets as follows:
-      - If IPv6 is enabled for a load balancer, the ID of subnet specified in `ipv6_network_id` will be used.
-      - If IPv4 is enabled for a load balancer, the ID of subnet specified in `ipv4_subnet_id` will be used.
-      - If only public network is available for a load balancer, the ID of any subnet in the VPC where the load balancer
-        resides will be used. Subnets with more IP addresses are preferred.
+    - If IPv6 is enabled for a load balancer, the ID of subnet specified in `ipv6_network_id` will be used.
+    - If IPv4 is enabled for a load balancer, the ID of subnet specified in `ipv4_subnet_id` will be used.
+    - If only public network is available for a load balancer, the ID of any subnet in the VPC where the load balancer
+      resides will be used. Subnets with more IP addresses are preferred.
   + If there is more than one subnet, the first subnet in the list will be used, and the subnets must be in the VPC
     where the load balancer resides.
 
@@ -223,6 +223,9 @@ The following arguments are supported:
 
 * `min_l7_flavor_id` - (Optional, String) Specifies the ID of the minimum Layer-7 flavor for elastic scaling.
   This parameter cannot be left blank if there are HTTP or HTTPS listeners.
+
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the resource.
+  Changing this will create a new resource.
 
 ## Attribute Reference
 
@@ -259,11 +262,11 @@ definition should be updated to align with the loadbalancer. Also you can ignore
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v3" "loadbalancer_1" {
-    ...
-  lifecycle {
-    ignore_changes = [
-      ipv6_bandwidth_id, iptype, bandwidth_charge_mode, sharetype, bandwidth_size, bandwidth_id,
-    ]
-  }
+  ...
+lifecycle {
+  ignore_changes = [
+    ipv6_bandwidth_id, iptype, bandwidth_charge_mode, sharetype, bandwidth_size, bandwidth_id,
+  ]
+}
 }
 ```
