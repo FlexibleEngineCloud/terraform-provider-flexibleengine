@@ -502,6 +502,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_flinksql_job": dli.ResourceFlinkSqlJob(),
 			"flexibleengine_drs_job":          drs.ResourceDrsJob(),
 
+			"flexibleengine_elb_security_policy": elb.ResourceSecurityPolicy(),
+
 			"flexibleengine_evs_volume":   evs.ResourceEvsVolume(),
 
 			"flexibleengine_fgs_dependency":   fgs.ResourceFgsDependency(),
