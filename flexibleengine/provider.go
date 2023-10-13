@@ -3,6 +3,9 @@ package flexibleengine
 import (
 	"context"
 	"fmt"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dcs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/evs"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/workspace"
 	"log"
 	"strings"
 	"sync"
@@ -475,6 +478,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cse_microservice_engine":   cse.ResourceMicroserviceEngine(),
 			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
 
+			"flexibleengine_dcs_backup":   dcs.ResourceDcsBackup(),
+
 			"flexibleengine_ddm_instance": ddm.ResourceDdmInstance(),
 			"flexibleengine_ddm_schema":   ddm.ResourceDdmSchema(),
 			"flexibleengine_ddm_account":  ddm.ResourceDdmAccount(),
@@ -496,6 +501,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_table":        dli.ResourceDliTable(),
 			"flexibleengine_dli_flinksql_job": dli.ResourceFlinkSqlJob(),
 			"flexibleengine_drs_job":          drs.ResourceDrsJob(),
+
+			"flexibleengine_evs_volume":   evs.ResourceEvsVolume(),
+
 			"flexibleengine_fgs_dependency":   fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":     fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":      fgs.ResourceFunctionGraphTrigger(),
@@ -539,6 +547,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_dedicated_policy":      ResourceWafDedicatedPolicyV1(),
 			"flexibleengine_waf_dedicated_certificate": ResourceWafDedicatedCertificateV1(),
 			"flexibleengine_waf_dedicated_domain":      ResourceWafDedicatedDomainV1(),
+
+			"flexibleengine_workspace_desktop": workspace.ResourceDesktop(),
+			"flexibleengine_workspace_service": workspace.ResourceService(),
+			"flexibleengine_workspace_user":    workspace.ResourceUser(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),

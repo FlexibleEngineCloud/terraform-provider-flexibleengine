@@ -21,6 +21,13 @@ var (
 	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
 	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
 	OS_PROJECT_ID             = os.Getenv("OS_PROJECT_ID")
+	OS_ENTERPRISE_PROJECT_ID_TEST         = os.Getenv("OS_ENTERPRISE_PROJECT_ID_TEST")
+
+	OS_WORKSPACE_AD_DOMAIN_NAME = os.Getenv("OS_WORKSPACE_AD_DOMAIN_NAME") // Domain name, e.g. "example.com".
+	OS_WORKSPACE_AD_SERVER_PWD  = os.Getenv("OS_WORKSPACE_AD_SERVER_PWD")  // The password of AD server.
+	OS_WORKSPACE_AD_DOMAIN_IP   = os.Getenv("OS_WORKSPACE_AD_DOMAIN_IP")   // Active domain IP, e.g. "192.168.196.3".
+	OS_WORKSPACE_AD_VPC_ID      = os.Getenv("OS_WORKSPACE_AD_VPC_ID")      // The VPC ID to which the AD server and desktops belongs.
+	OS_WORKSPACE_AD_NETWORK_ID  = os.Getenv("OS_WORKSPACE_AD_NETWORK_ID")  // The network ID to which the AD server belongs.
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")
 	OS_NETWORK_ID = os.Getenv("OS_NETWORK_ID")
@@ -76,6 +83,14 @@ func testAccPreCheck(t *testing.T) {
 	// Do not run the test if this is a deprecated testing environment.
 	if OS_DEPRECATED_ENVIRONMENT != "" {
 		t.Skip("This environment only runs deprecated tests")
+	}
+}
+
+// lintignore:AT003
+func TestAccPreCheckWorkspaceAD(t *testing.T) {
+	if OS_WORKSPACE_AD_DOMAIN_NAME == "" || OS_WORKSPACE_AD_SERVER_PWD == "" || OS_WORKSPACE_AD_DOMAIN_IP == "" ||
+		OS_WORKSPACE_AD_VPC_ID == "" || OS_WORKSPACE_AD_NETWORK_ID == "" {
+		t.Skip("The configuration of AD server is not completed for Workspace service acceptance test.")
 	}
 }
 
