@@ -43,14 +43,18 @@ resource "flexibleengine_identity_group_membership_v3" "membership_1" {
 
 The following arguments are supported:
 
-* `group` - (Required) The group ID of this membership.
+* `group` - (Required, String, ForceNew) The group ID of this membership. Changing this will create a new resource.
 
-* `users` - (Required) A List of user IDs to associate to the group.
+* `users` - (Required, List) A List of user IDs to associate to the group.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+All the arguments above can also be exported attributes.
 
-* `group` - See Argument Reference above.
+## Import
 
-* `users` - See Argument Reference above.
+IAM group membership can be imported using the group membership ID, e.g.
+
+```shell
+terraform import flexibleengine_identity_group_membership_v3.membership_1 89c60255-9bd6-460c-822a-e2b959ede9d2
+```

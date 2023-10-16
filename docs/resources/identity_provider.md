@@ -66,7 +66,7 @@ The following arguments are supported:
   Valid values are *saml* and *oidc*.
   Changing this creates a new resource.
 
-* `enabled` - (Optional, Bool) Specifies the status for the identity provider. Defaults to true.
+* `enabled` - (Optional, Bool) Specifies the status for the identity provider. Defaults to **true**.
 
 * `description` - (Optional, String) Specifies the description of the identity provider.
 
@@ -77,14 +77,16 @@ The following arguments are supported:
   The maximum length is 30,000 characters and it stores in the state with SHA1 algorithm.
 
   -> **NOTE:**
-    The metadata file specifies API addresses and certificate information in compliance with the SAML 2.0 standard.
-    It is usually stored in a file. In the TF script, you can import the metafile through the **file** function,
-    for example:
-    <br/>`metadata = file("/usr/local/data/files/metadata.txt")`
+  The metadata file specifies API addresses and certificate information in compliance with the SAML 2.0 standard.
+  It is usually stored in a file. In the TF script, you can import the metafile through the **file** function,
+  for example:
+  <br/>`metadata = file("/usr/local/data/files/metadata.txt")`
 
 * `openid_connect_config` - (Optional, List) Specifies the description of the identity provider.
   This field is required only if the protocol is set to *oidc*.
+  The [openid_connect_config](#IAM_openid_connect_config) object structure is documented below.
 
+<a name="IAM_openid_connect_config"></a>
 The `openid_connect_config` block supports:
 
 * `access_type` - (Required, String) Specifies the access type of the identity provider.
@@ -114,7 +116,7 @@ The `openid_connect_config` block supports:
   Valid values is *form_post* and *fragment*, default value is *form_post*.
   This field is required only if the access type is set to `program_console`.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -125,21 +127,24 @@ In addition to all arguments above, the following attributes are exported:
 * `sso_type` - The single sign-on type of the identity provider.
 
 * `conversion_rules` - The identity conversion rules of the identity provider.
-  The [object](#conversion_rules) structure is documented below
+  The [conversion_rules](#IAM_conversion_rules) object structure is documented below.
 
-<a name="conversion_rules"></a>
+<a name="IAM_conversion_rules"></a>
 The `conversion_rules` block supports:
 
-* `local` - The federated user information on the cloud platform.
+* `local` - The federated user information on the cloud platform. The [local](#IAM_local) object structure is
+  documented below.
 
-* `remote` - The description of the identity provider.
+* `remote` - The description of the identity provider. The [remote](#IAM_remote) object structure is documented below.
 
+<a name="IAM_local"></a>
 The `local` block supports:
 
 * `username` - The name of a federated user on the cloud platform.
 
 * `group` - The user group to which the federated user belongs on the cloud platform.
 
+<a name="IAM_remote"></a>
 The `remote` block supports:
 
 * `attribute` - The attribute in the IDP assertion.
