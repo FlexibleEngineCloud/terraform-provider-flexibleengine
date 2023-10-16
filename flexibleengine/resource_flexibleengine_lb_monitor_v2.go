@@ -43,13 +43,6 @@ func resourceMonitorV2() *schema.Resource {
 				Optional: true,
 			},
 
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -82,14 +75,24 @@ func resourceMonitorV2() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"admin_state_up": {
-				Type:     schema.TypeBool,
-				Default:  true,
-				Optional: true,
-			},
 			"port": {
 				Type:     schema.TypeInt,
 				Optional: true,
+			},
+
+			"admin_state_up": {
+				Type:       schema.TypeBool,
+				Default:    true,
+				Optional:   true,
+				Deprecated: "admin_state_up is deprecated",
+			},
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}

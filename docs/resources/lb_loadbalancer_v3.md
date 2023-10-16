@@ -224,14 +224,21 @@ The following arguments are supported:
 * `min_l7_flavor_id` - (Optional, String) Specifies the ID of the minimum Layer-7 flavor for elastic scaling.
   This parameter cannot be left blank if there are HTTP or HTTPS listeners.
 
+* `enterprise_project_id` - (Optional, String, ForceNew) Specifies the enterprise project id of the resource.
+  Changing this will create a new resource.
+
 ## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `ipv4_port_id` - The ID of the port bound to the private IPv4 address of the loadbalancer.
+
 * `ipv4_eip` - The ipv4 eip address of the Load Balancer.
+
 * `ipv6_eip` - The ipv6 eip address of the Load Balancer.
+
 * `ipv6_eip_id` - The ipv6 eip id of the Load Balancer.
+
 * `ipv6_address` - The ipv6 address of the Load Balancer.
 
 ## Timeouts
@@ -255,7 +262,7 @@ API response, security or some other reason. The missing attributes include: `ip
 `bandwidth_charge_mode`, `sharetype`,  `bandwidth_size` and `bandwidth_id`.
 It is generally recommended running `terraform plan` after importing a loadbalancer.
 You can then decide if changes should be applied to the loadbalancer, or the resource
-definition should be updated to align with the loadbalancer. Also you can ignore changes as below.
+definition should be updated to align with the loadbalancer. Also, you can ignore changes as below.
 
 ```hcl
 resource "flexibleengine_lb_loadbalancer_v3" "loadbalancer_1" {

@@ -38,13 +38,6 @@ func resourceL7RuleV2() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -95,6 +88,15 @@ func resourceL7RuleV2() *schema.Resource {
 				Default:      true,
 				Optional:     true,
 				ValidateFunc: validateTrueOnly,
+				Deprecated:   "admin_state_up is deprecated",
+			},
+
+			"tenant_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				ForceNew:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 		},
 	}

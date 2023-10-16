@@ -24,27 +24,20 @@ resource "flexibleengine_elb_backend" "backend" {
 
 The following arguments are supported:
 
-* `listener_id` - (Required) Specifies the listener ID.
+* `listener_id` - (Required, String, ForceNew) Specifies the listener ID. Changing this will create a new resource.
 
-* `server_id` - (Required) Specifies the backend member ID.
+* `server_id` - (Required, String, ForceNew) Specifies the backend member ID. Changing this will create a new resource.
 
-* `address` - (Required) Specifies the private IP address of the backend member.
+* `address` - (Required, String, ForceNew) Specifies the private IP address of the backend member.
+  Changing this will create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+All the arguments above can also be exported attributes.
 
-* `id` - Specifies the backend member ID.
-* `listener_id` - See Argument Reference above.
-* `server_id` - See Argument Reference above.
-* `address` - See Argument Reference above.
-* `server_address` - Specifies the floating IP address assigned to the backend member.
-* `status` - Specifies the backend ECS status. The value is ACTIVE, PENDING,
-    or ERROR.
-* `health_status` - Specifies the health check status. The value is NORMAL,
-    ABNORMAL, or UNAVAILABLE.
-* `update_time` - Specifies the time when information about the backend member
-    was updated.
-* `create_time` - Specifies the time when the backend member was created.
-* `server_name` - Specifies the backend member name.
-* `listeners` - Specifies the listener to which the backend member belongs.
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.

@@ -23,23 +23,22 @@ data "flexibleengine_lb_certificate_v2" "by_name" {
 The arguments of this data source act as filters for querying the available Certificates in the current region.
 The given filters must match exactly one Certificate whose data will be exported as attributes.
 
-* `id` - (Optional) The id of the specific Certificate to retrieve.
+* `id` - (Optional, String) The id of the specific Certificate to retrieve.
 
-* `name` - (Optional) Human-readable name for the Certificate. Does not have
-    to be unique.
+* `name` - (Optional, String) Human-readable name for the Certificate. Does not have to be unique.
 
-* `description` - (Optional) Human-readable description for the Certificate.
+* `description` - (Optional, String) Human-readable description for the Certificate.
 
-* `domain` - (Optional) The domain of the Certificate.
+* `domain` - (Optional, String) The domain of the Certificate.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `name` - See Argument Reference above.
-* `description` - See Argument Reference above.
-* `domain` - See Argument Reference above.
 * `private_key` - The private encrypted key of the Certificate, PEM format.
+
 * `certificate` - The public encrypted key of the Certificate, PEM format.
+
 * `update_time` - Indicates the update time.
+
 * `create_time` - Indicates the creation time.

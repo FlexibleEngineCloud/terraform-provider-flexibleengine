@@ -24,61 +24,46 @@ resource "flexibleengine_lb_monitor_v2" "monitor_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 Networking client.
-    A Networking client is needed to create an . If omitted, the
-    `region` argument of the provider is used. Changing this creates a new
-    monitor.
+* `region` - (Optional, String, ForceNew) The region in which to create the resources.
+  If omitted, the `region` argument of the provider is used. Changing this creates a new resource.
 
-* `pool_id` - (Required) The id of the pool that this monitor will be assigned to.
+* `pool_id` - (Required, String, ForceNew) The id of the pool that this monitor will be assigned to.
+  Changing this creates a new monitor.
 
-* `name` - (Optional) The Name of the Monitor.
+* `type` - (Required, String, ForceNew) The type of probe, which is PING, TCP, HTTP, or HTTPS,
+  that is sent by the load balancer to verify the member state. Changing this creates a new monitor.
 
-* `type` - (Required) The type of probe, which is PING, TCP, HTTP, or HTTPS,
-    that is sent by the load balancer to verify the member state. Changing this
-    creates a new monitor.
+* `delay` - (Required, Int) The time, in seconds, between sending probes to members.
 
-* `delay` - (Required) The time, in seconds, between sending probes to members.
+* `timeout` - (Required, Int) Maximum number of seconds for a monitor to wait for a
+  ping reply before it times out. The value must be less than the delay value.
 
-* `timeout` - (Required) Maximum number of seconds for a monitor to wait for a
-    ping reply before it times out. The value must be less than the delay
-    value.
+* `max_retries` - (Required, Int) Number of permissible ping failures before
+  changing the member's status to INACTIVE. Must be a number between 1 and 10.
 
-* `max_retries` - (Required) Number of permissible ping failures before
-    changing the member's status to INACTIVE. Must be a number between 1
-    and 10..
+* `name` - (Optional, String) The Name of the Monitor.
 
-* `url_path` - (Optional) Required for HTTP(S) types. URI path that will be
-    accessed if monitor type is HTTP or HTTPS.
+* `url_path` - (Optional, String) Required for HTTP(S) types. URI path that will be
+  accessed if monitor type is HTTP or HTTPS.
 
-* `http_method` - (Optional) Required for HTTP(S) types. The HTTP method used
-    for requests by the monitor. If this attribute is not specified, it
-    defaults to "GET".
+* `http_method` - (Optional, String) Required for HTTP(S) types. The HTTP method used
+  for requests by the monitor. If this attribute is not specified, it defaults to "GET".
 
-* `expected_codes` - (Optional) Required for HTTP(S) types. Expected HTTP codes
-    for a passing HTTP(S) monitor. You can either specify a single status like
-    "200", or a range like "200-202".
+* `expected_codes` - (Optional, String) Required for HTTP(S) types. Expected HTTP codes
+  for a passing HTTP(S) monitor. You can either specify a single status like "200", or a range like "200-202".
 
-* `port` - (Optional) Specifies the health check port. The value ranges from 1 to 65536.
+* `port` - (Optional, Int) Specifies the health check port. The value ranges from 1 to 65536.
 
-* `admin_state_up` - (Optional) The administrative state of the monitor.
-    A valid value is true (UP) or false (DOWN).
+## Attribute Reference
 
-* `tenant_id` - (Optional) The UUID of the tenant who owns the monitor.
-    Only administrative users can specify a tenant UUID other than their own.
-    Changing this creates a new monitor.
-
-## Attributes Reference
-
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID for the monitor.
-* `tenant_id` - See Argument Reference above.
-* `type` - See Argument Reference above.
-* `delay` - See Argument Reference above.
-* `timeout` - See Argument Reference above.
-* `max_retries` - See Argument Reference above.
-* `url_path` - See Argument Reference above.
-* `http_method` - See Argument Reference above.
-* `expected_codes` - See Argument Reference above.
-* `admin_state_up` - See Argument Reference above.
-* `port` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.

@@ -22,24 +22,24 @@ resource "flexibleengine_lb_whitelist_v2" "whitelist_1" {
 
 The following arguments are supported:
 
-* `listener_id` - (Required) The Listener ID that the whitelist will be associated with.
+* `listener_id` - (Required, String, ForceNew) The Listener ID that the whitelist will be associated with.
   Changing this creates a new whitelist.
 
-* `enable_whitelist` - (Optional) Specify whether to enable access control.
+* `enable_whitelist` - (Optional, Bool) Specify whether to enable access control.
 
-* `whitelist` - (Optional) Specifies the IP addresses in the whitelist. Use commas(,) to separate
+* `whitelist` - (Optional, String) Specifies the IP addresses in the whitelist. Use commas(,) to separate
   the multiple IP addresses.
 
-* `tenant_id` - (Optional) The UUID of the tenant who owns the whitelist.
-  Only administrative users can specify a tenant UUID other than their own.
-  Changing this creates a new whitelist.
+## Attribute Reference
 
-## Attributes Reference
-
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID for the whitelist.
-* `tenant_id` - See Argument Reference above.
-* `listener_id` - See Argument Reference above.
-* `enable_whitelist` - See Argument Reference above.
-* `whitelist` - See Argument Reference above.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
