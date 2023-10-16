@@ -283,7 +283,7 @@ func resourceMRSClusterV2() *schema.Resource {
 	}
 }
 
-// for custom node, the groupName should been empty
+// for custom node, the groupName should be empty
 func nodeGroupSchemaResource(groupName string, nodeScalable bool, minNodeNum, maxNodeNum int) *schema.Resource {
 	nodeResource := schema.Resource{
 		Schema: map[string]*schema.Schema{

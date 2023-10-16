@@ -431,9 +431,9 @@ The following arguments are supported:
       </tr>
     </table>
 
-* `master_nodes` - (Required, List, ForceNew) Specifies a list of the informations about the master nodes in the
+* `master_nodes` - (Required, List, ForceNew) Specifies a list of the information about the master nodes in the
   MRS cluster.
-  The nodes object structure of the `master_nodes` is documented below.
+  The [nodes](#mrs_arg_nodes) object structure of the `master_nodes` is documented below.
   Changing this will create a new MRS cluster resource.
 
 * `vpc_id` - (Required, String, ForceNew) Specifies the ID of the VPC which bound to the MRS cluster.
@@ -469,9 +469,10 @@ The following arguments are supported:
 
 * `security_group_ids` - (Optional, List, ForceNew) Specifies an array of one or more security group ID to attach to the
   MRS cluster. If using the specified security group, the group need to open the specified port (9022) rules.
+  Changing this will create a new MRS cluster resource.
 
-* `template_id` - (Optional, List, ForceNew) Specifies the template used for node deployment when the cluster type is
-  CUSTOM.
+* `template_id` - (Optional, String, ForceNew) Specifies the template used for node deployment when the cluster type is
+  CUSTOM. Changing this will create a new MRS cluster resource.
   + mgmt_control_combined_v2: template for jointly deploying the management and control nodes. The management and
     control roles are co-deployed on the Master node, and data instances are deployed in the same node group. This
     deployment mode applies to scenarios where the number of control nodes is less than 100, reducing costs.
@@ -482,36 +483,38 @@ The following arguments are supported:
     and data instances are deployed in different node groups. This deployment mode is applicable to a cluster with more
     than 500 nodes. Components can be deployed separately, which can be used for a larger cluster scale.
 
-* `analysis_core_nodes` - (Optional, List) Specifies a list of the informations about the analysis core nodes in the
-  MRS cluster.
-  The nodes object structure of the `analysis_core_nodes` is documented below.
+* `analysis_core_nodes` - (Optional, List, ForceNew) Specifies a list of the information about the analysis core nodes
+  in the MRS cluster. Changing this will create a new MRS cluster resource.
+  The [nodes](#mrs_arg_nodes) object structure of the `analysis_core_nodes` is documented below.
 
-* `streaming_core_nodes` - (Optional, List) Specifies a list of the informations about the streaming core nodes in the
-  MRS cluster.
-  The nodes object structure of the `streaming_core_nodes` is documented below.
+* `streaming_core_nodes` - (Optional, List, ForceNew) Specifies a list of the information about the streaming core nodes
+  in the MRS cluster. Changing this will create a new MRS cluster resource.
+  The [nodes](#mrs_arg_nodes) object structure of the `streaming_core_nodes` is documented below.
 
-* `analysis_task_nodes` - (Optional, List) Specifies a list of the informations about the analysis task nodes in the
-  MRS cluster.
-  The nodes object structure of the `analysis_task_nodes` is documented below.
+* `analysis_task_nodes` - (Optional, List, ForceNew) Specifies a list of the information about the analysis task nodes
+  in the MRS cluster. Changing this will create a new MRS cluster resource.
+  The [nodes](#mrs_arg_nodes) object structure of the `analysis_task_nodes` is documented below.
 
-* `streaming_task_nodes` - (Optional, List) Specifies a list of the informations about the streaming task nodes in the
-  MRS cluster.
-  The nodes object structure of the `streaming_task_nodes` is documented below.
+* `streaming_task_nodes` - (Optional, List, ForceNew) Specifies a list of the information about the streaming task nodes
+  in the MRS cluster. Changing this will create a new MRS cluster resource.
+  The [nodes](#mrs_arg_nodes) object structure of the `streaming_task_nodes` is documented below.
 
-* `custom_nodes` - (Optional, List) Specifies a list of the informations about the custom nodes in the MRS cluster.
-  The nodes object structure of the `custom_nodes` is documented below.
-  Unlike other nodes, it needs to specify group_name.
+* `custom_nodes` - (Optional, List, ForceNew) Specifies a list of the information about the custom nodes in the MRS
+  cluster. Unlike other nodes, it needs to specify group_name. Changing this will create a new MRS cluster resource.
+  The [nodes](#mrs_arg_nodes) object structure of the `custom_nodes` is documented below.
 
-* `tags` - (Optional, Map, ForceNew) Specifies the key/value pairs to associate with the cluster.
+* `tags` - (Optional, Map) Specifies the key/value pairs to associate with the cluster.
 
+<a name="mrs_arg_nodes"></a>
 The `nodes` block supports:
 
 * `flavor` - (Required, String, ForceNew) Specifies the instance specifications for each nodes in node group.
   Changing this will create a new MRS cluster resource.
 
 * `node_number` - (Required, Int) Specifies the number of nodes for the node group.
-  Only the core group and task group updations are allowed. The number of nodes after scaling cannot be
-  less than the number of nodes originally created.
+  Only the core group and task group updations are allowed. The number of nodes after scaling cannot be less than the
+  number of nodes originally created. It is **ForceNew** when the node type are **master_nodes** or **custom_nodes**,
+  and changing this will create a new MRS cluster resource.
 
 * `root_volume_type` - (Required, String, ForceNew) Specifies the system disk flavor of the nodes. Changing this will
   create a new MRS cluster resource.
@@ -540,10 +543,11 @@ The `nodes` block supports:
   to 32768. Required if `data_volume_count` is greater than zero. Changing this will create a new MRS cluster resource.
 
 * `group_name` - (Optional, String, ForceNew) Specifies the name of nodes for the node group.
-  This argument is mandatory when the cluster type is CUSTOM.
+  This argument is **Required** when the cluster type is CUSTOM. Changing this will create a new MRS cluster resource.
 
-* `assigned_roles` - (Optional, List, ForceNew) Specifies the roles deployed in a node group. This argument is mandatory
-  when the cluster type is CUSTOM. Each character string represents a role expression.
+* `assigned_roles` - (Optional, List, ForceNew) Specifies the roles deployed in a node group. This argument is
+  **Required** when the cluster type is CUSTOM. Each character string represents a role expression.
+  Changing this will create a new MRS cluster resource.
 
   **Role expression definition:**
 
@@ -558,37 +562,63 @@ The `nodes` block supports:
   -> `DBService` is a basic component of a cluster. Components such as Hive, Hue, Oozie, Loader, and Redis, and Loader
    store their metadata in DBService, and provide the metadata backup and restoration functions by using DBService.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The cluster ID in UUID format.
+
 * `total_node_number` - The total number of nodes deployed in the cluster.
+
 * `master_node_ip` - The IP address of the master node.
+
 * `private_ip` - The preferred private IP address of the master node.
+
 * `status` - The cluster state, which include: running, frozen, abnormal and failed.
+
 * `create_time` - The cluster creation time, in RFC-3339 format.
+
 * `update_time` - The cluster update time, in RFC-3339 format.
+
 * `charging_start_time` - The charging start time which is the start time of billing, in RFC-3339 format.
-* `node` - all the nodes attributes: master_nodes/analysis_core_nodes/streaming_core_nodes/analysis_task_nodes
-/streaming_task_nodes.
+
+* `master_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `custom_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `analysis_core_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `streaming_core_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `analysis_task_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `streaming_task_nodes` - See Argument Reference above. The [node](#mrs_attr_node) object structure is documented below.
+
+* `components` - Component list information. The [components](#mrs_components) object structure is documented below.
+
+<a name="mrs_attr_node"></a>
+The `node` block supports:
+
 * `host_ips` - The host list of this nodes group in the cluster.
 
-The `components` attributes:
+<a name="mrs_components"></a>
+The `components` block supports:
 
-* `id` - Component ID. For example, component_id of Hadoop is MRS 3.1.0-LTS.1_001,
-  MRS 2.0.1_001, and MRS 1.8.9_001.
+* `id` - Component ID. For example, component_id of Hadoop is MRS 3.1.0-LTS.1_001, MRS 2.0.1_001, and MRS 1.8.9_001.
+
 * `name` - Component name.
+
 * `version` - Component version.
+
 * `description` - Component description.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 60 minute.
-* `update` - Default is 180 minute.
-* `delete` - Default is 40 minute.
+* `create` - Default is 60 minutes.
+* `update` - Default is 180 minutes.
+* `delete` - Default is 40 minutes.
 
 ## Import
 
