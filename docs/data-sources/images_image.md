@@ -76,24 +76,38 @@ data "flexibleengine_images_image" "bms_image" {
 * `flavor_id` - (Optional, String) Specifies the ECS flavor ID used to filter out available images.
   You can specify only one flavor ID and only ECS flavor ID is valid, BMS flavor is not supported.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Specifies a resource ID in UUID format.
+
 * `checksum` - The checksum of the data associated with the image.
+
 * `container_format` - The format of the image's container.
+
 * `disk_format` - The format of the image's disk.
+
 * `file` - the trailing path after the glance endpoint that represent the location of the image or the path to retrieve
   it.
+
 * `metadata` - The metadata associated with the image. Image metadata allow for meaningfully define the image properties
   and tags.
+
 * `min_disk_gb` - The minimum amount of disk space required to use the image.
+
 * `min_ram_mb` - The minimum amount of ram required to use the image.
+
 * `protected` - Whether or not the image is protected.
+
 * `schema` - The path to the JSON-schema that represent the image or image.
+
 * `size_bytes` - The size of the image (in bytes).
+
 * `status` - The status of the image.
+
 * `backup_id` - The backup ID of the whole image in the CBR vault.
+
 * `created_at` - The date when the image was created.
+
 * `updated_at` - The date when the image was last updated.
