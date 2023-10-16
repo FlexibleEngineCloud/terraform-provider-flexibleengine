@@ -1,3 +1,9 @@
+---
+subcategory: "Data Sources"
+description: ""
+page_title: "flexibleengine_availability_zones"
+---
+
 # flexibleengine_availability_zones
 
 Use this data source to get a list of availability zones from FlexibleEngine.
@@ -10,11 +16,12 @@ data "flexibleengine_availability_zones" "zones" {}
 
 ## Argument Reference
 
-* `region` - (Optional) The `region` to fetch availability zones from, defaults to the provider's `region`.
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
 
-* `state` - (Optional) The `state` of the availability zones to match, default ("available").
+* `state` - (Optional, String) The `state` of the availability zones to match, default ("available").
 
-## Attributes Reference
+## Attribute Reference
 
 `id` is set to hash of the returned zone list. In addition, the following attributes are exported:
 

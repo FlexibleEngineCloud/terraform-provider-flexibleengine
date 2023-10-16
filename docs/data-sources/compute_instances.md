@@ -1,5 +1,7 @@
 ---
 subcategory: "Elastic Cloud Server (ECS)"
+description: ""
+page_title: "flexibleengine_compute_instances"
 ---
 
 # flexibleengine_compute_instances
@@ -20,35 +22,36 @@ data "flexibleengine_compute_instances" "demo" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the server instance.
+* `region` - (Optional, String) The region in which to obtain the server instance.
 
-* `name` - (Optional) Specifies the server name, which can be queried with a regular expression.
+* `name` - (Optional, String) Specifies the server name, which can be queried with a regular expression.
 
-* `fixed_ip_v4` - (Optional)  Specifies the IPv4 addresses of the server.
+* `fixed_ip_v4` - (Optional, String)  Specifies the IPv4 addresses of the server.
 
-* `flavor_id` - (Optional) Specifies the flavor ID.
+* `flavor_id` - (Optional, String) Specifies the flavor ID.
 
-* `status` - (Optional) Specifies the status of the instance. The valid values are as follows:
+* `status` - (Optional, String) Specifies the status of the instance. The valid values are as follows:
   + **ACTIVE**: The instance is running properly.
   + **SHUTOFF**: The instance has been properly stopped.
   + **ERROR**: An error has occurred on the instance.
 
-* `flavor_name` - (Optional) Specifies the flavor name of the instance.
+* `flavor_name` - (Optional, String) Specifies the flavor name of the instance.
 
-* `image_id` - (Optional) Specifies the image ID of the instance.
+* `image_id` - (Optional, String) Specifies the image ID of the instance.
 
-* `availability_zone` - (Optional) Specifies the availability zone where the instance is located.
+* `availability_zone` - (Optional, String) Specifies the availability zone where the instance is located.
 
-* `key_pair` - (Optional) Specifies the key pair that is used to authenticate the instance.
+* `key_pair` - (Optional, String) Specifies the key pair that is used to authenticate the instance.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Data source ID.
 
-* `instances` - List of ECS instance details. The object structure of each ECS instance is documented below.
+* `instances` - List of ECS instance details. The [instances](#ecs_attr_instances) object structure is documented below.
 
+<a name="ecs_attr_instances"></a>
 The `instances` block supports:
 
 * `id` - The instance ID in UUID format.
@@ -67,7 +70,7 @@ The `instances` block supports:
 
 * `key_pair` - The key pair that is used to authenticate the instance.
 
-* `floating_ip` - The EIP address that is associted to the instance.
+* `floating_ip` - The EIP address that is associated to the instance.
 
 * `user_data` -  The user data (information after encoding) configured during instance creation.
 
@@ -75,13 +78,13 @@ The `instances` block supports:
     to associate with the instance.
 
 * `network` - An array of one or more networks to attach to the instance.
-    The network object structure is documented below.
+  The [network](#ecs_attr_network) object structure is documented below.
 
 * `volume_attached` - An array of one or more disks to attach to the instance.
-    The object structure is documented below.
+  The [volume_attached](#ecs_attr_volume_attached) object structure is documented below.
 
 * `scheduler_hints` - The scheduler with hints on how the instance should be launched.
-    The available hints are described below.
+  The [scheduler_hints](#ecs_attr_scheduler_hints) object structure is documented below.
 
 * `tags` - The tags of the instance in key/value format.
 
@@ -89,6 +92,7 @@ The `instances` block supports:
 
 * `status` - The status of the instance.
 
+<a name="ecs_attr_network"></a>
 The `network` block supports:
 
 * `uuid` - The network UUID to attach to the server.
@@ -101,12 +105,14 @@ The `network` block supports:
 
 * `fixed_ip_v6` - The Fixed IPv6 address of the instance on that network.
 
+<a name="ecs_attr_volume_attached"></a>
 The `volume_attached` block supports:
 
 * `volume_id` - The volume id on that attachment.
 
 * `is_sys_volume` - Whether the volume is the system disk.
 
+<a name="ecs_attr_scheduler_hints"></a>
 The `scheduler_hints` block supports:
 
 * `group` - The UUID of a Server Group where the instance will be placed into.

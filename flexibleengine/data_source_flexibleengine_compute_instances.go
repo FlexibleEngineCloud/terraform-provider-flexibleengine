@@ -152,7 +152,7 @@ func dataSourceComputeInstances() *schema.Resource {
 						},
 						"scheduler_hints": {
 							Type:     schema.TypeSet,
-							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"group": {

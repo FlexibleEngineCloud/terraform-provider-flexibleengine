@@ -112,30 +112,31 @@ resource "flexibleengine_compute_interface_attach_v2" "example_interface_attach_
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the interface attachment.
+* `region` - (Optional, String, ForceNew) The region in which to create the interface attachment.
   If omitted, the `region` argument of the provider is used. Changing this creates a new attachment.
 
-* `instance_id` - (Required) The ID of the Instance to attach the Port or Network to.
+* `instance_id` - (Required, String, ForceNew) The ID of the Instance to attach the Port or Network to.
 
-* `port_id` - (Optional) The ID of the Port to attach to an Instance.
+* `port_id` - (Optional, String, ForceNew) The ID of the Port to attach to an Instance.
   This option and `network_id` are mutually exclusive.
 
-* `network_id` - (Optional) The ID of the Network to attach to an Instance. A port will be created automatically.
-  This option and `port_id` are mutually exclusive.
+* `network_id` - (Optional, String, ForceNew) The ID of the Network to attach to an Instance.
+  A port will be created automatically. This option and `port_id` are mutually exclusive.
 
-* `fixed_ip` - (Optional) An IP address to assosciate with the port.
+* `fixed_ip` - (Optional, String, ForceNew) An IP address to associate with the port.
   This option cannot be used with port_id. You must specify a network_id.
   The IP address must lie in a range on the supplied network.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+All the arguments above can also be exported attributes.
 
-* `region` - See Argument Reference above.
-* `instance_id` - See Argument Reference above.
-* `port_id` - See Argument Reference above.
-* `network_id` - See Argument Reference above.
-* `fixed_ip`  - See Argument Reference above.
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
