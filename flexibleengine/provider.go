@@ -14,6 +14,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/aom"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/apig"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/apigateway"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/as"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
@@ -474,19 +475,28 @@ func Provider() *schema.Provider {
 			// importing new resource
 			"flexibleengine_aom_service_discovery_rule": aom.ResourceServiceDiscoveryRule(),
 
+			"flexibleengine_apig_acl_policy":                  apig.ResourceAclPolicy(),
+			"flexibleengine_apig_acl_policy_associate":        apig.ResourceAclPolicyAssociate(),
 			"flexibleengine_apig_api":                         apig.ResourceApigAPIV2(),
 			"flexibleengine_apig_api_publishment":             apig.ResourceApigApiPublishment(),
 			"flexibleengine_apig_instance":                    apig.ResourceApigInstanceV2(),
+			"flexibleengine_apig_instance_routes":             apig.ResourceInstanceRoutes(),
+			"flexibleengine_apig_appcode":                     apig.ResourceAppcode(),
 			"flexibleengine_apig_application":                 apig.ResourceApigApplicationV2(),
+			"flexibleengine_apig_application_authorization":   apig.ResourceAppAuth(),
+			"flexibleengine_apig_channel":                     apig.ResourceChannel(),
 			"flexibleengine_apig_custom_authorizer":           apig.ResourceApigCustomAuthorizerV2(),
 			"flexibleengine_apig_environment":                 apig.ResourceApigEnvironmentV2(),
 			"flexibleengine_apig_group":                       apig.ResourceApigGroupV2(),
 			"flexibleengine_apig_response":                    apig.ResourceApigResponseV2(),
+			"flexibleengine_apig_signature_associate":         apig.ResourceSignatureAssociate(),
+			"flexibleengine_apig_signature":                   apig.ResourceSignature(),
 			"flexibleengine_apig_throttling_policy_associate": apig.ResourceThrottlingPolicyAssociate(),
 			"flexibleengine_apig_throttling_policy":           apig.ResourceApigThrottlingPolicyV2(),
 
-			"flexibleengine_api_gateway_api":   huaweicloud.ResourceAPIGatewayAPI(),
-			"flexibleengine_api_gateway_group": huaweicloud.ResourceAPIGatewayGroup(),
+			"flexibleengine_api_gateway_api":         huaweicloud.ResourceAPIGatewayAPI(),
+			"flexibleengine_api_gateway_environment": apigateway.ResourceEnvironment(),
+			"flexibleengine_api_gateway_group":       huaweicloud.ResourceAPIGatewayGroup(),
 
 			"flexibleengine_as_instance_attach": as.ResourceASInstanceAttach(),
 			"flexibleengine_as_notification":    as.ResourceAsNotification(),

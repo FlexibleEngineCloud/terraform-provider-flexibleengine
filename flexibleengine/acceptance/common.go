@@ -55,7 +55,7 @@ data "flexibleengine_compute_flavors_v2" "test" {
   memory_size       = 4
 }
 
-data "flexibleengine_images_image" "test" {
+data "flexibleengine_images_image_v2" "test" {
   name = "OBS Ubuntu 18.04"
 }
 `, testBaseNetwork(name))
