@@ -320,6 +320,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
 
+			"flexibleengine_obs_bucket_object": obs.DataSourceObsBucketObject(),
+
 			// importing existing data source
 			"flexibleengine_rds_flavors_v3": rds.DataSourceRdsFlavor(), // v1.34.0
 
