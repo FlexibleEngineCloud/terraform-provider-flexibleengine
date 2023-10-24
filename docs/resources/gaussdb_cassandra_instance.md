@@ -93,13 +93,15 @@ The following arguments are supported:
 * `force_import` - (Optional, Bool) If specified, try to import the instance instead of creating if the name already
   existed.
 
-* `datastore` - (Optional, List, ForceNew) Specifies the database information. Structure is documented below. Changing
-  this parameter will create a new resource.
+* `datastore` - (Optional, List, ForceNew) Specifies the database information. The [datastore](#gaussdb_datastore)
+  object structure is documented below. Changing this parameter will create a new resource.
 
-* `backup_strategy` - (Optional, List) Specifies the advanced backup policy. Structure is documented below.
+* `backup_strategy` - (Optional, List) Specifies the advanced backup policy. The [backup_strategy](#gaussdb_backup_strategy)
+  object structure is documented below.
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the instance.
 
+<a name="gaussdb_datastore"></a>
 The `datastore` block supports:
 
 * `engine` - (Required, String, ForceNew) Specifies the database engine. Only "GeminiDB-Cassandra" is supported now.
@@ -111,6 +113,7 @@ The `datastore` block supports:
 * `storage_engine` - (Required, String, ForceNew) Specifies the storage engine. Only "rocksDB" is supported now.
   Changing this parameter will create a new resource.
 
+<a name="gaussdb_backup_strategy"></a>
 The `backup_strategy` block supports:
 
 * `start_time` - (Required, String) Specifies the backup time window. Automated backups will be triggered during the
@@ -127,21 +130,34 @@ The `backup_strategy` block supports:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - Indicates the DB instance ID.
+
 * `status` - Indicates the DB instance status.
+
 * `port` - Indicates the database port.
+
 * `mode` - Indicates the instance type.
+
 * `db_user_name` - Indicates the default username.
-* `nodes` - Indicates the instance nodes information. Structure is documented below.
+
+* `nodes` - Indicates the instance nodes information. The [nodes](#gaussdb_nodes) object structure is documented below.
+
 * `private_ips` - Indicates the IP address list of the db.
+
 * `lb_ip_address` - Indicates the LB IP address of the db.
+
 * `lb_port` - Indicates the LB port of the db.
 
-The `nodes` block contains:
+<a name="gaussdb_nodes"></a>
+The `nodes` block supports:
 
 * `id` - Indicates the node ID.
+
 * `name` - Indicates the node name.
+
 * `status` - Indicates the node status.
+
 * `support_reduce` - Indicates whether the node support reduce or not.
+
 * `private_ip` - Indicates the private IP address of a node.
 
 ## Timeouts
