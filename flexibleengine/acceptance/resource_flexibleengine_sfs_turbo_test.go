@@ -164,13 +164,14 @@ func testAccSFSTurbo_basic(suffix string) string {
 data "flexibleengine_availability_zones" "myaz" {}
 
 resource "flexibleengine_sfs_turbo" "sfs-turbo1" {
-  name              = "sfs-turbo-acc-%s"
-  size              = 500
-  share_proto       = "NFS"
-  vpc_id            = flexibleengine_vpc_v1.test.id
-  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
-  security_group_id = flexibleengine_networking_secgroup_v2.secgroup.id
-  availability_zone = data.flexibleengine_availability_zones.myaz.names[0]
+  name                  = "sfs-turbo-acc-%s"
+  size                  = 500
+  share_proto           = "NFS"
+  vpc_id                = flexibleengine_vpc_v1.test.id
+  subnet_id             = flexibleengine_vpc_subnet_v1.test.id
+  security_group_id     = flexibleengine_networking_secgroup_v2.secgroup.id
+  availability_zone     = data.flexibleengine_availability_zones.myaz.names[0]
+  enterprise_project_id = "0"
 
   tags = {
     foo = "bar"
