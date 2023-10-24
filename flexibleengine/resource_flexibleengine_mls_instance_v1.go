@@ -87,7 +87,6 @@ func resourceMlsInstanceV1() *schema.Resource {
 									},
 									"eip_id": {
 										Type:     schema.TypeString,
-										Optional: true,
 										Computed: true,
 									},
 								},
@@ -139,31 +138,26 @@ func resourceMlsInstanceV1() *schema.Resource {
 
 			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 
 			"inner_endpoint": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 
 			"public_endpoint": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 
 			"created": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 
 			"updated": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 		},

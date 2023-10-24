@@ -75,90 +75,104 @@ resource "flexibleengine_mls_instance_v1" "instance" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to create the MLS instance. If
-    omitted, the `region` argument of the provider is used. Changing this
-    creates a new instance.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the MLS instance resource.
+  If omitted, the provider-level region will be used. Changing this will create a new MLS instance resource.
 
-* `name` - (Required) Specifies the MLS instance name. The DB instance name of
-    the same type is unique in the same tenant. Changing this creates a new instance.
+* `name` - (Required, String, ForceNew) Specifies the MLS instance name. The DB instance name of
+  the same type is unique in the same tenant. Changing this creates a new instance.
 
-* `version` - (Required) Specifies MLS Software version, only `1.2.0` is supported now.
+* `version` - (Required, String, ForceNew) Specifies MLS Software version, only `1.2.0` is supported now.
   Changing this creates a new instance.
 
-* `network` - (Required) Specifies the instance network information. The structure
-  is described below. Changing this creates a new instance.
+* `network` - (Required, List, ForceNew) Specifies the instance network information. The [network](#mls_network)
+  object structure is documented below. Changing this creates a new instance.
 
-* `agency` - (Optional) Specifies the agency name. This parameter is mandatory only
+* `agency` - (Optional, String, ForceNew) Specifies the agency name. This parameter is mandatory only
   when you bind an instance to an elastic IP address (EIP). An instance must be
-  bound to an EIP to grant MLS rights to abtain a tenant's token. NOTE: The tenant
+  bound to an EIP to grant MLS rights to obtain a tenant's token. NOTE: The tenant
   must create an agency on the Identity and Access Management (IAM) interface in
   advance. Changing this creates a new instance.
 
-* `flavor` - (Required) Specifies the instance flavor, only `mls.c2.2xlarge.common`
+* `flavor` - (Required, String, ForceNew) Specifies the instance flavor, only `mls.c2.2xlarge.common`
   is supported now. Changing this creates a new instance.
 
-* `mrs_cluster` - (Required) Specifies the MRS cluster information which the instance
-  is associated. The structure is described below. NOTE: The current MRS instance
-  requires an MRS cluster whose version is 1.3.0 and that is configured with the
+* `mrs_cluster` - (Required, List, ForceNew) Specifies the MRS cluster information which the instance
+  is associated. The [mrs_cluster](#mls_mrs_cluster) object structure is documented below.
+  NOTE: The current MRS instance requires an MRS cluster whose version is 1.3.0 and that is configured with the
   Spark component. MRS clusters whose version is not 1.3.0 or that are not configured
   with the Spark component cannot be selected. Changing this creates a new instance.
 
+<a name="mls_network"></a>
 The `network` block supports:
 
-* `vpc_id` - (Required) Specifies the ID of the virtual private cloud (VPC) where the
+* `vpc_id` - (Required, String, ForceNew) Specifies the ID of the virtual private cloud (VPC) where the
   instance resides. Changing this creates a new instance.
 
-* `subnet_id` - (Required) Specifies the ID of the VPC Subnet where the instance resides.
+* `subnet_id` - (Required, String, ForceNew) Specifies the ID of the VPC Subnet where the instance resides.
   Changing this creates a new instance.
 
-* `security_group` - (Optional) Specifies the ID of the security group of the instance.
+* `security_group` - (Optional, String, ForceNew) Specifies the ID of the security group of the instance.
   Changing this creates a new instance.
 
-* `available_zone` - (Required) Specifies the AZ of the instance.
+* `available_zone` - (Required, String, ForceNew) Specifies the AZ of the instance.
   Changing this creates a new instance.
 
-* `public_ip` - (Required) Specifies the IP address of the instance. The structure is
-  described below. Changing this creates a new instance.
+* `public_ip` - (Required, List, ForceNew) Specifies the IP address of the instance. The [public_ip](#mls_public_ip)
+  object structure is documented below. Changing this creates a new instance.
 
+<a name="mls_public_ip"></a>
 The `public_ip` block supports:
 
-* `bind_type` - (Required) Specifies the bind type. Possible values: `auto_assign` and
+* `bind_type` - (Required, String, ForceNew) Specifies the bind type. Possible values: `auto_assign` and
   `not_use`. Changing this creates a new instance.
 
+<a name="mls_mrs_cluster"></a>
 The `mrs_cluster` block supports:
 
-* `id` - (Required) Specifies the ID of the MRS cluster. Changing this creates a new instance.
+* `id` - (Required, String, ForceNew) Specifies the ID of the MRS cluster. Changing this creates a new instance.
 
-* `user_name` - (Optional) Specifies the MRS cluster username. This parameter is mandatory
+* `user_name` - (Optional, String) Specifies the MRS cluster username. This parameter is mandatory
   only when the MRS cluster is in the security mode. Changing this creates a new instance.
 
-* `user_password` - (Optional) Specifies the password of the MRS cluster user. The password
+* `user_password` - (Optional, String) Specifies the password of the MRS cluster user. The password
   and username work in a pair. Changing this creates a new instance.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `region` - See Argument Reference above.
-* `name` - See Argument Reference above.
-* `version` - See Argument Reference above.
-* `agency` - See Argument Reference above.
-* `flavor` - See Argument Reference above.
-* `network/vpc_id` - See Argument Reference above.
-* `network/subnet_id` - See Argument Reference above.
-* `network/security_group` - See Argument Reference above.
-* `network/available_zone` - See Argument Reference above.
-* `network/public_ip/bind_type` - See Argument Reference above.
-* `network/public_ip/eip_id` - Indicates the EIP ID, This is returned only when bind_type is
-  set to auto_assign.
-* `mrs_cluster` - See Argument Reference above.
 * `status` - Indicates the MLS instance status.
+
 * `inner_endpoint` - Indicates the URL for accessing the instance. Only machines in the same
   VPC and subnet as the instance can access the URL.
+
 * `public_endpoint` - Indicates the URL for accessing the instance. The URL can be accessed
   from the Internet. The URL is created only after the instance is bound to an EIP.
+
+* `network` - Specifies the instance network information. The [network](#mls_attr_network)
+  object structure is documented below.
+
 * `created` - Indicates the creation time in the following format: yyyy-mm-dd Thh:mm:ssZ.
+
 * `updated` - Indicates the update time in the following format: yyyy-mm-dd Thh:mm:ssZ.
+
+<a name="mls_attr_network"></a>
+The `network` block supports:
+
+* `public_ip` - Specifies the IP address of the instance. The [public_ip](#mls_attr_public_ip)
+  object structure is documented below.
+
+<a name="mls_attr_public_ip"></a>
+The `public_ip` block supports:
+
+* `eip_id` - Indicates the EIP ID, This is returned only when bind_type is set to auto_assign.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
