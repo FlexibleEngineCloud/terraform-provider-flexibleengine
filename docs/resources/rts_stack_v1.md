@@ -78,25 +78,31 @@ STACK
 
 The following arguments are supported:
 
-* `name` - (Required) A unique name for the stack. The value must meet the regular expression rule (`^[a-zA-Z][a-zA-Z0-9_.-]{0,254}$`).
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RTS stack resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RTS stack resource.
+
+* `name` - (Required, String, ForceNew) Specifies the name of the resource stack.
+  The valid length is limited from can contain 1 to 64, only letters, digits and hyphens (-) are allowed.
+  The name must start with a lowercase letter and end with a lowercase letter or digit.
   Changing this creates a new stack.
 
-* `template_body` - (Optional; Required if `template_url` is empty) Structure containing the template body.
-  The template content must use the yaml syntax.
+* `template_body` - (Optional, String) Structure containing the template body. The template content must use the yaml
+  syntax.  It is **Required** if `template_url` is empty.
 
-* `template_url` - (Optional; Required if `template_body` is empty) Location of a file containing the template body.
+* `template_url` - (Optional, String) Location of a file containing the template body. It is **Required** if
+  `template_body` is empty
 
-* `environment` - (Optional) Tthe environment information about the stack.
+* `environment` - (Optional, String) The environment information about the stack.
 
-* `files` - (Optional) Files used in the environment.
+* `files` - (Optional, Map) Files used in the environment.
 
-* `parameters` - (Optional) A list of Parameter structures that specify input parameters for the stack.
+* `parameters` - (Optional, Map) A list of Parameter structures that specify input parameters for the stack.
 
-* `disable_rollback` - (Optional) Set to true to disable rollback of the stack if stack creation failed.
+* `disable_rollback` - (Optional, Bool) Set to true to disable rollback of the stack if stack creation failed.
 
-* `timeout_mins` - (Optional) Specifies the timeout duration.
+* `timeout_mins` - (Optional, Int) Specifies the timeout duration.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
