@@ -49,8 +49,8 @@ resource "flexibleengine_waf_dedicated_instance" "instance_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the WAF dedicated instance. If omitted, the
-  provider-level region will be used. Changing this setting will create a new instance.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the WAF dedicated instance resource.
+  If omitted, the provider-level region will be used. Changing this will create a new WAF dedicated instance resource.
 
 * `name` - (Required, String) The name of WAF dedicated instance. Duplicate names are allowed, we suggest to keeping the
   name unique.
@@ -84,7 +84,7 @@ The following arguments are supported:
 * `group_id` - (Optional, String, ForceNew) The instance group ID used by the WAF dedicated instance in ELB mode.
   Changing this will create a new instance.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -109,8 +109,8 @@ The following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 30 minute.
-* `delete` - Default is 20 minute.
+* `create` - Default is 30 minutes.
+* `delete` - Default is 20 minutes.
 
 ## Import
 

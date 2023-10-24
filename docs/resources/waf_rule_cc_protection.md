@@ -64,12 +64,13 @@ The following arguments are supported:
 
 * `block_time` - (Optional, Int) Specifies the lock duration. The value ranges from 0 seconds to 2^32 seconds.
 
-* `block_page_type` - (Optional, String) Specifies the type of the returned page.
-  The options are `application/json`, `text/html`, and `text/xml`.
+* `block_page_type` - (Optional, String, ForceNew) Specifies the type of the returned page.
+  The options are `application/json`, `text/html`, and `text/xml`. Changing this will create a new resource.
 
-* `block_page_content` - (Optional, String) Specifies the content of the returned page.
+* `block_page_content` - (Optional, String, ForceNew) Specifies the content of the returned page. Changing this will
+  create a new resource.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 

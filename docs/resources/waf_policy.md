@@ -20,6 +20,9 @@ resource "flexibleengine_waf_policy" "policy_1" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the WAF policy resource.
+  If omitted, the provider-level region will be used. Changing this will create a new WAF policy resource.
+
 * `name` - (Required, String) Specifies the policy name. The maximum length is 256 characters.
   Only digits, letters, underscores(_), and hyphens(-) are allowed.
 
@@ -40,41 +43,50 @@ The following arguments are supported:
 
 * `domains` - (Optional, List) An array of domain IDs.
 
-* `protection_status` - (Optional, Object) Specifies the protection switches. The object structure is documented below.
+* `protection_status` - (Optional, List) Specifies the protection switches. The [protection_status](#waf_protection_status)
+  object structure is documented below.
 
+<a name="waf_protection_status"></a>
 The `protection_status` block supports:
 
-* `basic_web_protection` - Specifies whether Basic Web Protection is enabled.
+* `basic_web_protection` - (Optional, Bool) Specifies whether Basic Web Protection is enabled.
 
-* `general_check` - Specifies whether General Check in Basic Web Protection is enabled.
+* `general_check` - (Optional, Bool) Specifies whether General Check in Basic Web Protection is enabled.
 
-* `crawler_engine` - Specifies whether the Search Engine switch in Basic Web Protection is enabled.
+* `crawler_engine` - (Optional, Bool) Specifies whether the Search Engine switch in Basic Web Protection is enabled.
 
-* `crawler_scanner` - Specifies whether the Scanner switch in Basic Web Protection is enabled.
+* `crawler_scanner` - (Optional, Bool) Specifies whether the Scanner switch in Basic Web Protection is enabled.
 
-* `crawler_script` - Specifies whether the Script Tool switch in Basic Web Protection is enabled.
+* `crawler_script` - (Optional, Bool) Specifies whether the Script Tool switch in Basic Web Protection is enabled.
 
-* `crawler_other` - Specifies whether detection of other crawlers in Basic Web Protection is enabled.
+* `crawler_other` - (Optional, Bool) Specifies whether detection of other crawlers in Basic Web Protection is enabled.
 
-* `webshell` - Specifies whether webshell detection in Basic Web Protection is enabled.
+* `webshell` - (Optional, Bool) Specifies whether webshell detection in Basic Web Protection is enabled.
 
-* `cc_protection` - Specifies whether CC Attack Protection is enabled.
+* `cc_protection` - (Optional, Bool) Specifies whether CC Attack Protection is enabled.
 
-* `precise_protection` - Specifies whether Precise Protection is enabled.
+* `precise_protection` - (Optional, Bool) Specifies whether Precise Protection is enabled.
 
-* `blacklist` - Specifies whether Blacklist and Whitelist is enabled.
+* `blacklist` - (Optional, Bool) Specifies whether Blacklist and Whitelist is enabled.
 
-* `data_masking` - Specifies whether Data Masking is enabled.
+* `data_masking` - (Optional, Bool) Specifies whether Data Masking is enabled.
 
-* `false_alarm_masking` - Specifies whether False Alarm Masking is enabled.
+* `false_alarm_masking` - (Optional, Bool) Specifies whether False Alarm Masking is enabled.
 
-* `web_tamper_protection` - Specifies whether Web Tamper Protection is enabled.
+* `web_tamper_protection` - (Optional, Bool) Specifies whether Web Tamper Protection is enabled.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The policy ID in UUID format.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

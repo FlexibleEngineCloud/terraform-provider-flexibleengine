@@ -60,14 +60,14 @@ resource "flexibleengine_waf_dedicated_domain" "domain_1" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the dedicated mode domain resource. If omitted,
-  the provider-level region will be used. Changing this setting will push a new domain.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the dedicated mode domain resource.
+  If omitted, the provider-level region will be used. Changing this will create a new dedicated mode domain resource.
 
 * `domain` - (Required, String, ForceNew) Specifies the domain name to be protected. For example, `www.example.com` or
   `*.example.com`. Changing this creates a new domain.
 
 * `server` - (Required, List, ForceNew) The server configuration list of the domain. A maximum of 80 can be configured.
-  The object structure is documented below.
+  The [server](#waf_server) object structure is documented below.
 
 * `certificate_id` - (Optional, String) Specifies the certificate ID. This parameter is mandatory when `client_protocol`
   is set to HTTPS.
@@ -87,6 +87,24 @@ The following arguments are supported:
 * `protect_status` - (Optional, Int) The protection status of domain, `0`: suspended, `1`: enabled.
   Default value is `1`.
 
+* `tls` - (Optional, String) Specifies the minimum required TLS version. The options include `TLS v1.0`, `TLS v1.1`,
+  `TLS v1.2`.
+
+* `cipher` - (Optional, String) Specifies the cipher suite of domain. The options include `cipher_1`, `cipher_2`,
+  `cipher_3`, `cipher_4`, `cipher_default`.
+
+* `pci_3ds` - (Optional, Bool) Specifies the status of the PCI 3DS compliance certification check. The options
+  include `true` and `false`. This parameter must be used together with tls and cipher.
+
+  -> **NOTE:** Tls must be set to TLS v1.2, and cipher must be set to cipher_2. The PCI 3DS compliance certification
+  check cannot be disabled after being enabled.
+
+* `pci_dss` - (Optional, Bool) Specifies the status of the PCI DSS compliance certification check. The options
+  include `true` and `false`. This parameter must be used together with tls and cipher.
+
+  -> **NOTE:** Tls must be set to TLS v1.2, and cipher must be set to cipher_2.
+
+<a name="waf_server"></a>
 The `server` block supports:
 
 * `client_protocol` - (Required, String, ForceNew) Protocol type of the client. The options include `HTTP` and `HTTPS`.
@@ -106,7 +124,7 @@ The `server` block supports:
 * `port` - (Required, Int, ForceNew) Port number used by the web server. The value ranges from 0 to 65535. Changing this
   creates a new service.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
@@ -119,10 +137,6 @@ The following attributes are exported:
   + `1` - The domain name is connected to WAF.
 
 * `protocol` - The protocol type of the client. The options are `HTTP` and `HTTPS`.
-
-* `tls` - The TLS configuration of domain.
-
-* `cihper` - The cipher suite of domain.
 
 * `compliance_certification` - The compliance certifications of the domain, values are:
   + `pci_dss` - The status of domain PCI DSS, `true`: enabled, `false`: disabled.
