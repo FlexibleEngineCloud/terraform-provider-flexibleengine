@@ -36,29 +36,40 @@ resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of a protection group.
+* `name` - (Required, String) The name of a protection group.
 
-* `description` - (Optional) The description of a protection group. Changing this creates a new group.
+* `description` - (Optional, String, ForceNew) The description of a protection group. Changing this creates a new group.
 
-* `source_availability_zone` - (Required) Specifies the source AZ of a protection group. Changing this creates a new group.
-
-* `target_availability_zone` - (Required) Specifies the target AZ of a protection group. Changing this creates a new group.
-
-* `domain_id` - (Required) Specifies the ID of an active-active domain. Changing this creates a new group.
-
-* `source_vpc_id` - (Required) Specifies the ID of the source VPC. Changing this creates a new group.
-
-* `dr_type` - (Optional) Specifies the deployment model. The default value is migration indicating migration within a VPC.
+* `source_availability_zone` - (Required, String, ForceNew) Specifies the source AZ of a protection group.
   Changing this creates a new group.
 
-* `enable` - (Optional) Enable protection or not. It can only be set to true when there's replication pairs within
+* `target_availability_zone` - (Required, String, ForceNew) Specifies the target AZ of a protection group.
+  Changing this creates a new group.
+
+* `domain_id` - (Required, String, ForceNew) Specifies the ID of an active-active domain.
+  Changing this creates a new group.
+
+* `source_vpc_id` - (Required, String, ForceNew) Specifies the ID of the source VPC.
+  Changing this creates a new group.
+
+* `dr_type` - (Optional, String, ForceNew) Specifies the deployment model. The default value is migration indicating
+  migration within a VPC. Changing this creates a new group.
+
+* `enable` - (Optional, Bool) Enable protection or not. It can only be set to true when there's replication pairs within
   the protection group.
 
-## Attributes Reference
+## Attribute Reference
 
 The following attributes are exported:
 
 * `id` -  ID of the protection group.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

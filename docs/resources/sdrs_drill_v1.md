@@ -46,24 +46,29 @@ resource "flexibleengine_sdrs_drill_v1" "drill_1" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of a DR drill. The name can contain a maximum of 64 bytes.
+* `name` - (Required, String) The name of a DR drill. The name can contain a maximum of 64 bytes.
   The value can contain only letters (a to z and A to Z), digits (0 to 9), decimal points (.),
   underscores (_), and hyphens (-).
 
-* `group_id` - (Required) Specifies the ID of a protection group. Changing this creates a new drill.
+* `group_id` - (Required, String, ForceNew) Specifies the ID of a protection group. Changing this creates a new drill.
 
-* `drill_vpc_id` - (Required) Specifies the ID used for a DR drill. Changing this creates a new drill.
+* `drill_vpc_id` - (Required, String, ForceNew) Specifies the ID used for a DR drill. Changing this creates a new drill.
 
-## Attributes Reference
+## Attribute Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` -  ID of a DR drill.
-* `name` - See Argument Reference above.
-* `group_id` - See Argument Reference above.
-* `drill_vpc_id` - See Argument Reference above.
+
 * `status` - The status of a DR drill.
   For details, see [DR Drill Status](https://docs.prod-cloud-ocb.orange-business.com/en-us/api/sdrs/en-us_topic_0126152933.html).
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

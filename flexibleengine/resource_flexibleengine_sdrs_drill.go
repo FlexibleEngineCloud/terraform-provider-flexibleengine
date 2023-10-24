@@ -43,7 +43,6 @@ func resourceSdrsDrillV1() *schema.Resource {
 			},
 			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 		},

@@ -18,12 +18,11 @@ data "flexibleengine_sdrs_domain_v1" "dom_1" {
 
 ## Argument Reference
 
-* `name` - (Optional) Specifies the name of an active-active domain. Currently only support SDRS_HypeDomain01.
+* `name` - (Optional, String) Specifies the name of an active-active domain. Currently only support SDRS_HypeDomain01.
 
-## Attributes Reference
+## Attribute Reference
 
 `id` is set to the ID of the active-active domain. In addition, the following attributes
 are exported:
 
-* `name` - See Argument Reference above.
 * `description` - Specifies the description of an active-active domain.

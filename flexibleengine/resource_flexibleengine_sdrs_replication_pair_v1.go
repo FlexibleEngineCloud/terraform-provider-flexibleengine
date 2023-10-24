@@ -57,22 +57,18 @@ func resourceSdrsReplicationPairV1() *schema.Resource {
 			// the following attributes are computed
 			"replication_model": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"fault_level": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 			"target_volume_id": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 		},
