@@ -24,8 +24,8 @@ resource "flexibleengine_rds_account" "test" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to create the rds account resource. If omitted, the
-  provider-level region will be used. Changing this creates a new resource.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RDS account resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RDS account resource.
 
 * `instance_id` - (Required, String, ForceNew) Specifies the rds instance id. Changing this will create a new resource.
 
@@ -38,11 +38,19 @@ The following arguments are supported:
   long and contain only letters(case-sensitive), digits, and special characters(~!@#$%^*-_=+?,()&). The value must be
   different from name or name spelled backwards.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID of account which is formatted `<instance_id>/<account_name>`.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

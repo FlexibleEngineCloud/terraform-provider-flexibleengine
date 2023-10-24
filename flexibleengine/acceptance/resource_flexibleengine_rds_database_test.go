@@ -105,6 +105,7 @@ resource "flexibleengine_rds_database" "test" {
   instance_id   = flexibleengine_rds_instance_v3.test.id
   name          = "%s"
   character_set = "utf8"
+  description   = "terraform script description"
 }
 `, testRdsAccount_base(rName), rName)
 }

@@ -156,6 +156,9 @@ resource "flexibleengine_rds_instance_v3" "instance" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RDS instance resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RDS instance resource.
+
 * `name` - (Required, String) Specifies the DB instance name. The DB instance name of the same type must be unique for
   the same tenant. The value must be 4 to 64 characters in length and start with a letter. It is case-sensitive and can
   contain only letters, digits, hyphens (-), and underscores (_).
@@ -167,8 +170,8 @@ The following arguments are supported:
 * `availability_zone` - (Required, List, ForceNew) Specifies the list of AZ name.
   Changing this parameter will create a new resource.
 
-* `db` - (Required, String, ForceNew) Specifies the database information. Structure is documented below.
-  Changing this parameter will create a new resource.
+* `db` - (Required, List, ForceNew) Specifies the database information. The [db](#rds_db) object structure is
+  documented below. Changing this parameter will create a new resource.
 
 * `vpc_id` - (Required, String, ForceNew) Specifies the VPC ID. Changing this parameter will create a new resource.
 
@@ -177,12 +180,13 @@ The following arguments are supported:
 
 * `security_group_id` - (Required, String) Specifies the security group which the RDS DB instance belongs to.
 
-* `volume` - (Required, List) Specifies the volume information. Structure is documented below.
+* `volume` - (Required, List) Specifies the volume information. The [volume](#rds_volume) object structure is
+  documented below.
 
-* `fixed_ip` - (Optional, String, ForceNew) Specifies an intranet IP address of RDS DB instance.
-  Changing this parameter will create a new resource.
+* `fixed_ip` - (Optional, String) Specifies an intranet IP address of RDS DB instance.
 
-* `backup_strategy` - (Optional, List) Specifies the advanced backup policy. Structure is documented below.
+* `backup_strategy` - (Optional, List) Specifies the advanced backup policy. The [backup_strategy](#rds_backup_strategy)
+  object structure is documented below.
 
 * `ha_replication_mode` - (Optional, String, ForceNew) Specifies the replication mode for the standby DB instance.
   Changing this parameter will create a new resource.
@@ -204,6 +208,11 @@ The following arguments are supported:
 * `tags` - (Optional, Map) A mapping of tags to assign to the RDS instance.
   Each tag is represented by one key-value pair.
 
+* `parameters` - (Optional, List) Specify an array of one or more parameters to be set to the RDS instance after
+  launched. You can check on console to see which parameters supported. The [parameters](#rds_parameters) object
+  structure is documented below.
+
+<a name="rds_db"></a>
 The `db` block supports:
 
 * `type` - (Required, String, ForceNew) Specifies the DB engine. Available value are *MySQL*, *PostgreSQL* and
@@ -215,20 +224,19 @@ The `db` block supports:
   databases support 2014 SE and 2014 EE, example values: "2014_SE", "2014_EE".
   Changing this parameter will create a new resource.
 
-* `password` - (Required, String, ForceNew) Specifies the database password. The value cannot be
-  empty and should contain 8 to 32 characters, including uppercase
-  and lowercase letters, digits, and the following special
-  characters: ~!@#%^*-_=+? You are advised to enter a strong
-  password to improve security, preventing security risks such as
-  brute force cracking.  Changing this parameter will create a new resource.
+* `password` - (Required, String) Specifies the database password. The value cannot be
+  empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following
+  special characters: ~!@#%^*-_=+? You are advised to enter a strong password to improve security, preventing security
+  risks such as brute force cracking.
 
 * `port` - (Optional, Int) Specifies the database port.
   + The MySQL database port ranges from 1024 to 65535 (excluding 12017 and 33071, which are occupied by the RDS system
       and cannot be used). The default value is 3306.
   + The PostgreSQL database port ranges from 2100 to 9500. The default value is 5432.
   + The Microsoft SQL Server database port can be 1433 or ranges from 2100 to 9500, excluding 5355 and 5985.
-      The default value is 1433.
+    The default value is 1433.
 
+<a name="rds_volume"></a>
 The `volume` block supports:
 
 * `size` - (Required, Int) Specifies the volume size. Its value range is from 40 GB to 4000 GB.
@@ -241,9 +249,10 @@ The `volume` block supports:
 
   Changing this parameter will create a new resource.
 
-* `disk_encryption_id` - (Optional, String) Specifies the key ID for disk encryption.
+* `disk_encryption_id` - (Optional, String, ForceNew) Specifies the key ID for disk encryption.
   Changing this parameter will create a new resource.
 
+<a name="rds_backup_strategy"></a>
 The `backup_strategy` block supports:
 
 * `keep_days` - (Optional, Int) Specifies the retention days for specific backup files. The value range is from 0 to
@@ -253,12 +262,19 @@ The `backup_strategy` block supports:
   policy.
 
 * `start_time` - (Required, String) Specifies the backup time window. Automated backups will be triggered during the
-  backup time window. It must be a valid value in the **hh:mm-HH:MM**
-  format. The current time is in the UTC format. The HH value must be 1 greater than the hh value. The values of mm and
-  MM must be the same and must be set to any of the following: 00, 15, 30, or 45. Example value: 08:15-09:15 23:00-00:
-  00.
+  backup time window. It must be a valid value in the **hh:mm-HH:MM** format. The current time is in the UTC format.
+  The HH value must be 1 greater than the hh value. The values of mm and MM must be the same and must be set to any
+  of the following: 00, 15, 30, or 45. Example value: 08:15-09:15 23:00-00:00.
 
-## Attributes Reference
+<a name="rds_parameters"></a>
+The `parameters` block supports:
+
+* `name` - (Required, String) Specifies the parameter name. Some of them needs the instance to be restarted
+  to take effect.
+
+* `value` - (Required, String) Specifies the parameter value.
+
+## Attribute Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
@@ -268,18 +284,17 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `created` - Indicates the creation time.
 
-* `nodes` - Indicates the instance nodes information. Structure is documented below.
+* `nodes` - Indicates the instance nodes information. The [nodes](#rds_attr_nodes) object structure is documented below.
 
 * `private_ips` - Indicates the private IP address list.
   It is a blank string until an ECS is created.
 
 * `public_ips` - Indicates the public IP address list.
 
-* `db` - See Argument Reference above. The `db` block also contains:
+* `db` - See Argument Reference above. The [db](#rds_attr_db) object structure is documented below.
 
-  + `user_name` - Indicates the default user name of database.
-
-The `nodes` block contains:
+<a name="rds_attr_nodes"></a>
+The `nodes` block supports:
 
 * `availability_zone` - Indicates the AZ.
 
@@ -292,12 +307,18 @@ The `nodes` block contains:
 
 * `status` - Indicates the node status.
 
+<a name="rds_attr_db"></a>
+The `db` block supports:
+
+* `user_name` - Indicates the default username of database.
+
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 30 minute.
-* `update` - Default is 30 minute.
+* `create` - Default is 30 minutes.
+* `update` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 
@@ -307,7 +328,7 @@ RDS instance can be imported using the `id`, e.g.
 terraform import flexibleengine_rds_instance_v3.instance_1 7117d38e-4c8f-4624-a505-bd96b97d024c
 ```
 
-But due to some attrubutes missing from the API response, it's required to ignore changes as below.
+But due to some attributes missing from the API response, it's required to ignore changes as below.
 
 ```hcl
 resource "flexibleengine_rds_instance_v3" "instance_1" {

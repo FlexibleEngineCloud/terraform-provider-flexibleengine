@@ -68,45 +68,46 @@ resource "flexibleengine_rds_read_replica_v3" "instance_2" {
 
 The following arguments are supported:
 
-* `name` - (Required) Specifies the DB instance name.
-    The DB instance name of the same type must be unique for the
-    same tenant. The value must be 4 to 64 characters in length
-    and start with a letter. It is case-sensitive and can contain
-    only letters, digits, hyphens (-), and underscores (_).
-    Changing this parameter will create a new resource.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the RDS read replica resource.
+  If omitted, the provider-level region will be used. Changing this will create a new RDS read replica resource.
+  Currently, read replicas can be created only in the same region as that of the primary DB instance.
 
-* `flavor` - (Required) Specifies the specification code.
+* `name` - (Required, String, ForceNew) Specifies the DB instance name. The DB instance name of the same type must be
+  unique for the same tenant. The value must be 4 to 64 characters in length and start with a letter. It is
+  case-sensitive and can contain only letters, digits, hyphens (-), and underscores (_).
+  Changing this parameter will create a new resource.
 
-* `replica_of_id` - (Required) Specifies the DB instance ID, which is used to
-    create a read replica. Changing this parameter will create a new resource.
+* `flavor` - (Required, String) Specifies the specification code.
 
-* `volume` - (Required) Specifies the volume information. Structure is documented below.
-    Changing this parameter will create a new resource.
+* `replica_of_id` - (Required, String, ForceNew) Specifies the DB instance ID, which is used to create a read replica.
+  Changing this parameter will create a new resource.
 
-* `availability_zone` - (Required) Specifies the AZ name.
-    Changing this parameter will create a new resource.
+* `volume` - (Required, List, ForceNew) Specifies the volume information. The [volume](#rds_volume) object structure is
+  documented below. Changing this parameter will create a new resource.
 
-* `tags` - (Optional) A mapping of tags to assign to the RDS read replica instance.
-    Each tag is represented by one key-value pair.
+* `availability_zone` - (Required, String, ForceNew) Specifies the AZ name.
+  Changing this parameter will create a new resource.
 
-* `region` - (Optional) The region in which to create the instance. If omitted,
-    the `region` argument of the provider is used. Currently, read replicas can
-    be created only in the same region as that of the promary DB instance.
-    Changing this parameter will create a new resource.
+* `tags` - (Optional, Map) A mapping of tags to assign to the RDS read replica instance.
+  Each tag is represented by one key-value pair.
 
+<a name="rds_volume"></a>
 The `volume` block supports:
 
-* `type` - (Required) Specifies the volume type. Its value can be any of the following
-    and is case-sensitive:
-    - ULTRAHIGH: indicates the SSD type.
-    - ULTRAHIGHPRO: indicates the ultra-high I/O.
+* `type` - (Required, String, ForceNew) Specifies the volume type. Its value can be any of the following
+  and is case-sensitive:
+  - ULTRAHIGH: indicates the SSD type.
+  - ULTRAHIGHPRO: indicates the ultra-high I/O.
 
-    Changing this parameter will create a new resource.
+  Changing this parameter will create a new resource.
 
-* `disk_encryption_id` -  (Optional) Specifies the key ID for disk encryption.
-    Changing this parameter will create a new resource.
+* `disk_encryption_id` -  (Optional, String, ForceNew) Specifies the key ID for disk encryption.
+  Changing this parameter will create a new resource.
 
-## Attributes Reference
+* `size` - (Optional, Int) Specifies the volume size. Its value range is from **40** GB to **4000** GB. The value must
+  be a multiple of 10 and greater than the original size.
+
+## Attribute Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
@@ -114,7 +115,9 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `status` - Indicates the instance status.
 
-* `db` - Indicates the database information. Structure is documented below.
+* `type` -  Indicates the type of the read replica instance.
+
+* `db` - Indicates the database information. The [db](#rds_db) object structure is documented below.
 
 * `private_ips` - Indicates the private IP address list.
 
@@ -126,15 +129,23 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `vpc_id` - Indicates the VPC ID.
 
+<a name="rds_db"></a>
 The `db` block supports:
 
 * `port` - Indicates the database port information.
 
 * `type` - Indicates the DB engine. Value: MySQL, PostgreSQL, SQLServer.
 
-* `user_name` - Indicates the default user name of database.
+* `user_name` - Indicates the default username of database.
 
 * `version` - Indicates the database version.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 30 minutes.
+* `delete` - Default is 30 minutes.
 
 ## Import
 

@@ -36,6 +36,8 @@ func TestAccRdsInstanceV3_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "volume.0.size", "60"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
+					resource.TestCheckResourceAttr(resourceName, "parameters.0.name", "div_precision_increment"),
+					resource.TestCheckResourceAttr(resourceName, "parameters.0.value", "12"),
 					resource.TestCheckResourceAttrSet(resourceName, "fixed_ip"),
 				),
 			},
@@ -169,6 +171,11 @@ resource "flexibleengine_rds_instance_v3" "instance" {
   backup_strategy {
     start_time = "08:00-09:00"
     keep_days  = 1
+  }
+
+  parameters {
+    name  = "div_precision_increment"
+    value = "12"
   }
 
   tags = {
