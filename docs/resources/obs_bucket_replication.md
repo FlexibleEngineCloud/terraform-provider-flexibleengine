@@ -47,34 +47,45 @@ resource "flexibleengine_obs_bucket_replication" "replica" {
 
 The following arguments are supported:
 
-* `bucket` - (Required) Specifies the name of the source bucket. Changing this parameter will create a new resource.
+* `bucket` - (Required, String, ForceNew) Specifies the name of the source bucket. Changing this parameter will create
+  a new resource.
 
-* `destination_bucket` - (Required) Specifies the name of the destination bucket.
+* `destination_bucket` - (Required, String) Specifies the name of the destination bucket.
 
   -> The destination bucket cannot be in the region where the source bucket resides.
 
-* `agency` - (Required) Specifies the IAM agency applied to the cross-region replication function.
+* `agency` - (Required, String) Specifies the IAM agency applied to the cross-region replication function.
 
   -> The IAM agency is a cloud service agency of OBS. The OBS project must have the **OBS FullAccess** permissions.
 
-* `rule` - (Optional) A configuration of object cross-region replication management. The object supports the following:
+* `rule` - (Optional, List) A configuration of object cross-region replication management.
+  The [rule](#obs_arg_rule) object structure is documented below.
 
-  + `enabled` - (Optional) Specifies cross-region replication rule status. Defaults to `true`.
+<a name="obs_arg_rule"></a>
+The `rule` block supports:
 
-  + `prefix` - (Optional) Specifies the object key prefix identifying one or more objects to which the rule applies and
-    duplicated prefixes are not supported. If omitted, all objects in the bucket will be managed by the lifecycle rule.
-    To copy a folder, end the prefix with a slash (/), for example, imgs/.
+* `enabled` - (Optional, Bool) Specifies cross-region replication rule status. Defaults to `true`.
 
-  + `storage_class` - (Optional) Specifies the storage class for replicated objects. Valid values are "STANDARD",
-    "WARM" (Infrequent Access) and "COLD" (Archive).
-    If omitted, the storage class of object copies is the same as that of objects in the source bucket.
+* `prefix` - (Optional, String) Specifies the object key prefix identifying one or more objects to which the rule
+  applies and duplicated prefixes are not supported. If omitted, all objects in the bucket will be managed by the
+  lifecycle rule. To copy a folder, end the prefix with a slash (/), for example, imgs/.
 
-## Attributes Reference
+* `storage_class` - (Optional, String) Specifies the storage class for replicated objects. Valid values are "STANDARD",
+  "WARM" (Infrequent Access) and "COLD" (Archive).
+  If omitted, the storage class of object copies is the same as that of objects in the source bucket.
+
+## Attribute Reference
 
 The following attributes are exported:
 
 * `id` - The name of the bucket.
-* `rule/id` - The ID of a rule in UUID format.
+
+* `rule` - See Argument Reference above. The [rule](#obs_attr_rule) object structure is documented below.
+
+<a name="obs_attr_rule"></a>
+The `rule` block supports:
+
+* `id` - The ID of a rule in UUID format.
 
 ## Import
 
