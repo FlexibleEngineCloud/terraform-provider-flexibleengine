@@ -20,6 +20,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/css"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dcs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ddm"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
@@ -293,6 +294,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cce_nodes":    cce.DataSourceNodes(),
 
 			"flexibleengine_compute_servergroups": ecs.DataSourceComputeServerGroups(),
+
+			"flexibleengine_css_flavors": css.DataSourceCssFlavors(),
 
 			"flexibleengine_dcs_flavors":   dcs.DataSourceDcsFlavorsV2(),
 			"flexibleengine_dcs_instances": dcs.DataSourceDcsInstance(),
