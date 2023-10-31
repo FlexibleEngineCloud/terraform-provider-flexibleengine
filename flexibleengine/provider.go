@@ -316,9 +316,15 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_image":  ims.DataSourceImagesImageV2(),
 			"flexibleengine_images_images": ims.DataSourceImagesImages(),
 
-			"flexibleengine_networking_port":    vpc.DataSourceNetworkingPortV2(),
-			"flexibleengine_identity_group":     iam.DataSourceIdentityGroup(),
-			"flexibleengine_identity_users":     iam.DataSourceIdentityUsers(),
+			"flexibleengine_networking_port": vpc.DataSourceNetworkingPortV2(),
+			"flexibleengine_identity_group":  iam.DataSourceIdentityGroup(),
+			"flexibleengine_identity_users":  iam.DataSourceIdentityUsers(),
+
+			"flexibleengine_rds_backups":         rds.DataSourceBackup(),
+			"flexibleengine_rds_engine_versions": rds.DataSourceRdsEngineVersionsV3(),
+			"flexibleengine_rds_instances":       rds.DataSourceRdsInstances(),
+			"flexibleengine_rds_storage_types":   rds.DataSourceStoragetype(),
+
 			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
 			"flexibleengine_sms_source_servers": sms.DataSourceServers(),
@@ -535,9 +541,13 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
 
-			"flexibleengine_rds_account":            rds.ResourceMysqlAccount(),
-			"flexibleengine_rds_database":           rds.ResourceMysqlDatabase(),
-			"flexibleengine_rds_database_privilege": rds.ResourceMysqlDatabasePrivilege(),
+			"flexibleengine_rds_account":                      rds.ResourceMysqlAccount(),
+			"flexibleengine_rds_backup":                       rds.ResourceBackup(),
+			"flexibleengine_rds_cross_region_backup_strategy": rds.ResourceBackupStrategy(),
+			"flexibleengine_rds_database":                     rds.ResourceMysqlDatabase(),
+			"flexibleengine_rds_database_privilege":           rds.ResourceMysqlDatabasePrivilege(),
+			"flexibleengine_rds_sql_audit":                    rds.ResourceSQLAudit(),
+
 			"flexibleengine_sms_server_template":    sms.ResourceServerTemplate(),
 			"flexibleengine_sms_task":               sms.ResourceMigrateTask(),
 			"flexibleengine_swr_organization":       swr.ResourceSWROrganization(),
