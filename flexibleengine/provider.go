@@ -9,10 +9,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/aom"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/apig"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/as"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
@@ -449,6 +449,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_queue":                          ResourceDliQueueV1(),
 
 			// importing new resource
+			"flexibleengine_aom_service_discovery_rule": aom.ResourceServiceDiscoveryRule(),
+
 			"flexibleengine_apig_api":                         apig.ResourceApigAPIV2(),
 			"flexibleengine_apig_api_publishment":             apig.ResourceApigApiPublishment(),
 			"flexibleengine_apig_instance":                    apig.ResourceApigInstanceV2(),
