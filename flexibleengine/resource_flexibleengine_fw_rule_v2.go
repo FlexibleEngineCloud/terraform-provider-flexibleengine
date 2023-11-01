@@ -70,14 +70,16 @@ func resourceFWRuleV2() *schema.Resource {
 				Default:  true,
 			},
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeString,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "tenant_id is deprecated",
 			},
 			"value_specs": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeMap,
+				Optional:   true,
+				ForceNew:   true,
+				Deprecated: "value_specs is deprecated",
 			},
 		},
 	}
