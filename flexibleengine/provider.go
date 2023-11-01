@@ -26,6 +26,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/drs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dws"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ecs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eip"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/elb"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/eps"
@@ -286,6 +287,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
 			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
 
+			"flexibleengine_compute_servergroups": ecs.DataSourceComputeServerGroups(),
+
 			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
 			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
 			"flexibleengine_ddm_instance_nodes": ddm.DataSourceDdmInstanceNodes(),
@@ -297,7 +300,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
 
-			"flexibleengine_dws_flavors":      dws.DataSourceDwsFlavors(),
+			"flexibleengine_dws_flavors": dws.DataSourceDwsFlavors(),
+
 			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
