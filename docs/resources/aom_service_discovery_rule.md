@@ -4,7 +4,7 @@ subcategory: "Application Operations Management (AOM)"
 
 # flexibleengine_aom_service_discovery_rule
 
-Manages an AOM service discovery rule resource within FlexibleEngineCloud.
+Manages an AOM service discovery rule resource within FlexibleEngine.
 
 ## Example Usage
 
