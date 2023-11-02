@@ -284,7 +284,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_enterprise_project": eps.DataSourceEnterpriseProject(),
 			"flexibleengine_cbr_vaults":         cbr.DataSourceVaults(),
 			"flexibleengine_cbr_backup":         cbr.DataSourceBackup(),
-			"flexibleengine_cce_clusters":       cce.DataSourceCCEClusters(),
+
+			"flexibleengine_cce_clusters": cce.DataSourceCCEClusters(),
+			"flexibleengine_cce_nodes":    cce.DataSourceNodes(),
 
 			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
 			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
