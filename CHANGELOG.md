@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 1.43.0 (November 3, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_dli_global_variable` [GH-1034]
+  - `flexibleengine_aom_service_discovery_rule` [GH-1036]
+
+* **New Data Source:**
+  - `flexibleengine_compute_servergroups` [GH-1037]
+  - `flexibleengine_gaussdb_cassandra_flavors` [GH-1040]
+  - `flexibleengine_cce_nodes` [GH-1060]
+
+BUG FIXES:
+
+* `resource/flexibleengine_cce_node_pool_v3`: `initial_node_count` should not trigger scale down [GH-975]
+
 ## 1.42.0 (September 28, 2023)
 
 FEATURES:
