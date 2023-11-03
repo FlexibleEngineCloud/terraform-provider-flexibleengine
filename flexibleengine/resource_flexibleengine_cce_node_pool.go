@@ -469,8 +469,6 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating Flexibleengine CCE client: %s", err)
 	}
 
-	specLogin := buildCCENodePoolLoginSpec(d)
-	rootVolume := resourceCCERootVolume(d)
 	updateOpts := nodepools.UpdateOpts{
 		Kind:       "NodePool",
 		ApiVersion: "v3",
@@ -487,18 +485,11 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 				Priority:              d.Get("priority").(int),
 			},
 			NodeTemplate: nodepools.UpdateNodeTemplate{
-				Flavor:      d.Get("flavor_id").(string),
-				Az:          d.Get("availability_zone").(string),
-				Login:       &specLogin,
-				RootVolume:  &rootVolume,
-				DataVolumes: resourceCCEDataVolume(d),
-				Count:       1,
 				K8sTags:     resourceCCENodeK8sTags(d),
 				UserTags:    resourceCCENodeUserTags(d),
 				Taints:      resourceCCETaint(d),
 				ExtendParam: resourceCCEExtendParam(d),
 			},
-			Type: d.Get("type").(string),
 		},
 	}
 
