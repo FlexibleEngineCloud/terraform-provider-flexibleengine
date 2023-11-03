@@ -52,7 +52,8 @@ The following arguments are supported:
 
 * `name` - (Required, String) Node Pool Name.
 
-* `initial_node_count` - (Required, Int) Initial number of expected nodes in the node pool.
+* `initial_node_count` - (Required, Int) Specifies the initial number of expected nodes in the node pool.
+  This parameter can be also used to manually scale the node count afterwards.
 
 * `flavor_id` - (Required, String, ForceNew) Specifies the flavor id. Changing this parameter will create a new resource.
 
@@ -162,6 +163,8 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - Specifies a resource ID in UUID format.
 
 * `status` -  Node status information.
+
+* `current_node_count` - The current number of the nodes.
 
 * `billing_mode` -  Billing mode of a node.
 

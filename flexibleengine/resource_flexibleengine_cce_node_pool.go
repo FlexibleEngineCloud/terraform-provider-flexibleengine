@@ -263,6 +263,10 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"current_node_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -412,11 +416,11 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("os", s.Spec.NodeTemplate.Os),
 		d.Set("billing_mode", s.Spec.NodeTemplate.BillingMode),
 		d.Set("key_pair", s.Spec.NodeTemplate.Login.SshKey),
-		d.Set("initial_node_count", s.Spec.InitialNodeCount),
 		d.Set("scale_enable", s.Spec.Autoscaling.Enable),
 		d.Set("scall_enable", s.Spec.Autoscaling.Enable),
 		d.Set("min_node_count", s.Spec.Autoscaling.MinNodeCount),
 		d.Set("max_node_count", s.Spec.Autoscaling.MaxNodeCount),
+		d.Set("current_node_count", s.Status.CurrentNode),
 		d.Set("scale_down_cooldown_time", s.Spec.Autoscaling.ScaleDownCooldownTime),
 		d.Set("priority", s.Spec.Autoscaling.Priority),
 		d.Set("type", s.Spec.Type),
@@ -465,8 +469,6 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error creating Flexibleengine CCE client: %s", err)
 	}
 
-	specLogin := buildCCENodePoolLoginSpec(d)
-	rootVolume := resourceCCERootVolume(d)
 	updateOpts := nodepools.UpdateOpts{
 		Kind:       "NodePool",
 		ApiVersion: "v3",
@@ -483,18 +485,11 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 				Priority:              d.Get("priority").(int),
 			},
 			NodeTemplate: nodepools.UpdateNodeTemplate{
-				Flavor:      d.Get("flavor_id").(string),
-				Az:          d.Get("availability_zone").(string),
-				Login:       &specLogin,
-				RootVolume:  &rootVolume,
-				DataVolumes: resourceCCEDataVolume(d),
-				Count:       1,
 				K8sTags:     resourceCCENodeK8sTags(d),
 				UserTags:    resourceCCENodeUserTags(d),
 				Taints:      resourceCCETaint(d),
 				ExtendParam: resourceCCEExtendParam(d),
 			},
-			Type: d.Get("type").(string),
 		},
 	}
 
