@@ -315,6 +315,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_sms_source_servers": sms.DataSourceServers(),
 			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
 
+			"flexibleengine_waf_certificate":         waf.DataSourceWafCertificateV1(),
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
