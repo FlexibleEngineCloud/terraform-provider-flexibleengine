@@ -14,11 +14,11 @@ Manages a **Dedicated** Load Balancer resource within FlexibleEngine.
 
 ```hcl
 data "flexibleengine_elb_flavors" "l7_flavors" {
-  type            = "L7"
+  type = "L7"
 }
 
 data "flexibleengine_elb_flavors" "l4_flavors" {
-  type            = "L4"
+  type = "L4"
 }
 
 resource "flexibleengine_vpc_v1" "example_vpc" {
@@ -55,11 +55,11 @@ resource "flexibleengine_lb_loadbalancer_v3" "basic" {
 
 ```hcl
 data "flexibleengine_elb_flavors" "l7_flavors" {
-  type            = "L7"
+  type = "L7"
 }
 
 data "flexibleengine_elb_flavors" "l4_flavors" {
-  type            = "L4"
+  type = "L4"
 }
 
 resource "flexibleengine_vpc_v1" "example_vpc" {
@@ -100,11 +100,11 @@ resource "flexibleengine_lb_loadbalancer_v3" "basic" {
 
 ```hcl
 data "flexibleengine_elb_flavors" "l7_flavors" {
-  type            = "L7"
+  type = "L7"
 }
 
 data "flexibleengine_elb_flavors" "l4_flavors" {
-  type            = "L4"
+  type = "L4"
 }
 
 resource "flexibleengine_vpc_v1" "example_vpc" {
@@ -175,7 +175,7 @@ The following arguments are supported:
 
 * `ipv4_eip_id` - (Optional, String, ForceNew) The ID of the EIP. Changing this parameter will create a new resource.
 
--> **NOTE:** If the ipv4_eip_id parameter is configured, you do not need to configure the bandwidth parameters:
+-> **NOTE:** If the `ipv4_eip_id` parameter is configured, you do not need to configure the bandwidth parameters:
   `iptype`, `bandwidth_charge_mode`, `bandwidth_size`, `share_type` and `bandwidth_id`.
 
 * `iptype` - (Optional, String, ForceNew) Elastic IP type. Changing this parameter will create a new resource.
@@ -209,10 +209,10 @@ The following arguments are supported:
 
 * `backend_subnets` - (Optional, List) The IDs of subnets on the downstream plane.
   + If this parameter is not specified, select subnets as follows:
-      - If IPv6 is enabled for a load balancer, the ID of subnet specified in `ipv6_network_id` will be used.
-      - If IPv4 is enabled for a load balancer, the ID of subnet specified in `ipv4_subnet_id` will be used.
-      - If only public network is available for a load balancer, the ID of any subnet in the VPC where the load balancer
-        resides will be used. Subnets with more IP addresses are preferred.
+    - If IPv6 is enabled for a load balancer, the ID of subnet specified in `ipv6_network_id` will be used.
+    - If IPv4 is enabled for a load balancer, the ID of subnet specified in `ipv4_subnet_id` will be used.
+    - If only public network is available for a load balancer, the ID of any subnet in the VPC where the load balancer
+      resides will be used. Subnets with more IP addresses are preferred.
   + If there is more than one subnet, the first subnet in the list will be used, and the subnets must be in the VPC
     where the load balancer resides.
 
@@ -259,7 +259,7 @@ terraform import flexibleengine_lb_loadbalancer_v3.loadbalancer_1 5c20fdad-7288-
 
 Note that the imported state may not be identical to your resource definition, due to some attributes missing from the
 API response, security or some other reason. The missing attributes include: `ipv6_bandwidth_id`, `iptype`,
-`bandwidth_charge_mode`, `sharetype`,  `bandwidth_size` and `bandwidth_id`.
+`bandwidth_charge_mode`, `sharetype`, `bandwidth_size` and `bandwidth_id`.
 It is generally recommended running `terraform plan` after importing a loadbalancer.
 You can then decide if changes should be applied to the loadbalancer, or the resource
 definition should be updated to align with the loadbalancer. Also, you can ignore changes as below.
