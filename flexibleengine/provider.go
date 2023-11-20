@@ -521,7 +521,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_table":                 dli.ResourceDliTable(),
 			"flexibleengine_dli_template_flink":        dli.ResourceFlinkTemplate(),
 
-			"flexibleengine_drs_job":        drs.ResourceDrsJob(),
+			"flexibleengine_drs_job": drs.ResourceDrsJob(),
+
 			"flexibleengine_fgs_dependency": fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":   fgs.ResourceFgsFunctionV2(),
 			"flexibleengine_fgs_trigger":    fgs.ResourceFunctionGraphTrigger(),
@@ -537,6 +538,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
 
 			"flexibleengine_kms_grant": dew.ResourceKmsGrant(),
+
+			"flexibleengine_lb_security_policy_v3": elb.ResourceSecurityPolicy(),
 
 			"flexibleengine_nat_private_dnat_rule":  nat.ResourcePrivateDnatRule(),
 			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
