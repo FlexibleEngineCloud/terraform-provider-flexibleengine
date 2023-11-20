@@ -15,12 +15,13 @@ import (
 )
 
 var (
-	OS_DEPRECATED_ENVIRONMENT = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
-	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
-	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
-	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
-	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
-	OS_PROJECT_ID             = os.Getenv("OS_PROJECT_ID")
+	OS_DEPRECATED_ENVIRONMENT     = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
+	OS_AVAILABILITY_ZONE          = os.Getenv("OS_AVAILABILITY_ZONE")
+	OS_REGION_NAME                = os.Getenv("OS_REGION_NAME")
+	OS_ACCESS_KEY                 = os.Getenv("OS_ACCESS_KEY")
+	OS_SECRET_KEY                 = os.Getenv("OS_SECRET_KEY")
+	OS_PROJECT_ID                 = os.Getenv("OS_PROJECT_ID")
+	OS_ENTERPRISE_PROJECT_ID_TEST = os.Getenv("OS_ENTERPRISE_PROJECT_ID_TEST")
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")
 	OS_NETWORK_ID = os.Getenv("OS_NETWORK_ID")
@@ -153,5 +154,14 @@ func testAccPreCheckSms(t *testing.T) {
 func testAccPreCheckImsBackupId(t *testing.T) {
 	if OS_IMS_BACKUP_ID == "" {
 		t.Skip("OS_IMS_BACKUP_ID must be set for IMS whole image with CBR backup id")
+	}
+}
+
+func testAccPreCheckEpsID(t *testing.T) {
+	// The environment variables in tests take OS_ENTERPRISE_PROJECT_ID_TEST instead of OS_ENTERPRISE_PROJECT_ID to
+	// ensure that other data-resources that support enterprise projects query the default project without being
+	// affected by this variable.
+	if OS_ENTERPRISE_PROJECT_ID_TEST == "" {
+		t.Skip("The environment variables does not support Enterprise Project ID for acc tests")
 	}
 }
