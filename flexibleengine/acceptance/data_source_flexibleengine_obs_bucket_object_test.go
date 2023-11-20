@@ -163,7 +163,6 @@ func testAccCheckObsBucketObjectExists(n string) resource.TestCheckFunc {
 	}
 }
 
-
 func testAccCheckObsObjectDataSourceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]

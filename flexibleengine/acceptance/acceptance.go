@@ -21,6 +21,7 @@ var (
 	OS_ACCESS_KEY                 = os.Getenv("OS_ACCESS_KEY")
 	OS_SECRET_KEY                 = os.Getenv("OS_SECRET_KEY")
 	OS_PROJECT_ID                 = os.Getenv("OS_PROJECT_ID")
+	OS_DOMAIN_ID                  = os.Getenv("OS_DOMAIN_ID")
 	OS_ENTERPRISE_PROJECT_ID_TEST = os.Getenv("OS_ENTERPRISE_PROJECT_ID_TEST")
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")
@@ -163,5 +164,11 @@ func testAccPreCheckEpsID(t *testing.T) {
 	// affected by this variable.
 	if OS_ENTERPRISE_PROJECT_ID_TEST == "" {
 		t.Skip("The environment variables does not support Enterprise Project ID for acc tests")
+	}
+}
+
+func testAccPrecheckDomainId(t *testing.T) {
+	if OS_DOMAIN_ID == "" {
+		t.Skip("OS_DOMAIN_ID must be set for acceptance tests")
 	}
 }
