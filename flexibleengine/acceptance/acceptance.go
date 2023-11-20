@@ -22,6 +22,7 @@ var (
 	OS_SECRET_KEY                 = os.Getenv("OS_SECRET_KEY")
 	OS_PROJECT_ID                 = os.Getenv("OS_PROJECT_ID")
 	OS_DOMAIN_ID                  = os.Getenv("OS_DOMAIN_ID")
+	OS_USER_ID                    = os.Getenv("OS_USER_ID")
 	OS_ENTERPRISE_PROJECT_ID_TEST = os.Getenv("OS_ENTERPRISE_PROJECT_ID_TEST")
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")

@@ -60,7 +60,7 @@ resource "flexibleengine_apig_signature" "test" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) Specifies the region where the signature is located.  
+* `region` - (Optional, String, ForceNew) Specifies the region where the signature is located.
   If omitted, the provider-level region will be used. Changing this will create a new resource.
 
 * `instance_id` - (Required, String, ForceNew) Specifies the ID of the dedicated instance to which the signature
