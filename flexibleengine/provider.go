@@ -299,8 +299,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_ddm_accounts":       ddm.DataSourceDdmAccounts(),
 
 			"flexibleengine_dms_kafka_instances":    dms.DataSourceDmsKafkaInstances(),
+			"flexibleengine_dms_kafka_flavors":      dms.DataSourceKafkaFlavors(),
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
+			"flexibleengine_dms_maintainwindow":     dms.DataSourceDmsMaintainWindow(),
 
 			"flexibleengine_dws_flavors": dws.DataSourceDwsFlavors(),
 

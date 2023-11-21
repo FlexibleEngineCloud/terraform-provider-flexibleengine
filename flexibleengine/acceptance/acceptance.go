@@ -15,12 +15,13 @@ import (
 )
 
 var (
-	OS_DEPRECATED_ENVIRONMENT = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
-	OS_AVAILABILITY_ZONE      = os.Getenv("OS_AVAILABILITY_ZONE")
-	OS_REGION_NAME            = os.Getenv("OS_REGION_NAME")
-	OS_ACCESS_KEY             = os.Getenv("OS_ACCESS_KEY")
-	OS_SECRET_KEY             = os.Getenv("OS_SECRET_KEY")
-	OS_PROJECT_ID             = os.Getenv("OS_PROJECT_ID")
+	OS_DEPRECATED_ENVIRONMENT     = os.Getenv("OS_DEPRECATED_ENVIRONMENT")
+	OS_AVAILABILITY_ZONE          = os.Getenv("OS_AVAILABILITY_ZONE")
+	OS_REGION_NAME                = os.Getenv("OS_REGION_NAME")
+	OS_ACCESS_KEY                 = os.Getenv("OS_ACCESS_KEY")
+	OS_SECRET_KEY                 = os.Getenv("OS_SECRET_KEY")
+	OS_PROJECT_ID                 = os.Getenv("OS_PROJECT_ID")
+	OS_ENTERPRISE_PROJECT_ID_TEST = os.Getenv("OS_ENTERPRISE_PROJECT_ID_TEST")
 
 	OS_VPC_ID     = os.Getenv("OS_VPC_ID")
 	OS_NETWORK_ID = os.Getenv("OS_NETWORK_ID")
