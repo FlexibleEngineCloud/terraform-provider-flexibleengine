@@ -349,10 +349,10 @@ But due to some attributes missing from the API response, it's required to ignor
 resource "flexibleengine_rds_instance_v3" "instance_1" {
   ...
 
-lifecycle {
-  ignore_changes = [
-    "db",
-  ]
-}
+  lifecycle {
+    ignore_changes = [
+      "db",
+    ]
+  }
 }
 ```
