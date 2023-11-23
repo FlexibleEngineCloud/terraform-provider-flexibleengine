@@ -22,7 +22,7 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 * `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
   will be used.
 
-* `db_type` - (Required, String) Specifies the DB engine. Value: **MySQL**, **PostgreSQL**, **MariaDB**.
+* `db_type` - (Required, String) Specifies the DB engine. Value: **MySQL**, **PostgreSQL**, **SQLServer** and **MariaDB**.
 
 * `db_version` - (Required, String) Specifies the database version. The supported versions of each database
   are as follows:
