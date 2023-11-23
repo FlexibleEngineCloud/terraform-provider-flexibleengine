@@ -156,3 +156,12 @@ func testAccPreCheckImsBackupId(t *testing.T) {
 		t.Skip("OS_IMS_BACKUP_ID must be set for IMS whole image with CBR backup id")
 	}
 }
+
+func testAccPreCheckEpsID(t *testing.T) {
+	// The environment variables in tests take OS_ENTERPRISE_PROJECT_ID_TEST instead of OS_ENTERPRISE_PROJECT_ID to
+	// ensure that other data-resources that support enterprise projects query the default project without being
+	// affected by this variable.
+	if OS_ENTERPRISE_PROJECT_ID_TEST == "" {
+		t.Skip("The environment variables does not support Enterprise Project ID for acc tests")
+	}
+}

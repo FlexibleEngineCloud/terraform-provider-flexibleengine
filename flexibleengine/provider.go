@@ -329,6 +329,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
 			"flexibleengine_sms_source_servers": sms.DataSourceServers(),
 			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
+			"flexibleengine_vpc_subnets":        vpc.DataSourceVpcSubnets(),
+			"flexibleengine_vpcs":               vpc.DataSourceVpcs(),
 
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
 
