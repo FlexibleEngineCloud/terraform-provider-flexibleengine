@@ -22,11 +22,15 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 * `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
   will be used.
 
-* `db_type` - (Required, String) Specifies the DB engine. Value: MySQL, PostgreSQL, SQLServer.
+* `db_type` - (Required, String) Specifies the DB engine. Value: **MySQL**, **PostgreSQL**, **SQLServer** and **MariaDB**.
 
-* `db_version` - (Required, String) Specifies the database version. MySQL databases support MySQL 5.6
-  and 5.7. PostgreSQL databases support PostgreSQL 9.5 and 9.6. Microsoft SQL Server databases support
-  2014_SE, 2016_SE, and 2016_EE.
+* `db_version` - (Required, String) Specifies the database version. The supported versions of each database
+  are as follows:
+  - **MySQL**: MySQL databases support **5.6**, **5.7** and **8.0**.
+  - **PostgreSQL**: PostgreSQL databases support **9.5**, **9.6**, **10**, **11**, **12**, **13**, **14** and
+    **1.0 (Enhanced Edition)**.
+  - **SQLServer**: Microsoft SQL Server databases support **2014_SE**, **2016_SE** and **2016_EE**.
+  - **MariaDB**: MariaDB databases support **10.5**.
 
 * `instance_mode` - (Optional, String) The mode of instance. Value: *ha*(indicates primary/standby instance),
   *single*(indicates single instance) and *replica*(indicates read replicas).
@@ -36,12 +40,12 @@ data "flexibleengine_rds_flavors_v3" "flavor" {
 * `memory` - (Optional, Int) Specifies the memory size(GB) in the RDS flavor.
 
 * `group_type` - (Optional, String) Specifies the performance specification, the valid values are as follows:
-  + **normal**: General enhanced.
-  + **normal2**: General enhanced type II.
-  + **dedicatedNormal**: (dedicatedNormalLocalssd): Dedicated for x86.
-  + **normalLocalssd**: x86 general type.
-  + **general**: General type.
-  + **bigmem**: Large memory type.
+  - **normal**: General enhanced.
+  - **normal2**: General enhanced type II.
+  - **dedicatedNormal**: (dedicatedNormalLocalssd): Dedicated for x86.
+  - **normalLocalssd**: x86 general type.
+  - **general**: General type.
+  - **bigmem**: Large memory type.
 
 * `availability_zone` - (Optional, String) Specifies the availability zone which the RDS flavor belongs to.
 

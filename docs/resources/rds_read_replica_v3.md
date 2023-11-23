@@ -134,7 +134,7 @@ The `db` block supports:
 
 * `port` - Indicates the database port information.
 
-* `type` - Indicates the DB engine. Value: MySQL, PostgreSQL, SQLServer.
+* `type` - Indicates the DB engine. Value: **MySQL**, **PostgreSQL**, **SQLServer**, **MariaDB**.
 
 * `user_name` - Indicates the default username of database.
 

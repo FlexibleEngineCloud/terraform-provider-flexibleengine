@@ -183,7 +183,8 @@ The following arguments are supported:
 * `volume` - (Required, List) Specifies the volume information. The [volume](#rds_volume) object structure is
   documented below.
 
-* `fixed_ip` - (Optional, String) Specifies an intranet IP address of RDS DB instance.
+* `fixed_ip` - (Optional, String, ForceNew) Specifies an intranet IP address of RDS DB instance.
+  Changing this parameter will create a new resource.
 
 * `backup_strategy` - (Optional, List) Specifies the advanced backup policy. The [backup_strategy](#rds_backup_strategy)
   object structure is documented below.
@@ -192,7 +193,8 @@ The following arguments are supported:
   Changing this parameter will create a new resource.
   + For MySQL, the value is *async* or *semisync*.
   + For PostgreSQL, the value is *async* or *sync*.
-  + For Microsoft SQL Server, the value is *sync*.
+  + For SQLServer, the value is *sync*.
+  + For MariaDB, the value is *async* or *semisync*.
 
   -> **NOTE:** async indicates the asynchronous replication mode. semisync indicates the semi-synchronous replication
   mode. sync indicates the synchronous replication mode.
@@ -202,8 +204,12 @@ The following arguments are supported:
 
 * `time_zone` - (Optional, String, ForceNew) Specifies the UTC time zone. The value ranges from
   UTC-12:00 to UTC+12:00 at the full hour, and defaults to *UTC*.
+  Changing this parameter will create a new resource.
 
 * `ssl_enable` - (Optional, Bool) Specifies whether to enable the SSL for **MySQL** database.
+
+* `description` - (Optional, String) Specifies the description of the instance. The value consists of 0 to 64
+  characters, including letters, digits, periods (.), underscores (_), and hyphens (-).
 
 * `tags` - (Optional, Map) A mapping of tags to assign to the RDS instance.
   Each tag is represented by one key-value pair.
@@ -216,25 +222,33 @@ The following arguments are supported:
 The `db` block supports:
 
 * `type` - (Required, String, ForceNew) Specifies the DB engine. Available value are *MySQL*, *PostgreSQL* and
-  *SQLServer*. Changing this parameter will create a new resource.
+  *MariaDB*. Changing this parameter will create a new resource.
 
-* `version` - (Required, String, ForceNew) Specifies the database version. MySQL databases support MySQL 5.6
-  and 5.7, example values: "5.6", "5.7". PostgreSQL databases support
-  PostgreSQL 9.5, 9.6, 10 and 11, example values: "9.5", "9.6", "10", "11". Microsoft SQL Server
-  databases support 2014 SE and 2014 EE, example values: "2014_SE", "2014_EE".
+* `version` - (Required, String, ForceNew) Specifies the database version. The supported versions of each database
+  are as follows:
+  + **MySQL**: MySQL databases support **5.6**, **5.7** and **8.0**.
+  + **PostgreSQL**: PostgreSQL databases support **9.5**, **9.6**, **10**, **11**, **12**, **13**, **14** and
+    **1.0 (Enhanced Edition)**.
+  + **SQLServer**: SQLServer databases support **2014 SE** and **2014 EE**.
+  + **MariaDB**: MariaDB databases support **10.5**.
+
   Changing this parameter will create a new resource.
 
-* `password` - (Required, String) Specifies the database password. The value cannot be
-  empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following
-  special characters: ~!@#%^*-_=+? You are advised to enter a strong password to improve security, preventing security
-  risks such as brute force cracking.
+* `password` - (Required, String, ForceNew) Specifies the database password. The value cannot be
+  empty and should contain 8 to 32 characters, including uppercase
+  and lowercase letters, digits, and the following special
+  characters: ~!@#%^*-_=+? You are advised to enter a strong
+  password to improve security, preventing security risks such as
+  brute force cracking. Changing this parameter will create a new resource.
 
 * `port` - (Optional, Int) Specifies the database port.
   + The MySQL database port ranges from 1024 to 65535 (excluding 12017 and 33071, which are occupied by the RDS system
-      and cannot be used). The default value is 3306.
+    and cannot be used). The default value is 3306.
   + The PostgreSQL database port ranges from 2100 to 9500. The default value is 5432.
   + The Microsoft SQL Server database port can be 1433 or ranges from 2100 to 9500, excluding 5355 and 5985.
     The default value is 1433.
+  + The MariaDB database port ranges from 1024 to 65535 (excluding 12017 and 33071, which are occupied by the RDS system
+    and cannot be used). The default value is 3306.
 
 <a name="rds_volume"></a>
 The `volume` block supports:
@@ -246,6 +260,8 @@ The `volume` block supports:
   and is case-sensitive:
   + *COMMON*: indicates the SATA type.
   + *ULTRAHIGH*: indicates the SSD type.
+  + *CLOUDSSD*: cloud SSD storage. This storage type is supported only with general-purpose and dedicated DB
+    instances.
 
   Changing this parameter will create a new resource.
 
@@ -262,9 +278,9 @@ The `backup_strategy` block supports:
   policy.
 
 * `start_time` - (Required, String) Specifies the backup time window. Automated backups will be triggered during the
-  backup time window. It must be a valid value in the **hh:mm-HH:MM** format. The current time is in the UTC format.
-  The HH value must be 1 greater than the hh value. The values of mm and MM must be the same and must be set to any
-  of the following: 00, 15, 30, or 45. Example value: 08:15-09:15 23:00-00:00.
+  backup time window. It must be a valid value in the **hh:mm-HH:MM** format.
+  The current time is in the UTC format. The HH value must be 1 greater than the hh value. The values of mm and MM must
+  be the same and must be set to any of the following: 00, 15, 30, or 45. Example value: 08:15-09:15 23:00-00:00.
 
 <a name="rds_parameters"></a>
 The `parameters` block supports:
@@ -276,7 +292,7 @@ The `parameters` block supports:
 
 ## Attribute Reference
 
-In addition to the arguments listed above, the following computed attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `id` - The resource ID in UUID format.
 
@@ -284,7 +300,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `created` - Indicates the creation time.
 
-* `nodes` - Indicates the instance nodes information. The [nodes](#rds_attr_nodes) object structure is documented below.
+* `nodes` - Indicates the instance nodes information. The [nodes](#rds_nodes) object structure is documented below.
 
 * `private_ips` - Indicates the private IP address list.
   It is a blank string until an ECS is created.
@@ -293,7 +309,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `db` - See Argument Reference above. The [db](#rds_attr_db) object structure is documented below.
 
-<a name="rds_attr_nodes"></a>
+<a name="rds_nodes"></a>
 The `nodes` block supports:
 
 * `availability_zone` - Indicates the AZ.
@@ -318,7 +334,6 @@ This resource provides the following timeouts configuration options:
 
 * `create` - Default is 30 minutes.
 * `update` - Default is 30 minutes.
-* `delete` - Default is 30 minutes.
 
 ## Import
 
