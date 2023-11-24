@@ -60,3 +60,62 @@ data "flexibleengine_images_image" "test" {
 }
 `, testBaseNetwork(name))
 }
+
+func testAccDcsV1Instance_network(rName string) string {
+	return fmt.Sprintf(`
+resource "flexibleengine_vpc_v1" "vpc_1" {
+  name = "%[1]s"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "subnet_1" {
+  name       = "%[1]s"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+  vpc_id     = flexibleengine_vpc_v1.vpc_1.id
+}
+
+resource "flexibleengine_networking_secgroup_v2" "secgroup_1" {
+  name        = "%[1]s"
+  description = "secgroup_1"
+}
+`, rName)
+}
+
+func testAccDcsV1Instance_basic(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+data "flexibleengine_dcs_flavors" "test" {
+  cache_mode     = "ha"
+  capacity       = 0.125
+  engine_version = "5.0"
+}
+
+data "flexibleengine_dcs_product_v1" "product1" {
+  engine         = "Redis"
+  engine_version = "4.0;5.0"
+  cache_mode     = "cluster"
+  capacity       = 8
+  replica_count  = 2
+}
+
+resource "flexibleengine_dcs_instance_v1" "instance_1" {
+  name              = "%s"
+  engine            = "Redis"
+  engine_version    = "5.0"
+  password          = "FlexibleEngine_test"
+  product_id        = data.flexibleengine_dcs_product_v1.product1.id
+  capacity          = 8
+  vpc_id            = flexibleengine_vpc_v1.vpc_1.id
+  network_id        = flexibleengine_vpc_subnet_v1.subnet_1.id
+  available_zones   = ["eu-west-0a", "eu-west-0b"]
+
+  save_days       = 1
+  backup_type     = "manual"
+  begin_at        = "00:00-01:00"
+  period_type     = "weekly"
+  backup_at       = [1]
+}
+`, testAccDcsV1Instance_network(rName), rName)
+}
