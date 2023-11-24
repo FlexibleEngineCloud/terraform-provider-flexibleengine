@@ -506,7 +506,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 
 	clusterid := d.Get("cluster_id").(string)
 	stateCluster := &resource.StateChangeConf{
-		Pending:      []string{"PENDING"},
+		Pending:      []string{"Available", "PENDING"},
 		Target:       []string{"COMPLETED"},
 		Refresh:      clusterStateRefreshFunc(nodeClient, clusterid, []string{"Available"}),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
@@ -541,7 +541,7 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Waiting for CCE Node (%s) to become available", s.Metadata.Name)
 	stateConf := &resource.StateChangeConf{
-		Pending:      []string{"PENDING"},
+		Pending:      []string{"Build", "Installing", "PENDING"},
 		Target:       []string{"Active"},
 		Refresh:      waitForCceNodeActive(nodeClient, clusterid, nodeID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),

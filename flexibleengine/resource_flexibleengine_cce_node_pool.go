@@ -316,7 +316,7 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	clusterid := d.Get("cluster_id").(string)
 	stateCluster := &resource.StateChangeConf{
 		Pending:    []string{"PENDING"},
-		Target:     []string{"COMPLETED"},
+		Target:     []string{"Available", "COMPLETED"},
 		Refresh:    clusterStateRefreshFunc(nodePoolClient, clusterid, []string{"Available"}),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      10 * time.Second,
@@ -528,7 +528,7 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"PENDING"},
+		Pending:    []string{"Synchronizing", "Synchronized", "PENDING"},
 		Target:     []string{"COMPLETED"},
 		Refresh:    waitForCceNodePoolActive(nodePoolClient, clusterid, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
