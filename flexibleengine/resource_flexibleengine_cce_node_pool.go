@@ -9,11 +9,11 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/chnsz/golangsdk"
 	"github.com/chnsz/golangsdk/openstack/cce/v3/nodepools"
 	"github.com/chnsz/golangsdk/openstack/cce/v3/nodes"
-
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
@@ -226,16 +226,31 @@ func resourceCCENodePool() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"runtime": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"docker", "containerd",
+				}, false),
+			},
+			"security_groups": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"ecs_group_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 			"scale_enable": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Computed: true,
-			},
-			"scall_enable": {
-				Type:       schema.TypeBool,
-				Optional:   true,
-				Computed:   true,
-				Deprecated: "will be removed in 1.40.0 use scale_enable instead",
 			},
 			"min_node_count": {
 				Type:     schema.TypeInt,
@@ -253,12 +268,6 @@ func resourceCCENodePool() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"ecs_group_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
-
 			"billing_mode": {
 				Type:     schema.TypeInt,
 				Computed: true,
@@ -270,6 +279,12 @@ func resourceCCENodePool() *schema.Resource {
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"scall_enable": {
+				Type:       schema.TypeBool,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "will be removed in 1.40.0 use scale_enable instead",
 			},
 		},
 	}
@@ -300,11 +315,12 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	// wait for the cce cluster to become available
 	clusterid := d.Get("cluster_id").(string)
 	stateCluster := &resource.StateChangeConf{
-		Target:     []string{"Available"},
-		Refresh:    waitForClusterAvailable(nodePoolClient, clusterid),
+		Pending:    []string{"PENDING"},
+		Target:     []string{"COMPLETED"},
+		Refresh:    clusterStateRefreshFunc(nodePoolClient, clusterid, []string{"Available"}),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
-		Delay:      5 * time.Second,
-		MinTimeout: 5 * time.Second,
+		Delay:      10 * time.Second,
+		MinTimeout: 10 * time.Second,
 	}
 	if _, err = stateCluster.WaitForState(); err != nil {
 		return fmt.Errorf("CCE Cluster %s is inactive: %s", clusterid, err)
@@ -344,11 +360,18 @@ func resourceCCENodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 				ScaleDownCooldownTime: d.Get("scale_down_cooldown_time").(int),
 				Priority:              d.Get("priority").(int),
 			},
-			InitialNodeCount: &initialNodeCount,
+			InitialNodeCount:     &initialNodeCount,
+			CustomSecurityGroups: utils.ExpandToStringList(d.Get("security_groups").([]interface{})),
 			NodeManagement: nodepools.NodeManagementSpec{
 				ServerGroupReference: d.Get("ecs_group_id").(string),
 			},
 		},
+	}
+
+	if v, ok := d.GetOk("runtime"); ok {
+		createOpts.Spec.NodeTemplate.RunTime = &nodes.RunTimeSpec{
+			Name: v.(string),
+		}
 	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
@@ -425,10 +448,15 @@ func resourceCCENodePoolRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("priority", s.Spec.Autoscaling.Priority),
 		d.Set("type", s.Spec.Type),
 		d.Set("status", s.Status.Phase),
+		d.Set("security_groups", s.Spec.CustomSecurityGroups),
 		d.Set("ecs_group_id", s.Spec.NodeManagement.ServerGroupReference),
 	)
 	if err := mErr.ErrorOrNil(); err != nil {
 		return err
+	}
+
+	if s.Spec.NodeTemplate.RunTime != nil {
+		mErr = multierror.Append(mErr, d.Set("runtime", s.Spec.NodeTemplate.RunTime.Name))
 	}
 
 	rootVolume := expandResourceCCERootVolume(s.Spec.NodeTemplate)
@@ -500,8 +528,8 @@ func resourceCCENodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"Synchronizing", "Synchronized"},
-		Target:     []string{""},
+		Pending:    []string{"PENDING"},
+		Target:     []string{"COMPLETED"},
 		Refresh:    waitForCceNodePoolActive(nodePoolClient, clusterid, d.Id()),
 		Timeout:    d.Timeout(schema.TimeoutCreate),
 		Delay:      60 * time.Second,

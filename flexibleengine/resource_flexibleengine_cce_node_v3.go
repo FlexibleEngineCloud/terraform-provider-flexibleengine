@@ -17,6 +17,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceCCENodeV3() *schema.Resource {
@@ -203,6 +204,15 @@ func resourceCCENodeV3() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
+			},
+			"runtime": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"docker", "containerd",
+				}, false),
 			},
 			"ecs_performance_type": {
 				Type:     schema.TypeString,
@@ -488,15 +498,25 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 		},
 	}
 
+	if v, ok := d.GetOk("runtime"); ok {
+		createOpts.Spec.RunTime = &nodes.RunTimeSpec{
+			Name: v.(string),
+		}
+	}
+
 	clusterid := d.Get("cluster_id").(string)
 	stateCluster := &resource.StateChangeConf{
-		Target:       []string{"Available"},
-		Refresh:      waitForClusterAvailable(nodeClient, clusterid),
+		Pending:      []string{"PENDING"},
+		Target:       []string{"COMPLETED"},
+		Refresh:      clusterStateRefreshFunc(nodeClient, clusterid, []string{"Available"}),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
 		Delay:        5 * time.Second,
 		PollInterval: 5 * time.Second,
 	}
 	_, err = stateCluster.WaitForState()
+	if err != nil {
+		return fmt.Errorf("error waiting for CCE cluster to be Available: %s", err)
+	}
 
 	log.Printf("[DEBUG] Create Options: %#v", createOpts)
 	s, err := nodes.Create(nodeClient, clusterid, createOpts).Extract()
@@ -521,12 +541,12 @@ func resourceCCENodeV3Create(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Waiting for CCE Node (%s) to become available", s.Metadata.Name)
 	stateConf := &resource.StateChangeConf{
-		Pending:      []string{"Build", "Installing"},
+		Pending:      []string{"PENDING"},
 		Target:       []string{"Active"},
 		Refresh:      waitForCceNodeActive(nodeClient, clusterid, nodeID),
 		Timeout:      d.Timeout(schema.TimeoutCreate),
-		Delay:        5 * time.Second,
-		PollInterval: 5 * time.Second,
+		Delay:        20 * time.Second,
+		PollInterval: 20 * time.Second,
 	}
 	_, err = stateConf.WaitForState()
 	if err != nil {
@@ -585,6 +605,10 @@ func resourceCCENodeV3Read(d *schema.ResourceData, meta interface{}) error {
 	)
 	if err := mErr.ErrorOrNil(); err != nil {
 		return err
+	}
+
+	if s.Spec.RunTime != nil {
+		mErr = multierror.Append(mErr, d.Set("runtime", s.Spec.RunTime.Name))
 	}
 
 	rootVolume := expandResourceCCERootVolume(s.Spec)

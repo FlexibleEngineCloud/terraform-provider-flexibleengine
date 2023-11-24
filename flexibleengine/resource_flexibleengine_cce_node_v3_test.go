@@ -28,7 +28,8 @@ func TestAccCCENodeV3_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCCENodeV3Exists(resourceName, clusterName, &node),
 					resource.TestCheckResourceAttr(resourceName, "name", cceName),
-					resource.TestCheckResourceAttr(resourceName, "flavor_id", "s3.large.2"),
+					resource.TestCheckResourceAttr(resourceName, "flavor_id", "cc3.large.4"),
+					resource.TestCheckResourceAttr(resourceName, "runtime", "containerd"),
 					resource.TestCheckResourceAttr(resourceName, "status", "Active"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.foo", "bar"),
@@ -179,14 +180,36 @@ func testAccCCENodeV3_base(rName string) string {
 	return fmt.Sprintf(`
 data "flexibleengine_availability_zones" "test" {}
 
+resource "flexibleengine_vpc_v1" "test" {
+  name = "%[1]s"
+  cidr = "192.168.0.0/16"
+}
+
+resource "flexibleengine_vpc_subnet_v1" "test" {
+  name       = "%[1]s"
+  cidr       = "192.168.0.0/24"
+  gateway_ip = "192.168.0.1"
+
+  //dns is required for cce node installing
+  primary_dns   = "100.125.0.41"
+  secondary_dns = "100.126.0.41"
+  vpc_id        = flexibleengine_vpc_v1.test.id
+}
+
+resource "flexibleengine_compute_keypair_v2" "test" {
+  name = "%[1]s"
+}
+
 resource "flexibleengine_cce_cluster_v3" "cluster_1" {
-  name         = "%s"
+  name         = "%[1]s"
   cluster_type = "VirtualMachine"
   flavor_id    = "cce.s1.small"
-  vpc_id       = "%s"
-  subnet_id    = "%s"
+  vpc_id       = flexibleengine_vpc_v1.test.id
+  subnet_id    = flexibleengine_vpc_subnet_v1.test.id
+
   container_network_type = "overlay_l2"
-}`, rName, OS_VPC_ID, OS_NETWORK_ID)
+}
+`, rName)
 }
 
 func testAccCCENodeV3_basic(rName string) string {
@@ -196,10 +219,12 @@ func testAccCCENodeV3_basic(rName string) string {
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
   name              = "%s"
-  flavor_id         = "s3.large.2"
+  flavor_id         = "cc3.large.4"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
-  key_pair          = "%s"
-  subnet_id         = "%s"
+  key_pair          = flexibleengine_compute_keypair_v2.test.name
+  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
+
+  runtime = "containerd"
 
   root_volume {
     size       = 40
@@ -213,7 +238,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key = "value"
     foo = "bar"
   }
-}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME, OS_NETWORK_ID)
+}`, testAccCCENodeV3_base(rName), rName)
 }
 
 func testAccCCENodeV3_update(rName string) string {
@@ -223,10 +248,12 @@ func testAccCCENodeV3_update(rName string) string {
 resource "flexibleengine_cce_node_v3" "node_1" {
   cluster_id        = flexibleengine_cce_cluster_v3.cluster_1.id
   name              = "%s-update"
-  flavor_id         = "s3.large.2"
+  flavor_id         = "cc3.large.4"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
-  key_pair          = "%s"
-  subnet_id         = "%s"
+  key_pair          = flexibleengine_compute_keypair_v2.test.name
+  subnet_id         = flexibleengine_vpc_subnet_v1.test.id
+
+  runtime = "containerd"
 
   root_volume {
     size       = 40
@@ -240,7 +267,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key   = "value1"
     owner = "terraform"
   }
-}`, testAccCCENodeV3_base(rName), rName, OS_KEYPAIR_NAME, OS_NETWORK_ID)
+}`, testAccCCENodeV3_base(rName), rName)
 }
 
 func testAccCCENodeV3_volumes_encryption(rName string) string {
@@ -257,7 +284,7 @@ resource "flexibleengine_cce_node_v3" "node_1" {
   name              = "%s"
   flavor_id         = "s3.large.2"
   availability_zone = data.flexibleengine_availability_zones.test.names[0]
-  key_pair          = "%s"
+  key_pair          = flexibleengine_compute_keypair_v2.test.name
 
   root_volume {
     size       = 40
@@ -274,5 +301,5 @@ resource "flexibleengine_cce_node_v3" "node_1" {
     key = "value"
   }
 }
-`, testAccCCENodeV3_base(rName), rName, rName, OS_KEYPAIR_NAME)
+`, testAccCCENodeV3_base(rName), rName, rName)
 }
