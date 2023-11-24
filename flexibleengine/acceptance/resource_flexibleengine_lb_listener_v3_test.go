@@ -42,7 +42,8 @@ func TestAccElbV3Listener_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					rc.CheckResourceExists(),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
-					resource.TestCheckResourceAttr(resourceName, "forward_eip", "true"),
+					resource.TestCheckResourceAttr(resourceName, "description", "test description"),
+					resource.TestCheckResourceAttr(resourceName, "forward_eip", "false"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key", "value"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform"),
 				),
@@ -51,7 +52,8 @@ func TestAccElbV3Listener_basic(t *testing.T) {
 				Config: testAccElbV3ListenerConfig_update(rName, rNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", rNameUpdate),
-					resource.TestCheckResourceAttr(resourceName, "forward_eip", "false"),
+					resource.TestCheckResourceAttr(resourceName, "description", "update description"),
+					resource.TestCheckResourceAttr(resourceName, "forward_eip", "true"),
 					resource.TestCheckResourceAttr(resourceName, "tags.key1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.owner", "terraform_update"),
 				),
@@ -75,7 +77,7 @@ resource "flexibleengine_lb_listener_v3" "test" {
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = flexibleengine_lb_loadbalancer_v3.test.id
-  forward_eip     = true
+  forward_eip     = false
 
   idle_timeout     = 62
   request_timeout  = 63
@@ -95,10 +97,11 @@ func testAccElbV3ListenerConfig_update(rName, rNameUpdate string) string {
 
 resource "flexibleengine_lb_listener_v3" "test" {
   name            = "%s"
-  description     = "test description"
+  description     = "update description"
   protocol        = "HTTP"
   protocol_port   = 8080
   loadbalancer_id = flexibleengine_lb_loadbalancer_v3.test.id
+  forward_eip     = true
 
   idle_timeout     = 62
   request_timeout  = 63
