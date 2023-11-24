@@ -340,6 +340,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
 
+			"flexibleengine_obs_buckets":       obs.DataSourceObsBuckets(),
 			"flexibleengine_obs_bucket_object": obs.DataSourceObsBucketObject(),
 
 			// importing existing data source
@@ -546,7 +547,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_private_snat_rule":  nat.ResourcePrivateSnatRule(),
 			"flexibleengine_nat_private_transit_ip": nat.ResourcePrivateTransitIp(),
 
-			"flexibleengine_obs_bucket_acl": obs.ResourceOBSBucketAcl(),
+			"flexibleengine_obs_bucket_acl":        obs.ResourceOBSBucketAcl(),
+			"flexibleengine_obs_bucket_object_acl": obs.ResourceOBSBucketObjectAcl(),
+			"flexibleengine_obs_bucket_policy":     obs.ResourceObsBucketPolicy(),
 
 			"flexibleengine_rds_account":                      rds.ResourceMysqlAccount(),
 			"flexibleengine_rds_backup":                       rds.ResourceBackup(),
