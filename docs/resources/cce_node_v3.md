@@ -58,6 +58,9 @@ The following arguments are supported:
 * `os` - (Optional, String, ForceNew) Operating System of the node, possible values are EulerOS 2.2 and CentOS 7.6.
   Defaults to EulerOS 2.2. Changing this parameter will create a new resource.
 
+* `runtime` - (Optional, String, ForceNew) Specifies the runtime of the CCE node. Valid values are *docker* and
+  *containerd*. Changing this creates a new resource.
+
 * `labels` - (Optional, Map, ForceNew) Tags of a Kubernetes node, key/value pair format. Changing this parameter will
   create a new resource.
 
@@ -75,7 +78,7 @@ The following arguments are supported:
 * `eip_count` - (Optional, Int, ForceNew) Number of elastic IPs to be dynamically created. Changing this parameter
   will create a new resource.
 
-* `iptype` - (Optional, String, ForceNew) Elastic IP type.
+* `iptype` - (Optional, String, ForceNew) Elastic IP type. Changing this parameter will create a new resource.
 
 * `bandwidth_charge_mode` - (Optional, String, ForceNew) Bandwidth billing type. Changing this parameter will create a
   new resource.

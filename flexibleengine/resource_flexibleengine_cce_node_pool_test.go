@@ -102,6 +102,32 @@ func TestAccCCENodePool_serverGroup(t *testing.T) {
 	})
 }
 
+func TestAccCCENodePool_securityGroups(t *testing.T) {
+	var nodePool nodepools.NodePool
+
+	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
+	resourceName := "flexibleengine_cce_node_pool_v3.test"
+	//clusterName here is used to provide the cluster id to fetch cce node pool.
+	clusterName := "flexibleengine_cce_cluster_v3.test"
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCCENodePoolDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNodePool_securityGroups(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCCENodePoolExists(resourceName, clusterName, &nodePool),
+					resource.TestCheckResourceAttr(resourceName, "name", rName),
+					resource.TestCheckResourceAttr(resourceName, "runtime", "docker"),
+					resource.TestCheckResourceAttrSet(resourceName, "security_groups.#"),
+				),
+			},
+		},
+	})
+}
+
 func nodePoolImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
 	return func(s *terraform.State) (string, error) {
 		rs, ok := s.RootModule().Resources[resourceName]
@@ -193,14 +219,12 @@ data "flexibleengine_availability_zones" "test" {}
 
 resource "flexibleengine_compute_keypair_v2" "test" {
   name = "%s"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAjpC1hwiOCCmKEWxJ4qzTTsJbKzndLo1BCz5PcwtUnflmU+gHJtWMZKpuEGVi29h0A/+ydKek1O18k10Ff+4tyFjiHDQAT9+OfgWf7+b1yK+qDip3X1C0UPMbwHlTfSGWLGZquwhvEFx9k3h/M+VtMvwR1lJ9LUyTAImnNjWG7TAIPmui30HvM2UiFEmqkr4ijq45MyX2+fLIePLRIFuu1p4whjHAQYufqyno3BS48icQb4p6iVEZPo4AE2o9oIyQvj2mx4dk5Y8CgSETOZTYDOR3rU2fZTRDRgPJDH9FWvQjF5tA0p3d9CoWWd2s6GKKbfoUIi8R/Db1BSPJwkqB jrp-hp-pc"
 }
 
 resource "flexibleengine_cce_cluster_v3" "test" {
   name                   = "%s"
   description            = "a description"
   cluster_type           = "VirtualMachine"
-  cluster_version        = "v1.17.9-r0"
   flavor_id              = "cce.s1.small"
   vpc_id                 = flexibleengine_vpc_v1.test.id
   subnet_id              = flexibleengine_vpc_subnet_v1.test.id
@@ -323,6 +347,48 @@ resource "flexibleengine_cce_node_pool_v3" "test" {
   priority                 = 0
   type                     = "vm"
   ecs_group_id             = flexibleengine_compute_servergroup_v2.test.id
+
+  root_volume {
+    size       = 40
+    volumetype = "SSD"
+  }
+  data_volumes {
+    size       = 100
+    volumetype = "SSD"
+  }
+}
+`, testAccCCENodePool_Base(rName), rName)
+}
+
+func testAccNodePool_securityGroups(rName string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "flexibleengine_networking_secgroup_v2" "test1" {
+  name        = "%[2]s-test1"
+  description = "terraform security group"
+}
+
+resource "flexibleengine_cce_node_pool_v3" "test" {
+  cluster_id               = flexibleengine_cce_cluster_v3.test.id
+  name                     = "%[2]s"
+  os                       = "EulerOS 2.5"
+  runtime                  = "docker"
+  flavor_id                = "s3.large.2"
+  availability_zone        = data.flexibleengine_availability_zones.test.names[0]
+  key_pair                 = flexibleengine_compute_keypair_v2.test.name
+  scale_enable             = false
+  initial_node_count       = 1
+  min_node_count           = 0
+  max_node_count           = 0
+  max_pods                 = 200
+  scale_down_cooldown_time = 0
+  priority                 = 0
+  type                     = "vm"
+
+  security_groups = [
+    flexibleengine_networking_secgroup_v2.test1.id
+  ]
 
   root_volume {
     size       = 40

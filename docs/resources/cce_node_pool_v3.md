@@ -66,6 +66,9 @@ The following arguments are supported:
 * `os` - (Optional, String, ForceNew) Operating System of the node. The value can be EulerOS 2.5 and CentOS 7.6.
     Changing this parameter will create a new resource.
 
+* `runtime` - (Optional, String, ForceNew) Specifies the runtime of the CCE node pool. Valid values are *docker* and
+  *containerd*. Changing this creates a new resource.
+
 * `key_pair` - (Optional, String, ForceNew) Key pair name when logging in to select the key pair mode.
     This parameter and `password` are alternative. Changing this parameter will create a new resource.
 
@@ -74,6 +77,10 @@ The following arguments are supported:
 
 * `subnet_id` - (Optional, String, ForceNew) The ID of the VPC Subnet to which the NIC belongs.
     Changing this parameter will create a new resource.
+
+* `security_groups` - (Optional, List, ForceNew) Specifies the list of custom security group IDs for the node pool.
+  If specified, the nodes will be put in these security groups. When specifying a security group, do not modify
+  the rules of the port on which CCE running depends. Changing this parameter will create a new resource.
 
 * `ecs_group_id` - (Optional, String, ForceNew) Specifies the ECS group ID. If specified, the node will be created under
   the cloud server group. Changing this parameter will create a new resource.
