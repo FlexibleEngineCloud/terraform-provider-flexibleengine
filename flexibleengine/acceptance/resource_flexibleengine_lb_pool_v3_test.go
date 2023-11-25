@@ -88,12 +88,12 @@ resource "flexibleengine_lb_loadbalancer_v3" "test" {
   ]
 }
 resource "flexibleengine_lb_listener_v3" "test" {
-  name            = "%[1]s"
-  description     = "test description"
-  protocol        = "HTTP"
-  protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v3.test.id
-  forward_eip = true
+  name             = "%[1]s"
+  description      = "test description"
+  protocol         = "HTTP"
+  protocol_port    = 8080
+  loadbalancer_id  = flexibleengine_lb_loadbalancer_v3.test.id
+  forward_eip      = true
   idle_timeout     = 60
   request_timeout  = 60
   response_timeout = 60
@@ -104,6 +104,7 @@ resource "flexibleengine_lb_listener_v3" "test" {
 func testAccElbV3PoolConfig_basic(rName string) string {
 	return fmt.Sprintf(`
 %s
+
 resource "flexibleengine_lb_pool_v3" "test" {
   name        = "%s"
   protocol    = "HTTP"
@@ -116,6 +117,7 @@ resource "flexibleengine_lb_pool_v3" "test" {
 func testAccElbV3PoolConfig_update(rName, rNameUpdate string) string {
 	return fmt.Sprintf(`
 %s
+
 resource "flexibleengine_lb_pool_v3" "test" {
   name        = "%s"
   protocol    = "HTTP"
