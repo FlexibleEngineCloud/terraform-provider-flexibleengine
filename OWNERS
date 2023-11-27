@@ -1,0 +1,11 @@
+# List of usernames who may use /lgtm
+reviewers:
+- chengxiangdong
+- niuzhenguo
+- shichangkuo
+
+# List of usernames who may use /approve
+approvers:
+- chengxiangdong
+- niuzhenguo
+- shichangkuo
