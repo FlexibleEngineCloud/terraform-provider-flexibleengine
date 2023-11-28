@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
@@ -328,12 +329,13 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_instances":       rds.DataSourceRdsInstances(),
 			"flexibleengine_rds_storage_types":   rds.DataSourceStoragetype(),
 
-			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
-			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
-			"flexibleengine_sms_source_servers": sms.DataSourceServers(),
-			"flexibleengine_vpc_route_table":    vpc.DataSourceVPCRouteTable(),
-			"flexibleengine_vpc_subnets":        vpc.DataSourceVpcSubnets(),
-			"flexibleengine_vpcs":               vpc.DataSourceVpcs(),
+			"flexibleengine_sfs_turbos":            sfs.DataSourceTurbos(),
+			"flexibleengine_smn_topics":            smn.DataSourceTopics(),
+			"flexibleengine_smn_message_templates": smn.DataSourceSmnMessageTemplates(),
+			"flexibleengine_sms_source_servers":    sms.DataSourceServers(),
+			"flexibleengine_vpc_route_table":       vpc.DataSourceVPCRouteTable(),
+			"flexibleengine_vpc_subnets":           vpc.DataSourceVpcSubnets(),
+			"flexibleengine_vpcs":                  vpc.DataSourceVpcs(),
 
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
 
