@@ -31,10 +31,15 @@ output "subnet_cidr_blocks" {
 
 The following arguments are supported:
 
-* `vpc_id` (Required) - Specifies the VPC ID used as the query filter.
+* `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
+  If omitted, the region argument of the provider is used.
+
+* `vpc_id` (Required, String) - Specifies the VPC ID used as the query filter.
 
 ## Attributes Reference
 
 The following attributes are exported:
+
+* `id` - Specifies a data source ID in UUID format.
 
 * `ids` - A list of all the subnet ids found. This data source will fail if none are found.

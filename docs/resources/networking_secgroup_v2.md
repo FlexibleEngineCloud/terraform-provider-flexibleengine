@@ -21,18 +21,20 @@ resource "flexibleengine_networking_secgroup_v2" "example_secgroup" {
 
 The following arguments are supported:
 
-* `region` - (Optional) The region in which to obtain the V2 networking client.
+* `region` - (Optional, String) The region in which to obtain the V2 networking client.
     A networking client is needed to create a port. If omitted, the
     `region` argument of the provider is used. Changing this creates a new
     security group.
 
-* `name` - (Required) A unique name for the security group.
+* `name` - (Required, String) A unique name for the security group.
 
-* `description` - (Optional) A unique name for the security group.
+* `description` - (Optional, String) A unique name for the security group.
 
-* `delete_default_rules` - (Optional) Whether or not to delete the default
+* `delete_default_rules` - (Optional, String) Whether or not to delete the default
     egress security rules. This is `false` by default. See the below note
     for more information.
+
+* `tenant_id` - (Optional, String, ForceNew) The owner of the security group.
 
 ## Attributes Reference
 
@@ -67,6 +69,12 @@ the FlexibleEngine cloud. The above illustrates the current default Neutron
 behavior. Some FlexibleEngine clouds might provide additional rules and some might
 not provide any rules at all (in which case the `delete_default_rules` setting
 is moot).
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `delete` - Default is 10 minute.
 
 ## Import
 

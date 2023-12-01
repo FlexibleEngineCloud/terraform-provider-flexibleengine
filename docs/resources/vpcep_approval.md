@@ -61,9 +61,12 @@ resource "flexibleengine_vpcep_approval" "approval" {
 
 The following arguments are supported:
 
-* `service_id` (Required) - Specifies the ID of the VPC endpoint service. Changing this creates a new resource.
+* `region` - (Optional, String, ForceNew) The region in which to create the resource.
+  If omitted, the provider-level region will be used. Changing this creates a new resource.
 
-* `endpoints` (Required) - Specifies the list of VPC endpoint IDs which accepted to connect to VPC endpoint service.
+* `service_id` - (Required, String, ForceNew) Specifies the ID of the VPC endpoint service. Changing this creates a new resource.
+
+* `endpoints` - (Required, List) Specifies the list of VPC endpoint IDs which accepted to connect to VPC endpoint service.
     The VPC endpoints will be rejected when the resource was destroyed.
 
 ## Attributes Reference
@@ -71,8 +74,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID in UUID format which equals to the ID of the VPC endpoint service.
-
-* `region` - The region in which to obtain the VPC endpoint service.
 
 * `connections` - An array of VPC endpoints connect to the VPC endpoint service. Structure is documented below.
     - `endpoint_id` - The unique ID of the VPC endpoint.
@@ -85,4 +86,4 @@ In addition to all arguments above, the following attributes are exported:
 This resource provides the following timeouts configuration options:
 
 * `create` - Default is 10 minute.
-* `delete` - Default is 3 minute.
+* `delete` - Default is 10 minute.

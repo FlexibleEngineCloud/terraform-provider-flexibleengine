@@ -75,6 +75,9 @@ The following arguments are supported:
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the subnet.
 
+* `description` (Optional, String) - Provides supplementary information about the subnet.
+  The value can contain no more than 255 characters and cannot contain angle brackets (< or >).
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
@@ -90,6 +93,13 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv6_cidr` - The IPv6 subnet CIDR block.
 
 * `ipv6_gateway` - The IPv6 subnet gateway.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 5 minute.
+* `delete` - Default is 5 minute.
 
 ## Import
 

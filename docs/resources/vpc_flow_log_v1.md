@@ -69,10 +69,17 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - The status of the flow log. The value can be `ACTIVE`, `DOWN` or `ERROR`.
 
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `delete` - Default is 10 minute.
+
 ## Import
 
 VPC flow logs can be imported using the `id`, e.g.
 
-```sh
+```shell
 terraform import flexibleengine_vpc_flow_log_v1.flowlog1 41b9d73f-eb1c-4795-a100-59a99b062513
 ```

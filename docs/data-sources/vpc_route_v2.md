@@ -32,15 +32,18 @@ The arguments of this data source act as filters for querying the available
 routes in the current tenant. The given filters must match exactly one
 route whose data will be exported as attributes.
 
-* `id` (Optional) - The id of the specific route to retrieve.
+* `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
+  If omitted, the region argument of the provider is used.
 
-* `vpc_id` (Optional) - The id of the VPC that the desired route belongs to.
+* `id` (Optional, String) - The id of the specific route to retrieve.
 
-* `destination` (Optional) - The route destination address (CIDR).
+* `vpc_id` (Optional, String) - The id of the VPC that the desired route belongs to.
 
-* `tenant_id` (Optional) - Only the administrator can specify the tenant ID of other tenants.
+* `destination` (Optional, String) - The route destination address (CIDR).
 
-* `type` (Optional) - Route type for filtering.
+* `tenant_id` (Optional, String) - Only the administrator can specify the tenant ID of other tenants.
+
+* `type` (Optional, String) - Route type for filtering.
 
 ## Attribute Reference
 

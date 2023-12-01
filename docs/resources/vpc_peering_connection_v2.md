@@ -35,15 +35,20 @@ resource "flexibleengine_vpc_peering_connection_v2" "peering" {
 
 The following arguments are supported:
 
-* `name` (Required) - Specifies the name of the VPC peering connection. The value can contain 1 to 64 characters.
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the VPC peering connection.
+  If omitted, the provider-level region will be used. Changing this creates a new VPC peering connection.
 
-* `vpc_id` (Required) - Specifies the ID of a VPC involved in a VPC peering connection.
+* `name` (Required, String) - Specifies the name of the VPC peering connection. The value can contain 1 to 64 characters.
+
+* `vpc_id` (Required, String, ForceNew) - Specifies the ID of a VPC involved in a VPC peering connection.
   Changing this creates a new VPC peering connection.
 
-* `peer_vpc_id` (Required) - Specifies the VPC ID of the accepter tenant. Changing this creates a new VPC peering connection.
+* `peer_vpc_id` (Required, String, ForceNew) - Specifies the VPC ID of the accepter tenant.
+  Changing this creates a new VPC peering connection.
 
-* `peer_tenant_id` (Optional) - Specified the Tenant Id of the accepter tenant. Changing this creates a new VPC peering connection.
-  
+* `peer_tenant_id` (Optional, String, ForceNew) - Specified the Tenant Id of the accepter tenant.
+  Changing this creates a new VPC peering connection.
+
 ## Attributes Reference
 
 All of the argument attributes are also exported as
@@ -52,6 +57,13 @@ result attributes:
 * `id` - The VPC peering connection ID.
 
 * `status` - The VPC peering connection status. The value can be PENDING_ACCEPTANCE, REJECTED, EXPIRED, DELETED, or ACTIVE.
+
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `delete` - Default is 10 minute.
 
 ## Import
 

@@ -59,6 +59,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - The current status of the VPC. Possible values are as follows: CREATING, OK or ERROR.
 
+## Timeouts
+
+This resource provides the following timeouts configuration options:
+
+* `create` - Default is 10 minute.
+* `delete` - Default is 3 minute.
+
 ## Import
 
 VPCs can be imported using the `id`, e.g.

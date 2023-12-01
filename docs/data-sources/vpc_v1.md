@@ -57,3 +57,7 @@ The following attributes are exported:
 * `shared` - Specifies whether the cross-tenant sharing is supported.
 
 * `region` - See Argument Reference above.
+
+* `routes.destination` - The destination network segment of a route.
+
+* `routes.nexthop` - The next hop of a route.
