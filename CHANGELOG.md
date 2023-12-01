@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 1.44.0 (December 1, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_obs_bucket_object_acl` [GH-1052]
+  - `flexibleengine_obs_bucket_policy` [GH-1052]
+  - `flexibleengine_rds_backup` [GH-1058]
+  - `flexibleengine_rds_cross_region_backup_strategy` [GH-1058]
+  - `flexibleengine_rds_sql_audit` [GH-1058]
+
+* **New Data Source:**
+  - `flexibleengine_account` [GH-1044]
+  - `flexibleengine_dms_kafka_flavors` [GH-1048]
+  - `flexibleengine_identity_projects` [GH-1044]
+  - `flexibleengine_rds_instances` [GH-1058]
+  - `flexibleengine_rds_engine_versions` [GH-1058]
+  - `flexibleengine_rds_backups` [GH-1058]
+  - `flexibleengine_vpcs` [GH-1057]
+  - `flexibleengine_vpc_subnets` [GH-1057]
+  - `flexibleengine_obs_buckets` [GH-1052]
+  - `flexibleengine_obs_bucket_object` [GH-1052]
+
+BUG FIXES:
+
+* `resource/flexibleengine_lb_pool_v3`: Fix the issue of creation failure [GH-1066]
+
 ## 1.43.0 (November 3, 2023)
 
 FEATURES:
