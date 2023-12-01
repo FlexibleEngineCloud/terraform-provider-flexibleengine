@@ -58,6 +58,6 @@ The following attributes are exported:
 
 * `region` - See Argument Reference above.
 
-* `routes.destination` - Specifies the destination network segment of a routex.
+* `routes.destination` - The destination network segment of a route.
 
-* `routes.nexthop` - Specifies the next hop of a route.
+* `routes.nexthop` - The next hop of a route.
