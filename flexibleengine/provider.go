@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
@@ -306,7 +307,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_dws_flavors": dws.DataSourceDwsFlavors(),
 
-			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
+			"flexibleengine_elb_certificate":   elb.DataSourceELBCertificateV3(),
+			"flexibleengine_elb_loadbalancers": elb.DataSourceElbLoadbalances(),
+
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
 			"flexibleengine_gaussdb_cassandra_flavors":   gaussdb.DataSourceCassandraFlavors(),
