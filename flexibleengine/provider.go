@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
@@ -323,10 +324,11 @@ func Provider() *schema.Provider {
 			"flexibleengine_identity_projects": iam.DataSourceIdentityProjects(),
 			"flexibleengine_identity_users":    iam.DataSourceIdentityUsers(),
 
-			"flexibleengine_rds_backups":         rds.DataSourceBackup(),
-			"flexibleengine_rds_engine_versions": rds.DataSourceRdsEngineVersionsV3(),
-			"flexibleengine_rds_instances":       rds.DataSourceRdsInstances(),
-			"flexibleengine_rds_storage_types":   rds.DataSourceStoragetype(),
+			"flexibleengine_rds_backups":              rds.DataSourceBackup(),
+			"flexibleengine_rds_engine_versions":      rds.DataSourceRdsEngineVersionsV3(),
+			"flexibleengine_rds_instances":            rds.DataSourceRdsInstances(),
+			"flexibleengine_rds_sqlserver_collations": rds.DataSourceSQLServerCollations(),
+			"flexibleengine_rds_storage_types":        rds.DataSourceStoragetype(),
 
 			"flexibleengine_sfs_turbos":         sfs.DataSourceTurbos(),
 			"flexibleengine_smn_topics":         smn.DataSourceTopics(),
