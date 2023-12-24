@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_application"
 
 # flexibleengine_apig_application
 
-Manages an APIG application resource within Flexibleengine.
+Manages an APIG application resource within FlexibleEngine.
 
 ## Example Usage
 
