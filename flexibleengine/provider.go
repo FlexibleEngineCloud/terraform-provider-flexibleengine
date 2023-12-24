@@ -340,6 +340,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_subnets":        vpc.DataSourceVpcSubnets(),
 			"flexibleengine_vpcs":               vpc.DataSourceVpcs(),
 
+			"flexibleengine_waf_certificate":         waf.DataSourceWafCertificateV1(),
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
