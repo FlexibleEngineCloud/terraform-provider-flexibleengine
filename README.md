@@ -3,11 +3,9 @@ Terraform FlexibleEngine Provider
 
 <!-- markdownlint-disable-next-line MD034 -->
 - Website: https://www.terraform.io
+- [![Documentation](https://img.shields.io/badge/documentation-blue)](https://registry.terraform.io/providers/FlexibleEngineCloud/flexibleengine/latest/docs)
 - [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
-
-<!-- markdownlint-disable-next-line MD033 -->
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
 Quick Start
 -----------
