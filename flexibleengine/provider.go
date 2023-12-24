@@ -18,6 +18,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cbr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cce"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/cse"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dcs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ddm"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
@@ -291,6 +292,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_compute_servergroups": ecs.DataSourceComputeServerGroups(),
 
+			"flexibleengine_dcs_flavors":   dcs.DataSourceDcsFlavorsV2(),
+			"flexibleengine_dcs_instances": dcs.DataSourceDcsInstance(),
+
 			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
 			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
 			"flexibleengine_ddm_instance_nodes": ddm.DataSourceDdmInstanceNodes(),
@@ -499,6 +503,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cse_microservice":          cse.ResourceMicroservice(),
 			"flexibleengine_cse_microservice_engine":   cse.ResourceMicroserviceEngine(),
 			"flexibleengine_cse_microservice_instance": cse.ResourceMicroserviceInstance(),
+
+			"flexibleengine_dcs_backup_v1": dcs.ResourceDcsBackup(),
 
 			"flexibleengine_ddm_instance": ddm.ResourceDdmInstance(),
 			"flexibleengine_ddm_schema":   ddm.ResourceDdmSchema(),
