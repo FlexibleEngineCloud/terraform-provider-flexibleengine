@@ -312,7 +312,9 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_dws_flavors": dws.DataSourceDwsFlavors(),
 
-			"flexibleengine_elb_certificate":  elb.DataSourceELBCertificateV3(),
+			"flexibleengine_elb_certificate":   elb.DataSourceELBCertificateV3(),
+			"flexibleengine_elb_loadbalancers": elb.DataSourceElbLoadbalances(),
+
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
 			"flexibleengine_gaussdb_cassandra_flavors":   gaussdb.DataSourceCassandraFlavors(),
