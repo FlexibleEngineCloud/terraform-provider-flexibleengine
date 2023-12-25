@@ -299,6 +299,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_dcs_flavors":   dcs.DataSourceDcsFlavorsV2(),
 			"flexibleengine_dcs_instances": dcs.DataSourceDcsInstance(),
+			"flexibleengine_dcs_templates": dcs.DataSourceTemplates(),
 
 			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
 			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
