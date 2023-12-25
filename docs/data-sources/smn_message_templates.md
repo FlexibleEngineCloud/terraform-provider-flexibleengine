@@ -20,7 +20,7 @@ data "flexibleengine_smn_message_templates" "test" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String) Specifies the region in which to query the data source. 
+* `region` - (Optional, String) Specifies the region in which to query the data source.
   If omitted, the provider-level region will be used.
 
 * `name` - (Optional, String) Specifies the name of the message template.
@@ -35,7 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-* `templates` - The list of message templates. 
+* `templates` - The list of message templates.
   The [templates](#SmnMessageTemplate_MessageTemplate) structure is documented below.
 
 <a name="SmnMessageTemplate_MessageTemplate"></a>
@@ -47,7 +47,7 @@ The `templates` block supports:
 
 * `protocol` - Indicates the protocol supported by the template.
 
-* `tag_names` - Indicates the variable list. The variable name will be quoted in braces ({}) in the template. 
+* `tag_names` - Indicates the variable list. The variable name will be quoted in braces ({}) in the template.
   When you use a template to send messages, you can replace the variable with any content.
 
 * `created_at` - Indicates the create time.
