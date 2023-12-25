@@ -6,7 +6,7 @@ page_title: "flexibleengine_modelarts_dataset_version"
 
 # flexibleengine_modelarts_dataset_version
 
-Manages ModelArts dataset version resource within Flexibleengine.
+Manages ModelArts dataset version resource within FlexibleEngine.
 
 ## Example Usage
 

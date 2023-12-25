@@ -6,7 +6,7 @@ page_title: "flexibleengine_rds_account"
 
 # flexibleengine_rds_account
 
-Manages RDS Mysql account resource within Flexibleengine.
+Manages RDS Mysql account resource within FlexibleEngine.
 
 ## Example Usage
 

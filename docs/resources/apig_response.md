@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_response"
 
 # flexibleengine_apig_response
 
-Manages an APIG (API) custom response resource within Flexibleengine.
+Manages an APIG (API) custom response resource within FlexibleEngine.
 
 ## Example Usage
 

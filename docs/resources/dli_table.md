@@ -6,7 +6,7 @@ page_title: "flexibleengine_dli_table"
 
 # flexibleengine_dli_table
 
-Manages DLI Table resource within Flexibleengine
+Manages DLI Table resource within FlexibleEngine
 
 ## Example Usage
 

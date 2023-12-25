@@ -6,7 +6,7 @@ page_title: "flexibleengine_waf_dedicated_policy"
 
 # flexibleengine_waf_dedicated_policy
 
-Manages a WAF dedicated policy resource within Flexibleengine.
+Manages a WAF dedicated policy resource within FlexibleEngine.
 
 ## Example Usage
 

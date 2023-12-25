@@ -6,7 +6,7 @@ page_title: "flexibleengine_dli_database"
 
 # flexibleengine_dli_database
 
-Manages DLI SQL database resource within Flexibleengine.
+Manages DLI SQL database resource within FlexibleEngine.
 
 ## Example Usage
 

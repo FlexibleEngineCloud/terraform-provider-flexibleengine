@@ -6,7 +6,7 @@ page_title: "flexibleengine_cse_microservice"
 
 # flexibleengine_cse_microservice
 
-Manages a dedicated microservice resource within Flexibleengine.
+Manages a dedicated microservice resource within FlexibleEngine.
 
 -> When deleting a microservice, all instances under it will also be deleted together.
 

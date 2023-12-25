@@ -4,7 +4,7 @@ subcategory: "Dedicated Load Balance (Dedicated ELB)"
 
 # flexibleengine_lb_security_policy_v3
 
-Manages an ELB security policy resource within Flexibleengine.
+Manages an ELB security policy resource within FlexibleEngine.
 
 ## Example Usage
 

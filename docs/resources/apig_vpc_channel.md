@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_vpc_channel"
 
 # flexibleengine_apig_vpc_channel
 
-Manages a VPC channel resource within Flexibleengine.
+Manages a VPC channel resource within FlexibleEngine.
 
 ## Example Usage
 

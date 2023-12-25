@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_api"
 
 # flexibleengine_apig_api
 
-Manages an APIG API resource within Flexibleengine.
+Manages an APIG API resource within FlexibleEngine.
 
 ## Example Usage
 

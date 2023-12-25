@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_environment"
 
 # flexibleengine_apig_environment
 
-Manages an APIG environment resource within Flexibleengine.
+Manages an APIG environment resource within FlexibleEngine.
 
 ## Example Usage
 

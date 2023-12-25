@@ -6,7 +6,7 @@ page_title: "flexibleengine_rds_database"
 
 # flexibleengine_rds_database
 
-Manages RDS Mysql database resource within Flexibleengine.
+Manages RDS Mysql database resource within FlexibleEngine.
 
 ## Example Usage
 

@@ -6,7 +6,7 @@ page_title: "flexibleengine_waf_dedicated_domain"
 
 # flexibleengine_waf_dedicated_domain
 
-Manages a dedicated mode domain resource within Flexibleengine.
+Manages a dedicated mode domain resource within FlexibleEngine.
 
 -> **NOTE:** All WAF resources depend on WAF instances, and the WAF instances need to be purchased before they can be
 used. The dedicated mode domain name resource can be used in Dedicated Mode and ELB Mode.

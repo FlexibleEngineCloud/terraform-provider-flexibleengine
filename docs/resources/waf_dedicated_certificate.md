@@ -6,7 +6,7 @@ page_title: "flexibleengine_waf_dedicated_certificate"
 
 # flexibleengine_waf_dedicated_certificate
 
-Manages a WAF dedicated certificate resource within Flexibleengine.
+Manages a WAF dedicated certificate resource within FlexibleEngine.
 
 ## Example Usage
 

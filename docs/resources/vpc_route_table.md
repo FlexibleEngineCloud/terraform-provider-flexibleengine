@@ -6,7 +6,7 @@ page_title: "flexibleengine_vpc_route_table"
 
 # flexibleengine_vpc_route_table
 
-Manages a VPC custom route table resource within Flexibleengine.
+Manages a VPC custom route table resource within FlexibleEngine.
 
 -> **NOTE:** To use a custom route table, you need to submit a service ticket to increase quota.
 
