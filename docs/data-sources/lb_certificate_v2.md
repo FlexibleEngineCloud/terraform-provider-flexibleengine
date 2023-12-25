@@ -4,7 +4,7 @@ subcategory: "Elastic Load Balance (ELB)"
 
 # flexibleengine_lb_certificate_v2
 
-flexibleengine_lb_certificate_v2 provides details about a specific Certificate.
+Use this data source to get the certificate details in FlexibleEngine Elastic Load Balance (ELB).
 
 ## Example Usage
 

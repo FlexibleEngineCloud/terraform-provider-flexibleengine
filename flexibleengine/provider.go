@@ -322,6 +322,8 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
+			"flexibleengine_lb_listeners_v2": lb.DataSourceListeners(),
+
 			"flexibleengine_gaussdb_cassandra_flavors":   gaussdb.DataSourceCassandraFlavors(),
 			"flexibleengine_gaussdb_cassandra_instances": gaussdb.DataSourceGeminiDBInstances(),
 			"flexibleengine_gaussdb_nosql_flavors":       gaussdb.DataSourceGaussDBNoSQLFlavors(),
@@ -610,6 +612,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_dedicated_domain":      ResourceWafDedicatedDomainV1(),
 
 			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
+			"flexibleengine_lb_logtank_v3":      elb.ResourceLogTank(),
 			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
 			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
 			"flexibleengine_elb_ipgroup":        elb.ResourceIpGroupV3(),
