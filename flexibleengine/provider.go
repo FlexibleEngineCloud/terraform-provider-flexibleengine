@@ -282,6 +282,7 @@ func Provider() *schema.Provider {
 
 			// importing new data source
 			"flexibleengine_apig_environments": apig.DataSourceEnvironments(),
+			"flexibleengine_apig_groups":       apig.DataSourceGroups(),
 
 			"flexibleengine_as_configurations": as.DataSourceASConfigurations(),
 			"flexibleengine_as_groups":         as.DataSourceASGroups(),
