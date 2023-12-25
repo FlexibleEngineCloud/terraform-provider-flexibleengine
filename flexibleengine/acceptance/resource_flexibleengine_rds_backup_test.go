@@ -90,7 +90,7 @@ func TestAccBackup_mysql_basic(t *testing.T) {
 				ResourceName:      rName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateIdFunc: testAccBackupImportStateFunc(rName),
+				ImportStateIdFunc: testAccRdsBackupImportStateFunc(rName),
 			},
 		},
 	})
@@ -129,7 +129,7 @@ func TestAccBackup_sqlserver_basic(t *testing.T) {
 				ResourceName:      rName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateIdFunc: testAccBackupImportStateFunc(rName),
+				ImportStateIdFunc: testAccRdsBackupImportStateFunc(rName),
 			},
 		},
 	})
@@ -168,7 +168,7 @@ func TestAccBackup_pg_basic(t *testing.T) {
 				ResourceName:      rName,
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateIdFunc: testAccBackupImportStateFunc(rName),
+				ImportStateIdFunc: testAccRdsBackupImportStateFunc(rName),
 			},
 		},
 	})
@@ -211,7 +211,6 @@ resource "flexibleengine_rds_instance_v3" "test" {
     type = "COMMON"
     size = 60
   }
-
   backup_strategy {
     start_time = "08:00-09:00"
     keep_days  = 1
@@ -342,7 +341,7 @@ resource "flexibleengine_rds_backup" "test" {
 `, testVpc(name), name)
 }
 
-func testAccBackupImportStateFunc(name string) resource.ImportStateIdFunc {
+func testAccRdsBackupImportStateFunc(name string) resource.ImportStateIdFunc {
 	return func(s *terraform.State) (string, error) {
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
