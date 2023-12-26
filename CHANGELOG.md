@@ -1,5 +1,43 @@
 # CHANGELOG
 
+## 1.45.0 (December 26, 2023)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_apig_acl_policy` [GH-1050]
+  - `flexibleengine_apig_acl_policy_associate` [GH-1050]
+  - `flexibleengine_apig_instance_routes` [GH-1050]
+  - `flexibleengine_apig_appcode` [GH-1050]
+  - `flexibleengine_apig_application_authorization` [GH-1050]
+  - `flexibleengine_apig_channel` [GH-1050]
+  - `flexibleengine_apig_signature` [GH-1050]
+  - `flexibleengine_apig_signature_associate` [GH-1050]
+  - `flexibleengine_api_gateway_environment` [GH-1050]
+  - `flexibleengine_dcs_backup_v1` [GH-1049]
+  - `flexibleengine_dds_audit_log_policy` [GH-1039]
+  - `flexibleengine_dds_backup` [GH-1039]
+  - `flexibleengine_dds_parameter_template` [GH-1039]
+  - `flexibleengine_elb_security_policy` [GH-1045]
+  - `flexibleengine_elb_logtank` [GH-1056]
+
+* **New Data Source:**
+  - `flexibleengine_apig_groups` [GH-1076]
+  - `flexibleengine_css_flavors` [GH-1054]
+  - `flexibleengine_dcs_instances` [GH-1049]
+  - `flexibleengine_dcs_flavors` [GH-1049]
+  - `flexibleengine_dcs_templates` [GH-1078]
+  - `flexibleengine_dds_instances` [GH-1039]
+  - `flexibleengine_elb_loadbalancers` [GH-1079]
+  - `flexibleengine_lb_listeners_v2` [GH-1056]
+  - `flexibleengine_rds_sqlserver_collations` [GH-1081]
+  - `flexibleengine_smn_message_templates` [GH-1075]
+  - `flexibleengine_waf_certificate` [GH-1063]
+
+DEPRECATED:
+
+* `resource/flexibleengine_apig_vpc_channel` [GH-1083]
+
 ## 1.44.0 (December 1, 2023)
 
 FEATURES:
