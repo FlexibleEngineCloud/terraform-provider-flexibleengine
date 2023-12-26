@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_throttling_policy_associate"
 
 # flexibleengine_apig_throttling_policy_associate
 
-Use this resource to bind the APIs to the throttling policy within Flexibleengine.
+Use this resource to bind the APIs to the throttling policy within FlexibleEngine.
 
 ## Example Usage
 

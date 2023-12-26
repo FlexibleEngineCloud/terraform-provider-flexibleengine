@@ -6,7 +6,7 @@ page_title: "flexibleengine_rds_database_privilege"
 
 # flexibleengine_rds_database_privilege
 
-Manages RDS Mysql database privilege resource within Flexibleengine.
+Manages RDS Mysql database privilege resource within FlexibleEngine.
 
 ## Example Usage
 

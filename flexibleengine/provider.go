@@ -541,8 +541,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_dds_database_user":      dds.ResourceDatabaseUser(),
 			"flexibleengine_dds_parameter_template": dds.ResourceDdsParameterTemplate(),
 
-			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
-
 			"flexibleengine_dms_kafka_user":              dms.ResourceDmsKafkaUser(),
 			"flexibleengine_dms_rocketmq_instance":       dms.ResourceDmsRocketMQInstance(),
 			"flexibleengine_dms_rocketmq_consumer_group": dms.ResourceDmsRocketMQConsumerGroup(),
@@ -576,8 +574,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_images_image_share_accepter": ims.ResourceImsImageShareAccepter(),
 
 			"flexibleengine_kms_grant": dew.ResourceKmsGrant(),
-
-			"flexibleengine_lb_security_policy_v3": elb.ResourceSecurityPolicy(),
 
 			"flexibleengine_nat_private_dnat_rule":  nat.ResourcePrivateDnatRule(),
 			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
@@ -613,11 +609,12 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_dedicated_certificate": ResourceWafDedicatedCertificateV1(),
 			"flexibleengine_waf_dedicated_domain":      ResourceWafDedicatedDomainV1(),
 
-			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
-			"flexibleengine_lb_logtank_v3":      elb.ResourceLogTank(),
-			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
-			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
-			"flexibleengine_elb_ipgroup":        elb.ResourceIpGroupV3(),
+			"flexibleengine_lb_loadbalancer_v3":  elb.ResourceLoadBalancerV3(),
+			"flexibleengine_lb_listener_v3":      elb.ResourceListenerV3(),
+			"flexibleengine_elb_certificate":     elb.ResourceCertificateV3(),
+			"flexibleengine_elb_ipgroup":         elb.ResourceIpGroupV3(),
+			"flexibleengine_elb_security_policy": elb.ResourceSecurityPolicy(),
+			"flexibleengine_elb_logtank":         elb.ResourceLogTank(),
 
 			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
 			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),
@@ -660,6 +657,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_networking_router_v2":               resourceNetworkingRouterV2(),
 			"flexibleengine_networking_router_interface_v2":     resourceNetworkingRouterInterfaceV2(),
 			"flexibleengine_networking_router_route_v2":         resourceNetworkingRouterRouteV2(),
+
+			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,

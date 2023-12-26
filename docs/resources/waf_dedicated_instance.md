@@ -6,7 +6,7 @@ page_title: "flexibleengine_waf_dedicated_instance"
 
 # flexibleengine_waf_dedicated_instance
 
-Manages a WAF dedicated instance resource within Flexibleengine.
+Manages a WAF dedicated instance resource within FlexibleEngine.
 
 ## Example Usage
 

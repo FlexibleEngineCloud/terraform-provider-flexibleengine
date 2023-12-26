@@ -6,7 +6,7 @@ page_title: "flexibleengine_vpc_route"
 
 # flexibleengine_vpc_route
 
-Manages a VPC route resource within Flexibleengine.
+Manages a VPC route resource within FlexibleEngine.
 
 ## Example Usage
 

@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_instance"
 
 # flexibleengine_apig_instance
 
-Manages an APIG dedicated instance resource within Flexibleengine.
+Manages an APIG dedicated instance resource within FlexibleEngine.
 
 ## Example Usage
 

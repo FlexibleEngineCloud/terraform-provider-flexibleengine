@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_group"
 
 # flexibleengine_apig_group
 
-Manages an APIG (API) group resource within Flexibleengine.
+Manages an APIG (API) group resource within FlexibleEngine.
 
 ## Example Usage
 

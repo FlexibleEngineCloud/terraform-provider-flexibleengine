@@ -13,7 +13,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/acceptance"
 )
 
-func getELBLogTankResourceFunc(c *config.Config, state *terraform.ResourceState) (interface{}, error) {
+func getElbLogTankResourceFunc(c *config.Config, state *terraform.ResourceState) (interface{}, error) {
 	client, err := c.ElbV3Client(OS_REGION_NAME)
 	if err != nil {
 		return nil, fmt.Errorf("error creating ELB client: %s", err)
@@ -24,12 +24,12 @@ func getELBLogTankResourceFunc(c *config.Config, state *terraform.ResourceState)
 func TestAccElbLogTank_basic(t *testing.T) {
 	var logTanks logtanks.LogTank
 	rName := acceptance.RandomAccResourceNameWithDash()
-	resourceName := "flexibleengine_lb_logtank_v3.test"
+	resourceName := "flexibleengine_elb_logtank.test"
 
 	rc := acceptance.InitResourceCheck(
 		resourceName,
 		&logTanks,
-		getELBLogTankResourceFunc,
+		getElbLogTankResourceFunc,
 	)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -94,7 +94,7 @@ resource "flexibleengine_lb_loadbalancer_v3" "test" {
 }
 
 resource "flexibleengine_lts_group" "%[2]s" {
-  group_name  = "%[2]s"
+  group_name = "%[2]s"
 }
 
 resource "flexibleengine_lts_topic" "%[2]s" {
@@ -108,7 +108,7 @@ func testAccElbLogTankConfig_basic(rName string) string {
 	return fmt.Sprintf(`
 %s
 
-resource "flexibleengine_lb_logtank_v3" "test" {
+resource "flexibleengine_elb_logtank" "test" {
   loadbalancer_id = flexibleengine_lb_loadbalancer_v3.test.id
   log_group_id    = flexibleengine_lts_group.test.id
   log_topic_id    = flexibleengine_lts_topic.test.id
@@ -120,7 +120,7 @@ func testAccElbLogTankConfig_update(rName string) string {
 	return fmt.Sprintf(`
 %s
 
-resource "flexibleengine_lb_logtank_v3" "test" {
+resource "flexibleengine_elb_logtank" "test" {
   loadbalancer_id = flexibleengine_lb_loadbalancer_v3.test.id
   log_group_id    = flexibleengine_lts_group.test_update.id
   log_topic_id    = flexibleengine_lts_topic.test_update.id

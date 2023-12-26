@@ -1,5 +1,5 @@
 ---
-subcategory: Dedicated Load Balance (Dedicated ELB)
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
 # flexibleengine_elb_loadbalancers

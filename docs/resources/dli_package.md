@@ -6,7 +6,7 @@ page_title: "flexibleengine_dli_package"
 
 # flexibleengine_dli_package
 
-Manages DLI package resource within Flexibleengine
+Manages DLI package resource within FlexibleEngine
 
 ## Example Usage
 

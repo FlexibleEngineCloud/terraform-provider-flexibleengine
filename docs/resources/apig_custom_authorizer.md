@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_custom_authorizer"
 
 # flexibleengine_apig_custom_authorizer
 
-Manages an APIG custom authorizer resource within Flexibleengine.
+Manages an APIG custom authorizer resource within FlexibleEngine.
 
 ## Example Usage
 

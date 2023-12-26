@@ -6,7 +6,7 @@ page_title: "flexibleengine_drs_job"
 
 # flexibleengine_drs_job
 
-Manages DRS job resource within Flexibleengine.
+Manages DRS job resource within FlexibleEngine.
 
 ## Example Usage
 

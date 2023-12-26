@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_throttling_policy"
 
 # flexibleengine_apig_throttling_policy
 
-Manages an APIG (API) throttling policy resource within Flexibleengine.
+Manages an APIG (API) throttling policy resource within FlexibleEngine.
 
 ## Example Usage
 

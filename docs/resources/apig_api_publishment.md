@@ -6,7 +6,7 @@ page_title: "flexibleengine_apig_api_publishment"
 
 # flexibleengine_apig_api_publishment
 
-API publish Management within Flexibleengine.
+API publish Management within FlexibleEngine.
 
 ~> If you republish on the same environment or switch versions through other ways (such as console) after the API is
 published through terraform, the current resource attributes will be affected, resulting in data inconsistency.

@@ -6,7 +6,7 @@ page_title: "flexibleengine_dli_flinksql_job"
 
 # flexibleengine_dli_flinksql_job
 
-Manages a flink sql job resource within Flexibleengine DLI.
+Manages a flink sql job resource within FlexibleEngine DLI.
 
 ## Example Usage
 

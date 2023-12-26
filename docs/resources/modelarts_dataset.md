@@ -6,7 +6,7 @@ page_title: "flexibleengine_modelarts_dataset"
 
 # flexibleengine_modelarts_dataset
 
-Manages ModelArts dataset resource within Flexibleengine.
+Manages ModelArts dataset resource within FlexibleEngine.
 
 ## Example Usage
 

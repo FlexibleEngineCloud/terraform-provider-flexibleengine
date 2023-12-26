@@ -6,7 +6,7 @@ page_title: "flexibleengine_cce_pvc"
 
 # flexibleengine_cce_pvc
 
-Manages a CCE Persistent Volume Claim resource within Flexibleengine.
+Manages a CCE Persistent Volume Claim resource within FlexibleEngine.
 
 -> **NOTE:** Currently, there is an ongoing certificate issue regarding the PVC management APIs.
   Please set `insecure = true` in provider block to ignore SSL certificate verification.

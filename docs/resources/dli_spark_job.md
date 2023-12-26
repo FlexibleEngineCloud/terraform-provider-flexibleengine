@@ -6,7 +6,7 @@ page_title: "flexibleengine_dli_spark_job"
 
 # flexibleengine_dli_spark_job
 
-Manages spark job resource of DLI within Flexibleengine
+Manages spark job resource of DLI within FlexibleEngine
 
 ## Example Usage
 

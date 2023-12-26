@@ -6,7 +6,7 @@ page_title: "flexibleengine_cce_namespace"
 
 # flexibleengine_cce_namespace
 
-Manages a CCE namespace resource within Flexibleengine.
+Manages a CCE namespace resource within FlexibleEngine.
 
 -> **NOTE:** Currently, there is an ongoing certificate issue regarding the namespace management APIs.
   Please set `insecure = true` in provider block to ignore SSL certificate verification.

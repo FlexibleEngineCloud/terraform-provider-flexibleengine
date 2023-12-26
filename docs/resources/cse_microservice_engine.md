@@ -6,7 +6,7 @@ page_title: "flexibleengine_cse_microservice_engine"
 
 # flexibleengine_cse_microservice_engine
 
-Manages a dedicated microservice engine resource within Flexibleengine.
+Manages a dedicated microservice engine resource within FlexibleEngine.
 
 ## Example Usage
 

@@ -4,7 +4,7 @@ subcategory: "API Gateway (Dedicated APIG)"
 
 # flexibleengine_apig_environments
 
-Use this data source to query the environment list under the APIG instance within Flexibleengine.
+Use this data source to query the environment list under the APIG instance within FlexibleEngine.
 
 ## Example Usage
 
