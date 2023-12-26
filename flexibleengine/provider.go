@@ -541,8 +541,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_dds_database_user":      dds.ResourceDatabaseUser(),
 			"flexibleengine_dds_parameter_template": dds.ResourceDdsParameterTemplate(),
 
-			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
-
 			"flexibleengine_dms_kafka_user":              dms.ResourceDmsKafkaUser(),
 			"flexibleengine_dms_rocketmq_instance":       dms.ResourceDmsRocketMQInstance(),
 			"flexibleengine_dms_rocketmq_consumer_group": dms.ResourceDmsRocketMQConsumerGroup(),
@@ -660,6 +658,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_networking_router_v2":               resourceNetworkingRouterV2(),
 			"flexibleengine_networking_router_interface_v2":     resourceNetworkingRouterInterfaceV2(),
 			"flexibleengine_networking_router_route_v2":         resourceNetworkingRouterRouteV2(),
+
+			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,

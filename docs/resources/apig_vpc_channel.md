@@ -1,10 +1,12 @@
 ---
-subcategory: "API Gateway (Dedicated APIG)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_apig_vpc_channel"
 ---
 
 # flexibleengine_apig_vpc_channel
+
+!> **WARNING:** It has been deprecated.
 
 Manages a VPC channel resource within FlexibleEngine.
 
