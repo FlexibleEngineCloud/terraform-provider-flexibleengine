@@ -15,7 +15,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
 
-func getSecurityPoliciesV3ResourceFunc(cfg *config.Config, state *terraform.ResourceState) (interface{}, error) {
+func getElbSecurityPolicieResourceFunc(cfg *config.Config, state *terraform.ResourceState) (interface{}, error) {
 	region := OS_REGION_NAME
 	// getSecurityPolicy: Query the ELB security policy
 	var (
@@ -44,16 +44,16 @@ func getSecurityPoliciesV3ResourceFunc(cfg *config.Config, state *terraform.Reso
 	return utils.FlattenResponse(getSecurityPolicyResp)
 }
 
-func TestAccSecurityPoliciesV3_basic(t *testing.T) {
+func TestElbAccSecurityPolicie_basic(t *testing.T) {
 	var obj interface{}
 
 	name := acceptance.RandomAccResourceName()
-	rName := "flexibleengine_lb_security_policy_v3.test"
+	rName := "flexibleengine_elb_security_policy.test"
 
 	rc := acceptance.InitResourceCheck(
 		rName,
 		&obj,
-		getSecurityPoliciesV3ResourceFunc,
+		getElbSecurityPolicieResourceFunc,
 	)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -62,7 +62,7 @@ func TestAccSecurityPoliciesV3_basic(t *testing.T) {
 		CheckDestroy:      rc.CheckResourceDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: testSecurityPoliciesV3_basic(name),
+				Config: testElbSecurityPolicie_basic(name),
 				Check: resource.ComposeTestCheckFunc(
 					rc.CheckResourceExists(),
 					resource.TestCheckResourceAttr(rName, "protocols.0", "TLSv1"),
@@ -72,7 +72,7 @@ func TestAccSecurityPoliciesV3_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testSecurityPoliciesV3_basic_update(name),
+				Config: testElbSecurityPolicie_update(name),
 				Check: resource.ComposeTestCheckFunc(
 					rc.CheckResourceExists(),
 					resource.TestCheckResourceAttr(rName, "protocols.0", "TLSv1.2"),
@@ -89,9 +89,9 @@ func TestAccSecurityPoliciesV3_basic(t *testing.T) {
 	})
 }
 
-func testSecurityPoliciesV3_basic(name string) string {
+func testElbSecurityPolicie_basic(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_security_policy_v3" "test" {
+resource "flexibleengine_elb_security_policy" "test" {
   protocols = [
     "TLSv1",
     "TLSv1.1",
@@ -109,9 +109,9 @@ resource "flexibleengine_lb_security_policy_v3" "test" {
 `, name)
 }
 
-func testSecurityPoliciesV3_basic_update(name string) string {
+func testElbSecurityPolicie_update(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_security_policy_v3" "test" {
+resource "flexibleengine_elb_security_policy" "test" {
   protocols = [
     "TLSv1.2",
   ]

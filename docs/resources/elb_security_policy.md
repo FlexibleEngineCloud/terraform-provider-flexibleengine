@@ -1,15 +1,15 @@
 ---
-subcategory: "Dedicated Load Balance (Dedicated ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
-# flexibleengine_lb_security_policy_v3
+# flexibleengine_elb_security_policy
 
 Manages an ELB security policy resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_security_policy_v3" "test" {
+resource "flexibleengine_elb_security_policy" "test" {
   name        = "security_policy_test"
   description = "this is a security policy"
   protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"]
@@ -70,5 +70,5 @@ The `listeners` block supports:
 The elb security policies can be imported using the `id`, e.g.
 
 ```bash
-terraform import flexibleengine_lb_security_policy_v3.test 0ce123456a00f2591fabc00385ff1234
+terraform import flexibleengine_elb_security_policy.test 0ce123456a00f2591fabc00385ff1234
 ```

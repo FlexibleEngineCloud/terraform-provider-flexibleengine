@@ -575,8 +575,6 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_kms_grant": dew.ResourceKmsGrant(),
 
-			"flexibleengine_lb_security_policy_v3": elb.ResourceSecurityPolicy(),
-
 			"flexibleengine_nat_private_dnat_rule":  nat.ResourcePrivateDnatRule(),
 			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
 			"flexibleengine_nat_private_snat_rule":  nat.ResourcePrivateSnatRule(),
@@ -611,11 +609,12 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_dedicated_certificate": ResourceWafDedicatedCertificateV1(),
 			"flexibleengine_waf_dedicated_domain":      ResourceWafDedicatedDomainV1(),
 
-			"flexibleengine_lb_loadbalancer_v3": elb.ResourceLoadBalancerV3(),
-			"flexibleengine_lb_logtank_v3":      elb.ResourceLogTank(),
-			"flexibleengine_lb_listener_v3":     elb.ResourceListenerV3(),
-			"flexibleengine_elb_certificate":    elb.ResourceCertificateV3(),
-			"flexibleengine_elb_ipgroup":        elb.ResourceIpGroupV3(),
+			"flexibleengine_lb_loadbalancer_v3":  elb.ResourceLoadBalancerV3(),
+			"flexibleengine_lb_listener_v3":      elb.ResourceListenerV3(),
+			"flexibleengine_elb_certificate":     elb.ResourceCertificateV3(),
+			"flexibleengine_elb_ipgroup":         elb.ResourceIpGroupV3(),
+			"flexibleengine_elb_security_policy": elb.ResourceSecurityPolicy(),
+			"flexibleengine_elb_logtank":         elb.ResourceLogTank(),
 
 			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
 			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),

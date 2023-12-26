@@ -1,8 +1,8 @@
 ---
-subcategory: "Dedicated Load Balance (Dedicated ELB)"
+subcategory: "Elastic Load Balance (Dedicated ELB)"
 ---
 
-# flexibleengine_lb_logtank_v3
+# flexibleengine_elb_logtank
 
 Manage an LB logtank resource within FlexibleEngine.
 
@@ -13,7 +13,7 @@ variable "loadbalancer_id" {}
 variable "group_id" {}
 variable "topic_id" {}
 
-resource "flexibleengine_lb_logtank_v3" "test" {
+resource "flexibleengine_elb_logtank" "test" {
   loadbalancer_id = var.loadbalancer_id
   log_group_id    = var.group_id
   log_topic_id    = var.topic_id
@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 LB logtank can be imported using the logtank ID, e.g.
 
 ```bash
-terraform import flexibleengine_lb_logtank_v3.test 2f148a75-acd3-4ce7-8f63-d5c9fadab3a0
+terraform import flexibleengine_elb_logtank.test 2f148a75-acd3-4ce7-8f63-d5c9fadab3a0
 ```
