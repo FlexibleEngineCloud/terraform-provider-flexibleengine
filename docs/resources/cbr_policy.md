@@ -66,12 +66,16 @@ The following arguments are supported:
   Changing this will create a new policy.
 
 * `backup_cycle` - (Required, List) Specifies the scheduling rule for the policy backup execution.
-  The [object](#cbr_policy_backup_cycle) structure is documented below.
+  The [backup_cycle](#cbr_policy_backup_cycle) structure is documented below.
 
 * `enabled` - (Optional, Bool) Specifies whether to enable the policy. Default to **true**.
 
 * `destination_region` - (Optional, String) Specifies the name of the replication destination region, which is mandatory
   for cross-region replication. Required if `protection_type` is **replication**.
+
+* `enable_acceleration` - (Optional, Bool, ForceNew) Specifies whether to enable the acceleration function to shorten
+  the replication time for cross-region.  
+  Changing this will create a new policy.
 
 * `destination_project_id` - (Optional, String) Specifies the ID of the replication destination project, which is
   mandatory for cross-region replication. Required if `protection_type` is **replication**.
@@ -121,6 +125,10 @@ The `long_term_retention` block supports:
 
 -> A maximum of 10 backups are retained for failed periodic backup tasks. They are retained for one month and can be
   manually deleted on the web console.
+
+* `full_backup_interval` - (Optional, Int) Specifies how often (after how many incremental backups) a full backup is
+  performed. The valid value ranges from `-1` to `100`.
+  If `-1` is specified, full backup will not be performed.
 
 ## Attribute Reference
 
