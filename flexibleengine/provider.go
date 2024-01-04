@@ -382,6 +382,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
+			"flexibleengine_modelarts_model_templates":  modelarts.DataSourceModelTemplates(),
 
 			"flexibleengine_obs_buckets":       obs.DataSourceObsBuckets(),
 			"flexibleengine_obs_bucket_object": obs.DataSourceObsBucketObject(),
