@@ -339,6 +339,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dms_rocketmq_broker":    dms.DataSourceDmsRocketMQBroker(),
 			"flexibleengine_dms_rocketmq_instances": dms.DataSourceDmsRocketMQInstances(),
 			"flexibleengine_dms_maintainwindow":     dms.DataSourceDmsMaintainWindow(),
+			"flexibleengine_dms_rabbitmq_flavors":   dms.DataSourceRabbitMQFlavors(),
 
 			"flexibleengine_dws_flavors": dws.DataSourceDwsFlavors(),
 
