@@ -12,7 +12,7 @@ resource "flexibleengine_vpc_eip" "eip_1" {
 
 resource "flexibleengine_vpc_eip_associate" "associated" {
   public_ip  = flexibleengine_vpc_eip.eip_1.address
-  fixed_ip   = flexibleengine_lb_loadbalancer_v2.loadbalancer.vip_address
+  fixed_ip   = flexibleengine_lb_loadbalancer.loadbalancer.vip_address
   network_id = flexibleengine_vpc_subnet_v1.subnet.id
 }
 

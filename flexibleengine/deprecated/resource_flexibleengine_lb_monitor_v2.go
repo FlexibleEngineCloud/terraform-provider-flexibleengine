@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
@@ -7,16 +7,19 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/monitors"
 )
 
-func resourceMonitorV2() *schema.Resource {
+func ResourceMonitorV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceMonitorV2Create,
 		Read:   resourceMonitorV2Read,
 		Update: resourceMonitorV2Update,
 		Delete: resourceMonitorV2Delete,
+
+		DeprecationMessage: "flexibleengine_lb_monitor_v2 has deprecated, use flexibleengine_lb_monitor instead.",
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -99,8 +102,8 @@ func resourceMonitorV2() *schema.Resource {
 }
 
 func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	lbClient, err := config.ElbV2Client(GetRegion(d, config))
+	config := meta.(*config.Config)
+	lbClient, err := config.ElbV2Client(config.GetRegion(d))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
 	}
@@ -154,7 +157,7 @@ func resourceMonitorV2Create(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -184,7 +187,7 @@ func resourceMonitorV2Read(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -250,7 +253,7 @@ func resourceMonitorV2Update(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMonitorV2Delete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)

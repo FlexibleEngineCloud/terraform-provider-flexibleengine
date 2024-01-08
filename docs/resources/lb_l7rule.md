@@ -1,46 +1,46 @@
 ---
-subcategory: "Deprecated"
+subcategory: "Elastic Load Balance (ELB)"
 description: ""
-page_title: "flexibleengine_lb_l7rule_v2"
+page_title: "flexibleengine_lb_l7rule"
 ---
 
-# flexibleengine_lb_l7rule_v2
+# flexibleengine_lb_l7rule
 
 Manages an **enhanced** load balancer L7 Rule resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_1"
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener_1"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 
-resource "flexibleengine_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool" "pool_1" {
   name            = "pool_1"
   protocol        = "HTTP"
   lb_method       = "ROUND_ROBIN"
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 
-resource "flexibleengine_lb_l7policy_v2" "l7policy_1" {
+resource "flexibleengine_lb_l7policy" "l7policy_1" {
   name             = "test"
   action           = "REDIRECT_TO_POOL"
   description      = "test l7 policy"
   position         = 1
-  listener_id      = flexibleengine_lb_listener_v2.listener_1.id
-  redirect_pool_id = flexibleengine_lb_pool_v2.pool_1.id
+  listener_id      = flexibleengine_lb_listener.listener_1.id
+  redirect_pool_id = flexibleengine_lb_pool.pool_1.id
 }
 
-resource "flexibleengine_lb_l7rule_v2" "l7rule_1" {
-  l7policy_id  = flexibleengine_lb_l7policy_v2.l7policy_1.id
+resource "flexibleengine_lb_l7rule" "l7rule_1" {
+  l7policy_id  = flexibleengine_lb_l7policy.l7policy_1.id
   type         = "PATH"
   compare_type = "EQUAL_TO"
   value        = "/api"
@@ -90,5 +90,5 @@ Load Balancer L7 Rule can be imported using the L7 Policy ID and L7 Rule ID
 separated by a slash, e.g.:
 
 ```shell
-terraform import flexibleengine_lb_l7rule_v2.l7rule_1 e0bd694a-abbe-450e-b329-0931fd1cc5eb/4086b0c9-b18c-4d1c-b6b8-4c56c3ad2a9e
+terraform import flexibleengine_lb_l7rule.l7rule_1 e0bd694a-abbe-450e-b329-0931fd1cc5eb/4086b0c9-b18c-4d1c-b6b8-4c56c3ad2a9e
 ```

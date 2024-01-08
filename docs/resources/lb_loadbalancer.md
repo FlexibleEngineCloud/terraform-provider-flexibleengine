@@ -1,17 +1,17 @@
 ---
-subcategory: "Deprecated"
+subcategory: "Elastic Load Balance (ELB)"
 description: ""
-page_title: "flexibleengine_lb_loadbalancer_v2"
+page_title: "flexibleengine_lb_loadbalancer"
 ---
 
-# flexibleengine_lb_loadbalancer_v2
+# flexibleengine_lb_loadbalancer
 
 Manages an **enhanced** load balancer resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
+resource "flexibleengine_lb_loadbalancer" "lb_1" {
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
   tags = {
@@ -68,5 +68,5 @@ This resource provides the following timeouts configuration options:
 Loadbalancers can be imported using the `id`, e.g.
 
 ```shell
-terraform import flexibleengine_lb_loadbalancer_v2.loadbalancer_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
+terraform import flexibleengine_lb_loadbalancer.loadbalancer_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
 ```

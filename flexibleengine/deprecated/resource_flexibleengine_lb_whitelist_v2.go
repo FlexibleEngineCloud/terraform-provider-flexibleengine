@@ -1,20 +1,26 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
 	"log"
+	"reflect"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/whitelists"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 )
 
-func resourceWhitelistV2() *schema.Resource {
+func ResourceWhitelistV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceWhitelistV2Create,
 		Read:   resourceWhitelistV2Read,
 		Update: resourceWhitelistV2Update,
 		Delete: resourceWhitelistV2Delete,
+
+		DeprecationMessage: "flexibleengine_lb_whitelist_v2 has deprecated, use flexibleengine_lb_whitelist instead.",
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -52,7 +58,7 @@ func resourceWhitelistV2() *schema.Resource {
 }
 
 func resourceWhitelistV2Create(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -77,7 +83,7 @@ func resourceWhitelistV2Create(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceWhitelistV2Read(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -100,7 +106,7 @@ func resourceWhitelistV2Read(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceWhitelistV2Update(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -125,7 +131,7 @@ func resourceWhitelistV2Update(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceWhitelistV2Delete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -138,4 +144,16 @@ func resourceWhitelistV2Delete(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId("")
 	return nil
+}
+
+func suppressLBWhitelistDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if len(old) != len(new) {
+		return false
+	}
+	old_array := strings.Split(old, ",")
+	new_array := strings.Split(new, ",")
+	sort.Strings(old_array)
+	sort.Strings(new_array)
+
+	return reflect.DeepEqual(old_array, new_array)
 }

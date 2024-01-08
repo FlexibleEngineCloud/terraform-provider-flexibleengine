@@ -42,7 +42,7 @@ func testAccCheckELBListenerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_lb_listener_v2" {
+		if rs.Type != "flexibleengine_lb_listener" {
 			continue
 		}
 

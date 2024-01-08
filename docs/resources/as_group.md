@@ -93,14 +93,14 @@ resource "flexibleengine_vpc_subnet_v1" "example_subnet" {
   vpc_id     = flexibleengine_vpc_v1.example_vpc.id
 }
 
-resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
+resource "flexibleengine_lb_loadbalancer" "lb_1" {
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.lb_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.lb_1.id
 }
 
 resource "flexibleengine_as_group" "my_as_group_with_elb" {
@@ -108,7 +108,7 @@ resource "flexibleengine_as_group" "my_as_group_with_elb" {
   desire_instance_number   = 2
   min_instance_number      = 0
   max_instance_number      = 10
-  lb_listener_id           = flexibleengine_lb_listener_v2.listener_1.id
+  lb_listener_id           = flexibleengine_lb_listener.listener_1.id
   scaling_configuration_id = "37e310f5-db9d-446e-9135-c625f9c2bbfc"
   vpc_id                   = flexibleengine_vpc_v1.example_vpc.id
   delete_publicip          = true

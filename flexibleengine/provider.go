@@ -7,8 +7,10 @@ import (
 	"strings"
 	"sync"
 
+	fedeprecated "github.com/FlexibleEngineCloud/terraform-provider-flexibleengine/flexibleengine/deprecated"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
 
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
@@ -24,7 +26,6 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dcs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/ddm"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dds"
-	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/deprecated"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dew"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dli"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/dms"
@@ -289,8 +290,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_dds_flavors_v3": dataSourceDDSFlavorsV3(),
 
-			"flexibleengine_lb_certificate_v2":  dataSourceCertificateV2(),
-			"flexibleengine_lb_loadbalancer_v2": dataSourceELBV2Loadbalancer(),
+			"flexibleengine_lb_certificate": dataSourceCertificateV2(),
 
 			"flexibleengine_sdrs_domain_v1": dataSourceSdrsDomainV1(),
 
@@ -347,7 +347,8 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_fgs_dependencies": fgs.DataSourceFunctionGraphDependencies(),
 
-			"flexibleengine_lb_listeners_v2": lb.DataSourceListeners(),
+			"flexibleengine_lb_listeners":    lb.DataSourceListeners(),
+			"flexibleengine_lb_loadbalancer": lb.DataSourceELBV2Loadbalancer(),
 
 			"flexibleengine_gaussdb_cassandra_flavors":   gaussdb.DataSourceCassandraFlavors(),
 			"flexibleengine_gaussdb_cassandra_instances": gaussdb.DataSourceGeminiDBInstances(),
@@ -390,19 +391,26 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_flavors_v3": rds.DataSourceRdsFlavor(), // v1.34.0
 
 			// Deprecated data source
-			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),
 			"flexibleengine_blockstorage_availability_zones_v3": dataSourceBlockStorageAvailabilityZonesV3(),
 
+			"flexibleengine_compute_availability_zones_v2": dataSourceAvailabilityZones(),
+
+			"flexibleengine_dcs_az_v1": dataSourceDcsAZV1(),
+
+			"flexibleengine_dds_flavor_v3": dataSourceDDSFlavorV3(),
+
 			"flexibleengine_images_image_v2": dataSourceImagesImageV2(),
+
+			"flexibleengine_lb_certificate_v2":  dataSourceCertificateV2(),
+			"flexibleengine_lb_listeners_v2":    lb.DataSourceListeners(),
+			"flexibleengine_lb_loadbalancer_v2": fedeprecated.DataSourceELBV2Loadbalancer(),
+
+			"flexibleengine_rds_flavors_v1": dataSourceRdsFlavorV1(),
 
 			"flexibleengine_networking_network_v2": dataSourceNetworkingNetworkV2(),
 			"flexibleengine_vpc_eip_v1":            dataSourceVpcEipV1(),
 			"flexibleengine_vpc_route_v2":          dataSourceVPCRouteV2(),
 			"flexibleengine_vpc_route_ids_v2":      dataSourceVPCRouteIdsV2(),
-
-			"flexibleengine_dcs_az_v1":      dataSourceDcsAZV1(),
-			"flexibleengine_dds_flavor_v3":  dataSourceDDSFlavorV3(),
-			"flexibleengine_rds_flavors_v1": dataSourceRdsFlavorV1(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -433,13 +441,10 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_kms_key_v1": resourceKmsKeyV1(),
 
-			"flexibleengine_lb_loadbalancer_v2": resourceLoadBalancerV2(),
-			"flexibleengine_lb_listener_v2":     resourceListenerV2(),
-			"flexibleengine_lb_member_v2":       resourceMemberV2(),
-			"flexibleengine_lb_monitor_v2":      resourceMonitorV2(),
-			"flexibleengine_lb_whitelist_v2":    resourceWhitelistV2(),
-			"flexibleengine_lb_l7policy_v2":     resourceL7PolicyV2(),
-			"flexibleengine_lb_l7rule_v2":       resourceL7RuleV2(),
+			"flexibleengine_lb_loadbalancer": resourceLoadBalancerV2(),
+			"flexibleengine_lb_listener":     resourceListenerV2(),
+			"flexibleengine_lb_l7policy":     resourceL7PolicyV2(),
+			"flexibleengine_lb_l7rule":       resourceL7RuleV2(),
 
 			"flexibleengine_mrs_cluster_v2":  resourceMRSClusterV2(),
 			"flexibleengine_mrs_job_v2":      resourceMRSJobV2(),
@@ -674,6 +679,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_elb_security_policy": elb.ResourceSecurityPolicy(),
 			"flexibleengine_elb_logtank":         elb.ResourceLogTank(),
 
+			"flexibleengine_lb_member":    lb.ResourceMemberV2(),
+			"flexibleengine_lb_monitor":   lb.ResourceMonitorV2(),
+			"flexibleengine_lb_whitelist": lb.ResourceWhitelistV2(),
+
 			"flexibleengine_modelarts_dataset":         modelarts.ResourceDataset(),
 			"flexibleengine_modelarts_dataset_version": modelarts.ResourceDatasetVersion(),
 			"flexibleengine_smn_message_template":      smn.ResourceSmnMessageTemplate(),
@@ -682,7 +691,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_instance_v3":     rds.ResourceRdsInstance(),           // v1.29.0
 			"flexibleengine_vpc_v1":              vpc.ResourceVirtualPrivateCloudV1(), // v1.29.0
 			"flexibleengine_vpc_subnet_v1":       vpc.ResourceVpcSubnetV1(),           // v1.31.0
-			"flexibleengine_lb_pool_v2":          lb.ResourcePoolV2(),                 // v1.35.0
+			"flexibleengine_lb_pool":             lb.ResourcePoolV2(),                 // v1.35.0
 			"flexibleengine_lb_pool_v3":          elb.ResourcePoolV3(),                // v1.35.0
 			"flexibleengine_lb_monitor_v3":       elb.ResourceMonitorV3(),             // v1.35.0
 			"flexibleengine_lb_member_v3":        elb.ResourceMemberV3(),              // v1.35.0
@@ -691,18 +700,27 @@ func Provider() *schema.Provider {
 			"flexibleengine_sfs_turbo":           sfs.ResourceSFSTurbo(),
 
 			// Deprecated resource
+			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
+
 			"flexibleengine_as_group_v1":         resourceASGroup(),
 			"flexibleengine_as_configuration_v1": resourceASConfiguration(),
 
-			"flexibleengine_elb_loadbalancer":  resourceELoadBalancer(),
-			"flexibleengine_elb_listener":      resourceEListener(),
-			"flexibleengine_elb_backend":       resourceBackend(),
-			"flexibleengine_elb_health":        resourceHealth(),
-			"flexibleengine_images_image_v2":   resourceImagesImageV2(),
-			"flexibleengine_lb_certificate_v2": resourceCertificateV2(),
-			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
-			"flexibleengine_vpc_eip_v1":        resourceVpcEIPV1(),
-			"flexibleengine_vpc_route_v2":      resourceVPCRouteV2(),
+			"flexibleengine_elb_loadbalancer": resourceELoadBalancer(),
+			"flexibleengine_elb_listener":     resourceEListener(),
+			"flexibleengine_elb_backend":      resourceBackend(),
+			"flexibleengine_elb_health":       resourceHealth(),
+
+			"flexibleengine_images_image_v2": resourceImagesImageV2(),
+
+			"flexibleengine_lb_certificate_v2":  resourceCertificateV2(),
+			"flexibleengine_lb_l7policy_v2":     resourceL7PolicyV2(),
+			"flexibleengine_lb_l7rule_v2":       resourceL7RuleV2(),
+			"flexibleengine_lb_listener_v2":     resourceListenerV2(),
+			"flexibleengine_lb_loadbalancer_v2": resourceLoadBalancerV2(),
+			"flexibleengine_lb_pool_v2":         lb.ResourcePoolV2(),
+			"flexibleengine_lb_member_v2":       fedeprecated.ResourceMemberV2(),
+			"flexibleengine_lb_monitor_v2":      fedeprecated.ResourceMonitorV2(),
+			"flexibleengine_lb_whitelist_v2":    fedeprecated.ResourceWhitelistV2(),
 
 			"flexibleengine_mrs_hybrid_cluster_v1": resourceMRSHybridClusterV1(),
 			"flexibleengine_mrs_cluster_v1":        resourceMRSClusterV1(),
@@ -716,7 +734,10 @@ func Provider() *schema.Provider {
 			"flexibleengine_networking_router_interface_v2":     resourceNetworkingRouterInterfaceV2(),
 			"flexibleengine_networking_router_route_v2":         resourceNetworkingRouterRouteV2(),
 
-			"flexibleengine_apig_vpc_channel": deprecated.ResourceApigVpcChannelV2(),
+			"flexibleengine_rds_instance_v1": resourceRdsInstance(),
+
+			"flexibleengine_vpc_eip_v1":   resourceVpcEIPV1(),
+			"flexibleengine_vpc_route_v2": resourceVPCRouteV2(),
 		},
 		// configuring the provider
 		ConfigureContextFunc: configureProvider,

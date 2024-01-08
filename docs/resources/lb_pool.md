@@ -1,17 +1,17 @@
 ---
-subcategory: "Deprecated"
+subcategory: "Elastic Load Balance (ELB)"
 description: ""
-page_title: "flexibleengine_lb_pool_v2"
+page_title: "flexibleengine_lb_pool"
 ---
 
-# flexibleengine_lb_pool_v2
+# flexibleengine_lb_pool
 
 Manages an **enhanced** load balancer pool resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool" "pool_1" {
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
   listener_id = "d9415786-5f1a-428b-b35f-2f1523e146d2"
@@ -94,5 +94,5 @@ This resource provides the following timeouts configuration options:
 ELB pool can be imported using the ELB pool ID, e.g.
 
 ```shell
-terraform import flexibleengine_lb_pool_v2.pool_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
+terraform import flexibleengine_lb_pool.pool_1 3e3632db-36c6-4b28-a92e-e72e6562daa6
 ```

@@ -1,10 +1,8 @@
 ---
-subcategory: "Deprecated"
-description: ""
-page_title: "flexibleengine_lb_listeners_v2"
+subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine_lb_listeners_v2
+# flexibleengine_lb_listeners
 
 Use this data source to query the list of ELB listeners.
 
@@ -13,7 +11,7 @@ Use this data source to query the list of ELB listeners.
 ```hcl
 variable "protocol" {}
 
-data "flexibleengine_lb_listeners_v2" "test" {
+data "flexibleengine_lb_listeners" "test" {
   protocol  = var.protocol
 }
 ```

@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
@@ -8,11 +8,15 @@ import (
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/loadbalancers"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 )
 
-func dataSourceELBV2Loadbalancer() *schema.Resource {
+func DataSourceELBV2Loadbalancer() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceELBV2LoadbalancerRead,
+
+		DeprecationMessage: "flexibleengine_lb_loadbalancer_v2 has deprecated, use flexibleengine_lb_loadbalancer instead.",
+
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:     schema.TypeString,
@@ -57,7 +61,7 @@ func dataSourceELBV2Loadbalancer() *schema.Resource {
 }
 
 func dataSourceELBV2LoadbalancerRead(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	region := GetRegion(d, config)
 	lbClient, err := config.ElbV2Client(region)
 	if err != nil {

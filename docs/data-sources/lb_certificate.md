@@ -1,10 +1,8 @@
 ---
-subcategory: "Deprecated"
-description: ""
-page_title: "flexibleengine_lb_certificate_v2"
+subcategory: "Elastic Load Balance (ELB)"
 ---
 
-# flexibleengine_lb_certificate_v2
+# flexibleengine_lb_certificate
 
 Use this data source to get the certificate details in FlexibleEngine Elastic Load Balance (ELB).
 
@@ -15,7 +13,7 @@ The following example shows how one might accept a certificate name as a variabl
 ```hcl
 variable "cert_name" {}
 
-data "flexibleengine_lb_certificate_v2" "by_name" {
+data "flexibleengine_lb_certificate" "by_name" {
   name = var.cert_name
 }
 ```
@@ -29,7 +27,7 @@ The given filters must match exactly one Certificate whose data will be exported
 
 * `name` - (Optional, String) Human-readable name for the Certificate. Does not have to be unique.
 
-* `description` - (Optional, String) Human-readable description for the Certificate.
+* `description` - (Optional, String) Human-readable description for the LB Certificate.
 
 * `domain` - (Optional, String) The domain of the Certificate.
 

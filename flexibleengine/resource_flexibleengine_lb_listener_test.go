@@ -12,7 +12,7 @@ import (
 
 func TestAccLBV2Listener_basic(t *testing.T) {
 	var listener listeners.Listener
-	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	resourceName := "flexibleengine_lb_listener.listener_1"
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
@@ -55,7 +55,7 @@ func TestAccLBV2Listener_basic(t *testing.T) {
 
 func TestAccLBV2Listener_withCert(t *testing.T) {
 	var listener listeners.Listener
-	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	resourceName := "flexibleengine_lb_listener.listener_1"
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
@@ -78,7 +78,7 @@ func TestAccLBV2Listener_withCert(t *testing.T) {
 
 func TestAccLBV2Listener_v3(t *testing.T) {
 	var listener listeners.Listener
-	resourceName := "flexibleengine_lb_listener_v2.listener_1"
+	resourceName := "flexibleengine_lb_listener.listener_1"
 	rName := fmt.Sprintf("tf-acc-test-%s", acctest.RandString(5))
 
 	resource.Test(t, resource.TestCase{
@@ -109,7 +109,7 @@ func testAccCheckLBV2ListenerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_lb_listener_v2" {
+		if rs.Type != "flexibleengine_lb_listener" {
 			continue
 		}
 
@@ -156,33 +156,33 @@ func testAccCheckLBV2ListenerExists(n string, listener *listeners.Listener) reso
 
 func testAccLBV2ListenerConfig_basic(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener-%s"
   description     = "created by acceptance test"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 `, name, OS_SUBNET_ID, name)
 }
 
 func testAccLBV2ListenerConfig_tags(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener-%s"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 
   tags = {
     key   = "value"
@@ -194,17 +194,17 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 func testAccLBV2ListenerConfig_update(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener-%s_updated"
   description     = "created by acceptance test updated"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 
   tags = {
     foo   = "bar"
@@ -216,7 +216,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 func testAccLBV2ListenerConfig_cert(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
@@ -280,12 +280,12 @@ i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+9Aa==
 EOT
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name                      = "listener-%s"
   protocol                  = "TERMINATED_HTTPS"
   protocol_port             = 8080
   http2_enable              = true
-  loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id           = flexibleengine_lb_loadbalancer.loadbalancer_1.id
   default_tls_container_ref = flexibleengine_elb_certificate.certificate_1.id
 }
 `, name, OS_SUBNET_ID, name, name)
@@ -293,16 +293,16 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 
 func testAccLBV2ListenerConfig_v3(name string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener-%s"
   protocol        = "TCP"
   protocol_port   = 443
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
   idle_timeout    = 500
   transparent_client_ip_enable = true
 

@@ -1,4 +1,4 @@
-package flexibleengine
+package deprecated
 
 import (
 	"fmt"
@@ -7,16 +7,19 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 
 	"github.com/chnsz/golangsdk/openstack/networking/v2/extensions/lbaas_v2/pools"
 )
 
-func resourceMemberV2() *schema.Resource {
+func ResourceMemberV2() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceMemberV2Create,
 		Read:   resourceMemberV2Read,
 		Update: resourceMemberV2Update,
 		Delete: resourceMemberV2Delete,
+
+		DeprecationMessage: "flexibleengine_lb_member_v2 have deprecated, use flexibleengine_lb_member instead.",
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(10 * time.Minute),
@@ -94,7 +97,7 @@ func resourceMemberV2() *schema.Resource {
 }
 
 func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -157,7 +160,7 @@ func resourceMemberV2Create(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMemberV2Read(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -184,7 +187,7 @@ func resourceMemberV2Read(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)
@@ -232,7 +235,7 @@ func resourceMemberV2Update(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceMemberV2Delete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
+	config := meta.(*config.Config)
 	lbClient, err := config.ElbV2Client(GetRegion(d, config))
 	if err != nil {
 		return fmt.Errorf("Error creating FlexibleEngine ELB v2.0 client: %s", err)

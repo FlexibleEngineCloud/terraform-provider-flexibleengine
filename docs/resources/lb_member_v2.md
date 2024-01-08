@@ -1,5 +1,5 @@
 ---
-subcategory: "Elastic Load Balance (ELB)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_lb_member_v2"
 ---

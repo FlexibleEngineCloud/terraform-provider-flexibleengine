@@ -1,17 +1,17 @@
 ---
-subcategory: "Deprecated"
+subcategory: "Elastic Load Balance (ELB)"
 description: ""
-page_title: "flexibleengine_lb_listener_v2"
+page_title: "flexibleengine_lb_listener"
 ---
 
-# flexibleengine_lb_listener_v2
+# flexibleengine_lb_listener
 
 Manages an **enhanced** lb listener resource within FlexibleEngine.
 
 ## Example Usage
 
 ```hcl
-resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
+resource "flexibleengine_lb_loadbalancer" "lb_1" {
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 
   tags = {
@@ -19,10 +19,10 @@ resource "flexibleengine_lb_loadbalancer_v2" "lb_1" {
   }
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.lb_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.lb_1.id
 
   tags = {
     key = "value"
@@ -33,7 +33,7 @@ resource "flexibleengine_lb_listener_v2" "listener_1" {
 ## Example Usage of TERMINATED_HTTPS protocol
 
 ```hcl
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_cert"
   vip_subnet_id = flexibleengine_vpc_subnet_v1.example_subnet.ipv4_subnet_id
 }
@@ -97,11 +97,11 @@ i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+9Aa==
 EOT
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name                      = "listener_cert"
   protocol                  = "TERMINATED_HTTPS"
   protocol_port             = 8080
-  loadbalancer_id           = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id           = flexibleengine_lb_loadbalancer.loadbalancer_1.id
   default_tls_container_ref = flexibleengine_elb_certificate.certificate_1.id
 }
 ```

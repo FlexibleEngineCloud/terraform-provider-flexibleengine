@@ -155,23 +155,23 @@ func testASV1Group_basic(rName string) string {
 	return fmt.Sprintf(`
 %s
 
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "lb-%s"
   vip_subnet_id = "%s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "listener_1"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 
-resource "flexibleengine_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool" "pool_1" {
   name        = "pool_1"
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
-  listener_id = flexibleengine_lb_listener_v2.listener_1.id
+  listener_id = flexibleengine_lb_listener.listener_1.id
 }
 
 resource "flexibleengine_as_group_v1" "as_group"{
@@ -186,8 +186,8 @@ resource "flexibleengine_as_group_v1" "as_group"{
     id = flexibleengine_networking_secgroup_v2.secgroup.id
   }
   lbaas_listeners {
-    pool_id       = flexibleengine_lb_pool_v2.pool_1.id
-    protocol_port = flexibleengine_lb_listener_v2.listener_1.protocol_port
+    pool_id       = flexibleengine_lb_pool.pool_1.id
+    protocol_port = flexibleengine_lb_listener.listener_1.protocol_port
   }
   tags = {
     foo = "bar"

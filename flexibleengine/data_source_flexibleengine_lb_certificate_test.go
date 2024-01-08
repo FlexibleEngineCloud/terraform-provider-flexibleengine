@@ -16,13 +16,13 @@ func TestAccCertificateV2DataSource_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceCertificateV2Config,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate_v2.by_id"),
-					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate_v2.by_name"),
-					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate_v2.by_domain"),
+					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate.by_id"),
+					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate.by_name"),
+					testAccCheckCertificateV2DataSourceID("data.flexibleengine_lb_certificate.by_domain"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_lb_certificate_v2.by_id", "name", "certificate_test"),
+						"data.flexibleengine_lb_certificate.by_id", "name", "certificate_test"),
 					resource.TestCheckResourceAttr(
-						"data.flexibleengine_lb_certificate_v2.by_name", "domain", "www.elb.com"),
+						"data.flexibleengine_lb_certificate.by_name", "domain", "www.elb.com"),
 				),
 			},
 		},
@@ -45,7 +45,7 @@ func testAccCheckCertificateV2DataSourceID(n string) resource.TestCheckFunc {
 }
 
 const testAccDataSourceCertificateV2Config = `
-resource "flexibleengine_lb_certificate_v2" "certificate_1" {
+resource "flexibleengine_lb_certificate" "certificate_1" {
   name        = "certificate_test"
   description = "terraform test certificate"
   domain      = "www.elb.com"
@@ -105,15 +105,15 @@ i1YhgnQbn5E0hz55OLu5jvOkKQjPCW+8Kg==
 EOT
 }
 
-data "flexibleengine_lb_certificate_v2" "by_id" {
-  id = flexibleengine_lb_certificate_v2.certificate_1.id
+data "flexibleengine_lb_certificate" "by_id" {
+  id = flexibleengine_lb_certificate.certificate_1.id
 }
 
-data "flexibleengine_lb_certificate_v2" "by_domain" {
-  domain = flexibleengine_lb_certificate_v2.certificate_1.domain
+data "flexibleengine_lb_certificate" "by_domain" {
+  domain = flexibleengine_lb_certificate.certificate_1.domain
 }
 
-data "flexibleengine_lb_certificate_v2" "by_name" {
-  name = flexibleengine_lb_certificate_v2.certificate_1.name
+data "flexibleengine_lb_certificate" "by_name" {
+  name = flexibleengine_lb_certificate.certificate_1.name
 }
 `

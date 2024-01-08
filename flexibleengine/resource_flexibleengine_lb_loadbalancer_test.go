@@ -15,7 +15,7 @@ import (
 
 func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
-	resourceName := "flexibleengine_lb_loadbalancer_v2.loadbalancer_1"
+	resourceName := "flexibleengine_lb_loadbalancer.loadbalancer_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -54,7 +54,7 @@ func TestAccLBV2LoadBalancer_basic(t *testing.T) {
 func TestAccLBV2LoadBalancer_secGroup(t *testing.T) {
 	var lb loadbalancers.LoadBalancer
 	var sg_1, sg_2 groups.SecGroup
-	resourceName := "flexibleengine_lb_loadbalancer_v2.loadbalancer_1"
+	resourceName := "flexibleengine_lb_loadbalancer.loadbalancer_1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -115,7 +115,7 @@ func testAccCheckLBV2LoadBalancerDestroy(s *terraform.State) error {
 	}
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "flexibleengine_lb_loadbalancer_v2" {
+		if rs.Type != "flexibleengine_lb_loadbalancer" {
 			continue
 		}
 
@@ -186,7 +186,7 @@ func testAccCheckLBV2LoadBalancerHasSecGroup(
 }
 
 var testAccLBV2LoadBalancerConfig_basic = fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_1"
   description   = "created by acceptance test"
   vip_subnet_id = "%s"
@@ -199,7 +199,7 @@ resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
 `, OS_SUBNET_ID)
 
 var testAccLBV2LoadBalancerConfig_update = fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name           = "loadbalancer_1_updated"
   admin_state_up = "true"
   vip_subnet_id  = "%s"
@@ -222,7 +222,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   description = "secgroup_2"
 }
 
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_1"
   vip_subnet_id = "%s"
 
@@ -243,7 +243,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   description = "secgroup_2"
 }
 
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_1"
   vip_subnet_id = "%s"
 
@@ -265,7 +265,7 @@ resource "flexibleengine_networking_secgroup_v2" "secgroup_2" {
   description = "secgroup_2"
 }
 
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "loadbalancer_1"
   vip_subnet_id = "%s"
 

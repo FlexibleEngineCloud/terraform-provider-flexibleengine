@@ -28,7 +28,7 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 	var pool pools.Pool
 	rName := acceptance.RandomAccResourceNameWithDash()
 	rNameUpdate := acceptance.RandomAccResourceNameWithDash()
-	resourceName := "flexibleengine_lb_pool_v2.pool_1"
+	resourceName := "flexibleengine_lb_pool.pool_1"
 
 	rc := acceptance.InitResourceCheck(
 		resourceName,
@@ -67,47 +67,47 @@ func TestAccLBV2Pool_basic(t *testing.T) {
 
 func testAccLBV2PoolConfig_basic(rName string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "%[1]s"
   vip_subnet_id = "%[2]s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "%[1]s"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 
-resource "flexibleengine_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool" "pool_1" {
   name        = "%[1]s"
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
-  listener_id = flexibleengine_lb_listener_v2.listener_1.id
+  listener_id = flexibleengine_lb_listener.listener_1.id
 }
 `, rName, OS_SUBNET_ID)
 }
 
 func testAccLBV2PoolConfig_update(rName, rNameUpdate string) string {
 	return fmt.Sprintf(`
-resource "flexibleengine_lb_loadbalancer_v2" "loadbalancer_1" {
+resource "flexibleengine_lb_loadbalancer" "loadbalancer_1" {
   name          = "%[1]s"
   vip_subnet_id = "%[3]s"
 }
 
-resource "flexibleengine_lb_listener_v2" "listener_1" {
+resource "flexibleengine_lb_listener" "listener_1" {
   name            = "%[1]s"
   protocol        = "HTTP"
   protocol_port   = 8080
-  loadbalancer_id = flexibleengine_lb_loadbalancer_v2.loadbalancer_1.id
+  loadbalancer_id = flexibleengine_lb_loadbalancer.loadbalancer_1.id
 }
 
-resource "flexibleengine_lb_pool_v2" "pool_1" {
+resource "flexibleengine_lb_pool" "pool_1" {
   name           = "%[2]s"
   protocol       = "HTTP"
   lb_method      = "LEAST_CONNECTIONS"
   admin_state_up = "true"
-  listener_id    = flexibleengine_lb_listener_v2.listener_1.id
+  listener_id    = flexibleengine_lb_listener.listener_1.id
 }
 `, rName, rNameUpdate, OS_SUBNET_ID)
 }
