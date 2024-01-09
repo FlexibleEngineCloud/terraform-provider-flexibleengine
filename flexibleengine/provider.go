@@ -409,7 +409,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_blockstorage_volume_v2": resourceBlockStorageVolumeV2(),
 
 			"flexibleengine_compute_instance_v2":             resourceComputeInstanceV2(),
-			"flexibleengine_compute_interface_attach_v2":     resourceComputeInterfaceAttachV2(),
 			"flexibleengine_compute_keypair_v2":              resourceComputeKeypairV2(),
 			"flexibleengine_compute_servergroup_v2":          resourceComputeServerGroupV2(),
 			"flexibleengine_compute_floatingip_v2":           resourceComputeFloatingIPV2(),
@@ -616,6 +615,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_template_flink":        dli.ResourceFlinkTemplate(),
 
 			"flexibleengine_drs_job": drs.ResourceDrsJob(),
+
+			"flexibleengine_compute_interface_attach_v2": ecs.ResourceComputeInterfaceAttach(),
 
 			"flexibleengine_fgs_dependency": fgs.ResourceFgsDependency(),
 			"flexibleengine_fgs_function":   fgs.ResourceFgsFunctionV2(),
