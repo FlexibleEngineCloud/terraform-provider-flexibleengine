@@ -1,30 +1,35 @@
 ---
 subcategory: "NAT Gateway (NAT)"
-description: ""
-page_title: "flexibleengine_nat_snat_rule_v2"
 ---
 
 # flexibleengine_nat_snat_rule_v2
 
-Manages a V2 SNAT rule resource within FlexibleEngine.
+Manages a SNAT rule resource of the **public** NAT within FlexibleEngine.
 
 ## Example Usage
 
 ### SNAT rule in VPC scenario
 
 ```hcl
-resource "flexibleengine_nat_snat_rule_v2" "snat_1" {
-  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
+variable "gateway_id" {}
+variable "publicip_id" {}
+variable "subent_id" {}
+
+resource "flexibleengine_nat_snat_rule_v2" "test" {
+  nat_gateway_id = var.gateway_id
   floating_ip_id = var.publicip_id
-  subnet_id      = flexibleengine_vpc_subnet_v1.example_subnet.id
+  subnet_id      = var.subent_id
 }
 ```
 
-### SNAT rule in Direct Connect scenario
+### SNAT rule in DC (Direct Connect) scenario
 
 ```hcl
-resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
-  nat_gateway_id = flexibleengine_nat_gateway_v2.nat_1.id
+variable "gateway_id" {}
+variable "publicip_id" {}
+
+resource "flexibleengine_nat_snat_rule_v2" "test" {
+  nat_gateway_id = var.gateway_id
   floating_ip_id = var.publicip_id
   source_type    = 1
   cidr           = "192.168.10.0/24"
@@ -35,46 +40,50 @@ resource "flexibleengine_nat_snat_rule_v2" "snat_2" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 nat client.
-  If omitted, the `region` argument of the provider is used. Changing this creates a new snat rule.
+* `region` - (Optional, String, ForceNew) Specifies the region where the SNAT rule is located.  
+  If omitted, the provider-level region will be used. Changing this will create a new resource.
 
-* `nat_gateway_id` - (Required, String, ForceNew) ID of the nat gateway this snat rule belongs to.
-  Changing this creates a new snat rule.
+* `nat_gateway_id` - (Required, String, ForceNew) Specifies the ID of the gateway to which the SNAT rule belongs.  
+  Changing this will create a new resource.
 
-* `floating_ip_id` - (Required, String, ForceNew) ID of the floating ip this snat rule connets to.
-  Changing this creates a new snat rule.
+* `floating_ip_id` - (Required, String) Specifies the IDs of floating IPs connected by SNAT rule.  
+  Multiple floating IPs are separated using commas (,). The number of floating IP IDs cannot exceed `20`.
 
-* `subnet_id` - (Optional, String, ForceNew) ID of the VPC Subnet this snat rule connects to.
-  This parameter and `cidr` are alternative. Changing this creates a new snat rule.
+* `subnet_id` - (Optional, String, ForceNew) Specifies the network IDs of subnet connected by SNAT rule (VPC side).  
+  This parameter and `cidr` are alternative. Changing this will create a new resource.
 
-* `cidr` - (Optional, String, ForceNew) Specifies CIDR, which can be in the format of a network segment or a host IP
-  address. This parameter and `subnet_id` are alternative. Changing this creates a new snat rule.
+* `cidr` - (Optional, String, ForceNew) Specifies the CIDR block connected by SNAT rule (DC side).  
+  This parameter and `subnet_id` are alternative. Changing this will create a new resource.
 
-* `source_type` - (Optional, Int, ForceNew) Specifies the scenario. The valid value is 0 (VPC scenario) and 1
-  (Direct Connect scenario). Only `cidr` can be specified over a Direct Connect connection.
-  If no value is entered, the default value 0 (VPC scenario) is used. Changing this creates a new snat rule.
+* `source_type` - (Optional, Int, ForceNew) Specifies the resource scenario.  
+  The valid values are **0** (VPC scenario) and **1** (Direct Connect scenario), and the default value is `0`.
+  Only `cidr` can be specified over a Direct Connect connection. Changing this will create a new resource.
+
+* `description` - (Optional, String) Specifies the description of the SNAT rule.
+  The value is a string of no more than `255` characters, and angle brackets (<>) are not allowed.
 
 ## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - The resource ID in UUID format.
+* `id` - Specifies a resource ID in UUID format.
 
 * `floating_ip_address` - The actual floating IP address.
 
-* `status` - The status of the snat rule.
+* `status` - The status of the SNAT rule.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minutes.
-* `delete` - Default is 10 minutes.
+* `create` - Default is 5 minutes.
+* `update` - Default is 5 minutes.
+* `delete` - Default is 5 minutes.
 
 ## Import
 
-SNAT rules can be imported using the following format:
+SNAT rules can be imported using their `id`, e.g.
 
 ```shell
-terraform import flexibleengine_nat_snat_rule_v2.snat_1 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
+terraform import flexibleengine_nat_snat_rule_v2.test 9e0713cb-0a2f-484e-8c7d-daecbb61dbe4
 ```

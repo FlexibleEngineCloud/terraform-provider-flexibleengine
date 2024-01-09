@@ -488,7 +488,6 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_nat_dnat_rule_v2": resourceNatDnatRuleV2(),
 			"flexibleengine_nat_gateway_v2":   resourceNatGatewayV2(),
-			"flexibleengine_nat_snat_rule_v2": resourceNatSnatRuleV2(),
 
 			"flexibleengine_vpc_eip":                            resourceVpcEIPV1(),
 			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
@@ -637,6 +636,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
 			"flexibleengine_nat_private_snat_rule":  nat.ResourcePrivateSnatRule(),
 			"flexibleengine_nat_private_transit_ip": nat.ResourcePrivateTransitIp(),
+			"flexibleengine_nat_snat_rule_v2":       nat.ResourcePublicSnatRule(),
 
 			"flexibleengine_obs_bucket_acl":        obs.ResourceOBSBucketAcl(),
 			"flexibleengine_obs_bucket_object_acl": obs.ResourceOBSBucketObjectAcl(),
