@@ -6,8 +6,7 @@ page_title: "flexibleengine_compute_volume_attach_v2"
 
 # flexibleengine_compute_volume_attach_v2
 
-Attaches a Block Storage Volume to an Instance using the FlexibleEngine
-Compute (Nova) v2 API.
+Attaches a Block Storage Volume to an Instance using the FlexibleEngine Compute (Nova) v2 API.
 
 ## Example Usage
 
@@ -15,13 +14,23 @@ Compute (Nova) v2 API.
 
 ```hcl
 resource "flexibleengine_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  size = 1
+  name              = "volume_1"
+  availability_zone = "eu-west-0a"
+  volume_type       = "SAS"
+  size              = 10
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
+  name              = "instance_1"
+  image_id          = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  flavor_id         = "s6.small.1"
+  key_pair          = "my_key_pair_name"
+  security_groups   = ["default"]
+  availability_zone = "eu-west-0a"
+
+  network {
+    uuid = "55534eaa-533a-419d-9b40-ec427ea7195a"
+  }
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "va_1" {
@@ -34,14 +43,20 @@ resource "flexibleengine_compute_volume_attach_v2" "va_1" {
 
 ```hcl
 resource "flexibleengine_blockstorage_volume_v2" "volumes" {
-  count = 2
-  name  = format("vol-%02d", count.index + 1)
-  size  = 1
+  count             = 2
+  name              = format("vol-%02d", count.index + 1)
+  availability_zone = "eu-west-0a"
+  volume_type       = "SAS"
+  size              = 1
 }
 
 resource "flexibleengine_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
-  security_groups = ["default"]
+  name              = "instance_1"
+  image_id          = "ad091b52-742f-469e-8f3c-fd81cadf0743"
+  flavor_id         = "s6.small.1"
+  key_pair          = "my_key_pair_name"
+  security_groups   = ["default"]
+  availability_zone = "eu-west-0a"
 }
 
 resource "flexibleengine_compute_volume_attach_v2" "attachments" {
@@ -59,24 +74,30 @@ output "volume devices" {
 
 The following arguments are supported:
 
-* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Compute client.
-  A Compute client is needed to create a volume attachment. If omitted, the
+* `region` - (Optional, String, ForceNew) The region in which to obtain the V2 Compute client. A Compute client is
+  needed to create a volume attachment. If omitted, the
   `region` argument of the provider is used. Changing this creates a new volume attachment.
 
-* `instance_id` - (Required, String, ForceNew) The ID of the Instance to attach the Volume to.
+* `instance_id` - (Required, String, ForceNew) Specifies the ID of the Instance to attach the Volume to.
+  Changing this will create a new resource.
 
-* `volume_id` - (Required, String, ForceNew) The ID of the Volume to attach to an Instance.
+* `volume_id` - (Required, String, ForceNew) Specifies the ID of the Volume to attach to an Instance.
+  Changing this will create a new resource.
 
-* `device` - (Optional, String) The device of the volume attachment (ex: `/dev/vdc`).
-  Being able to specify a device is dependent upon the hypervisor in use.
-  There is a chance that the device specified in Terraform will not be
-  the same device the hypervisor chose. If this happens, Terraform will wish
-  to update the device upon subsequent applying which will cause the volume
-  to be detached and reattached indefinitely. Please use with caution.
+* `device` - (Optional, String) Specifies the device of the volume attachment (ex: `/dev/vdc`).
+
+  -> Being able to specify a device is dependent upon the hypervisor in use. There is a chance that the device
+  specified in Terraform will not be the same device the hypervisor chose. If this happens, Terraform will wish to
+  update the device upon subsequent applying which will cause the volume to be detached and reattached indefinitely.
+  Please use with caution.
 
 ## Attribute Reference
 
-All the arguments above can also be exported attributes.
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - The resource ID in UUID format.
+
+* `pci_address` - PCI address of the block device.
 
 ## Timeouts
 
@@ -87,8 +108,7 @@ This resource provides the following timeouts configuration options:
 
 ## Import
 
-Volume Attachments can be imported using the Instance ID and Volume ID
-separated by a slash, e.g.
+Volume Attachments can be imported using the Instance ID and Volume ID separated by a slash, e.g.
 
 ```shell
 terraform import flexibleengine_compute_volume_attach_v2.va_1 89c60255-9bd6-460c-822a-e2b959ede9d2/45670584-225f-46c3-b33e-6707b589b666
