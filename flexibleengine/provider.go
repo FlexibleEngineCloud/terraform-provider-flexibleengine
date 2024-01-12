@@ -477,8 +477,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_as_policy_v1":         resourceASPolicy(),
 			"flexibleengine_as_lifecycle_hook_v1": resourceASLifecycleHook(),
 
-			"flexibleengine_rds_read_replica_v3":   resourceRdsReadReplicaInstance(),
-			"flexibleengine_rds_parametergroup_v3": resourceRdsConfigurationV3(),
+			"flexibleengine_rds_read_replica_v3": resourceRdsReadReplicaInstance(),
 
 			"flexibleengine_networking_vip_v2":           resourceNetworkingVIPV2(),
 			"flexibleengine_networking_vip_associate_v2": resourceNetworkingVIPAssociateV2(),
@@ -647,6 +646,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_cross_region_backup_strategy": rds.ResourceBackupStrategy(),
 			"flexibleengine_rds_database":                     rds.ResourceMysqlDatabase(),
 			"flexibleengine_rds_database_privilege":           rds.ResourceMysqlDatabasePrivilege(),
+			"flexibleengine_rds_parametergroup_v3":            rds.ResourceRdsConfiguration(),
 			"flexibleengine_rds_sql_audit":                    rds.ResourceSQLAudit(),
 
 			"flexibleengine_sms_server_template":    sms.ResourceServerTemplate(),
