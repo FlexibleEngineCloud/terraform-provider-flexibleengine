@@ -457,7 +457,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_identity_project_v3":          resourceIdentityProjectV3(),
 			"flexibleengine_identity_role_v3":             resourceIdentityRoleV3(),
 			"flexibleengine_identity_role_assignment_v3":  resourceIdentityRoleAssignmentV3(),
-			"flexibleengine_identity_user_v3":             resourceIdentityUserV3(),
 			"flexibleengine_identity_provider":            resourceIdentityProvider(),
 			"flexibleengine_identity_provider_conversion": resourceIAMProviderConversion(),
 
@@ -624,7 +623,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_gaussdb_cassandra_instance": gaussdb.ResourceGeminiDBInstanceV3(),
 			"flexibleengine_gaussdb_influx_instance":    gaussdb.ResourceGaussDBInfluxInstanceV3(),
 
-			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
+			"flexibleengine_identity_acl":     iam.ResourceIdentityACL(),
+			"flexibleengine_identity_user_v3": iam.ResourceIdentityUser(),
 
 			"flexibleengine_images_image":                ims.ResourceImsImage(),
 			"flexibleengine_images_image_copy":           ims.ResourceImsImageCopy(),
