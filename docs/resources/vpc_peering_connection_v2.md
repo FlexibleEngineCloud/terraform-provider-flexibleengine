@@ -49,10 +49,11 @@ The following arguments are supported:
 * `peer_tenant_id` (Optional, String, ForceNew) - Specified the Tenant Id of the accepter tenant.
   Changing this creates a new VPC peering connection.
 
-## Attributes Reference
+* `description` - (Optional, String) Specifies the description of the VPC peering connection.
 
-All of the argument attributes are also exported as
-result attributes:
+## Attribute Reference
+
+All the arguments above can also be exported attributes.
 
 * `id` - The VPC peering connection ID.
 
@@ -62,8 +63,8 @@ result attributes:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 

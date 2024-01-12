@@ -248,11 +248,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_kms_key_v1":      dataSourceKmsKeyV1(),
 			"flexibleengine_kms_data_key_v1": dataSourceKmsDataKeyV1(),
 
-			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
-			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
-			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
-			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
-			"flexibleengine_vpc_eip":                   dataSourceVpcEipV1(),
+			"flexibleengine_vpc_v1":            dataSourceVirtualPrivateCloudVpcV1(),
+			"flexibleengine_vpc_subnet_ids_v1": dataSourceVpcSubnetIdsV1(),
+			"flexibleengine_vpc_eip":           dataSourceVpcEipV1(),
 
 			"flexibleengine_nat_gateway_v2": dataSourceNatGatewayV2(),
 
@@ -373,9 +371,12 @@ func Provider() *schema.Provider {
 			"flexibleengine_smn_topics":            smn.DataSourceTopics(),
 			"flexibleengine_smn_message_templates": smn.DataSourceSmnMessageTemplates(),
 			"flexibleengine_sms_source_servers":    sms.DataSourceServers(),
-			"flexibleengine_vpc_route_table":       vpc.DataSourceVPCRouteTable(),
-			"flexibleengine_vpc_subnets":           vpc.DataSourceVpcSubnets(),
-			"flexibleengine_vpcs":                  vpc.DataSourceVpcs(),
+
+			"flexibleengine_vpc_peering_connection_v2": vpc.DataSourceVpcPeeringConnectionV2(),
+			"flexibleengine_vpc_route_table":           vpc.DataSourceVPCRouteTable(),
+			"flexibleengine_vpc_subnet_v1":             vpc.DataSourceVpcSubnetV1(),
+			"flexibleengine_vpc_subnets":               vpc.DataSourceVpcSubnets(),
+			"flexibleengine_vpcs":                      vpc.DataSourceVpcs(),
 
 			"flexibleengine_waf_certificate":         waf.DataSourceWafCertificateV1(),
 			"flexibleengine_waf_dedicated_instances": waf.DataSourceWafDedicatedInstancesV1(),
@@ -480,8 +481,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_read_replica_v3":   resourceRdsReadReplicaInstance(),
 			"flexibleengine_rds_parametergroup_v3": resourceRdsConfigurationV3(),
 
-			"flexibleengine_networking_vip_v2":           resourceNetworkingVIPV2(),
-			"flexibleengine_networking_vip_associate_v2": resourceNetworkingVIPAssociateV2(),
+			"flexibleengine_networking_vip_v2": resourceNetworkingVIPV2(),
 
 			"flexibleengine_drs_replication_v2":                 resourceReplication(),
 			"flexibleengine_drs_replicationconsistencygroup_v2": resourceReplicationConsistencyGroup(),
@@ -492,7 +492,6 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_vpc_eip":                            resourceVpcEIPV1(),
 			"flexibleengine_vpc_flow_log_v1":                    resourceVpcFlowLogV1(),
-			"flexibleengine_vpc_peering_connection_v2":          resourceVpcPeeringConnectionV2(),
 			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
 
 			"flexibleengine_sfs_file_system_v2": resourceSFSFileSystemV2(),
@@ -658,9 +657,11 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_tms_tags": tms.ResourceTmsTag(),
 
-			"flexibleengine_vpc_eip_associate": eip.ResourceEIPAssociate(),
-			"flexibleengine_vpc_route_table":   vpc.ResourceVPCRouteTable(),
-			"flexibleengine_vpc_route":         vpc.ResourceVPCRouteTableRoute(),
+			"flexibleengine_vpc_eip_associate":           eip.ResourceEIPAssociate(),
+			"flexibleengine_networking_vip_associate_v2": vpc.ResourceNetworkingVIPAssociateV2(),
+			"flexibleengine_vpc_peering_connection_v2":   vpc.ResourceVpcPeeringConnectionV2(),
+			"flexibleengine_vpc_route_table":             vpc.ResourceVPCRouteTable(),
+			"flexibleengine_vpc_route":                   vpc.ResourceVPCRouteTableRoute(),
 
 			"flexibleengine_waf_dedicated_instance":    ResourceWafDedicatedInstance(),
 			"flexibleengine_waf_dedicated_policy":      ResourceWafDedicatedPolicyV1(),

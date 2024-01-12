@@ -51,12 +51,11 @@ subnet whose data will be exported as attributes.
 
 * `description` - The description of the subnet.
 
-## **Attributes Reference**
+## Attribute Reference
 
-All of the argument attributes are also exported as
-result attributes. This data source will complete the data by populating
-any fields that are not included in the configuration with the data for
-the selected subnet.
+All the argument attributes are also exported as result attributes.
+This data source will complete the data by populating any fields that are not included in the configuration with the
+data for the selected subnet.
 
 * `dns_list` - The IP address list of DNS servers on the subnet.
 

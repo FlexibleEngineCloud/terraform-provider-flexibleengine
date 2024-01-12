@@ -43,8 +43,8 @@ The given filters must match exactly one VPC peering connection whose data will 
 * `peer_tenant_id` (Optional, String) - The Tenant ID of the accepter/peer VPC
   of the specific VPC Peering Connection to retrieve.
 
-## Attributes Reference
+## Attribute Reference
+
+All the arguments above can also be exported attributes.
 
 * `description` - The description of the VPC Peering Connection.
-
-All of the argument attributes are exported as result attributes.

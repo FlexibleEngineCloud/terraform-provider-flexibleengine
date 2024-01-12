@@ -109,6 +109,7 @@ resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
   name        = "flexibleengine_peering"
   vpc_id      = flexibleengine_vpc_v1.vpc_1.id
   peer_vpc_id = flexibleengine_vpc_v1.vpc_2.id
+  description = "tf test1"
 }
 `
 const testAccFlexibleEngineVpcPeeringConnectionV2_update = `
@@ -126,5 +127,6 @@ resource "flexibleengine_vpc_peering_connection_v2" "peering_1" {
   name        = "flexibleengine_peering_1"
   vpc_id      = flexibleengine_vpc_v1.vpc_1.id
   peer_vpc_id = flexibleengine_vpc_v1.vpc_2.id
+  description = "tf update"
 }
 `
