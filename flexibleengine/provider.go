@@ -445,8 +445,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_mrs_job_v2":      resourceMRSJobV2(),
 			"flexibleengine_mls_instance_v1": resourceMlsInstanceV1(),
 
-			"flexibleengine_network_acl":                 resourceNetworkACL(),
-			"flexibleengine_network_acl_rule":            resourceNetworkACLRule(),
 			"flexibleengine_networking_port_v2":          resourceNetworkingPortV2(),
 			"flexibleengine_networking_secgroup_v2":      resourceNetworkingSecGroupV2(),
 			"flexibleengine_networking_secgroup_rule_v2": resourceNetworkingSecGroupRuleV2(),
@@ -637,6 +635,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_nat_private_gateway":    nat.ResourcePrivateGateway(),
 			"flexibleengine_nat_private_snat_rule":  nat.ResourcePrivateSnatRule(),
 			"flexibleengine_nat_private_transit_ip": nat.ResourcePrivateTransitIp(),
+
+			"flexibleengine_network_acl":      huaweicloud.ResourceNetworkACL(),
+			"flexibleengine_network_acl_rule": huaweicloud.ResourceNetworkACLRule(),
 
 			"flexibleengine_obs_bucket_acl":        obs.ResourceOBSBucketAcl(),
 			"flexibleengine_obs_bucket_object_acl": obs.ResourceOBSBucketObjectAcl(),
