@@ -547,8 +547,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_waf_rule_precise_protection":    resourceWafRulePreciseProtection(),
 			"flexibleengine_waf_rule_web_tamper_protection": resourceWafRuleWebTamperProtection(),
 
-			"flexibleengine_dli_queue": ResourceDliQueueV1(),
-
 			// importing new resource
 			"flexibleengine_aom_service_discovery_rule": aom.ResourceServiceDiscoveryRule(),
 
@@ -610,6 +608,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dli_flinksql_job":          dli.ResourceFlinkSqlJob(),
 			"flexibleengine_dli_global_variable":       dli.ResourceGlobalVariable(),
 			"flexibleengine_dli_package":               dli.ResourceDliPackageV2(),
+			"flexibleengine_dli_queue":                 dli.ResourceDliQueue(),
 			"flexibleengine_dli_spark_job":             dli.ResourceDliSparkJobV2(),
 			"flexibleengine_dli_sql_job":               dli.ResourceSqlJob(),
 			"flexibleengine_dli_table":                 dli.ResourceDliTable(),
