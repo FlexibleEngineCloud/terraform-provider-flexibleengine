@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
@@ -43,6 +42,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/nat"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/obs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sdrs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sms"
@@ -292,8 +292,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_certificate_v2":  dataSourceCertificateV2(),
 			"flexibleengine_lb_loadbalancer_v2": dataSourceELBV2Loadbalancer(),
 
-			"flexibleengine_sdrs_domain_v1": dataSourceSdrsDomainV1(),
-
 			"flexibleengine_identity_project_v3":     dataSourceIdentityProjectV3(),
 			"flexibleengine_identity_role_v3":        dataSourceIdentityRoleV3(),
 			"flexibleengine_identity_custom_role_v3": dataSourceIdentityCustomRoleV3(),
@@ -388,6 +386,8 @@ func Provider() *schema.Provider {
 
 			// importing existing data source
 			"flexibleengine_rds_flavors_v3": rds.DataSourceRdsFlavor(), // v1.34.0
+
+			"flexibleengine_sdrs_domain_v1": sdrs.DataSourceSDRSDomain(),
 
 			// Deprecated data source
 			"flexibleengine_compute_availability_zones_v2":      dataSourceAvailabilityZones(),

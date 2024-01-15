@@ -4,7 +4,7 @@ subcategory: "Storage Disaster Recovery Service (SDRS)"
 
 # flexibleengine_sdrs_domain_v1
 
-Use this data source to get the ID of an available FlexibleEngine SDRS domain.
+Use this data source to get an available SDRS domain.
 
 ## Example Usage
 
@@ -18,11 +18,17 @@ data "flexibleengine_sdrs_domain_v1" "dom_1" {
 
 ## Argument Reference
 
-* `name` - (Optional, String) Specifies the name of an active-active domain. Currently only support SDRS_HypeDomain01.
+The following arguments are supported:
+
+* `region` - (Optional, String) Specifies the region in which to query the data source.
+  If omitted, the provider-level region will be used.
+
+* `name` - (Optional, String) Specifies the name of an available SDRS domain.
 
 ## Attribute Reference
 
-`id` is set to the ID of the active-active domain. In addition, the following attributes
-are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `description` - Specifies the description of an active-active domain.
+* `id` - The resource ID.
+
+* `description` - Indicates the description of the SDRS domain.
