@@ -254,8 +254,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
 			"flexibleengine_vpc_eip":                   dataSourceVpcEipV1(),
 
-			"flexibleengine_nat_gateway_v2": dataSourceNatGatewayV2(),
-
 			"flexibleengine_sfs_file_system_v2": dataSourceSFSFileSystemV2(),
 
 			"flexibleengine_compute_bms_flavors_v2":  dataSourceBMSFlavorV2(),
@@ -382,6 +380,8 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_modelarts_datasets":         modelarts.DataSourceDatasets(),
 			"flexibleengine_modelarts_dataset_versions": modelarts.DataSourceDatasetVerions(),
+
+			"flexibleengine_nat_gateway_v2": nat.DataSourcePublicGateway(),
 
 			"flexibleengine_obs_buckets":       obs.DataSourceObsBuckets(),
 			"flexibleengine_obs_bucket_object": obs.DataSourceObsBucketObject(),
