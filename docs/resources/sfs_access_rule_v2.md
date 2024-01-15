@@ -58,6 +58,9 @@ resource "flexibleengine_sfs_access_rule_v2" "rule_1" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the resource.
+  If omitted, the provider-level region will be used. Changing this parameter will create a new resource.
+
 * `sfs_id` - (Required, String, ForceNew) Specifies the UUID of the shared file system.
   Changing this will create a new access rule.
 

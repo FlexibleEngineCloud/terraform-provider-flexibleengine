@@ -496,7 +496,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_peering_connection_accepter_v2": resourceVpcPeeringConnectionAccepterV2(),
 
 			"flexibleengine_sfs_file_system_v2": resourceSFSFileSystemV2(),
-			"flexibleengine_sfs_access_rule_v2": resourceSFSAccessRuleV2(),
 
 			"flexibleengine_rts_software_config_v1": resourceSoftwareConfigV1(),
 			"flexibleengine_rts_stack_v1":           resourceRTSStackV1(),
@@ -688,7 +687,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_lb_member_v3":        elb.ResourceMemberV3(),              // v1.35.0
 			"flexibleengine_smn_topic_v2":        smn.ResourceTopic(),                 // v1.39.0
 			"flexibleengine_smn_subscription_v2": smn.ResourceSubscription(),          // v1.39.0
-			"flexibleengine_sfs_turbo":           sfs.ResourceSFSTurbo(),
+
+			"flexibleengine_sfs_access_rule_v2": sfs.ResourceSFSAccessRuleV2(),
+			"flexibleengine_sfs_turbo":          sfs.ResourceSFSTurbo(),
 
 			// Deprecated resource
 			"flexibleengine_as_group_v1":         resourceASGroup(),
