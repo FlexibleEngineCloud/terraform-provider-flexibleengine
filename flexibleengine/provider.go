@@ -252,7 +252,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
 			"flexibleengine_vpc_subnet_ids_v1":         dataSourceVpcSubnetIdsV1(),
 			"flexibleengine_vpc_peering_connection_v2": dataSourceVpcPeeringConnectionV2(),
-			"flexibleengine_vpc_eip":                   dataSourceVpcEipV1(),
 
 			"flexibleengine_nat_gateway_v2": dataSourceNatGatewayV2(),
 
@@ -318,6 +317,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_cce_nodes":    cce.DataSourceNodes(),
 
 			"flexibleengine_compute_servergroups": ecs.DataSourceComputeServerGroups(),
+
+			"flexibleengine_vpc_eip": eip.DataSourceVpcEip(),
 
 			"flexibleengine_css_flavors": css.DataSourceCssFlavors(),
 
