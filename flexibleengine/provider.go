@@ -275,8 +275,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_cts_tracker_v1": dataSourceCTSTrackerV1(),
 
-			"flexibleengine_dcs_maintainwindow_v1": dataSourceDcsMaintainWindowV1(),
-			"flexibleengine_dcs_product_v1":        dataSourceDcsProductV1(),
+			"flexibleengine_dcs_product_v1": dataSourceDcsProductV1(),
 
 			"flexibleengine_dms_product": dataSourceDmsProduct(),
 
@@ -321,9 +320,10 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_css_flavors": css.DataSourceCssFlavors(),
 
-			"flexibleengine_dcs_flavors":   dcs.DataSourceDcsFlavorsV2(),
-			"flexibleengine_dcs_instances": dcs.DataSourceDcsInstance(),
-			"flexibleengine_dcs_templates": dcs.DataSourceTemplates(),
+			"flexibleengine_dcs_flavors":           dcs.DataSourceDcsFlavorsV2(),
+			"flexibleengine_dcs_instances":         dcs.DataSourceDcsInstance(),
+			"flexibleengine_dcs_templates":         dcs.DataSourceTemplates(),
+			"flexibleengine_dcs_maintainwindow_v1": dcs.DataSourceDcsMaintainWindow(),
 
 			"flexibleengine_ddm_engines":        ddm.DataSourceDdmEngines(),
 			"flexibleengine_ddm_flavors":        ddm.DataSourceDdmFlavors(),
