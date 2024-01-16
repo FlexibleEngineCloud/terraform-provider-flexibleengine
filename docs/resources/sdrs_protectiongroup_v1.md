@@ -36,6 +36,9 @@ resource "flexibleengine_sdrs_protectiongroup_v1" "group_1" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the resource.
+  If omitted, the provider-level region will be used. Changing this parameter will create a new resource.
+
 * `name` - (Required, String) The name of a protection group.
 
 * `description` - (Optional, String, ForceNew) The description of a protection group. Changing this creates a new group.
@@ -69,6 +72,7 @@ The following attributes are exported:
 This resource provides the following timeouts configuration options:
 
 * `create` - Default is 10 minutes.
+* `update` - Default is 10 minutes.
 * `delete` - Default is 10 minutes.
 
 ## Import

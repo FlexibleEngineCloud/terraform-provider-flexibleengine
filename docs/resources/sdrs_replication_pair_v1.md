@@ -41,6 +41,9 @@ resource "flexibleengine_sdrs_replication_pair_v1" "replication_1" {
 
 The following arguments are supported:
 
+* `region` - (Optional, String, ForceNew) Specifies the region in which to create the resource.
+  If omitted, the provider-level region will be used. Changing this parameter will create a new resource.
+
 * `name` - (Required, String) The name of a replication pair. The name can contain a maximum of 64 bytes.
   The value can contain only letters (a to z and A to Z), digits (0 to 9), decimal points (.),
   underscores (_), and hyphens (-).

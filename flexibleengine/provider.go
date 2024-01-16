@@ -43,6 +43,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/nat"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/obs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/rds"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sdrs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sfs"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/smn"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/sms"
@@ -528,9 +529,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_dds_instance_v3": resourceDdsInstanceV3(),
 
 			"flexibleengine_sdrs_drill_v1":              resourceSdrsDrillV1(),
-			"flexibleengine_sdrs_protectiongroup_v1":    resourceSdrsProtectiongroupV1(),
 			"flexibleengine_sdrs_protectedinstance_v1":  resourceSdrsProtectedInstanceV1(),
-			"flexibleengine_sdrs_replication_pair_v1":   resourceSdrsReplicationPairV1(),
 			"flexibleengine_sdrs_replication_attach_v1": resourceSdrsReplicationAttachV1(),
 
 			"flexibleengine_vpcep_approval": resourceVPCEndpointApproval(),
@@ -648,6 +647,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_database":                     rds.ResourceMysqlDatabase(),
 			"flexibleengine_rds_database_privilege":           rds.ResourceMysqlDatabasePrivilege(),
 			"flexibleengine_rds_sql_audit":                    rds.ResourceSQLAudit(),
+
+			"flexibleengine_sdrs_protectiongroup_v1":  sdrs.ResourceProtectionGroup(),
+			"flexibleengine_sdrs_replication_pair_v1": sdrs.ResourceReplicationPair(),
 
 			"flexibleengine_sms_server_template":    sms.ResourceServerTemplate(),
 			"flexibleengine_sms_task":               sms.ResourceMigrateTask(),
