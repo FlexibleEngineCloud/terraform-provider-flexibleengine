@@ -245,8 +245,7 @@ func Provider() *schema.Provider {
 
 			"flexibleengine_s3_bucket_object": dataSourceS3BucketObject(),
 
-			"flexibleengine_kms_key_v1":      dataSourceKmsKeyV1(),
-			"flexibleengine_kms_data_key_v1": dataSourceKmsDataKeyV1(),
+			"flexibleengine_kms_key_v1": dataSourceKmsKeyV1(),
 
 			"flexibleengine_vpc_v1":                    dataSourceVirtualPrivateCloudVpcV1(),
 			"flexibleengine_vpc_subnet_v1":             dataSourceVpcSubnetV1(),
@@ -333,6 +332,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_ddm_accounts":       ddm.DataSourceDdmAccounts(),
 
 			"flexibleengine_dds_instances": dds.DataSourceDdsInstance(),
+
+			"flexibleengine_kms_data_key_v1": dew.DataSourceKmsDataKeyV1(),
 
 			"flexibleengine_dms_kafka_instances":    dms.DataSourceDmsKafkaInstances(),
 			"flexibleengine_dms_kafka_flavors":      dms.DataSourceKafkaFlavors(),

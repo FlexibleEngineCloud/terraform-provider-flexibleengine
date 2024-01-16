@@ -26,6 +26,9 @@ data "flexibleengine_kms_data_key_v1" "kms_datakey1" {
 
 ## Argument Reference
 
+* `region` - (Optional, String) The region in which to query the data source. If omitted, the provider-level region
+  will be used.
+
 * `key_id` - (Required, String) The globally unique identifier for the key.
   Changing this gets the new data encryption key.
 
@@ -43,4 +46,5 @@ data "flexibleengine_kms_data_key_v1" "kms_datakey1" {
 are exported:
 
 * `plain_text` - The plaintext of a DEK is expressed in hexadecimal format, and two characters indicate one byte.
+
 * `cipher_text` - The ciphertext of a DEK is expressed in hexadecimal format, and two characters indicate one byte.
