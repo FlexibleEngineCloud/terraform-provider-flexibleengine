@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/config"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/helper/mutexkv"
@@ -49,6 +48,7 @@ import (
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/swr"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/tms"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpc"
+	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/vpcep"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/services/waf"
 	"github.com/huaweicloud/terraform-provider-huaweicloud/huaweicloud/utils"
 )
@@ -533,9 +533,7 @@ func Provider() *schema.Provider {
 			"flexibleengine_sdrs_replication_pair_v1":   resourceSdrsReplicationPairV1(),
 			"flexibleengine_sdrs_replication_attach_v1": resourceSdrsReplicationAttachV1(),
 
-			"flexibleengine_vpcep_approval": resourceVPCEndpointApproval(),
-			"flexibleengine_vpcep_endpoint": resourceVPCEndpoint(),
-			"flexibleengine_vpcep_service":  resourceVPCEndpointService(),
+			"flexibleengine_vpcep_service": resourceVPCEndpointService(),
 
 			"flexibleengine_waf_certificate":                resourceWafCertificateV1(),
 			"flexibleengine_waf_domain":                     resourceWafDomainV1(),
@@ -661,6 +659,9 @@ func Provider() *schema.Provider {
 			"flexibleengine_vpc_eip_associate": eip.ResourceEIPAssociate(),
 			"flexibleengine_vpc_route_table":   vpc.ResourceVPCRouteTable(),
 			"flexibleengine_vpc_route":         vpc.ResourceVPCRouteTableRoute(),
+
+			"flexibleengine_vpcep_approval": vpcep.ResourceVPCEndpointApproval(),
+			"flexibleengine_vpcep_endpoint": vpcep.ResourceVPCEndpoint(),
 
 			"flexibleengine_waf_dedicated_instance":    ResourceWafDedicatedInstance(),
 			"flexibleengine_waf_dedicated_policy":      ResourceWafDedicatedPolicyV1(),

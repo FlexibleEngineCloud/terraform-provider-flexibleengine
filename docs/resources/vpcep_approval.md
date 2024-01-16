@@ -69,21 +69,30 @@ The following arguments are supported:
 * `endpoints` - (Required, List) Specifies the list of VPC endpoint IDs which accepted to connect to VPC endpoint service.
     The VPC endpoints will be rejected when the resource was destroyed.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The unique ID in UUID format which equals to the ID of the VPC endpoint service.
 
 * `connections` - An array of VPC endpoints connect to the VPC endpoint service. Structure is documented below.
-    - `endpoint_id` - The unique ID of the VPC endpoint.
-    - `packet_id` - The packet ID of the VPC endpoint.
-    - `domain_id` - The user's domain ID.
-    - `status` - The connection status of the VPC endpoint.
+  - `endpoint_id` - The unique ID of the VPC endpoint.
+  - `packet_id` - The packet ID of the VPC endpoint.
+  - `domain_id` - The user's domain ID.
+  - `status` - The connection status of the VPC endpoint.
+  - `description` - The description of the VPC endpoint service connection.
 
 ## Timeouts
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
+
+## Import
+
+VPC endpoint approval can be imported using the `id`, e.g.
+
+```shell
+terraform import flexibleengine_vpcep_approval.test <id>
+```

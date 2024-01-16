@@ -82,32 +82,33 @@ resource "flexibleengine_vpcep_endpoint" "demo" {
 The following arguments are supported:
 
 * `region` - (Optional, String, ForceNew) The region in which to create the VPC endpoint.
-    If omitted, the provider-level region will be used. Changing this creates a new VPC endpoint.
+  If omitted, the provider-level region will be used. Changing this creates a new VPC endpoint.
 
 * `service_id` - (Required, String, ForceNew) Specifies the ID of the VPC endpoint service.
-    Changing this creates a new VPC endpoint.
+  Changing this creates a new VPC endpoint.
 
 * `vpc_id` - (Required, String, ForceNew) Specifies the ID of the VPC where the VPC endpoint is to be created.
-    Changing this creates a new VPC endpoint.
+  Changing this creates a new VPC endpoint.
 
 * `network_id` - (Required, String, ForceNew) Specifies the network ID of the subnet in the VPC specified by `vpc_id`.
-    Changing this creates a new VPC endpoint.
+  Changing this creates a new VPC endpoint.
 
 * `ip_address` - (Optional, String, ForceNew) Specifies the IP address for accessing the associated VPC endpoint service.
-    Only IPv4 addresses are supported. Changing this creates a new VPC endpoint.
+  Only IPv4 addresses are supported. Changing this creates a new VPC endpoint.
 
-* `enable_dns` - (Optional, Bool, ForceNew) Specifies whether to create a private domain name. The default value is true.
-    Changing this creates a new VPC endpoint.
+* `enable_dns` - (Optional, Bool) Specifies whether to create a private domain name. The default value is true.
 
-* `enable_whitelist` (Optional, Bool, ForceNew) - Specifies whether to enable access control. The default value is false.
-    Changing this creates a new VPC endpoint.
+* `enable_whitelist` (Optional, Bool) - Specifies whether to enable access control. The default value is false.
 
 * `whitelist` (Optional, List, ForceNew) - Specifies the list of IP address or CIDR block,
-    which can be accessed to the VPC endpoint. Changing this creates a new VPC endpoint.
+  which can be accessed to the VPC endpoint. Changing this creates a new VPC endpoint.
+
+* `description` - (Optional, String, ForceNew) Specifies the description of the VPC endpoint.
+  Changing this creates a new VPC endpoint.
 
 * `tags` - (Optional, Map) The key/value pairs to associate with the VPC endpoint.
 
-## Attributes Reference
+## Attribute Reference
 
 In addition to all arguments above, the following attributes are exported:
 
@@ -128,8 +129,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource provides the following timeouts configuration options:
 
-* `create` - Default is 10 minute.
-* `delete` - Default is 10 minute.
+* `create` - Default is 10 minutes.
+* `delete` - Default is 10 minutes.
 
 ## Import
 
