@@ -38,7 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - The data source ID.
 
-
 * `templates` - The list of model templates.
   The [templates](#ModelTemplate_templates) structure is documented below.
 
