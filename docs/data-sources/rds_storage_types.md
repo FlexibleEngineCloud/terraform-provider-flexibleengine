@@ -37,7 +37,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - The resource ID.
+* `id` - The data source ID.
 
 * `storage_types` - Indicates the DB instance specifications information list. For details, see Data structure of
   the storage_type field. The [storage_types](#Storagetype_storageType) structure is documented below.

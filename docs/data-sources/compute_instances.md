@@ -47,7 +47,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Data source ID.
+* `id` - The data source ID.
 
 * `instances` - List of ECS instance details. The [instances](#ecs_attr_instances) object structure is documented below.
 

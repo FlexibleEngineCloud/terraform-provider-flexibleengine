@@ -37,7 +37,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Indicates a data source ID.
+* `id` - The data source ID.
 
 * `ids` - Indicates a list of IDs of all CCE nodes found.
 

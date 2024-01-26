@@ -75,7 +75,7 @@ In addition to all arguments above, the following attributes are exported:
 <a name="cbr_backup_replication_records"></a>
 The `replication_records` block supports:
 
-* `id` - The replication record ID.
+* `id` - The data source ID of the replication record.
 
 * `destination_backup_id` - The ID of the destination backup used for replication.
 

@@ -43,7 +43,7 @@ The arguments of this data source act as filters for querying the BMSs details.
 
 All of the argument attributes are also exported as result attributes.
 
-* `id` - The BMS flavor id.
+* `id` - The data source ID of the BMS flavor.
 
 * `ram` - The memory size (in MB) of the BMS flavor.
 

@@ -31,7 +31,7 @@ subnet whose data will be exported as attributes.
 * `region` - (Optional, String) The region in which to obtain the V1 VPC client. A VPC client is needed to retrieve VPCs.
   If omitted, the region argument of the provider is used.
 
-* `id` - (Optional, String) - Specifies the ID in UUID format.
+* `id` - (Optional, String) - Specifies the data source ID in UUID format.
 
 * `name` (Optional, String) - The name of the specific subnet to retrieve.
 

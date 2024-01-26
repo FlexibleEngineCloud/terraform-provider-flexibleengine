@@ -44,7 +44,7 @@ The given filters must match exactly one VPC whose data will be exported as attr
 
 The following attributes are exported:
 
-* `id` - ID of the VPC.
+* `id` - The data source ID of the VPC.
 
 * `name` -  See Argument Reference above.
 

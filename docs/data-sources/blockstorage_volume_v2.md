@@ -29,4 +29,4 @@ The following arguments are supported:
 
 The following attributes are exported:
 
-* `id` - The ID of the volume.
+* `id` - The data source ID of the volume.

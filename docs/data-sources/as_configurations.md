@@ -26,7 +26,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - The ID of the list.
+* `id` - The data source ID of the list.
 
 * `configurations` - A list of AS configurations.
   The [configurations](#instance_configurations) object structure is documented below.

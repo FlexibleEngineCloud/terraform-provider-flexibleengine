@@ -36,7 +36,7 @@ data "flexibleengine_gaussdb_nosql_flavors" "flavors" {
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Data source ID.
+* `id` - The data source ID.
 
 * `flavors` - The information of the GaussDB specifications. Structure is documented below.
 

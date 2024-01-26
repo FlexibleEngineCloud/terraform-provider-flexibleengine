@@ -35,7 +35,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Data source ID.
+* `id` - The data source ID.
 
 * `environments` - List of APIG environment details. The structure is documented below.
 

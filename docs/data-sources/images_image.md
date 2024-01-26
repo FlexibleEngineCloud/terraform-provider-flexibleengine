@@ -80,7 +80,7 @@ data "flexibleengine_images_image" "bms_image" {
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Specifies a resource ID in UUID format.
+* `id` - Specifies a data source ID in UUID format.
 
 * `checksum` - The checksum of the data associated with the image.
 

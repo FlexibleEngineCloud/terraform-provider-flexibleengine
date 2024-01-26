@@ -38,7 +38,7 @@ The following arguments are supported:
 
 All above argument parameters can be exported as attribute parameters along with attribute reference:
 
-* `id` - The ID of the cluster.
+* `id` - The data source ID of the cluster.
 
 * `name` - The name of the cluster in string format.
 

@@ -36,7 +36,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - The ID of the list.
+* `id` - The data source ID of the list.
 
 * `groups` - A list of AS groups. The [groups](#as_groups) object structure is documented below.
 

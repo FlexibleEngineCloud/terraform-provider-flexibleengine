@@ -49,7 +49,7 @@ data "flexibleengine_fgs_dependencies" "test" {
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - A data source ID.
+* `id` - The data source ID.
 
 * `packages` - All dependent packages that match.
 
