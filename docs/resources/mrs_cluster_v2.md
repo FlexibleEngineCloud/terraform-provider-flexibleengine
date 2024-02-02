@@ -509,6 +509,7 @@ The following arguments are supported:
 The `nodes` block supports:
 
 * `flavor` - (Required, String, ForceNew) Specifies the instance specifications for each nodes in node group.
+  This field corresponds to `node_size` in the MRS API documentation.
   Changing this will create a new MRS cluster resource.
 
 * `node_number` - (Required, Int) Specifies the number of nodes for the node group.

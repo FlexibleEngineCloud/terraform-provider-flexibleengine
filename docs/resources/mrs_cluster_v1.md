@@ -87,7 +87,7 @@ The following arguments are supported:
       c3.4xlarge.4, c3.8xlarge.4, c3.15xlarge.4, d2.xlarge.8, d2.2xlarge.8, d2.4xlarge.8, d2.8xlarge.8.
 
     The following provides specification details.
-
+    <!-- markdownlint-disable-next-line MD055 -->
     node_size | CPU(core) | Memory(GB) | System Disk | Data Disk
     | --- | --- | --- | --- | --- |
     c2.2xlarge.linux.mrs | 8  | 16  | 40 | -
