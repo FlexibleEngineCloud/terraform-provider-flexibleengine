@@ -239,6 +239,11 @@ func resourceObsBucket() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"kms_key_project_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"multi_az": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -293,10 +298,15 @@ func resourceObsBucketCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	obsClient, err := config.ObjectStorageClient(GetRegion(d, config))
+	conf := meta.(*Config)
+	region := conf.GetRegion(d)
+	obsClient, err := conf.ObjectStorageClient(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
+		return fmt.Errorf("error creating OBS client: %s", err)
+	}
+	obsClientWithSignature, err := conf.ObjectStorageClientWithSignature(region)
+	if err != nil {
+		return fmt.Errorf("error creating OBS client with signature: %s", err)
 	}
 
 	log.Printf("[DEBUG] Update OBS bucket %s", d.Id())
@@ -318,8 +328,8 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	if d.HasChanges("encryption", "kms_key_id") {
-		if err := resourceObsBucketEncryptionUpdate(obsClient, d); err != nil {
+	if d.HasChanges("encryption", "kms_key_id", "kms_key_project_id") {
+		if err := resourceObsBucketEncryptionUpdate(obsClientWithSignature, d); err != nil {
 			return err
 		}
 	}
@@ -352,11 +362,15 @@ func resourceObsBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	region := GetRegion(d, config)
-	obsClient, err := config.ObjectStorageClient(region)
+	conf := meta.(*Config)
+	region := conf.GetRegion(d)
+	obsClient, err := conf.ObjectStorageClient(region)
 	if err != nil {
-		return fmt.Errorf("Error creating FlexibleEngine OBS client: %s", err)
+		return fmt.Errorf("error creating OBS client: %s", err)
+	}
+	obsClientWithSignature, err := conf.ObjectStorageClientWithSignature(region)
+	if err != nil {
+		return fmt.Errorf("error creating OBS client with signature: %s", err)
 	}
 
 	log.Printf("[DEBUG] Read OBS bucket: %s", d.Id())
@@ -394,7 +408,7 @@ func resourceObsBucketRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Read the encryption configuration
-	if err := setObsBucketEncryption(obsClient, d); err != nil {
+	if err := setObsBucketEncryption(obsClientWithSignature, d); err != nil {
 		return err
 	}
 
@@ -565,8 +579,11 @@ func resourceObsBucketEncryptionUpdate(obsClient *obs.ObsClient, d *schema.Resou
 	if d.Get("encryption").(bool) {
 		input := &obs.SetBucketEncryptionInput{}
 		input.Bucket = bucket
-		input.SSEAlgorithm = obs.DEFAULT_SSE_KMS_ENCRYPTION
-		input.KMSMasterKeyID = d.Get("kms_key_id").(string)
+		input.SSEAlgorithm = obs.DEFAULT_SSE_KMS_ENCRYPTION_OBS
+		if raw, ok := d.GetOk("kms_key_id"); ok {
+			input.KMSMasterKeyID = raw.(string)
+			input.ProjectID = d.Get("kms_key_project_id").(string)
+		}
 
 		log.Printf("[DEBUG] enable default encryption of OBS bucket %s: %#v", bucket, input)
 		_, err := obsClient.SetBucketEncryption(input)
@@ -905,6 +922,7 @@ func setObsBucketEncryption(obsClient *obs.ObsClient, d *schema.ResourceData) er
 			if obsError.Code == "NoSuchEncryptionConfiguration" || obsError.Code == "FsNotSupport" {
 				d.Set("encryption", false)
 				d.Set("kms_key_id", nil)
+				d.Set("kms_key_project_id", nil)
 				return nil
 			}
 			return fmt.Errorf("Error getting encryption configuration of OBS bucket %s: %s,\n Reason: %s",
@@ -916,9 +934,11 @@ func setObsBucketEncryption(obsClient *obs.ObsClient, d *schema.ResourceData) er
 	if output.SSEAlgorithm != "" {
 		d.Set("encryption", true)
 		d.Set("kms_key_id", output.KMSMasterKeyID)
+		d.Set("kms_key_project_id", output.ProjectID)
 	} else {
 		d.Set("encryption", false)
 		d.Set("kms_key_id", nil)
+		d.Set("kms_key_project_id", nil)
 	}
 
 	return nil

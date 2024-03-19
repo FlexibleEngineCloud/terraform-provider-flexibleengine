@@ -165,7 +165,10 @@ The following arguments are supported:
 
 * `encryption` - (Optional, Bool) Whether enable default server-side encryption of the bucket in SSE-KMS mode.
 
-* `kms_key_id` - (Optional, String) Specifies the ID of a kms key. If omitted, the default master key will be used.
+* `kms_key_id` - (Optional, String) Specifies the ID of a KMS key. If omitted, the default master key will be used.
+
+* `kms_key_project_id` - (Optional, String) Specifies the project ID to which the KMS key belongs. This field is valid
+  only when `kms_key_id` is specified.
 
 * `logging` - (Optional, List) A settings of bucket logging. The [logging](#obs_logging) object structure is documented
   below.
