@@ -68,7 +68,7 @@ The following arguments are supported:
   + `cce.t2.large` - large-scale HA physical machine cluster (up to 500 nodes).
 
 * `cluster_version` - (Optional, String, ForceNew) For the cluster version, possible values are listed on the
-  [CCE Cluster Version Release Notes](https://docs.prod-cloud-ocb.orange-business.com/usermanual2/cce/cce_01_0068.html).
+  [CCE Cluster Version Release Notes](https://docs.prod-cloud-ocb.orange-business.com/usermanual2/cce/cce_10_0405.html).
   If this parameter is not set, the latest available version will be used.
 
 * `cluster_type` - (Required, String, ForceNew) Cluster Type, possible values are VirtualMachine and BareMetal.
