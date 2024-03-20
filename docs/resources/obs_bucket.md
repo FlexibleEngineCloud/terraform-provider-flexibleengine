@@ -33,6 +33,9 @@ resource "flexibleengine_obs_bucket" "b" {
 ### Enable Logging
 
 ```hcl
+# The agency must be an OBS cloud service agency with the `PutObject` permission.
+variable "agency_name" {}
+
 resource "flexibleengine_obs_bucket" "log_bucket" {
   bucket = "my-tf-log-bucket"
   acl    = "log-delivery-write"
@@ -45,6 +48,7 @@ resource "flexibleengine_obs_bucket" "b" {
   logging {
     target_bucket = flexibleengine_obs_bucket.log_bucket.id
     target_prefix = "log/"
+    agency        = var.agency_name
   }
 }
 ```
@@ -195,7 +199,14 @@ The `logging` object supports:
 
 * `target_bucket` - (Required, String) The name of the bucket that will receive the log objects.
   The acl policy of the target bucket should be `log-delivery-write`.
+
 * `target_prefix` - (Optional, String) To specify a key prefix for log objects.
+
+* `agency` - (Required, String) Specifies the IAM agency of OBS cloud service.
+
+  -> The IAM agency requires the `PutObject` permission for the target bucket.  If default encryption is enabled for the
+  target bucket, the agency also requires the `KMS Administrator` permission in the region where the target bucket is
+  located.
 
 <a name="obs_website"></a>
 The `website` object supports:
