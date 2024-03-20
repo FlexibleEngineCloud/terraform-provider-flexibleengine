@@ -89,7 +89,7 @@ The following arguments are supported:
     The following provides specification details.
 
     node_size | CPU(core) | Memory(GB) | System Disk | Data Disk
-    | --- | --- | --- | --- | --- |
+    --- | --- | --- | --- | ---
     c2.2xlarge.linux.mrs | 8  | 16  | 40 | -
     cc3.xlarge.4.linux.mrs | 4  | 16  | 40 | -
     cc3.2xlarge.4.linux.mrs | 8  | 32  | 40 | -
