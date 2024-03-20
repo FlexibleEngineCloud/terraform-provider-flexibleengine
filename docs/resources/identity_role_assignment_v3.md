@@ -1,5 +1,5 @@
 ---
-subcategory: "Identity and Access Management (IAM)"
+subcategory: "Deprecated"
 description: ""
 page_title: "flexibleengine_identity_role_assignment_v3"
 ---
@@ -9,6 +9,8 @@ page_title: "flexibleengine_identity_role_assignment_v3"
 Manages a V3 Role assignment within group on FlexibleEngine IAM Service.
 
 -> You *must* have admin privileges in your FlexibleEngine cloud to use this resource.
+
+!> **Warning:** It has been deprecated, please use `flexibleengine_identity_group_role_assignment` instead.
 
 ## Example Usage: Assign Role On Project Level
 
