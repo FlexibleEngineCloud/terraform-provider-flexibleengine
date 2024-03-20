@@ -457,7 +457,6 @@ func Provider() *schema.Provider {
 			"flexibleengine_identity_group_membership_v3": resourceIdentityGroupMembershipV3(),
 			"flexibleengine_identity_project_v3":          resourceIdentityProjectV3(),
 			"flexibleengine_identity_role_v3":             resourceIdentityRoleV3(),
-			"flexibleengine_identity_role_assignment_v3":  resourceIdentityRoleAssignmentV3(),
 			"flexibleengine_identity_user_v3":             resourceIdentityUserV3(),
 			"flexibleengine_identity_provider":            resourceIdentityProvider(),
 			"flexibleengine_identity_provider_conversion": resourceIAMProviderConversion(),
@@ -625,7 +624,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_gaussdb_cassandra_instance": gaussdb.ResourceGeminiDBInstanceV3(),
 			"flexibleengine_gaussdb_influx_instance":    gaussdb.ResourceGaussDBInfluxInstanceV3(),
 
-			"flexibleengine_identity_acl": iam.ResourceIdentityACL(),
+			"flexibleengine_identity_acl":                   iam.ResourceIdentityACL(),
+			"flexibleengine_identity_group_role_assignment": iam.ResourceIdentityGroupRoleAssignment(),
 
 			"flexibleengine_images_image":                ims.ResourceImsImage(),
 			"flexibleengine_images_image_copy":           ims.ResourceImsImageCopy(),
@@ -704,6 +704,8 @@ func Provider() *schema.Provider {
 			"flexibleengine_rds_instance_v1":   resourceRdsInstance(),
 			"flexibleengine_vpc_eip_v1":        resourceVpcEIPV1(),
 			"flexibleengine_vpc_route_v2":      resourceVPCRouteV2(),
+
+			"flexibleengine_identity_role_assignment_v3": resourceIdentityRoleAssignmentV3(),
 
 			"flexibleengine_mrs_hybrid_cluster_v1": resourceMRSHybridClusterV1(),
 			"flexibleengine_mrs_cluster_v1":        resourceMRSClusterV1(),

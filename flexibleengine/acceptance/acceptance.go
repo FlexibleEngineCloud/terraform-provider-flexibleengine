@@ -172,3 +172,9 @@ func testAccPrecheckDomainId(t *testing.T) {
 		t.Skip("OS_DOMAIN_ID must be set for acceptance tests")
 	}
 }
+
+func testAccPreCheckProjectID(t *testing.T) {
+	if OS_PROJECT_ID == "" {
+		t.Skip("OS_PROJECT_ID must be set for acceptance tests")
+	}
+}

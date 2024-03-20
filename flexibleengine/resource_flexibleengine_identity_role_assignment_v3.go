@@ -20,6 +20,7 @@ func resourceIdentityRoleAssignmentV3() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
+		DeprecationMessage: `It has been deprecated, please use 'flexibleengine_identity_group_role_assignment' instead`,
 		Schema: map[string]*schema.Schema{
 			"group_id": {
 				Type:     schema.TypeString,
