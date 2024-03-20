@@ -10,14 +10,16 @@
         "tables": false,
         "code_blocks": false
     },
+    "MD014": false,
     "MD024": {
         "siblings_only": true
     },
     "MD033": {
         "allowed_elements": [
-            "a"
+            "a", "br", "img"
         ]
     },
+    "MD040": false,
     "MD049": {
         "style": "asterisk"
     },
