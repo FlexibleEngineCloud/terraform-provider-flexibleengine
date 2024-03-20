@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 1.46.0 (March 20, 2024)
+
+FEATURES:
+
+* **New Resource:**
+  - `flexibleengine_identity_group_role_assignment` [GH-1116]
+
+* **New Data Source:**
+  - `flexibleengine_modelarts_model_templates` [GH-1087]
+
+ENHANCEMENTS:
+
+* `resource/flexibleengine_cbr_policy`: Support `enable_acceleration` and `full_backup_interval` parameters [GH-1085]
+* `resource/flexibleengine_obs_bucket`: Support `kms_key_project_id` and logging agency parameters [GH-1114]
+
+DEPRECATED:
+
+* `resource/flexibleengine_identity_role_assignment_v3` [GH-1116]
+
 ## 1.45.0 (December 26, 2023)
 
 FEATURES:
