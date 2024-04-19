@@ -28,6 +28,12 @@ The following arguments are supported:
     5 to 32 characters. It can contain only uppercase letters, lowercase letters,
     digits, spaces, and special characters (-_) and cannot start with a digit.
 
+* `access_mode` - (Optional, String) Specifies the user access type.
+  Available options are:
+  + `default`: programmatic access and management console access. This option is the default access type.
+  + `programmatic`: programmatic access.
+  + `console`: management console access.
+
 * `description` - (Optional, String) Specifies the description of the user.
 
 * `email` - (Optional, String) Specifies the email address with a maximum of 255 characters.

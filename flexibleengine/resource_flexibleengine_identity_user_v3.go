@@ -37,6 +37,12 @@ func resourceIdentityUserV3() *schema.Resource {
 				Optional:  true,
 				Sensitive: true,
 			},
+			"access_mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "default",
+				ValidateFunc: validation.StringInSlice([]string{"default", "programmatic", "console"}, false),
+			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -92,6 +98,7 @@ func resourceIdentityUserV3Create(ctx context.Context, d *schema.ResourceData, m
 	enabled := d.Get("enabled").(bool)
 	createOpts := iam_users.CreateOpts{
 		Name:        d.Get("name").(string),
+		AccessMode:  d.Get("access_mode").(string),
 		Description: d.Get("description").(string),
 		Email:       d.Get("email").(string),
 		Phone:       d.Get("phone").(string),
@@ -130,6 +137,7 @@ func resourceIdentityUserV3Read(_ context.Context, d *schema.ResourceData, meta 
 
 	d.Set("enabled", user.Enabled)
 	d.Set("name", user.Name)
+	d.Set("access_mode", user.AccessMode)
 	d.Set("description", user.Description)
 	d.Set("email", user.Email)
 	d.Set("country_code", user.AreaCode)
@@ -158,6 +166,10 @@ func resourceIdentityUserV3Update(ctx context.Context, d *schema.ResourceData, m
 
 	if d.HasChange("name") {
 		updateOpts.Name = d.Get("name").(string)
+	}
+
+	if d.HasChange("access_mode") {
+		updateOpts.AccessMode = d.Get("access_mode").(string)
 	}
 
 	if d.HasChange("description") {

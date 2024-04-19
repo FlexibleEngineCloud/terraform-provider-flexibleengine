@@ -29,6 +29,7 @@ func TestAccIdentityV3User_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIdentityV3UserExists(resourceName, &user),
 					resource.TestCheckResourceAttr(resourceName, "name", userName),
+					resource.TestCheckResourceAttr(resourceName, "access_mode", "programmatic"),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "email", "foo123@orange-business.com"),
 					resource.TestCheckResourceAttr(resourceName, "description", "created by terraform"),
@@ -40,6 +41,7 @@ func TestAccIdentityV3User_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIdentityV3UserExists(resourceName, &user),
 					resource.TestCheckResourceAttr(resourceName, "name", userName),
+					resource.TestCheckResourceAttr(resourceName, "access_mode", "default"),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "email", "bar123@orange-business.com"),
 					resource.TestCheckResourceAttr(resourceName, "description", "updated by terraform"),
@@ -115,6 +117,7 @@ func testAccIdentityV3User_basic(userName string) string {
 resource "flexibleengine_identity_user_v3" "user_1" {
   name        = "%s"
   password    = "password123@!"
+  access_mode = "programmatic"
   enabled     = true
   email       = "foo123@orange-business.com"
   description = "created by terraform"
@@ -126,6 +129,7 @@ func testAccIdentityV3User_update(userName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_identity_user_v3" "user_1" {
   name        = "%s"
+  access_mode = "default"
   enabled     = false
   password    = "password123@!"
   email       = "bar123@orange-business.com"

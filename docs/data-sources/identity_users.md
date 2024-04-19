@@ -36,6 +36,8 @@ The `users` block contains:
 
 * `name` - Indicates the IAM user name.
 
+* `access_mode` - Indicates the IAM user access mode
+
 * `description` - Indicates the description of the IAM user.
 
 * `enabled` - Indicates the whether the IAM user is enabled.
