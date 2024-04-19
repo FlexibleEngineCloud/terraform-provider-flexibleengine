@@ -40,7 +40,7 @@ func resourceIdentityUserV3() *schema.Resource {
 			"access_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "default"
+				Default:      "default",
 				ValidateFunc: validation.StringInSlice([]string{"default", "programmatic", "console"}, false),
 			},
 			"description": {
