@@ -29,7 +29,10 @@ The following arguments are supported:
     digits, spaces, and special characters (-_) and cannot start with a digit.
 
 * `access_mode` - (Optional, String) Specifies the user access type.
-    Valid values are `program` and `program_console`
+  Available options are:
+  + `default`: programmatic access and management console access. This option is the default access type.
+  + `programmatic`: programmatic access.
+  + `console`: management console access.
 
 * `description` - (Optional, String) Specifies the description of the user.
 

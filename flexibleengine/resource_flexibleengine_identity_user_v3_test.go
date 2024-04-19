@@ -115,7 +115,7 @@ func testAccIdentityV3User_basic(userName string) string {
 resource "flexibleengine_identity_user_v3" "user_1" {
   name        = "%s"
   password    = "password123@!"
-  access_mode = "program"
+  access_mode = "programmatic"
   enabled     = true
   email       = "foo123@orange-business.com"
   description = "created by terraform"
@@ -127,7 +127,7 @@ func testAccIdentityV3User_update(userName string) string {
 	return fmt.Sprintf(`
 resource "flexibleengine_identity_user_v3" "user_1" {
   name        = "%s"
-  access_mode = "program_console"
+  access_mode = "default"
   enabled     = false
   password    = "password123@!"
   email       = "bar123@orange-business.com"
